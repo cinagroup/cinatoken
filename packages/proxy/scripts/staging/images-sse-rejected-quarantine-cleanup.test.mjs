@@ -14,7 +14,7 @@ async function setup(t,fault){
   t.mock.method(globalThis,'fetch',()=>{throw Error('No external network');});
   // This closed staging experiment is pinned to its original 56-table ledger.
   // New schemas require a new reviewed baseline; never relax the cleanup guards.
-  const db=createSqliteD1({}, {lastMigration:'0081_mcp_servers.sql'});t.after(()=>db.sqlite.close());
+  const db=createSqliteD1({}, {lastMigration:'0068_batch_jobs.sql'});t.after(()=>db.sqlite.close());
   // Wrangler owns this bookkeeping table remotely; the lightweight test D1
   // applies migrations directly. Model the extra unrelated table explicitly.
   db.sqlite.exec('CREATE TABLE d1_migrations (id INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT DEFAULT CURRENT_TIMESTAMP)');

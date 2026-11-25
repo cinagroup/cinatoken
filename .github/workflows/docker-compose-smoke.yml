@@ -83,7 +83,7 @@ jobs:
         timeout-minutes: 45
         env:
             DATABASE_DRIVER: postgres
-            DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/octafuse
+            DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/cinatoken
             GATEWAY_BASE_URL: http://127.0.0.1:8787
             GATEWAY_MASTER_URL: http://127.0.0.1:8789
             # Fresh, disposable compose database: migration 0023 imports this development seed key.

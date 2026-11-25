@@ -1457,7 +1457,7 @@ for (const operation of ['generations', 'edits'] as const) {
 		assert.equal(settlements, 0);
 		assert.equal(f.batches(), 0);
 	});
-	
+
 	it(`Images ${operation}: definitive no-claim releases admission and never fetches`, async t => {
 		let decisions = 0, sends = 0;
 		const recoveryFactory: ImageUsageRecoveryFactory = () => ({
