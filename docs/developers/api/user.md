@@ -1111,7 +1111,7 @@ Catalog 条目同样包含 `input_modalities`、`output_modalities`、`released_
 | `discounts` | 官方时段 × 路由 Charged，再叠该用户模型倍率 | 仅官方时段 × 路由 Charged（公共折扣） | — | 与 `/v1/models` 相同合成；**只含已配置用户倍率的模型** |
 | 计入用户 RPM | 否 | 否 | 否 | 否 |
 
-Admin 静态导入目录见 **`GET /admin/models/import/catalog`**（与上表无关，见 [管理接口](./admin.md#admin-vs-proxy-catalog)）。
+Admin 模型导入目录（读取 OctaFuse 模型目录）见 **`GET /admin/models/import/catalog`**（与上表无关，见 [管理接口](./admin.md#admin-vs-proxy-catalog)）。
 
 ### 示例
 

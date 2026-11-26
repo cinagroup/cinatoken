@@ -2,9 +2,14 @@ import { createProviderService, revealProviderApiKeyService, updateProviderServi
 
 import { AdminServiceError } from './errors';
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { before, after, describe, it, mock } from "node:test";
 import type { GatewayRepositories } from "@octafuse/core";
-import { listStaticProviderImportPresets } from "@/lib/provider-import-preset";
+import { listStaticProviderImportPresets } from "@/lib/catalog/provider-catalog-fixture";
+import { localProviderRows } from "@/lib/catalog/local-provider-catalog";
+
+// Exercise runtime catalog loading without depending on the public service.
+before(() => { mock.method(globalThis, "fetch", async () => Response.json(localProviderRows)); });
+after(() => { mock.restoreAll(); });
 import { importProvidersFromStaticPresetsService } from "./providers-service";
 import { applyProviderSyncService } from "./provider-sync-service";
 

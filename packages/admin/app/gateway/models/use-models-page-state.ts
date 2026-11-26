@@ -181,7 +181,11 @@ export function useModelsPageState() {
 	const [importCatalogRows, setImportCatalogRows] = useState<PresetCatalogRow[]>([]);
 	const [importCatalogLoading, setImportCatalogLoading] = useState(false);
 	const [importCatalogError, setImportCatalogError] = useState('');
-	const [importSelected, setImportSelected] = useState<Record<string, boolean>>({});
+	const [importCatalogVendor, setImportCatalogVendor] = useState('');
+	const [importCatalogVendors, setImportCatalogVendors] = useState<string[]>([]);
+	const [importSelected, setImportSelected] = useState<Record<string, boolean>>(
+		{}
+	);
 	const [importCatalogSearch, setImportCatalogSearch] = useState('');
 	const [importCatalogKind, setImportCatalogKind] = useState<ModelKindFilter>(DEFAULT_KIND_FILTER);
 	const [importCatalogLifecycle, setImportCatalogLifecycle] = useState<ModelLifecycleFilter>(
@@ -389,7 +393,7 @@ export function useModelsPageState() {
 		};
 	}, [applyModels, isCurrentScope, requestModels]);
 
-	const loadImportCatalog = useCallback(async () => {
+	const loadImportCatalog = useCallback(async (vendor: string) => {
 		const scope = lifetimeRef.current;
 		if (!scope || !isCurrentScope(scope)) return;
 		catalogRequestRef.current?.abort();
@@ -397,14 +401,17 @@ export function useModelsPageState() {
 		catalogRequestRef.current = request;
 		setImportCatalogLoading(true);
 		setImportCatalogError('');
+		setImportCatalogRows([]);
+		setImportSelected({});
 		try {
-			const response = await editorFetch('/api/admin/models/import/catalog', {
+			const response = await editorFetch(`/api/admin/models/import/catalog${vendor ? `?${new URLSearchParams({vendor})}` : ''}`, {
 				signal: request.signal,
 			});
 			const data = await readApiJson<PresetCatalogRow[]>(response);
 			if (!isCurrentScope(scope) || request.signal.aborted || catalogRequestRef.current !== request) return;
 			if (!data.success || !Array.isArray(data.data)) throw new Error(data.message || 'Failed to load catalog');
 			setImportCatalogRows(data.data);
+			if (!vendor) setImportCatalogVendors([...new Set(data.data.map(row => row.vendor).filter(key => key && key !== 'other'))]);
 			setImportSelected({});
 		} catch (e) {
 			if (!isCurrentScope(scope) || request.signal.aborted) return;
@@ -417,6 +424,18 @@ export function useModelsPageState() {
 		}
 	}, [isCurrentScope]);
 
+	const changeImportCatalogVendor = useCallback((vendor: string) => {
+		setImportCatalogVendor(vendor);
+		void loadImportCatalog(vendor);
+	}, [loadImportCatalog]);
+
+	const closeImportCatalogModal = useCallback(() => {
+		catalogRequestRef.current?.abort();
+		setShowImportCatalogModal(false);
+	}, []);
+
+	useEffect(() => () => catalogRequestRef.current?.abort(), []);
+
 	const openImportCatalogModal = useCallback(() => {
 		setShowImportCatalogModal(true);
 		setImportCatalogError('');
@@ -425,8 +444,9 @@ export function useModelsPageState() {
 		// 导入表格按单一类型显示对应计费列；模型目录选“全部”时从 LLM 目录开始。
 		setImportCatalogKind(selectedKind === 'all' || selectedKind === 'audio' ? DEFAULT_KIND_FILTER : selectedKind);
 		setImportSelected({});
-		void loadImportCatalog();
-	}, [loadImportCatalog, selectedKind]);
+		setImportCatalogVendors([]);
+		changeImportCatalogVendor('');
+	}, [changeImportCatalogVendor, selectedKind]);
 
 	const unpricedImportIds = useMemo(
 		() => new Set(importCatalogRows.filter((r) => !r.pricing_available).map((r) => r.id)),
@@ -1069,12 +1089,15 @@ export function useModelsPageState() {
 		isSaving,
 		isDeleting,
 		showImportCatalogModal,
-		setShowImportCatalogModal,
+		closeImportCatalogModal,
 		importCatalogRows,
 		importCatalogSearch,
 		setImportCatalogSearch,
 		importCatalogKind,
 		setImportCatalogKind,
+		importCatalogVendor,
+		importCatalogVendors,
+		changeImportCatalogVendor,
 		importCatalogKindCounts,
 		importCatalogLifecycle,
 		setImportCatalogLifecycle,

@@ -19,13 +19,11 @@ import {
 	PROVIDER_IMPORT_PENDING_API_KEY,
 } from '@octafuse/core/db/provider-key-utils';
 import { getProviderQuotaAdapter } from '@octafuse/core/provider-quota';
-import {
-	isKnownProviderKind,
-	providerImportStoredFields,
-	resolveStoredProviderPresentation,
-	listStaticProviderImportPresets,
-} from '@/lib/provider-import-preset';
-import { providerNameKindKey, suggestUniqueProviderImportName } from '@/lib/provider-kind';
+import { getProviderCatalog, type ProviderCatalog } from '@/lib/provider-catalog';
+import { providerImportStoredFields } from '@/lib/provider-catalog-pure';
+import { loadProviderCatalog, optionalCatalog, requireCurrentCatalog } from '@/lib/catalog/catalog-loader';
+import type { CatalogEnv } from '@/lib/catalog/catalog-config';
+import { CUSTOM_PROVIDER_KIND, providerNameKindKey, suggestUniqueProviderImportName } from '@/lib/provider-kind';
 import { badRequest, conflict, notFound } from './errors';
 import type {
 	AdminCreatedIdOutput,
@@ -117,14 +115,15 @@ function normalizeSharedChannelType(raw: unknown): string | null {
 	return trimmed;
 }
 
-/** 列表/详情脱敏：明文 `api_key` → masked；附带 `has_pending_key` 与路由计数。 */
-function normalizeProviderKind(raw: unknown, required: boolean): string {
+async function normalizeProviderKind(raw: unknown, required: boolean, env?: CatalogEnv, catalog?: ProviderCatalog): Promise<string> {
 	if (raw === undefined || raw === null || String(raw).trim() === '') {
 		if (required) throw badRequest('kind is required');
 		return '';
 	}
 	const kind = String(raw).trim();
-	if (!isKnownProviderKind(kind)) {
+	if (kind === CUSTOM_PROVIDER_KIND) return kind;
+	const current = catalog ?? getProviderCatalog(requireCurrentCatalog(await loadProviderCatalog(env)));
+	if (!current.isKnownProviderKind(kind)) {
 		throw badRequest('kind must be a known provider template name or __custom__');
 	}
 	return kind;
@@ -152,19 +151,19 @@ async function writeProvider(write: () => Promise<void>): Promise<void> {
 }
 
 /** 列表/详情脱敏：明文 `api_key` → masked；图标按已保存的 kind 解析。 */
-function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
+function enrichProviderRow(provider: AdminProviderRow, catalog: ProviderCatalog | null): AdminProviderRow {
 	const plaintext = typeof provider.api_key === 'string' ? provider.api_key : '';
-	const presentation = resolveStoredProviderPresentation(provider);
+	const presentation = catalog?.resolveStoredProviderPresentation(provider);
 	return {
 		...provider,
  note: catalogNoteValue(provider),
  description: catalogNoteValue(provider),
 		kind: String(provider.kind ?? ''),
-		kind_labels: presentation.kindLabels ?? undefined,
-		kind_descriptions: presentation.kindDescriptions ?? undefined,
-		vendor_key: presentation.vendorKey,
-		icon_key: presentation.iconKey,
-		catalog_links: presentation.catalogLinks ?? undefined,
+		kind_labels: presentation?.kindLabels ?? undefined,
+		kind_descriptions: presentation?.kindDescriptions ?? undefined,
+		vendor_key: presentation?.vendorKey ?? 'other',
+		icon_key: presentation?.iconKey ?? 'other',
+		catalog_links: presentation?.catalogLinks ?? undefined,
 		api_key: maskProviderApiKeyForAdmin(plaintext),
 		status: provider.status === 'disabled' ? 'disabled' : 'active',
 		has_pending_key: isPendingProviderImportApiKey(plaintext),
@@ -175,9 +174,16 @@ function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
 }
 
 /** 供应商列表（脱敏 api_key）。 */
-export async function listProvidersService(repos: GatewayRepositories): Promise<AdminProviderRow[]> {
+async function readProviderPresentationCatalog(env?: CatalogEnv): Promise<ProviderCatalog | null> {
+	const snapshot = await loadProviderCatalog(env).catch(optionalCatalog);
+	return snapshot ? getProviderCatalog(snapshot.rows) : null;
+}
+
+export async function listProvidersService(repos: GatewayRepositories, env?: CatalogEnv): Promise<AdminProviderRow[]> {
 	const providers = (await repos.providers.listProviders()) as AdminProviderRow[];
-	return providers.map(enrichProviderRow);
+	if (providers.length === 0) return [];
+	const catalog = await readProviderPresentationCatalog(env);
+	return providers.map((provider) => enrichProviderRow(provider, catalog));
 }
 
 /**
@@ -187,6 +193,8 @@ export async function listProvidersService(repos: GatewayRepositories): Promise<
 export async function createProviderService(
 	repos: GatewayRepositories,
 	body: AdminProviderMutationInput,
+	env?: CatalogEnv,
+	catalog?: ProviderCatalog
 ): Promise<AdminCreatedIdOutput> {
 	const customId = String(body.id ?? '').trim();
 	if (customId === '.' || customId === '..') {
@@ -205,7 +213,7 @@ export async function createProviderService(
 	const endpointsJson = resolveEndpointsFromMutation(body);
 	const customParamsJson = resolveCustomParamsFromMutation(body);
 	const status = normalizeProviderStatus(body.status);
-	const kind = normalizeProviderKind(body.kind ?? '__custom__', true);
+	const kind = await normalizeProviderKind(body.kind ?? CUSTOM_PROVIDER_KIND, true, env, catalog);
 
 	const id = customId || crypto.randomUUID();
 	if (customId && (await repos.providers.providerIdExists(id))) {
@@ -230,10 +238,10 @@ export async function createProviderService(
 }
 
 /** 单条供应商（脱敏）；不存在抛 `notFound`。 */
-export async function getProviderService(repos: GatewayRepositories, id: string): Promise<AdminProviderRow> {
+export async function getProviderService(repos: GatewayRepositories, id: string, env?: CatalogEnv): Promise<AdminProviderRow> {
 	const provider = await repos.providers.getProviderRowById(id);
 	if (!provider) throw notFound('Provider not found');
-	return enrichProviderRow(provider as AdminProviderRow);
+	return enrichProviderRow(provider as AdminProviderRow, await readProviderPresentationCatalog(env));
 }
 
 /** 揭示供应商明文 API Key。 */
@@ -256,6 +264,7 @@ export async function updateProviderService(
 	id: string,
 	body: AdminProviderMutationInput,
 	actorId: string,
+	env?: CatalogEnv
 ): Promise<void> {
 	const existing = await repos.providers.getProviderRowById(id);
 	if (!existing || existing.id !== id) throw notFound('Provider not found');
@@ -268,7 +277,7 @@ export async function updateProviderService(
 		patch.name = name;
 	}
 	if (body.kind !== undefined) {
-		patch.kind = normalizeProviderKind(body.kind, false);
+		patch.kind = await normalizeProviderKind(body.kind, false, env);
 	}
 	if (body.note !== undefined || body.description !== undefined) {
  Object.assign(patch, catalogNotePatch({note:body.note,description:body.description}));
@@ -332,10 +341,10 @@ export async function deleteProviderService(repos: GatewayRepositories, id: stri
 }
 
 /**
- * 从 `lib/provider-import-presets.json` 按 **catalog 键**导入 Provider。
+ * 从 `供应商目录` 按 **catalog 键**导入 Provider。
  * 普通模板写入待替换占位符；allowlist 中的托管模板写固定 Provider id
  * 与非敏感 `env:NAME` 引用；只有固定官方端点验证 Secret 成功才启用。
- * 从 `lib/provider-import-presets.json` 按 **catalog 键**导入 Provider：
+ * 从 `供应商目录` 按 **catalog 键**导入 Provider：
  * 写入占位 `PROVIDER_IMPORT_PENDING_API_KEY`，须在 Admin 中替换为真实密钥。
  * `kind` 写成模板英文名；显示名按 `locale` 取目录文案（中文 / 英文）。同一类型下同名才追加 `(2)` 后缀。介绍不入库。
  */
@@ -347,19 +356,24 @@ export async function importProvidersFromStaticPresetsService(
 		environmentApiKeys?: Readonly<Record<string, string | undefined>>;
 		fetchImpl?: typeof fetch;
 	},
+	env?: CatalogEnv
 ): Promise<AdminProvidersImportOutput> {
 	const uniqueIds = [...new Set((input.ids ?? []).map((x) => String(x).trim()).filter((x) => x.length > 0))];
 	if (uniqueIds.length === 0) {
 		throw badRequest('ids must be a non-empty array of preset catalog keys');
 	}
 
-	const presetByKey = new Map(listStaticProviderImportPresets().map((p) => [p.catalog_key, p]));
+	if (uniqueIds.some((key) => /^\d+$/.test(key))) {
+		throw conflict('Provider catalog keys have changed. Refresh the catalog and try again.');
+	}
+	const catalog = getProviderCatalog(requireCurrentCatalog(await loadProviderCatalog(env)));
+	const presetByKey = new Map(catalog.listStaticProviderImportPresets().map((p) => [p.catalog_key, p]));
 
 	let created = 0;
 	const skippedExisting: string[] = [];
 	const failed: Array<{ id: string; message: string }> = [];
 
-	const existingProviders = await listProvidersService(repos);
+	const existingProviders = await repos.providers.listProviders();
 	const existingNameKindKeys = new Set(
 		existingProviders.map((provider) => providerNameKindKey(provider.name, String(provider.kind ?? ''))),
 	);
@@ -409,7 +423,7 @@ export async function importProvidersFromStaticPresetsService(
 				endpoints: preset.endpoints,
 				api_key: apiKey,
 				status,
-			});
+			}, env, catalog);
 
 			existingNameKindKeys.add(providerNameKindKey(name, stored.kind));
 			created++;

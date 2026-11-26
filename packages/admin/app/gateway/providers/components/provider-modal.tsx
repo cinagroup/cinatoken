@@ -16,11 +16,18 @@ import {
 	KeyIcon,
 	ServerStackIcon,
 	ChatBubbleLeftEllipsisIcon,
-} from '@heroicons/react/24/outline';
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { useTranslations, useLocale } from 'next-intl';
-import { getStaticProviderPresetByKind, providerPresetCatalogCopy } from '@/lib/provider-import-preset';
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+} from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/solid";
+import { useTranslations, useLocale } from "next-intl";
+import { providerImportCatalogCopy } from "@/lib/provider-catalog-pure";
+import {
+	useEffect,
+	useId,
+	useMemo,
+	useRef,
+	useState,
+	type KeyboardEvent,
+} from "react";
 import {
 	providerApiKeyPreview,
 	getProtocolEndpointMode,
@@ -30,29 +37,36 @@ import {
 	protocolFormHasOverrides,
 	switchProtocolEndpointMode,
 	protocolFormIsConfigured,
-} from '../provider-utils';
-import { listProviderKindChoices, resolveStoredProviderPresentation } from '@/lib/provider-import-preset';
-import { CUSTOM_PROVIDER_KIND, pickProviderCatalogText, pickProviderKindLabel } from '@/lib/provider-kind';
-import { InfoHintPopover } from '@/components/InfoHintPopover';
-import { VendorIcon } from '@/components/model-vendor-icon';
-import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
+} from "../provider-utils";
+import {
+	CUSTOM_PROVIDER_KIND,
+	pickProviderCatalogText,
+	pickProviderKindLabel,
+} from "@/lib/provider-kind";
+import { InfoHintPopover } from "@/components/InfoHintPopover";
+import { VendorIcon } from "@/components/model-vendor-icon";
+import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
 import type {
 	GatewayProvider,
 	ProtocolCustomParamsForm,
 	ProtocolEndpointForm,
 	ProviderFormData,
-} from '../types';
-import { EMPTY_PROTOCOL_CUSTOM_PARAMS_FORM } from '../types';
-import { ProviderCatalogOutboundLink } from './provider-catalog-outbound-link';
-import { useProviderRoutes } from '../use-provider-routes';
-import { ProviderEndpointsJsonPreview } from './provider-endpoints-json-preview';
-import { ProviderRelatedRoutes } from './provider-related-routes';
-import { ProviderProtocolIcon } from './provider-protocol-icon';
-import { PROVIDER_ENDPOINT_FIELDS } from '../provider-endpoint-fields';
+	ProviderImportCatalogRow,
+} from "../types";
+import { EMPTY_PROTOCOL_CUSTOM_PARAMS_FORM } from "../types";
+import { ProviderCatalogOutboundLink } from "./provider-catalog-outbound-link";
+import { useProviderRoutes } from "../use-provider-routes";
+import { ProviderEndpointsJsonPreview } from "./provider-endpoints-json-preview";
+import { ProviderRelatedRoutes } from "./provider-related-routes";
+import { ProviderProtocolIcon } from "./provider-protocol-icon";
+import { PROVIDER_ENDPOINT_FIELDS } from "../provider-endpoint-fields";
 
 type ProviderModalProps = {
 	open: boolean;
-	initialTab?: 'basic' | 'endpoints' | 'params' | 'routes';
+	catalogRows: ProviderImportCatalogRow[];
+	catalogLoading: boolean;
+	catalogError: string;
+	initialTab?: "basic" | "endpoints" | "params" | "routes";
 	editingProvider: GatewayProvider | null;
 	duplicateSourceId: string | null;
 	formData: ProviderFormData;
@@ -500,7 +514,10 @@ export function ProviderModal(props: ProviderModalProps) {
 function ProviderModalContent(props: ProviderModalProps) {
 	const {
 		open,
-		initialTab = 'basic',
+		catalogRows,
+		catalogLoading,
+		catalogError,
+		initialTab = "basic",
 		editingProvider,
 		duplicateSourceId,
 		formData,
@@ -583,20 +600,19 @@ function ProviderModalContent(props: ProviderModalProps) {
 			: []),
 	];
 	const kindChoices = useMemo(() => {
-		return listProviderKindChoices()
-			.map((choice) => ({
-				...choice,
-				label: pickProviderKindLabel(choice.labels, locale),
-			}))
-			.sort((a, b) => a.label.localeCompare(b.label, locale));
-	}, [locale]);
-	const selectedKind = kindChoices.find((choice) => choice.kind === formData.kind);
-	const showUnclassified = Boolean(editingProvider) && !String(editingProvider?.kind ?? '').trim();
-	const catalogIntro = useMemo(() => {
-		const preset = getStaticProviderPresetByKind(formData.kind);
-		if (!preset) return '';
-		return pickProviderCatalogText(providerPresetCatalogCopy(preset), locale);
-	}, [formData.kind, locale]);
+		return catalogRows.map((row) => ({
+			...row,
+			label: providerImportCatalogCopy(row, locale).name,
+		})).sort((a, b) => a.label.localeCompare(b.label, locale));
+	}, [catalogRows, locale]);
+	const selectedKind = kindChoices.find((choice) => choice.name === formData.kind);
+	const showUnclassified =
+		Boolean(editingProvider) && !String(editingProvider?.kind ?? "").trim();
+	const savedKind = editingProvider?.kind === formData.kind ? editingProvider : null;
+	const catalogIntro = savedKind?.kind_descriptions
+		? pickProviderCatalogText(savedKind.kind_descriptions, locale)
+		: selectedKind && providerImportCatalogCopy(selectedKind, locale).description;
+	const catalogLinks = savedKind?.catalog_links ?? selectedKind?.links;
 
 	useEffect(() => {
 		if (!open) return;
@@ -788,13 +804,19 @@ function ProviderModalContent(props: ProviderModalProps) {
 												onChange={(e) => onFormChange({ ...formData, kind: e.target.value })}
 												className="h-10 min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
 												required={!editingProvider}
+												aria-busy={catalogLoading}
 											>
 												<option value="" disabled={!showUnclassified}>
 													{showUnclassified ? tKind('unclassified') : t('kindPlaceholder')}
 												</option>
 												<option value={CUSTOM_PROVIDER_KIND}>{tKind('custom')}</option>
+												{formData.kind && formData.kind !== CUSTOM_PROVIDER_KIND && !selectedKind && (
+													<option value={formData.kind}>
+														{savedKind?.kind_labels ? pickProviderKindLabel(savedKind.kind_labels, locale) : formData.kind}
+													</option>
+												)}
 												{kindChoices.map((choice) => (
-													<option key={choice.kind} value={choice.kind}>
+													<option key={choice.name} value={choice.name}>
 														{choice.label}
 													</option>
 												))}
@@ -806,10 +828,10 @@ function ProviderModalContent(props: ProviderModalProps) {
 													size="default"
 													className="!h-10 !w-10 [&>span:first-child]:!h-6 [&>span:first-child]:!w-6"
 												/>
-											) : selectedKind ? (
+											) : selectedKind || savedKind?.vendor_key ? (
 												<VendorIcon
-													vendor={selectedKind.vendorKey}
-													iconKey={selectedKind.iconKey}
+													vendor={selectedKind?.vendor_key ?? savedKind?.vendor_key ?? "other"}
+													iconKey={selectedKind?.icon_key ?? savedKind?.icon_key}
 													size="default"
 													className="!h-10 !w-10 [&>span:first-child]:!h-6 [&>span:first-child]:!w-6"
 												/>
@@ -838,6 +860,7 @@ function ProviderModalContent(props: ProviderModalProps) {
 											<option value="deepseek">DeepSeek</option>
 										</select>
 										<p className="mt-1 text-xs text-gray-500">{t('sharedChannelHint')}</p>
+										{catalogError && <p className="mt-1.5 text-xs text-red-700" role="status">{catalogError}</p>}
 									</div>
 									<div>
 										<label
@@ -866,13 +889,7 @@ function ProviderModalContent(props: ProviderModalProps) {
 												{editingProvider ? t('apiKeyOptional') : t('apiKeyRequired')}
 											</label>
 											<ProviderCatalogOutboundLink
-												links={
-													resolveStoredProviderPresentation({
-														kind: formData.kind,
-														name: formData.name,
-														endpoints: editingProvider?.endpoints,
-													}).catalogLinks
-												}
+												links={catalogLinks}
 												className="inline-flex items-center gap-1 text-xs font-medium text-gray-800 hover:text-gray-900"
 											/>
 										</div>
