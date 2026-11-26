@@ -10,7 +10,7 @@ import { pathToFileURL } from 'node:url';
  *   ② `GET /api/admin/budget-audit-logs` 校验 `key_created` 审计
  *   ③ `GET /api/admin/keys` 确认列表 `data` 数组
  *   ④ `POST /api/admin/users/:id/keys` 第二把 key；`GET .../keys` 确认 ≥2
- *   ⑤ `DELETE /api/admin/users/:id` 级联清理（失败则回退逐个删 key）
+ *   ⑤ 验证默认 Guardrail 的用户删除保护；无默认 Guardrail 时验证级联删除，最后逐个清理受保护用户的临时 key
  *
  * 环境变量：
  * - GATEWAY_BASE_URL — Proxy 根 URL，默认 http://127.0.0.1:8787
@@ -263,26 +263,53 @@ async function smokeWritePaths(adminBase: string, masterKey: string, tag: string
 	await assertOk(mcpDelete, 'DELETE /api/admin/mcp-servers/:id');
 	console.log('%s [write] mcp server create/list/pricing/initialize ok', tag);
 
-	// 删除临时用户（级联删除其 api_keys；验证多 key 清理路径）
+	// 默认 Guardrail 属于受保护的账户/工作区状态；清理不能绕过这条删除约束。
+	const guardrailsRes = await fetch(`${adminBase}/api/admin/guardrails/summaries`, {
+		headers: { Authorization: `Bearer ${masterKey}` },
+	});
+	await assertOk(guardrailsRes, 'GET /api/admin/guardrails/summaries');
+	const guardrails = (await guardrailsRes.json()) as {
+		data?: Array<{ ownerUserId: string | null; isWorkspaceDefault: boolean; isAccountDefault: boolean }>;
+	};
+	if (!Array.isArray(guardrails.data)) throw new Error('Guardrail summaries must contain a data array');
+	const hasProtectedDefault = guardrails.data.some(
+		(row) => row.ownerUserId === userId && (row.isWorkspaceDefault || row.isAccountDefault)
+	);
 	console.log('%s [write] DELETE /api/admin/users/%s (cleanup cascade)', tag, userId);
 	const delUserRes = await fetch(`${adminBase}/api/admin/users/${encodeURIComponent(userId)}`, {
 		method: 'DELETE',
 		headers: { Authorization: `Bearer ${masterKey}` },
 	});
-	if (STRICT) await assertOk(delUserRes, 'DELETE /api/admin/users/:id');
+	if (hasProtectedDefault) {
+		if (delUserRes.status !== 404) {
+			throw new Error(`Protected default Guardrail must block user deletion: ${delUserRes.status}`);
+		}
+		const retainedKeysRes = await fetch(`${adminBase}/api/admin/users/${encodeURIComponent(userId)}/keys`, {
+			headers: { Authorization: `Bearer ${masterKey}` },
+		});
+		await assertOk(retainedKeysRes, 'GET protected user keys after rejected deletion');
+		const retainedKeys = (await retainedKeysRes.json()) as { data?: Array<{ id: string }> };
+		const retainedKeyIds = new Set(retainedKeys.data?.map((key) => key.id));
+		if (!Array.isArray(retainedKeys.data) || ![keyId, key2Id].every((id) => retainedKeyIds.has(id))) {
+			throw new Error('Rejected user deletion must preserve both fixture keys');
+		}
+		console.log('%s [write] protected user deletion preserved both keys', tag);
+	} else if (STRICT) await assertOk(delUserRes, 'DELETE /api/admin/users/:id');
 	if (!delUserRes.ok) {
 		console.warn('%s [write] DELETE user warn: %s — 回退删除 key', tag, delUserRes.status);
 		const deleteRes = await fetch(`${adminBase}/api/admin/keys/${keyId}`, {
 			method: 'DELETE',
 			headers: { Authorization: `Bearer ${masterKey}` },
 		});
+		if (STRICT) await assertOk(deleteRes, 'DELETE first fixture key');
 		if (!deleteRes.ok) {
 			console.warn('%s [write] DELETE key warn: %s', tag, deleteRes.status);
 		}
-		await fetch(`${adminBase}/api/admin/keys/${key2Id}`, {
+		const deleteSecondRes = await fetch(`${adminBase}/api/admin/keys/${key2Id}`, {
 			method: 'DELETE',
 			headers: { Authorization: `Bearer ${masterKey}` },
-		}).catch(() => undefined);
+		});
+		if (STRICT) await assertOk(deleteSecondRes, 'DELETE second fixture key');
 	} else {
 		console.log('%s [write] DELETE user ok (cascade keys)', tag);
 	}
