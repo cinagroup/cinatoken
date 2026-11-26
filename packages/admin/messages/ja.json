@@ -582,7 +582,8 @@
 		"confirmLossPricing": "プロバイダー費用を下回る価格を確認",
 		"kindAsr": "音声認識",
 		"kindTts": "音声合成",
-		"kindEmbedding": "埋め込み"
+		"kindEmbedding": "埋め込み",
+		"kindAudio": "音声"
 	},
 	"auth": {
 		"cinaAuthDescription": "統合 CinaAuth アカウントで cinatoken 管理コンソールに安全にログインします。",
@@ -1012,7 +1013,8 @@
 		"providerTypeAria": "Provider タイプフィルター",
 		"kindAsr": "音声認識",
 		"kindTts": "音声合成",
-		"kindEmbedding": "埋め込み"
+		"kindEmbedding": "埋め込み",
+		"kindAudio": "音声"
 	},
 	"modalities": {
 		"text": "テキスト",
@@ -1128,7 +1130,11 @@
 			"finishedWithFail": "{created} 件の Provider をインポートしました。{failed} 件失敗しました。",
 			"failed": "インポートに失敗しました",
 			"copyFailed": "API Key のコピーに失敗しました",
-			"templateDetails": "テンプレートの説明"
+			"templateDetails": "テンプレートの説明",
+			"protocols": "protocols",
+			"openaiBase": "OpenAI base：{url}",
+			"openaiChat": "OpenAI chat：{url}",
+			"openaiCaps": "· {caps}"
 		},
 		"modal": {
 			"editTitle": "Provider を編集",
@@ -1310,7 +1316,56 @@
 			"jsonCopyFailed": "自動コピーに失敗しました。選択した内容を手動でコピーできます。",
 			"apiKeyRequiredError": "API キーを入力してください",
 			"credentialsTitle": "アカウントと認証情報",
-			"duplicateHint": "設定をコピーしました。保存前に名前、認証情報、エンドポイントを確認してください。"
+			"duplicateHint": "設定をコピーしました。保存前に名前、認証情報、エンドポイントを確認してください。",
+			"endpointsHint": "プロトコルごとに Base URL を設定すると全機能を利用できます。標準外 URL は上書きを展開してください。機能を制限する場合は Base を空にし、対応する上書き URL のみ入力します。",
+			"minimaxHint": "Base のみの場合、音声認識は '{base}'/speech_to_text、音声合成は '{base}'/t2a_v2、画像生成は '{base}'/image_generation になります。国際向けホストは api.minimax.io です。動画と音楽のエンドポイントはまだありません。",
+			"volcengineHint": "Base のみの場合、Seedream 画像生成は '{base}'/images/generations になります。中国 Ark は ark.cn-beijing.volces.com、BytePlus ModelArk は ark.ap-southeast.bytepluses.com です。チャットは OpenAI のエンドポイント設定のままです。",
+			"advancedToggle": "URL の上書き",
+			"advancedHint": "完全な URL を入力してください。",
+			"advancedHintGemini": "完全な URL を入力し、'{model}' と '{action}' を含めてください。",
+			"advancedHintDashscope": "完全な URL を入力してください。エンドポイントは機能ごとに分かれており、1 つのモデルが使うのはそのうち 1 つです。複数の項目が同じ上流 URL（multimodal-generation など）を指すことがありますが、個別に有効化するために分けています。Base がある場合、空欄は生成された URL を使います。Base がない場合、空欄は未対応を意味します。",
+			"advancedHintMinimax": "完全な URL を入力します。Base がある項目は空欄のままで、ゲートウェイが speech_to_text、t2a_v2、image_generation を導出します。",
+			"advancedHintVolcengine": "完全な URL を入力します。Base がある場合は空欄のままで、ゲートウェイが images/generations を導出します。",
+			"capHintMiniMaxAudioTranscriptions": "MiniMax ファイル文字起こし POST /v1/speech_to_text。ルートのアダプターは「MiniMax ファイル文字起こし」を選びます。language はフォームではなくリクエストヘッダーに入ります。",
+			"capHintMiniMaxAudioSpeech": "MiniMax 同期音声合成 POST /v1/t2a_v2。アダプターは MiniMax audio.speech パススルーです。非ストリームと stream:true は同じエンドポイントです。",
+			"capHintMiniMaxImagesGenerations": "MiniMax 画像生成 POST /v1/image_generation。アダプターは MiniMax images.generations パススルーです。テキスト生成と参照画像は同じエンドポイントです。",
+			"capHintVolcengineImagesGenerations": "Volcengine Seedream。ネイティブ透過と OpenAI 変換アダプター volcengine-image はどちらも Ark の POST /images/generations を呼びます。ストリームはネイティブ透過のみです。",
+			"capChat": "chat (/v1/chat/completions)",
+			"capResponses": "responses (/v1/responses)",
+			"capImagesGenerations": "images.generations (/v1/images/generations)",
+			"capImagesGenerationsMultimodal": "images.generations.multimodal（Qwen / Wan HTTP）",
+			"capImagesEdits": "images.edits (/v1/images/edits)",
+			"capAudioTranscriptions": "audio.transcriptions（ASR HTTP）",
+			"capAudioTranscriptionsOpenai": "audio.transcriptions (/v1/audio/transcriptions)",
+			"capAudioTranscriptionsMultimodal": "audio.transcriptions.multimodal（Qwen ASR HTTP）",
+			"capAudioTranscriptionsTasks": "audio.transcriptions.tasks（'{task_id}' を含む非同期タスク URL）",
+			"capAudioSpeech": "audio.speech（TTS HTTP）",
+			"capAudioSpeechOpenai": "audio.speech (/v1/audio/speech)",
+			"capAudioSpeechMultimodal": "audio.speech.multimodal（Qwen / MiniMax TTS HTTP）",
+			"capAudioRealtimeInference": "audio.realtime.inference（ネイティブタスク WSS）",
+			"capAudioRealtimeSession": "audio.realtime.session（ネイティブセッション WSS）",
+			"capAudioHotwords": "audio.hotwords（カスタムホットワード HTTP）",
+			"capAudioVoices": "audio.voices（音声カスタマイズ HTTP）",
+			"capHintImagesGenerationsMultimodal": "Qwen Image と Wan の同期画像生成。ルートのアダプターは Qwen Image 3.0 または Wan 2.7 Image。",
+			"capHintAudioTranscriptions": "filetrans 非同期文字起こしの送信 URL（Fun-ASR、Paraformer、Qwen filetrans）。タスク照会 URL も設定してください。ルートのアダプターは非同期ファイル音声認識。",
+			"capHintAudioTranscriptionsMultimodal": "Qwen3-ASR、Qwen-Audio-3.0、Fun-ASR の同期ファイル音声認識。モデルに合うファイル音声認識アダプター、または DashScope パススルーを選びます。",
+			"capHintAudioTranscriptionsTasks": "非同期タスクの結果照会。上の filetrans 送信 URL と組み合わせて使います。",
+			"capHintAudioSpeech": "CosyVoice と Qwen-Audio-3.0-TTS 用の SpeechSynthesizer API。ルートのアダプターは CosyVoice / Qwen-Audio-3.0 TTS。",
+			"capHintAudioSpeechMultimodal": "Qwen-TTS（qwen3-tts-flash など）と MiniMax 用の multimodal-generation TTS。上の項目とは別の API なので、モデルに合わせて選びます。ルートのアダプターは Qwen-TTS（マルチモーダル）または MiniMax TTS。",
+			"capHintAudioRealtimeInference": "WebSocket タスクプロトコル（run-task / continue-task）：CosyVoice・Qwen-Audio-TTS のリアルタイム合成、Fun-ASR・Paraformer のリアルタイム認識。ルートは DashScope パススルー。",
+			"capHintAudioRealtimeSession": "WebSocket セッションプロトコル（session.update）。現在ゲートウェイが対応するのは Qwen3-ASR-Flash-Realtime 認識のみです。",
+			"capHintAudioHotwords": "ASR カスタムホットワード管理。プロバイダーアカウントのリソースで、モデルルーティングには使いません。",
+			"capHintAudioVoices": "TTS 音声クローンとデザイン（CosyVoice / Qwen）。プロバイダーアカウントのリソースで、モデルルーティングには使いません。",
+			"capMessages": "messages (/v1/messages)",
+			"capGenerateContent": "generateContent (/v1beta/models/'{model}':generateContent)",
+			"capStreamGenerateContent": "streamGenerateContent (/v1beta/models/'{model}':streamGenerateContent)",
+			"description": "説明",
+			"descriptionHint": "内部参照専用です。アップストリームには送信されません。",
+			"descriptionPlaceholder": "任意の内部向け説明",
+			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — ストリーム + 非ストリーム",
+			"sharedChannel": "共有キーのチャネル",
+			"sharedChannelNone": "無効",
+			"sharedChannelHint": "このプロバイダーで利用する共有キーのチャネルを選択します。"
 		},
 		"sharedChannel": "User shared channel",
 		"sharedChannelNone": "Not shared",
@@ -1375,7 +1430,8 @@
 				"removed": "ローカルのみ"
 			},
 			"field": {
-				"endpoints": "{protocol} エンドポイント"
+				"endpoints": "{protocol} エンドポイント",
+				"description": "説明"
 			},
 			"slot": {
 				"title": "項目",
@@ -1480,7 +1536,8 @@
 			"searchPlaceholder": "モデル名、ID、ベンダー、タグで検索",
 			"clearSearch": "検索をクリア",
 			"allVendors": "すべてのベンダー",
-			"allLifecycles": "すべての状態"
+			"allLifecycles": "すべての状態",
+			"kindAudio": "音声"
 		},
 		"imagePricing": {
 			"enabled": "旧機能（廃止済み）",
@@ -1683,7 +1740,16 @@
 				"cacheWrite": "キャッシュ書き込み"
 			},
 			"modelIdRequiredError": "モデル ID を入力してください",
-			"invalidMetadata": "メタデータには有効な JSON オブジェクトを入力してください"
+			"invalidMetadata": "メタデータには有効な JSON オブジェクトを入力してください",
+			"kindAudio": "音声",
+			"kindHintAudio": "音声エンドポイントモデルです。音声認識（ASR）または音声合成（TTS）を選ぶと、モダリティと課金方式が同期されます。",
+			"audioCapability": "音声機能",
+			"audioCapabilityTranscription": "音声認識（ASR）",
+			"audioCapabilitySpeech": "音声合成（TTS）",
+			"audioCapabilityHintTranscription": "音声を入力してテキストを返します。秒単位または Token 課金に対応します。",
+			"audioCapabilityHintSpeech": "テキストを入力して音声を返します。文字単位で課金します。",
+			"description": "説明",
+			"descriptionPlaceholder": "任意の内部メモ"
 		},
 		"metadata": {
 			"title": "メタデータ"
@@ -1715,7 +1781,10 @@
 			"viewRoutes": "{name} の関連ルートを表示",
 			"inputOutputPricing": "入力 / 出力 · 100万トークン",
 			"textImagePricing": "テキスト入力 / 画像出力 · 100万トークン",
-			"inputOnlyPricing": "入力のみ · 100万トークン"
+			"inputOnlyPricing": "入力のみ · 100万トークン",
+			"kindAudio": "音声",
+			"imageHint": "画像",
+			"audioHint": "音声"
 		},
 		"sync": {
 			"title": "公式カタログと同期",
@@ -1745,7 +1814,8 @@
 				"released_at": "リリース日",
 				"input_modalities": "入力モダリティ",
 				"output_modalities": "出力モダリティ",
-				"pricing_profile": "価格"
+				"pricing_profile": "価格",
+				"description": "説明"
 			},
 			"pricingHint": "価格は課金に影響するため、既定では現在の値を保持します。比較対象は公式カタログの {currency} 価格です。確認のうえ採用してください。",
 			"pricingPath": "価格項目",
@@ -1841,7 +1911,14 @@
 			"allProviderKinds": "すべてのプロバイダー種別",
 			"allProviders": "すべてのプロバイダー",
 			"allRouteGroups": "すべてのルートグループ",
-			"displaySettings": "表示設定"
+			"displaySettings": "表示設定",
+			"densityCompact": "コンパクト",
+			"densityDetailed": "詳細",
+			"stickyRefreshOff": "自動更新オフ",
+			"stickyRefresh1m": "1分ごと",
+			"stickyRefresh5m": "5分ごと",
+			"stickyRefresh10m": "10分ごと",
+			"stickyRefreshUpdatedAgo": "{ago}前に更新"
 		},
 		"flow": {
 			"controls": {
@@ -1944,9 +2021,26 @@
 					"applied": "プロバイダー倍率を合成済み",
 					"notApplied": "プロバイダー倍率は無効 · ×1 で計算",
 					"standard": "プロバイダー倍率は ×1",
-					"basis": "この時間帯のカタログ価格が基準です。ユーザー固有倍率は含みません。各行は現在日時でのプレビューです。"
+					"basis": "この時間帯のカタログ価格が基準です。ユーザー固有倍率は含みません。各行は現在日時でのプレビューです。",
+					"marker": "紫の点は ×1 以外のプロバイダー倍率が合成済みであることを示します。点がない場合は ×1 です。"
 				},
-				"inactiveProvider": "プロバイダー倍率は現在無効のため、×1 で計算します。"
+				"inactiveProvider": "プロバイダー倍率は現在無効のため、×1 で計算します。",
+				"guide": {
+					"title": "時間帯と実効倍率",
+					"periodTitle": "時間帯の見方",
+					"periodBody": "時刻と曜日で判定します。指定時間帯に該当しない場合は「その他の時間帯」、時間帯設定がない場合は「全時間帯」を使用します。",
+					"currentBody": "「現在」は該当する時間帯を示すだけで、ルートやプロバイダーが有効であることは意味しません。",
+					"timezone": "業務タイムゾーン：{timezone}",
+					"factorTitle": "2 列の数値の意味",
+					"factorBody": "プロバイダー倍率を合成した倍率です。金額ではありません。",
+					"chargedFormula": "実効課金倍率 = 有効なプロバイダー倍率 × 課金倍率",
+					"meteredFormula": "実効原価倍率 = 有効なプロバイダー倍率 × 原価倍率",
+					"validityTitle": "プロバイダーの有効期間",
+					"validityBody": "各行は現在日時でのプレビューです。プロバイダー倍率の開始前または期限切れの場合は ×1 で計算します。時計アイコンは現在適用されていないことを示します。",
+					"scopeTitle": "基準となる価格",
+					"scopeBody": "各時間帯のカタログ価格が基準です。この価格にはカタログの時間帯倍率が含まれるため、再度乗算する必要はありません。ユーザー固有倍率や最終請求額は含みません。",
+					"hint": "倍率にカーソルを合わせると計算式と有効期間を確認できます。"
+				}
 			},
 			"pricingCharged": "請求倍率",
 			"pricingMetered": "原価倍率",
@@ -1981,7 +2075,13 @@
 				"scheduled": "開始前",
 				"active": "有効",
 				"expired": "期限切れ"
-			}
+			},
+			"expandTier": "プロバイダーを展開",
+			"collapseTier": "プロバイダーを折りたたむ",
+			"expandTierAria": "優先度 {priority} のプロバイダーを展開",
+			"collapseTierAria": "優先度 {priority} のプロバイダーを折りたたむ",
+			"tierPreviewEnabled": "{name} · 有効",
+			"tierPreviewDisabled": "{name} · 無効"
 		},
 		"vendor": {
 			"label": "ベンダー",
@@ -2119,7 +2219,8 @@
 				"elevenlabs-asr-file": "ElevenLabs ファイル文字起こし",
 				"elevenlabs-tts": "ElevenLabs 音声合成",
 				"volcengine-image": "Volcengine Seedream 画像生成",
-				"gemini-image": "Gemini 公式画像生成"
+				"gemini-image": "Gemini 公式画像生成",
+				"dashscope-asr-file-async": "非同期ファイル音声認識"
 			},
 			"noCompatibleAdapter": "互換性のあるアダプターがありません",
 			"passthroughHint": "このリリースはパススルーのみで、公開・アップストリームのプロトコルは一致する必要があります。",
@@ -2421,6 +2522,15 @@
 						"WxH の size は最も近い imageConfig.aspectRatio に換算し、長辺から 1K / 2K / 4K を選びます。512 / 1K / 2K / 4K のみ、または auto も指定できます。",
 						"response_format は b64_json のみです。参照画像は image に data URL で置き、inlineData として送ります。quality と background は転送しません。",
 						"その他の Gemini パラメーターは generationConfig（imageConfig、thinkingConfig など）に書くと深くマージされます。画像出力とテキスト出力のトークンで課金します。JSON のみです。ストリームは Gemini のネイティブ透過を使います。"
+					]
+				},
+				"dashscope-asr-file-async": {
+					"purpose": "filetrans、fun-asr、paraformer の非同期文字起こし用。プロバイダーには送信とタスク照会の両方のエンドポイントが必要です。",
+					"mapping": [
+						"公開 file_url フォーム項目が必須です（http、https、oss）。",
+						"prompt は input.context に書き込まれます。",
+						"language は parameters.language_hints に書き込まれます。",
+						"ゲートウェイがタスクを送信し、結果をポーリングします。"
 					]
 				}
 			},
@@ -2750,7 +2860,23 @@
 			"maintenanceHistory": "期限切れ・無効化済み",
 			"resetImpact": "有効なバインド {count} 件に影響します。次のリクエストはルート戦略に従って選び直します。",
 			"resetReselectHint": "同じ Provider が再選択される場合があります。粘性の有効・無効と有効期間は変わりません。",
-			"viewBindings": "バインド詳細を表示"
+			"viewBindings": "バインド詳細を表示",
+			"orderPreview": "同じ呼び出し元から次のリクエストが来ると、前回成功した Provider を最初に試します。",
+			"tradeoff": "その Provider が成功し続ける限り優先して使用し、失敗した場合にほかの Provider を試します。",
+			"distributionTitle": "現在のバインディング",
+			"distributionTotals": "有効 {active} · 古い {stale}",
+			"weightShare": "ウェイト（プール）",
+			"weightShareValue": "W{weight} · {pct}%",
+			"lookupTitle": "ユーザーのバインディングを検索",
+			"lookupUser": "ユーザー",
+			"lookupTarget": "固定先",
+			"lookupTtl": "残り {seconds}s",
+			"lookupEpochValid": "epoch 有効",
+			"lookupEpochInvalid": "epoch 無効",
+			"residualTitle": "残っているバインディング",
+			"residualHint": "スティッキーはオフですが、有効 {active} / 古い {stale} のバインディングが残っています。オフ中は新規記録されません。必要ならクリアしてください。",
+			"showOps": "詳細を表示",
+			"hideOps": "詳細を隠す"
 		},
 		"failover": {
 			"title": "Failover ルール",
@@ -2765,7 +2891,8 @@
 			"imagesAbort": "画像生成：クライアント取消しやゲートウェイタイムアウトは 504 を返し、他 Provider へ failover しません。"
 		},
 		"kindAsr": "音声認識",
-		"kindTts": "音声合成"
+		"kindTts": "音声合成",
+		"kindAudio": "音声"
 	},
 	"playground": {
 		"title": "プレイグラウンド",
@@ -2972,7 +3099,11 @@
 		"audioRealtimeFileElevenLabsHint": "ファイルは実時間の速度で再生され（wav/mp3/ogg はブラウザで 16 kHz PCM にデコードし、生の .pcm はそのまま送ります）、終了後に自動でコミットされます。ライブ発話にはマイクを使います。",
 		"realtimeWaitingElevenLabs": "WebSocket 接続済み。上流の応答を待っています…",
 		"kindEmbedding": "埋め込み",
-		"actualRequest": "実際のリクエスト"
+		"actualRequest": "実際のリクエスト",
+		"kindAudio": "音声",
+		"mode": "モード",
+		"modeRoutes": "Routes",
+		"modeTools": "Tools"
 	},
 	"simulator": {
 		"inspection": {
@@ -3136,7 +3267,9 @@
 		"protocolLockedEmbedding": "埋め込みルートは OpenAI POST /v1/embeddings と Gemini ネイティブ :embedContent / :batchEmbedContents に対応します。",
 		"keyFilters": "キーを絞り込む",
 		"keyReady": "キー準備完了",
-		"selectedKeyOutsideFilter": "選択中のキー · {id}（フィルター対象外）"
+		"selectedKeyOutsideFilter": "選択中のキー · {id}（フィルター対象外）",
+		"kindAudio": "音声",
+		"openToolsInvocations": "Tools Invocations を開く"
 	},
 	"users": {
 		"title": "ユーザー",
@@ -4305,6 +4438,44 @@
 				"cleversee": "Alibaba CleverSee（开析）",
 				"tencent_wsa": "Tencent Cloud WSA",
 				"deepseek": "DeepSeek Search"
+			},
+			"providerGuideLink": "エンジンガイド",
+			"providerGuide": {
+				"title": "検索エンジンガイド",
+				"subtitle": "各エンジンのインデックス / ソースと適した用途。Baidu または Google の API を直接使用するものではありません。",
+				"disclaimer": "いずれも Baidu または Google の公式検索 API を呼び出しません。各社または提携先の Web インデックスを使用しているため、結果 URL が baidu.com、google.com などを指す場合はあります。",
+				"selected": "現在選択中",
+				"docsLink": "Docs & API Key →",
+				"labels": {
+					"sources": "ソース",
+					"bestFor": "適した用途"
+				},
+				"items": {
+					"bocha": {
+						"badge": "中国向け推奨",
+						"summary": "独自の大規模 Web インデックスを持つ AI 向け中国語検索エンジン（中国国内向け Bing Search API 代替として提供）。",
+						"sources": "数億から約 100 億の Web ページと提携コンテンツ（ニュース、百科事典、ショート動画、天気、学術情報など）。Baidu/Google ではありません。",
+						"bestFor": "中国地域のユーザー、中国語クエリ、中国国内のコンプライアンス要件。"
+					},
+					"tavily": {
+						"badge": "国際向け推奨",
+						"summary": "LLM 向けの検索レイヤーで、検索・抽出・ランキングを 1 回の呼び出しで実行します。従来型の SERP 一覧ではなく、Agent / RAG 向けです。",
+						"sources": "独自クローラーとサードパーティ集約（Brave など独立系インデックスとの関連がよく言及されます）。Google/Baidu の公式 API ではありません。",
+						"bestFor": "国際地域、英語での調査、Agent ワークフロー。"
+					},
+					"cleversee": {
+						"badge": "",
+						"summary": "Alibaba CleverSee（开析）の AI ネイティブ Web Search。mainland_china / global の地域モードに対応します。",
+						"sources": "Alibaba 独自の AI 検索インデックス。Docs では Baidu または Google をバックエンドとしているとは説明されていません。Gateway のデフォルトは mainland_china で、ドメイン許可リストを設定すると global に切り替わります。",
+						"bestFor": "Alibaba Cloud 上で中国 / グローバル地域を明示的に切り替える必要がある場合。"
+					},
+					"tencent_wsa": {
+						"badge": "",
+						"summary": "Tencent Cloud Web Search API（WSA）。公式には Sogou Search を基盤としています。",
+						"sources": "Sogou 経由の公開 Web と Tencent エコシステム（Tencent News、Sogou Baike、Penguin アカウント）。上位 tier では VR / 権威性の高い分野別ソースも追加されます。",
+						"bestFor": "中国語 Web 検索で Bocha の代替が必要な場合。Sogou/Tencent コンテンツに強みがあります。"
+					}
+				}
 			}
 		},
 		"webFetch": {
@@ -4653,6 +4824,52 @@
 						"note": "SecretId と SecretKey が必要です。Region の既定値は ap-guangzhou、BizType は任意。課金単位の文字数で切り上げます。"
 					}
 				}
+			}
+		},
+		"invocations": {
+			"title": "呼び出し履歴",
+			"subtitle": "REST サービス（tool:*）と MCP サービス（mcp:*）の呼び出しをまとめて表示します。行をクリックするとリクエストと結果概要を確認できます。リクエストログと同じ元データです。",
+			"configureTools": "REST サービス →",
+			"source": "ソース",
+			"allSources": "すべて",
+			"sourceRest": "REST",
+			"sourceMcp": "MCP",
+			"serverFilter": "MCP サーバー",
+			"allServers": "すべてのサーバー",
+			"openInRequestLogs": "リクエストログで開く",
+			"toolFilter": "Tool",
+			"allTools": "すべての Tools",
+			"status": "ステータス",
+			"empty": "この期間に Tool 呼び出しはありません。",
+			"columns": {
+				"time": "時刻",
+				"tool": "Tool",
+				"query": "クエリ",
+				"user": "ユーザー",
+				"status": "ステータス",
+				"results": "結果",
+				"latency": "レイテンシ",
+				"provider": "エンジン",
+				"profit": "粗利（{currency}）",
+				"standard": "標準（{currency}）",
+				"charged": "ユーザー課金（{currency}）",
+				"metered": "供給（{currency}）"
+			},
+			"detail": {
+				"request": "リクエスト",
+				"response": "レスポンス",
+				"responseFormat": "レスポンス形式",
+				"formatList": "リスト",
+				"formatJson": "JSON",
+				"noListResults": "リスト表示できる項目はありません。raw payload がある場合は JSON に切り替えてください。",
+				"noResponseStored": "レスポンス概要は保存されていません（古い行にはクエリのみが保存されているか、結果を返す前に呼び出しが失敗しています）。",
+				"hint": "運用確認用にレスポンス概要は切り詰められています。完全な chat transcript はクライアントに保持されます。"
+			},
+			"titles": {
+				"profit": "ユーザー課金 − 供給コスト（1回）",
+				"standard": "標準（カタログ）",
+				"charged": "ユーザー課金",
+				"metered": "供給コスト"
 			}
 		}
 	},
@@ -6108,7 +6325,8 @@
 			"connectionNotes": "接続に関する注意事項",
 			"tokenSummary": "第三者クライアントの認可を確認し、ユーザーやアプリごとにアクセスを取り消す",
 			"oauthSaved": "OAuth 検出を設定済み"
-		}
+		},
+		"batchStatusConfirm": "{count}件の項目を更新します。有効な項目はサーバーが有効なときに公開されます。"
 	},
 	"toolPricing": {
 		"simpleTitle": "課金方式",

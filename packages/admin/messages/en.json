@@ -582,7 +582,8 @@
 		"confirmLossPricing": "Confirm prices below provider cost",
 		"kindAsr": "ASR",
 		"kindTts": "TTS",
-		"kindEmbedding": "Embedding"
+		"kindEmbedding": "Embedding",
+		"kindAudio": "Audio"
 	},
 	"auth": {
 		"cinaAuthDescription": "Sign in to the cinatoken operator console with your unified CinaAuth account.",
@@ -1012,7 +1013,8 @@
 		"providerTypeAria": "Provider type filter",
 		"kindAsr": "ASR",
 		"kindTts": "TTS",
-		"kindEmbedding": "Embedding"
+		"kindEmbedding": "Embedding",
+		"kindAudio": "Audio"
 	},
 	"modalities": {
 		"text": "Text",
@@ -1128,7 +1130,11 @@
 			"finishedWithFail": "Imported {created} provider(s). {failed} failed.",
 			"failed": "Import failed",
 			"copyFailed": "Failed to copy API key",
-			"templateDetails": "Template details"
+			"templateDetails": "Template details",
+			"protocols": "protocols",
+			"openaiBase": "OpenAI base: {url}",
+			"openaiChat": "OpenAI chat: {url}",
+			"openaiCaps": "· {caps}"
 		},
 		"modal": {
 			"editTitle": "Edit Provider",
@@ -1310,7 +1316,56 @@
 			"jsonCopyFailed": "Automatic copy failed. The content is selected for manual copying.",
 			"apiKeyRequiredError": "Enter an API key",
 			"credentialsTitle": "Account & credentials",
-			"duplicateHint": "Configuration copied. Review the name, credentials and endpoints before saving."
+			"duplicateHint": "Configuration copied. Review the name, credentials and endpoints before saving.",
+			"endpointsHint": "One base URL per protocol for full capabilities. Expand overrides for non-standard URLs, or clear Base and fill only supported overrides to limit capabilities.",
+			"minimaxHint": "A base derives speech recognition as '{base}'/speech_to_text, speech synthesis as '{base}'/t2a_v2, and image generation as '{base}'/image_generation. Use api.minimax.io for the international host. Video and music do not have endpoints yet.",
+			"volcengineHint": "A base derives Seedream image generation as '{base}'/images/generations. China Ark uses ark.cn-beijing.volces.com; BytePlus ModelArk uses ark.ap-southeast.bytepluses.com. Chat stays on the OpenAI endpoint config.",
+			"advancedToggle": "URL overrides",
+			"advancedHint": "Enter a complete URL.",
+			"advancedHintGemini": "Enter a complete URL that includes '{model}' and '{action}'.",
+			"advancedHintDashscope": "Enter full URLs. Endpoints are split by capability and a model uses only one of them. Several may point to the same upstream URL (such as multimodal-generation); they are separate so each can be enabled on its own. With a base, empty fields use the derived URL. Without a base, an empty field means unsupported.",
+			"advancedHintMinimax": "Enter a full URL. Leave a field empty when a base is set; the gateway derives speech_to_text, t2a_v2, or image_generation.",
+			"advancedHintVolcengine": "Enter a full URL. Leave the field empty when a base is set; the gateway derives images/generations.",
+			"capHintMiniMaxAudioTranscriptions": "MiniMax file transcription, POST /v1/speech_to_text. Choose the MiniMax file transcription adapter. The gateway sends language as a request header, not a form field.",
+			"capHintMiniMaxAudioSpeech": "MiniMax sync speech synthesis, POST /v1/t2a_v2. Choose the MiniMax audio.speech passthrough. Non-stream and stream:true share this endpoint.",
+			"capHintMiniMaxImagesGenerations": "MiniMax image generation, POST /v1/image_generation. Choose the MiniMax images.generations passthrough. Text-to-image and subject reference share this endpoint.",
+			"capHintVolcengineImagesGenerations": "Volcengine Seedream. Native passthrough and the OpenAI adapter volcengine-image both call Ark POST /images/generations. Streaming is native passthrough only.",
+			"capChat": "chat (/v1/chat/completions)",
+			"capResponses": "responses (/v1/responses)",
+			"capImagesGenerations": "images.generations (/v1/images/generations)",
+			"capImagesGenerationsMultimodal": "images.generations.multimodal (Qwen / Wan HTTP)",
+			"capImagesEdits": "images.edits (/v1/images/edits)",
+			"capAudioTranscriptions": "audio.transcriptions (ASR HTTP)",
+			"capAudioTranscriptionsOpenai": "audio.transcriptions (/v1/audio/transcriptions)",
+			"capAudioTranscriptionsMultimodal": "audio.transcriptions.multimodal (Qwen ASR HTTP)",
+			"capAudioTranscriptionsTasks": "audio.transcriptions.tasks (async task URL with '{task_id}')",
+			"capAudioSpeech": "audio.speech (TTS HTTP)",
+			"capAudioSpeechOpenai": "audio.speech (/v1/audio/speech)",
+			"capAudioSpeechMultimodal": "audio.speech.multimodal (Qwen / MiniMax TTS HTTP)",
+			"capAudioRealtimeInference": "audio.realtime.inference (native task WSS)",
+			"capAudioRealtimeSession": "audio.realtime.session (native session WSS)",
+			"capAudioHotwords": "audio.hotwords (custom hotword HTTP)",
+			"capAudioVoices": "audio.voices (voice customization HTTP)",
+			"capHintImagesGenerationsMultimodal": "Qwen Image and Wan synchronous image generation. Route adapter: Qwen Image 3.0 or Wan 2.7 Image.",
+			"capHintAudioTranscriptions": "Submit URL for filetrans async transcription (Fun-ASR, Paraformer, Qwen filetrans). Also configure the task query URL. Route adapter: Async file ASR.",
+			"capHintAudioTranscriptionsMultimodal": "Synchronous file ASR for Qwen3-ASR, Qwen-Audio-3.0, and Fun-ASR. Pick the matching file ASR adapter for the model, or use DashScope passthrough.",
+			"capHintAudioTranscriptionsTasks": "Async task result query, used together with the filetrans submit URL above.",
+			"capHintAudioSpeech": "SpeechSynthesizer API for CosyVoice and Qwen-Audio-3.0-TTS. Route adapter: CosyVoice / Qwen-Audio-3.0 TTS.",
+			"capHintAudioSpeechMultimodal": "multimodal-generation TTS for Qwen-TTS (such as qwen3-tts-flash) and MiniMax. This is a different API from the one above; choose by model. Route adapter: Qwen-TTS (multimodal) or MiniMax TTS.",
+			"capHintAudioRealtimeInference": "WebSocket task protocol (run-task / continue-task): CosyVoice and Qwen-Audio-TTS realtime synthesis, Fun-ASR and Paraformer realtime recognition. Routes use DashScope passthrough.",
+			"capHintAudioRealtimeSession": "WebSocket session protocol (session.update). The gateway currently supports only Qwen3-ASR-Flash-Realtime recognition.",
+			"capHintAudioHotwords": "ASR custom hotword management. A provider account resource; not used for model routing.",
+			"capHintAudioVoices": "TTS voice cloning and design (CosyVoice / Qwen). A provider account resource; not used for model routing.",
+			"capMessages": "messages (/v1/messages)",
+			"capGenerateContent": "generateContent (/v1beta/models/'{model}':generateContent)",
+			"capStreamGenerateContent": "streamGenerateContent (/v1beta/models/'{model}':streamGenerateContent)",
+			"description": "Description",
+			"descriptionHint": "Internal reference only; not sent to upstream.",
+			"descriptionPlaceholder": "Optional internal description",
+			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — stream + non-stream",
+			"sharedChannel": "Shared key channel",
+			"sharedChannelNone": "Disabled",
+			"sharedChannelHint": "Choose which channel of shared keys this provider may use."
 		},
 		"sharedChannel": "User shared channel",
 		"sharedChannelNone": "Not shared",
@@ -1375,7 +1430,8 @@
 				"removed": "Local only"
 			},
 			"field": {
-				"endpoints": "{protocol} endpoints"
+				"endpoints": "{protocol} endpoints",
+				"description": "Description"
 			},
 			"slot": {
 				"title": "Item",
@@ -1480,7 +1536,8 @@
 			"searchPlaceholder": "Search model name, ID, vendor or tag",
 			"clearSearch": "Clear search",
 			"allVendors": "All vendors",
-			"allLifecycles": "All statuses"
+			"allLifecycles": "All statuses",
+			"kindAudio": "Audio"
 		},
 		"imagePricing": {
 			"enabled": "Legacy (removed)",
@@ -1683,7 +1740,16 @@
 				"cacheWrite": "Cache write"
 			},
 			"modelIdRequiredError": "Enter a model ID",
-			"invalidMetadata": "Metadata must be a valid JSON object"
+			"invalidMetadata": "Metadata must be a valid JSON object",
+			"kindAudio": "Audio",
+			"kindHintAudio": "Audio endpoint models. Choose speech recognition (ASR) or speech synthesis (TTS); the gateway keeps modalities and billing consistent.",
+			"audioCapability": "Audio capability",
+			"audioCapabilityTranscription": "Speech to text (ASR)",
+			"audioCapabilitySpeech": "Text to speech (TTS)",
+			"audioCapabilityHintTranscription": "Accepts audio and returns text. Uses per-second or token pricing.",
+			"audioCapabilityHintSpeech": "Accepts text and returns audio. Uses per-character pricing.",
+			"description": "Description",
+			"descriptionPlaceholder": "Optional, for internal notes"
 		},
 		"metadata": {
 			"title": "Metadata"
@@ -1715,7 +1781,10 @@
 			"viewRoutes": "View routes for {name}",
 			"inputOutputPricing": "Input / output · million tokens",
 			"textImagePricing": "Text input / image output · million tokens",
-			"inputOnlyPricing": "Input only · million tokens"
+			"inputOnlyPricing": "Input only · million tokens",
+			"kindAudio": "Audio",
+			"imageHint": "Image",
+			"audioHint": "Audio"
 		},
 		"sync": {
 			"title": "Sync with official catalog",
@@ -1745,7 +1814,8 @@
 				"released_at": "Release date",
 				"input_modalities": "Input modalities",
 				"output_modalities": "Output modalities",
-				"pricing_profile": "Pricing"
+				"pricing_profile": "Pricing",
+				"description": "Description"
 			},
 			"pricingHint": "Pricing affects billing and is kept by default. The comparison uses the official {currency} prices — review before applying.",
 			"pricingPath": "Price field",
@@ -1841,7 +1911,14 @@
 			"allProviderKinds": "All provider types",
 			"allProviders": "All providers",
 			"allRouteGroups": "All route groups",
-			"displaySettings": "Display settings"
+			"displaySettings": "Display settings",
+			"densityCompact": "Compact",
+			"densityDetailed": "Detailed",
+			"stickyRefreshOff": "Auto-refresh off",
+			"stickyRefresh1m": "Every 1 min",
+			"stickyRefresh5m": "Every 5 min",
+			"stickyRefresh10m": "Every 10 min",
+			"stickyRefreshUpdatedAgo": "Updated {ago} ago"
 		},
 		"flow": {
 			"controls": {
@@ -1944,9 +2021,26 @@
 					"applied": "Provider multiplier included",
 					"notApplied": "Provider multiplier inactive · using ×1",
 					"standard": "Provider multiplier is ×1",
-					"basis": "Relative to this period’s catalog price; excludes user-specific multipliers. All rows are previewed as of now."
+					"basis": "Relative to this period’s catalog price; excludes user-specific multipliers. All rows are previewed as of now.",
+					"marker": "A purple dot means a non-×1 provider multiplier is included. Without a dot, ×1 applies."
 				},
-				"inactiveProvider": "The provider multiplier is inactive; ×1 is used in this calculation."
+				"inactiveProvider": "The provider multiplier is inactive; ×1 is used in this calculation.",
+				"guide": {
+					"title": "Periods and effective multipliers",
+					"periodTitle": "Reading the periods",
+					"periodBody": "Match by time and weekday. Other periods applies outside the listed windows; All periods applies when no windows are configured.",
+					"currentBody": "Current marks the matching period only. It does not mean the route or provider is enabled.",
+					"timezone": "Business time zone: {timezone}",
+					"factorTitle": "What the two values mean",
+					"factorBody": "These are combined multipliers including the provider multiplier, not monetary amounts.",
+					"chargedFormula": "Effective billing = active provider multiplier × billing multiplier",
+					"meteredFormula": "Effective cost = active provider multiplier × cost multiplier",
+					"validityTitle": "Provider validity",
+					"validityBody": "Every row is previewed as of now. Before the provider multiplier starts or after it expires, ×1 applies. A clock icon indicates that it is currently inactive.",
+					"scopeTitle": "The price used as the baseline",
+					"scopeBody": "Each multiplier is relative to that period’s catalog price, which already includes the catalog schedule multiplier. Do not apply it again. User-specific multipliers and final billed amounts are not included.",
+					"hint": "Hover over a multiplier for its calculation and validity dates."
+				}
 			},
 			"pricingCharged": "Charged",
 			"pricingMetered": "Metered",
@@ -1981,7 +2075,13 @@
 				"scheduled": "Scheduled",
 				"active": "Active",
 				"expired": "Expired"
-			}
+			},
+			"expandTier": "Expand providers",
+			"collapseTier": "Collapse providers",
+			"expandTierAria": "Expand priority {priority} providers",
+			"collapseTierAria": "Collapse priority {priority} providers",
+			"tierPreviewEnabled": "{name} · enabled",
+			"tierPreviewDisabled": "{name} · disabled"
 		},
 		"vendor": {
 			"label": "Vendor",
@@ -2119,7 +2219,8 @@
 				"elevenlabs-asr-file": "ElevenLabs file transcription",
 				"elevenlabs-tts": "ElevenLabs speech",
 				"volcengine-image": "Volcengine Seedream images",
-				"gemini-image": "Gemini official images"
+				"gemini-image": "Gemini official images",
+				"dashscope-asr-file-async": "Async file ASR"
 			},
 			"noCompatibleAdapter": "No compatible adapter",
 			"passthroughHint": "Passthrough only in this release; public and upstream protocols must match.",
@@ -2421,6 +2522,15 @@
 						"A WxH size maps to the nearest imageConfig.aspectRatio, and the long side picks 1K / 2K / 4K. You can also send only 512 / 1K / 2K / 4K, or auto.",
 						"response_format accepts only b64_json. Reference images go in image as data URLs and are sent as inlineData. quality and background are not forwarded.",
 						"Other Gemini parameters go in generationConfig (for example imageConfig or thinkingConfig) and are deep-merged. Billing uses image and text output tokens. JSON only; use the Gemini native passthrough for streaming."
+					]
+				},
+				"dashscope-asr-file-async": {
+					"purpose": "For filetrans, fun-asr, and paraformer async transcription. The provider needs both the submit and task query endpoints.",
+					"mapping": [
+						"A public file_url form field is required (http, https, or oss).",
+						"prompt is written to input.context.",
+						"language is written to parameters.language_hints.",
+						"The gateway submits the task and polls for the result."
 					]
 				}
 			},
@@ -2750,7 +2860,23 @@
 			"maintenanceHistory": "Expired or invalidated",
 			"resetImpact": "Affects {count} active bindings. The next request will reselect using the route strategy.",
 			"resetReselectHint": "The same Provider may be selected again. The sticky toggle and lifetime stay unchanged.",
-			"viewBindings": "View binding details"
+			"viewBindings": "View binding details",
+			"orderPreview": "When the same caller sends another request, the last successful Provider is tried first.",
+			"tradeoff": "As long as that Provider keeps succeeding, it remains preferred. Other Providers are tried after it fails.",
+			"distributionTitle": "Current bindings",
+			"distributionTotals": "{active} active · {stale} stale",
+			"weightShare": "Weight (pool)",
+			"weightShareValue": "W{weight} · {pct}%",
+			"lookupTitle": "Lookup user binding",
+			"lookupUser": "User",
+			"lookupTarget": "Bound to",
+			"lookupTtl": "{seconds}s remaining",
+			"lookupEpochValid": "epoch valid",
+			"lookupEpochInvalid": "epoch invalid",
+			"residualTitle": "Leftover bindings",
+			"residualHint": "Sticky is off, but {active} active and {stale} stale bindings remain. New requests are not recorded; clear leftovers if you want a clean slate.",
+			"showOps": "Show details",
+			"hideOps": "Hide details"
 		},
 		"failover": {
 			"title": "Failover rules",
@@ -2765,7 +2891,8 @@
 			"imagesAbort": "Image generation: client cancel or gateway timeout returns 504 and does not fail over to another provider."
 		},
 		"kindAsr": "ASR",
-		"kindTts": "TTS"
+		"kindTts": "TTS",
+		"kindAudio": "Audio"
 	},
 	"playground": {
 		"title": "Playground",
@@ -2972,7 +3099,11 @@
 		"audioRealtimeFileElevenLabsHint": "The file is replayed at real-time speed (wav/mp3/ogg are decoded to 16 kHz PCM in the browser; raw .pcm is sent as-is) and committed when it ends. Use the microphone for live speech.",
 		"realtimeWaitingElevenLabs": "WebSocket connected. Waiting for the upstream response…",
 		"kindEmbedding": "Embedding",
-		"actualRequest": "Actual request"
+		"actualRequest": "Actual request",
+		"kindAudio": "Audio",
+		"mode": "Mode",
+		"modeRoutes": "Routes",
+		"modeTools": "Tools"
 	},
 	"simulator": {
 		"inspection": {
@@ -3136,7 +3267,9 @@
 		"protocolLockedEmbedding": "Embedding routes support OpenAI POST /v1/embeddings and Gemini native :embedContent / :batchEmbedContents.",
 		"keyFilters": "Filter keys",
 		"keyReady": "Key ready",
-		"selectedKeyOutsideFilter": "Current key · {id} (outside filter)"
+		"selectedKeyOutsideFilter": "Current key · {id} (outside filter)",
+		"kindAudio": "Audio",
+		"openToolsInvocations": "Open Tools Invocations"
 	},
 	"users": {
 		"title": "Users",
@@ -4313,6 +4446,44 @@
 				"cleversee": "Alibaba CleverSee (开析)",
 				"tencent_wsa": "Tencent Cloud WSA",
 				"deepseek": "DeepSeek Search"
+			},
+			"providerGuideLink": "Engine guide",
+			"providerGuide": {
+				"title": "Search engine guide",
+				"subtitle": "Index / sources and when to pick each engine. Not a direct Baidu or Google API.",
+				"disclaimer": "None of these call Baidu or Google official search APIs. Each uses its own or partner web index; result URLs may still point at baidu.com, google.com, etc.",
+				"selected": "Currently selected",
+				"docsLink": "Docs & API key →",
+				"labels": {
+					"sources": "Sources",
+					"bestFor": "Best for"
+				},
+				"items": {
+					"bocha": {
+						"badge": "China preferred",
+						"summary": "AI-oriented Chinese search engine with its own large web index (positioned as a domestic Bing Search API alternative).",
+						"sources": "Hundreds of millions to ~10B web pages plus partner content (news, encyclopedia, short video, weather, academic, etc.). Not Baidu/Google.",
+						"bestFor": "China-region users, Chinese queries, domestic compliance."
+					},
+					"tavily": {
+						"badge": "International preferred",
+						"summary": "LLM-oriented retrieval layer: search + extract + rank in one call. Built for agents/RAG, not a classic SERP dump.",
+						"sources": "Own crawler plus third-party aggregation (often associated with independent indexes such as Brave). Not an official Google/Baidu API.",
+						"bestFor": "International region, English research, agent workflows."
+					},
+					"cleversee": {
+						"badge": "",
+						"summary": "Alibaba CleverSee (开析) AI-native web search with mainland_china / global region modes.",
+						"sources": "Alibaba’s own AI search index. Docs do not claim Baidu or Google backends. Gateway default is mainland_china; domain allow-lists switch to global.",
+						"bestFor": "When you need an explicit China vs global region switch on Alibaba Cloud."
+					},
+					"tencent_wsa": {
+						"badge": "",
+						"summary": "Tencent Cloud Web Search API (WSA), officially based on Sogou Search.",
+						"sources": "Open web via Sogou plus Tencent ecosystem (Tencent News, Sogou Baike, Penguin accounts). Higher tiers add VR/authority verticals.",
+						"bestFor": "China Chinese web as an alternative to Bocha; strong Sogou/Tencent content mix."
+					}
+				}
 			}
 		},
 		"webFetch": {
@@ -4653,6 +4824,52 @@
 						"note": "Requires SecretId and SecretKey. Region defaults to ap-guangzhou; BizType is optional. Billing rounds characters up to the configured unit."
 					}
 				}
+			}
+		},
+		"invocations": {
+			"title": "Invocations",
+			"subtitle": "REST service calls (tool:*) and MCP service calls (mcp:*) together. Click a row to inspect the request and result summary. Same underlying rows as Request Logs.",
+			"configureTools": "REST Services →",
+			"source": "Source",
+			"allSources": "All",
+			"sourceRest": "REST",
+			"sourceMcp": "MCP",
+			"serverFilter": "MCP server",
+			"allServers": "All servers",
+			"openInRequestLogs": "Open in Request Logs",
+			"toolFilter": "Tool",
+			"allTools": "All tools",
+			"status": "Status",
+			"empty": "No tool invocations in this range.",
+			"columns": {
+				"time": "Time",
+				"tool": "Tool",
+				"provider": "Engine",
+				"query": "Query",
+				"user": "User",
+				"status": "Status",
+				"results": "Results",
+				"standard": "Standard ({currency})",
+				"charged": "Charged ({currency})",
+				"metered": "Metered ({currency})",
+				"profit": "Profit ({currency})",
+				"latency": "Latency"
+			},
+			"titles": {
+				"profit": "Charged − metered (per call)",
+				"standard": "Standard (catalog price)",
+				"charged": "Charged (user budget)",
+				"metered": "Metered (supplier cost)"
+			},
+			"detail": {
+				"request": "Request",
+				"response": "Response",
+				"responseFormat": "Response format",
+				"formatList": "List",
+				"formatJson": "JSON",
+				"noListResults": "No list items to show; switch to JSON if a raw payload exists.",
+				"noResponseStored": "No response summary stored (older rows only kept the query, or the call failed before results).",
+				"hint": "Response summaries are truncated for ops review; full chat transcripts stay on the client."
 			}
 		}
 	},
@@ -6108,7 +6325,8 @@
 			"connectionNotes": "Connection notes",
 			"tokenSummary": "Review third-party authorizations and revoke access by user or application",
 			"oauthSaved": "OAuth discovery configured"
-		}
+		},
+		"batchStatusConfirm": "This updates {count} items. Enabled items are exposed when their server is active."
 	},
 	"toolPricing": {
 		"simpleTitle": "Billing method",
