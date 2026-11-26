@@ -369,16 +369,18 @@ export default function PortalGate({ children }: Props) {
 								</Link>
 							);
 						})}
-						{me.isAdmin && (
-							<Link
-								href="/dashboard"
-								className="console-nav-link mt-3 flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium"
-								style={{ borderColor: "var(--console-border)" }}
-							>
-								<ShieldCheckIcon className="h-[18px] w-[18px]" />
-								{tBrand("operatorConsole")}
-							</Link>
-						)}
+						<a
+							href={
+								me.isAdmin
+									? "/dashboard"
+									: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fdashboard"
+							}
+							className="console-nav-link mt-3 flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium"
+							style={{ borderColor: "var(--console-border)" }}
+						>
+							<ShieldCheckIcon className="h-[18px] w-[18px]" />
+							{tBrand("operatorConsole")}
+						</a>
 					</nav>
 					<div
 						className="space-y-3 border-t p-3"
@@ -452,6 +454,17 @@ export default function PortalGate({ children }: Props) {
 							<PortalWorkspaceSwitcher compact />
 						</div>
 						<nav className="flex gap-1 overflow-x-auto px-3 pb-2">
+							<a
+								href={
+									me.isAdmin
+										? "/dashboard"
+										: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fdashboard"
+								}
+								className="console-nav-link flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm"
+							>
+								<ShieldCheckIcon className="h-4 w-4" />
+								{tBrand("operatorConsole")}
+							</a>
 							{navItems.map((item) => {
 								const active =
 									pathname === item.href ||
