@@ -225,7 +225,7 @@ export function createCredentialFreeChatIngressV401(
       === decodeURIComponent(new URL(connections.runtimeConnectionString).pathname));
   return async (c, next) => {
     if (!isCredentialFreeChatIngressV401(c.req.method, c.req.path)
-      || c.env.CREDENTIAL_FREE_CHAT_INGRESS_V401_ENABLED === undefined) return next();
+      || c.env?.CREDENTIAL_FREE_CHAT_INGRESS_V401_ENABLED === undefined) return next();
     const generationId = createGenerationId();
     c.set('generationId', generationId);
     const failure = (status: 400 | 401 | 403 | 404 | 409 | 413 | 502, code: GatewayErrorCodeValue, message: string) =>

@@ -1,6 +1,6 @@
 {
 	"name": "@octafuse/admin",
-	"version": "2.14.0",
+	"version": "2.20.0",
 	"private": true,
 	"scripts": {
 		"dev": "npm run build:tools-css && next dev",
@@ -19,7 +19,7 @@
 		"pretest:unit": "npm run build:node-index -w @octafuse/core && npm run test:endpoints-ui -w @octafuse/admin && npm run test:resilience -w @octafuse/admin",
 		"test:resilience": "tsx --test lib/gateway-read-retry.test.ts lib/portal-fetch.test.ts lib/data-load-error.test.tsx",
 		"test:endpoints-ui": "tsx --test app/gateway/endpoints/endpoint-api.test.ts",
-		"test:unit": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/public-request-url.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/routes/admin/earnings.test.ts lib/routes/admin/model-routes-context.test.ts lib/routes/shared-key-history-error.test.ts lib/routes/user/guardrails-effective.test.ts lib/public-catalog.test.ts components/catalog/PublicCatalogPricing.test.tsx lib/public-catalog-bff.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/user-workspace-precondition.test.ts lib/user-principal-precondition.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/models/types.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts app/gateway/tools/tools-console.test.ts app/gateway/mcp/mcp-catalog-test-utils.test.ts app/gateway/mcp/mcp-pricing-draft.test.ts app/gateway/tools/tool-pricing-draft.test.ts lib/mcp-config-import.test.ts lib/tool-invocation-detail.test.ts lib/admin-request-rewrite.test.ts lib/audit-user-snapshot-diff.test.ts lib/provider-kind.test.ts lib/playground/preview-upstream-url.test.ts lib/playground/outbound-headers.test.ts lib/playground-node-realtime.test.ts lib/playground/llm-request.test.ts lib/playground/response-preview.test.ts lib/playground/quick-test-samples.test.ts app/gateway/models/model-duplicate.test.ts components/dashboard/format-dashboard-bucket.test.ts app/gateway/users/user-detail-form.test.ts",
+		"test:unit": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/public-request-url.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/routes/admin/earnings.test.ts lib/routes/admin/model-routes-context.test.ts lib/routes/shared-key-history-error.test.ts lib/routes/user/guardrails-effective.test.ts lib/public-catalog.test.ts components/catalog/PublicCatalogPricing.test.tsx lib/public-catalog-bff.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/user-workspace-precondition.test.ts lib/user-principal-precondition.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/models/types.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts app/gateway/tools/tools-console.test.ts app/gateway/mcp/mcp-catalog-test-utils.test.ts app/gateway/mcp/mcp-pricing-draft.test.ts app/gateway/tools/tool-pricing-draft.test.ts lib/mcp-config-import.test.ts lib/tool-invocation-detail.test.ts lib/admin-request-rewrite.test.ts lib/audit-user-snapshot-diff.test.ts lib/provider-kind.test.ts lib/playground/preview-upstream-url.test.ts lib/playground/outbound-headers.test.ts lib/playground-node-realtime.test.ts lib/playground/llm-request.test.ts lib/playground/response-preview.test.ts lib/playground/quick-test-samples.test.ts app/gateway/models/model-duplicate.test.ts components/dashboard/format-dashboard-bucket.test.ts app/gateway/users/user-detail-form.test.ts lib/admin-node-login-peer.test.ts lib/admin-login-guard.test.ts app/api/auth/login/route.test.ts lib/pricing-tiers-draft.test.ts lib/proxy-base-url.test.ts lib/code-highlight.test.ts lib/analytics-query.test.ts lib/financial-display.test.ts app/gateway/maintenance/maintenance-input.test.ts lib/request-log-kind.test.ts lib/grouped-selection.test.ts lib/services/admin/request-log-kind-filter.test.ts lib/model-lifecycle.test.ts lib/services/admin/maintenance-service.test.ts app/gateway/mcp/mcp-connect-guide-utils.test.ts app/gateway/mcp/mcp-definition-diff.test.ts app/gateway/mcp/mcp-price-display.test.ts app/gateway/tools/tool-api-guide.test.ts app/gateway/tools/tool-provider-activation.test.ts app/gateway/mcp/mcp-workspace-location.test.ts lib/embeddings.test.ts lib/invoke-kind.test.ts lib/elevenlabs-realtime-client.test.ts app/gateway/routes/sticky-refresh-scheduler.test.ts lib/auto-refresh-preference.test.ts app/gateway/routes/route-model-summary.test.ts app/gateway/providers/provider-endpoint-fields.test.ts app/gateway/providers/provider-api.test.ts app/gateway/models/model-search.test.ts app/gateway/models/model-card-pricing.test.ts app/gateway/request-logs/request-log-values.test.ts app/gateway/request-logs/request-log-query.test.ts app/gateway/request-logs/request-log-feed.test.ts app/gateway/audit-logs/audit-log-query.test.ts app/gateway/audit-logs/audit-log-presentation.test.ts components/dashboard/dashboard-links.test.ts components/dashboard/dashboard-live.test.ts components/dashboard/dashboard-activity-details.test.ts app/gateway/keys/key-form.test.ts app/gateway/models/model-routes-api.test.ts lib/services/admin/oauth-access-tokens-service.test.ts lib/services/admin/oauth-server-service.test.ts lib/services/admin/admin-access-control.test.ts",
 		"build:tools-css": "node scripts/build-tools-web-compat.mjs",
 		"verify:standalone": "node ./scripts/verify-standalone-boot.mjs",
 		"test:stream-first-event-timeout": "tsx --test --test-concurrency=1 lib/routes/admin/config-overview.test.ts lib/services/admin/config-managed-route.test.ts",
@@ -32,15 +32,15 @@
 		"@noble/hashes": "^1.8.0",
 		"@octafuse/core": "*",
 		"@octafuse/tool-engines": "*",
-		"@opennextjs/cloudflare": "1.19.4",
+		"@opennextjs/cloudflare": "1.20.15",
 		"@swc/helpers": "^0.5.18",
-		"hono": "^4.12.9",
-		"next": "^16.1.6",
+		"hono": "^4.13.16",
+		"next": "^16.4.6",
 		"next-intl": "^4.13.1",
 		"oauth4webapi": "^3.8.5",
 		"postgres": "^3.4.9",
-		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
+		"react": "19.3.1",
+		"react-dom": "19.3.1",
 		"react-markdown": "^10.1.0",
 		"recharts": "^2.15.4",
 		"remark-gfm": "^4.0.1",
@@ -49,7 +49,8 @@
 		"i18next": "^26.2.0",
 		"react-i18next": "^17.0.8",
 		"@cinatoken/web": "*",
-		"ws": "^8.21.0"
+		"ws": "^8.21.0",
+		"@speed-highlight/core": "1.2.24"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^5.20260829.1",
@@ -59,13 +60,13 @@
 		"autoprefixer": "^10.4.18",
 		"dotenv-cli": "^11.0.0",
 		"eslint": "^9.39.2",
-		"eslint-config-next": "^16.1.6",
-		"postcss": "^8.4.35",
+		"eslint-config-next": "16.2.3",
+		"postcss": "^8.5.23",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.7.2",
 		"viem": "^2.55.19",
-		"wrangler": "^4.127.1",
-		"esbuild": "^0.27.3",
-		"tsx": "^4.21.0"
+		"wrangler": "^4.156.0",
+		"esbuild": "^0.28.2",
+		"tsx": "^4.23.15"
 	}
 }

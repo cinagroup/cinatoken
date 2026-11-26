@@ -30,6 +30,7 @@ export type ResponseMeta = {
 	latencyMs: string | null;
 	requestUrl: string | null;
 	contentType: string | null;
+	requestLogId?: string | null;
 };
 
 export type WirePreview = {

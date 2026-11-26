@@ -28,9 +28,10 @@ export type AdminNavNameKey =
 	| 'adminApiKeys'
 	| 'withdrawals'
 	| 'nftMints'
+	| 'maintenance'
 	| 'config';
 
-export type AdminNavGroupKey = 'overview' | 'inference' | 'user' | 'tools' | 'analytics' | 'integration' | 'system';
+export type AdminNavGroupKey = 'overview' | 'inference' | 'logs' | 'user' | 'tools' | 'analytics' | 'integration' | 'system';
 
 export interface AdminNavRoute {
 	nameKey: AdminNavNameKey;
@@ -67,10 +68,13 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 			{ nameKey: 'users', href: '/admin/users' },
 			{ nameKey: 'apiKeys', href: '/admin/keys' },
 			{ nameKey: 'sharedKeys', href: '/admin/shared-keys' },
-			{ nameKey: 'requestLogs', href: '/admin/request-logs' },
-			{ nameKey: 'auditLogs', href: '/admin/audit-logs' },
+
 		],
 	},
+ {groupKey:'logs',items:[
+			{ nameKey: 'requestLogs', href: '/admin/request-logs' },
+			{ nameKey: 'auditLogs', href: '/admin/audit-logs' },
+ ]},
 	{
 		groupKey: 'tools',
 		items: [
@@ -98,6 +102,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 			{ nameKey: 'withdrawals', href: '/admin/withdrawals' },
 			{ nameKey: 'nftMints', href: '/admin/nft-mints' },
 			{ nameKey: 'config', href: '/admin/config' },
+			{ nameKey: 'maintenance', href: '/admin/maintenance' },
 		],
 	},
 ];

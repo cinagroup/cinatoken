@@ -1,7 +1,9 @@
 'use client';
 
+import { MultiplierBadge } from '@/components/financial-value';
+
 import { useState, type ReactNode } from 'react';
-import { CalendarDaysIcon, ChevronDownIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { BanknotesIcon, CalendarDaysIcon, ChevronDownIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNow, useTranslations } from 'next-intl';
 import {
 	ISO_WEEKDAYS,
@@ -38,7 +40,8 @@ export function RouteBillingFactors({
 	locked: boolean;
 	timezone: string;
 	onChange: (form: RouteFormData) => void;
-	renderPrices?: (index: number) => ReactNode;
+	/** `null` 表示未命中下方时段时的兜底行（其他时段 / 全部时段）。 */
+	renderPrices?: (index: number | null) => ReactNode;
 }) {
 	const t = useTranslations('routes.modal');
 	const common = useTranslations('common');
@@ -92,14 +95,14 @@ export function RouteBillingFactors({
 	const entries = [null, ...rows];
 
 	return (
-		<RouteEditorSection
+		<RouteEditorSection icon={BanknotesIcon}
 			title={t('editor.billingFactors')}
 			description={t('editor.billingFactorsHint')}
 			action={
 				locked ? undefined : (
 					<button
 						type="button"
-						className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50"
+						className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-800 hover:bg-gray-50"
 						onClick={() => {
 							update({
 								schedule_windows: [
@@ -130,7 +133,7 @@ export function RouteBillingFactors({
 			>
 				<span>{t('editor.period')}</span>
 				{labels.map((label, index) => (
-					<span key={label} className="flex items-center gap-1">
+					<span key={label} data-factor-type={['provider_factor', 'charged_factor', 'metered_factor'][index]} className="route-factor-heading flex items-center gap-1">
 						{label}
 						{help(index)}
 					</span>
@@ -173,7 +176,7 @@ export function RouteBillingFactors({
 											}}
 											aria-expanded={openPeriod === index}
 											aria-controls={`route-period-${index}`}
-											className="inline-flex items-center gap-1 text-left font-mono text-xs font-medium text-blue-600 hover:text-blue-800"
+											className="inline-flex items-center gap-1 text-left font-mono text-xs font-medium text-gray-800 hover:text-gray-900"
 										>
 											{title}
 											<ChevronDownIcon className="h-3 w-3 shrink-0" aria-hidden />
@@ -196,7 +199,7 @@ export function RouteBillingFactors({
 									</p>
 								</div>
 								{(['provider_factor', 'charged_factor', 'metered_factor'] as const).map((key, i) => (
-									<div key={key} className="min-w-0">
+									<div key={key} data-factor-type={key} className="route-factor-field min-w-0">
 										<div className="mb-2 flex items-center gap-1 text-xs text-slate-500 sm:hidden">
 											<label htmlFor={`route-${position}-${key}`}>{labels[i]}</label>
 											{help(i)}
@@ -218,8 +221,8 @@ export function RouteBillingFactors({
 												}}
 												aria-expanded={validityOpen}
 												aria-controls={`route-validity-${position}`}
-												className={`mt-2 inline-flex max-w-full items-center gap-1 text-left text-[11px] leading-4 hover:text-blue-700 ${
-													configured || validityOpen ? 'text-blue-600' : 'text-slate-500'
+												className={`mt-2 inline-flex max-w-full items-center gap-1 text-left text-xs leading-4 hover:text-gray-800 ${
+													configured || validityOpen ? 'text-gray-800' : 'text-slate-500'
 												}`}
 											>
 												<CalendarDaysIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
@@ -231,21 +234,19 @@ export function RouteBillingFactors({
 											</button>
 										) : (
 											<p
-												className="mt-2 text-[11px] leading-4 text-slate-500"
+												className="mt-2 text-xs leading-4 text-slate-500"
 												title={t('editor.effectiveFactorHint')}
 											>
 												{t('editor.effectiveFactor')}{' '}
-												<span className="font-mono font-medium tabular-nums text-slate-700">
-													{(key === 'charged_factor' ? effective.charged : effective.metered) == null
-														? common('noData')
-														: `×${key === 'charged_factor' ? effective.charged : effective.metered}`}
-												</span>
+												{(key === 'charged_factor' ? effective.charged : effective.metered) == null
+													? common('noData')
+													: <MultiplierBadge compact>{`×${key === 'charged_factor' ? effective.charged : effective.metered}`}</MultiplierBadge>}
 											</p>
 										)}
 										{key === 'provider_factor' &&
 											effective.providerInactive &&
 											effective.provider !== null && (
-												<p className="mt-1 text-[11px] leading-4 text-slate-500">
+												<p className="mt-1 text-xs leading-4 text-slate-500">
 													{t('editor.providerInactive')}
 												</p>
 											)}
@@ -278,7 +279,7 @@ export function RouteBillingFactors({
 													type="button"
 													aria-pressed={selected}
 													className={`h-7 min-w-7 rounded px-1 ${
-														selected ? 'bg-blue-50 text-blue-700' : 'bg-slate-50 text-slate-400'
+														selected ? 'bg-gray-50 text-gray-800' : 'bg-slate-50 text-slate-400'
 													}`}
 													onClick={() => {
 														const days = new Set(isEveryIsoWeekday(row.days) ? ISO_WEEKDAYS : row.days);
@@ -322,7 +323,7 @@ export function RouteBillingFactors({
 								</div>
 							) : null}
 							{validityOpen ? (
-								<div id={`route-validity-${position}`} className="mt-3 border-l-2 border-blue-200 pl-3">
+								<div id={`route-validity-${position}`} className="mt-3 border-l-2 border-gray-200 pl-3">
 									<p className="text-xs font-medium text-slate-700">{t('editor.providerValidity')}</p>
 									<p className="mt-1 text-xs leading-5 text-slate-500">
 										{t('editor.rowValidityHint', { timezone })}
@@ -349,7 +350,7 @@ export function RouteBillingFactors({
 									</div>
 								</div>
 							) : null}
-							{row && renderPrices ? <div className="mt-2">{renderPrices(index)}</div> : null}
+							{renderPrices ? <div className="mt-2">{renderPrices(row ? index : null)}</div> : null}
 						</fieldset>
 					);
 				})}

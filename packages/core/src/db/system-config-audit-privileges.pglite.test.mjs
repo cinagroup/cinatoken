@@ -20,7 +20,7 @@ test('configuration writes preserve INSERT-only audit ACL with actual PostgreSQL
 	const f = await createFinancialEngine();
 	const repo = createPostgresSystemConfigRepository(f.client);
 	try {
-		assert.equal(f.migrations.at(-1), '0085_mcp_servers.sql');
+		assert.equal(f.migrations.at(-1), '0094_tools_deepseek_audit.sql');
 		await f.pg.exec(`CREATE ROLE ${role} LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOINHERIT;
 			GRANT USAGE ON SCHEMA cinatoken_gateway TO ${role};
 			GRANT SELECT, INSERT, UPDATE ON cinatoken_gateway.system_config TO ${role};

@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import ts from 'typescript';
 
-for(const [file,expected,mixed] of [['../db/postgres/api-keys.impl.ts',22,false],['./management-api-keys.ts',15,true]])test(file+': PostgreSQL raw table names are explicit',()=>{
+for(const [file,expected,mixed] of [['../db/postgres/api-keys.impl.ts',23,false],['./management-api-keys.ts',15,true]])test(file+': PostgreSQL raw table names are explicit',()=>{
   const text=readFileSync(new URL(file,import.meta.url),'utf8');
   const ast=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true);
   let count=0,branches=0;

@@ -43,6 +43,7 @@ import { dispatchOpenAiAudioTranscriptions, type NormalizedAudioTranscriptionReq
 import {
 	dispatchDashScopeMiniMaxTts,
 	dispatchDashScopeQwenTts,
+	dispatchDashScopeQwenAudioSpeech,
 	dispatchDashScopeSpeechSynthesizer,
 	dispatchOpenAiAudioSpeech,
 	type AudioSpeechDispatchOptions,
@@ -51,6 +52,10 @@ import {
 import { dispatchDashScopeImageGenerations } from './dashscope-images-driver';
 import { dispatchGeminiOpenAiImage } from './gemini-openai-image-driver';
 import { dispatchMiniMaxOpenAiImage, dispatchMiniMaxOpenAiSpeech } from './minimax-openai-driver';
+import {
+	dispatchElevenLabsAudioTranscriptions,
+	dispatchElevenLabsOpenAiSpeech,
+} from './elevenlabs-openai-driver';
 import { dispatchOpenAiImageGenerations } from './openai-images-driver';
 import { dispatchVolcengineOpenAiImage } from './volcengine-openai-driver';
 
@@ -64,15 +69,21 @@ const AUDIO_TRANSCRIPTION_ADAPTERS = [
 	'dashscope-asr-qwen-file',
 	'dashscope-asr-qwen-audio-file',
 	'dashscope-asr-fun-file',
-	'dashscope-asr-file-async',
+	'dashscope-asr-qwen-file-async',
+	'dashscope-asr-qwen-audio-file-async',
+	'dashscope-asr-fun-async',
+	'dashscope-asr-paraformer-async',
 	'minimax-asr-file',
+	'elevenlabs-asr-file',
 ] as const satisfies readonly RouteAdapter[];
 
 const AUDIO_SPEECH_ADAPTERS = [
 	'dashscope-tts-speech',
+	'dashscope-tts-qwen-audio',
 	'dashscope-tts-qwen',
 	'dashscope-tts-minimax',
 	'minimax-tts',
+	'elevenlabs-tts',
 ] as const satisfies readonly RouteAdapter[];
 
 const IMAGE_GENERATION_ADAPTERS = [
@@ -116,7 +127,12 @@ export function dispatchAudioTranscriptions(
 	) {
 		return dispatchDashScopeSyncAsr(route, req, ctx.signal, ctx.timing, ctx.attempt, options);
 	}
-	if (route.adapter === 'dashscope-asr-file-async') {
+	if (
+		route.adapter === 'dashscope-asr-qwen-file-async' ||
+		route.adapter === 'dashscope-asr-qwen-audio-file-async' ||
+		route.adapter === 'dashscope-asr-fun-async' ||
+		route.adapter === 'dashscope-asr-paraformer-async'
+	) {
 		return dispatchDashScopeAsyncAsr(route, req, ctx.signal, ctx.timing, ctx.attempt, options);
 	}
 	if (route.adapter === 'minimax-asr-file') {
@@ -124,14 +140,19 @@ export function dispatchAudioTranscriptions(
 			dispatchMiniMaxAudioTranscriptions(route, req, ownedSignal, timing, attempt, ownedOptions),
 		);
 	}
+	if (route.adapter === 'elevenlabs-asr-file') {
+		return dispatchElevenLabsAudioTranscriptions(route, req, ctx.signal, ctx.timing, ctx.attempt);
+	}
 	throw new Error(`Unsupported audio transcription adapter: ${route.adapter}`);
 }
 
 const SPEECH_DISPATCH = {
 	'dashscope-tts-speech': dispatchDashScopeSpeechSynthesizer,
+	'dashscope-tts-qwen-audio': dispatchDashScopeQwenAudioSpeech,
 	'dashscope-tts-qwen': dispatchDashScopeQwenTts,
 	'dashscope-tts-minimax': dispatchDashScopeMiniMaxTts,
 	'minimax-tts': dispatchMiniMaxOpenAiSpeech,
+	'elevenlabs-tts': dispatchElevenLabsOpenAiSpeech,
 } as const;
 
 export function dispatchAudioSpeech(

@@ -1,3 +1,6 @@
+
+import { isUpstreamHeadersTimeoutMessage } from './egress/upstream-fetch-timeout';
+import { formatHttpErrorTextForRequestLog } from './request-log-record-status';
 /**
  * 上游调度与故障转移：
  * - 可选 Provider sticky（跨 Tier 优先）→ priority 硬序 + 层内 route strategy 编排尝试序列。
@@ -287,6 +290,7 @@ type DispatchFn = (
 	beforeFetch?: (preparedAttempt?: unknown) => Promise<void>,
 	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 	upstreamHeadersObserved?: (status: number) => void,
+ context?:DispatchAttemptContext,
 ) => Promise<ProxyDispatchResult>;
 
 function emptyRoute(protocol: UpstreamProtocol): RouteResult {
@@ -1016,6 +1020,7 @@ async function failoverDispatchWithinDeadline(
 					beforeFetch,
 					dispatchBudget.auxiliaryAuth,
 					upstreamHeadersObserved,
+     {canFailover:hasLaterEligibleAttempt(attemptIndex)},
 				);
 			const dispatched = deadline
 				? await deadline.wait(run, (late) => {
@@ -1111,7 +1116,9 @@ async function failoverDispatchWithinDeadline(
 				clientCancelled: requestSignal?.aborted === true,
 			});
 			const errMessage = err instanceof Error ? err.message : String(err);
-			console.warn(`[Gateway Proxy] fetch failed providerId=${route.providerId} error=${errMessage}`);
+			console.warn(`[Gateway Proxy] fetch failed providerId=${route.providerId} error=upstream_transport_failure`);
+   const headersTimedOut=isUpstreamHeadersTimeoutMessage(errMessage);
+   if(headersTimedOut)timing?.markAttemptFailure(timingAttempt,{error:'Upstream response headers timeout',failureKind:'timeout'});
 			const fetchClassification = classifyUpstreamFetchFailure();
 			if (stickySession && stickyAttemptDispatched && shouldInvalidateStickyBinding(fetchClassification)) {
 				await clearSticky();
@@ -1120,8 +1127,8 @@ async function failoverDispatchWithinDeadline(
 			// 与 route_resolution_failed 一致：把 fetch 层原文带给客户端（DNS/TLS/abort 等，不含凭据）
 			const outcomeUnknown = thrownOutcomeIsUnknown(err);
 			lastResponse = gatewayErrorResponse({
-				status: 502,
-				code: GatewayErrorCode.upstreamRequestFailed,
+				status: headersTimedOut ? 504:502,
+				code: headersTimedOut ? GatewayErrorCode.requestDeadlineExceeded : GatewayErrorCode.upstreamRequestFailed,
 				message: outcomeUnknown
 					? 'Upstream request outcome could not be confirmed; the request was not replayed'
 					: errMessage.trim()
@@ -1410,3 +1417,129 @@ async function failoverDispatchWithinDeadline(
 
 /** @deprecated 使用 {@link failoverDispatch} */
 export const failoverDispatchWithKeyPool = failoverDispatch;
+
+
+/** failover 循环传给 driver 的本次尝试上下文。 */
+export type DispatchAttemptContext = {
+	/** 后面是否还有未熔断的候选可切换。为 false 时 driver 不应再用「快速失败」类超时。 */
+	canFailover: boolean;
+};
+
+
+/** 故障转移前最多读这么多错误体，避免把大响应整段拉进日志。 */
+const FAILOVER_ERROR_BODY_CHARS = 8192;
+
+/** 错误体迟迟不结束时放弃等待，先切下一候选。 */
+const FAILOVER_ERROR_BODY_READ_MS = 300;
+
+const FAILOVER_LOG_REASON_CHARS = 240;
+
+
+function providerLabel(route: RouteResult): string {
+	const name = route.providerName?.trim();
+	return name || route.providerId;
+}
+
+
+function clipLogReason(reason: string): string {
+	const collapsed = reason.replace(/\s+/g, ' ').trim();
+	const clipped =
+		collapsed.length > FAILOVER_LOG_REASON_CHARS
+			? `${collapsed.slice(0, FAILOVER_LOG_REASON_CHARS)}…`
+			: collapsed;
+	return JSON.stringify(clipped);
+}
+
+
+/**
+ * 只读错误体的前一段。用 clone，不消耗返回给客户端的原响应。
+ * 读超时或 body 已锁定时返回已读到的文本，调用方退回 `HTTP <status>`。
+ */
+async function readResponsePrefix(response: Response, maxChars: number, timeoutMs: number): Promise<string> {
+	const body = response.body;
+	if (!body) return '';
+	const reader = body.getReader();
+	const decoder = new TextDecoder();
+	let text = '';
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	try {
+		const timeout = new Promise<null>((resolve) => {
+			timer = setTimeout(() => resolve(null), timeoutMs);
+		});
+		while (text.length < maxChars) {
+			// 读失败并到超时分支时不能变成未处理的 rejection。
+			const read = reader.read().then(
+				(result) => result,
+				() => null
+			);
+			const next = await Promise.race([read, timeout]);
+			if (!next || next.done) break;
+			text += decoder.decode(next.value, { stream: true });
+		}
+		text += decoder.decode();
+		return text.length > maxChars ? text.slice(0, maxChars) : text;
+	} finally {
+		if (timer) clearTimeout(timer);
+		try {
+			await reader.cancel();
+		} catch {
+			// 原响应仍可用；取消 clone 失败不影响故障转移。
+		}
+	}
+}
+
+
+async function summarizeUpstreamHttpError(response: Response): Promise<string> {
+	const contentType = response.headers.get('content-type');
+	try {
+		const text = await readResponsePrefix(
+			response.clone(),
+			FAILOVER_ERROR_BODY_CHARS,
+			FAILOVER_ERROR_BODY_READ_MS
+		);
+		return formatHttpErrorTextForRequestLog(response.status, contentType, text);
+	} catch {
+		return `HTTP ${response.status}`;
+	}
+}
+
+
+type FailoverCircuitNote = 'none' | 'closed' | `open:${number}`;
+
+
+function logFailoverDecision(input: {
+	headline: string;
+	candidateIndex: number;
+	candidateCount: number;
+	route: RouteResult;
+	next: RouteResult | null;
+	status: number | 'fetch';
+	kind: string;
+	reason: string;
+	sticky: boolean;
+	stickyCleared: boolean;
+	circuit: FailoverCircuitNote;
+}): void {
+	const circuit =
+		input.circuit === 'none'
+			? ' circuit=none'
+			: input.circuit === 'closed'
+				? ' circuit=closed'
+				: ` circuit=open cooldownMs=${input.circuit.slice('open:'.length)}`;
+	const next = input.next
+		? ` nextProviderId=${input.next.providerId} nextProvider=${providerLabel(input.next)} nextTarget=${input.next.targetId}`
+		: ' next=none';
+	const sticky = input.sticky ? ' sticky=1' : '';
+	const stickyCleared = input.stickyCleared ? ' stickyCleared=1' : '';
+	console.warn(
+		`[Gateway Proxy] ${input.headline} candidate=${input.candidateIndex + 1}/${input.candidateCount} providerId=${input.route.providerId} provider=${providerLabel(input.route)} target=${input.route.targetId} model=${input.route.providerModelName} priority=${input.route.routePriority} key=${input.route.providerKeyFingerprint ?? '-'} status=${input.status} kind=${input.kind}${circuit}${sticky}${stickyCleared}${next} reason=${clipLogReason(input.reason)}`
+	);
+}
+
+
+function allProvidersBusyDueToCircuitOnly(plan: {
+	attempts: { length: number };
+	skippedByCircuit: number;
+}): boolean {
+	return plan.attempts.length === 0 && plan.skippedByCircuit > 0;
+}

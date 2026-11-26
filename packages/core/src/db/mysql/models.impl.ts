@@ -1,3 +1,4 @@
+import { catalogNotePatch } from '../catalog-note-compat';
 import {
 	modelPricingScheduleUpdate,
 	modelPricingScheduleChanged,
@@ -19,7 +20,7 @@ import { assertModelPolicyExpected, modelPolicyPatch, modelPolicyTags } from '..
 const MODEL_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens,
 		m.pricing_profile,
 		CAST(COALESCE((SELECT JSON_ARRAYAGG(mt.tag ORDER BY mt.tag) FROM model_tags mt WHERE mt.model_id = m.id), JSON_ARRAY()) AS CHAR) AS tags,
-		m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
+		m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
 		(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id) AS routes_count,
 		(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 	FROM models m ORDER BY m.id ASC`;
@@ -27,7 +28,7 @@ const MODEL_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor,
 const MODEL_DETAIL_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens,
 		m.pricing_profile,
 		CAST(COALESCE((SELECT JSON_ARRAYAGG(mt.tag ORDER BY mt.tag) FROM model_tags mt WHERE mt.model_id = m.id), JSON_ARRAY()) AS CHAR) AS tags,
-		m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
+		m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
 		(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id) AS routes_count,
 		(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 	FROM models m WHERE m.id = ?`;
@@ -54,7 +55,7 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 			contextWindow: unknown;
 			maxTokens: unknown;
 			pricingProfile?: unknown;
-			description: unknown;
+			note: unknown;
 			metadata: unknown;
 			inputModalities?: unknown;
 			outputModalities?: unknown;
@@ -68,7 +69,8 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 				contextWindow: params.contextWindow == null ? null : Number(params.contextWindow),
 				maxTokens: params.maxTokens == null ? null : Number(params.maxTokens),
 				pricingProfile: params.pricingProfile == null ? null : String(params.pricingProfile),
-				description: params.description == null ? null : String(params.description),
+				note: params.note == null ? null : String(params.note),
+ description: params.note == null ? null : String(params.note),
 				metadata: params.metadata == null ? null : String(params.metadata),
 				inputModalities: params.inputModalities == null ? null : String(params.inputModalities),
 				outputModalities: params.outputModalities == null ? null : String(params.outputModalities),
@@ -98,6 +100,7 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 		},
 
 		async updateModelByPatch(id: string, rest: Record<string, unknown>): Promise<number> {
+ rest = catalogNotePatch(rest);
 			const patch: string[] = [];
 			const bindValues: unknown[] = [];
 			for (const [key, value] of Object.entries(rest)) {
@@ -115,6 +118,7 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 		},
 
 		async updateModelWithPolicyPrecondition(id, rest, expectedRoutePolicy, tags): Promise<boolean> {
+ rest = catalogNotePatch(rest);
 			assertModelPolicyExpected(expectedRoutePolicy);
 			const patch = modelPolicyPatch(rest);
 			const conn = await pool.getConnection();
@@ -125,7 +129,8 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 				const [rows] = await conn.execute<
 					Array<{ id: string; route_policy: string | null; pricing_profile?: string | null }>
 				>(`SELECT ${fields} FROM models WHERE BINARY id = BINARY ? FOR UPDATE`, [id]);
-				if (!Array.isArray(rows) || rows.length > 1) throw new Error('Invalid conditional model read acknowledgement');
+				if (!Array.isArray(rows) || rows.length > 1)
+					throw new Error('Invalid conditional model read acknowledgement');
 				if (!rows.length || rows[0].id !== id || rows[0].route_policy !== expectedRoutePolicy) {
 					await conn.rollback();
 					return false;
@@ -183,6 +188,14 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 			} finally {
 				conn.release();
 			}
+		},
+
+		async deleteModelIfUnrouted(id: string): Promise<number> {
+			const [result] = await pool.execute<ResultSetHeader>(
+				'DELETE FROM models WHERE id = ? AND NOT EXISTS (SELECT 1 FROM model_routes WHERE model_id = ?)',
+				[id, id],
+			);
+			return result.affectedRows;
 		},
 	};
 }

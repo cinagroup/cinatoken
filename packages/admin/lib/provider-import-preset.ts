@@ -17,15 +17,19 @@
  * 普通模板导入后不含 API Key，须在 Edit Provider 中手动添加。显式标记的
  * 托管环境凭据模板只落 `env:NAME` 引用，密钥仍由 Worker Secret 提供。
  */
-import { CUSTOM_PROVIDER_KIND, type ProviderKindLabels } from './provider-kind';
+import {
+	CUSTOM_PROVIDER_KIND,
+	PROVIDER_CATALOG_LOCALES,
+	providerCatalogLocale,
+	type ProviderCatalogLocale,
+	type ProviderKindLabels,
+} from './provider-kind';
 import rawPresets from './provider-import-presets.json';
 import { getModelVendorLabel, normalizeModelVendorInput } from './model-vendor';
 import type { AdminProviderImportCatalogItem } from '@/lib/services/admin/types';
 import {
-	listConfiguredCapabilities,
 	parseProviderEndpoints,
 	serializeProviderEndpoints,
-	type ProviderEndpointCapability,
 	type ProviderEndpointsMap,
 	type ProviderEndpointsSource,
 } from '@octafuse/core/provider-endpoints';
@@ -49,17 +53,16 @@ export type StaticProviderImportPresetRow = {
 	 */
 	icon_key?: string;
 	endpoints: ProviderEndpointsMap;
-	/** 可选；JSON 中可省略，导入后写入 providers.description 时为 null */
+	/**
+	 * 可选运维说明。目录 `catalog.i18n` 缺摘要时，导入列表用它做介绍回退；不写入数据库。
+	 */
 	description?: string | null;
 	/**
-	 * 仅用于公开 Catalog / 文档展示，不写入 providers 表。
-	 * `description` 继续承载导入后的运维说明；此处提供本地化的用户侧摘要与官方入口。
+	 * 导入列表展示文案。`en` / `zh` / `ja` / `ko` 分别对应四种界面语言。
+	 * `name` 仍是 `providers.kind` 的稳定英文键，不随语言改变，也不写入介绍。
 	 */
 	catalog?: {
-		i18n: {
-			zh: { name: string; description: string };
-			en: { name: string; description: string };
-		};
+		i18n: Record<ProviderCatalogLocale, { name: string; description: string }>;
 		links?: ProviderCatalogLinks;
 	};
 };
@@ -84,15 +87,6 @@ export type ProviderCatalogOutbound = {
 /** 运行时 catalog 行键（JSON 数组下标字符串）；与入库 provider id 无关。 */
 export type StaticProviderImportPresetWithKey = StaticProviderImportPresetRow & {
 	catalog_key: string;
-};
-
-/** Import 弹窗 / catalog 摘要用的 OpenAI 端点一行展示。 */
-export type ProviderImportOpenAiSummary = {
-	/** 复制/展示用的主 URL（base 或 chat） */
-	url: string;
-	/** 是否配置了 openai.base（全能力） */
-	hasBase: boolean;
-	capabilities: ProviderEndpointCapability[];
 };
 
 const STATIC_ROWS = rawPresets as StaticProviderImportPresetRow[];
@@ -136,6 +130,100 @@ function httpsHref(value: string | undefined | null): string | null {
 	} catch {
 		return null;
 	}
+}
+
+function catalogLabelsFromRow(row: StaticProviderImportPresetRow): AdminProviderImportCatalogItem['labels'] {
+	const i18n = row.catalog?.i18n;
+	if (!i18n) return undefined;
+	const labels = {} as Record<ProviderCatalogLocale, { name: string; description: string }>;
+	for (const locale of PROVIDER_CATALOG_LOCALES) {
+		const name = i18n[locale]?.name?.trim() ?? '';
+		const description = i18n[locale]?.description?.trim() ?? '';
+		if (!name || !description) return undefined;
+		labels[locale] = { name, description };
+	}
+	return labels;
+}
+
+/** 目录介绍。缺本地化摘要时回退模板运维说明。 */
+export function providerPresetCatalogCopy(
+	row: StaticProviderImportPresetRow,
+): Record<ProviderCatalogLocale, string | null> {
+	const labels = catalogLabelsFromRow(row);
+	const fallback = row.description?.trim() || '';
+	const copy = {} as Record<ProviderCatalogLocale, string | null>;
+	for (const locale of PROVIDER_CATALOG_LOCALES) {
+		copy[locale] = labels?.[locale].description?.trim() || fallback || null;
+	}
+	return copy;
+}
+
+/** 导入列表展示文案。按界面语言取目录文案；缺该语言时回退英文，再回退稳定英文名和运维说明。 */
+export function providerImportCatalogCopy(
+	row: {
+		name: string;
+		description?: string | null;
+		labels?: AdminProviderImportCatalogItem['labels'];
+	},
+	locale: string,
+): { name: string; description: string | null } {
+	const key = providerCatalogLocale(locale);
+	const localized = row.labels?.[key] ?? (key === 'en' ? undefined : row.labels?.en);
+	return {
+		name: localized?.name?.trim() || row.name,
+		description: localized?.description?.trim() || row.description?.trim() || null,
+	};
+}
+
+/**
+ * 导入时使用的显示名和类型。
+ * `kind` 固定为模板英文 `name`；`name` 与导入列表当前语言一致。
+ * `description` 只给导入列表展示，不写入数据库。
+ */
+export function providerImportStoredFields(
+	row: StaticProviderImportPresetRow,
+	locale: string | null | undefined,
+): { name: string; kind: string; description: string | null } {
+	const copy = providerImportCatalogCopy(
+		{
+			name: row.name,
+			description: row.description,
+			labels: catalogLabelsFromRow(row),
+		},
+		locale ?? '',
+	);
+	return {
+		name: copy.name,
+		kind: row.name.trim(),
+		description: copy.description,
+	};
+}
+
+/** 搜索同时匹配稳定英文名、四种语言的名称和摘要，以及运维说明。 */
+export function providerImportCatalogMatchesQuery(
+	row: {
+		name: string;
+		description?: string | null;
+		vendor_label?: string | null;
+		labels?: AdminProviderImportCatalogItem['labels'];
+	},
+	query: string,
+): boolean {
+	const needle = query.trim().toLowerCase();
+	if (!needle) return true;
+	const haystack = [
+		row.name,
+		row.description,
+		row.vendor_label,
+		...PROVIDER_CATALOG_LOCALES.flatMap((locale) => [
+			row.labels?.[locale]?.name,
+			row.labels?.[locale]?.description,
+		]),
+	]
+		.filter((part): part is string => Boolean(part?.trim()))
+		.join('\n')
+		.toLowerCase();
+	return haystack.includes(needle);
 }
 
 function catalogLinksFromRow(row: StaticProviderImportPresetRow): ProviderCatalogLinks | null {
@@ -186,10 +274,18 @@ function endpointIdentity(url: URL): ProviderCatalogIdentity | null {
 	// Product-specific hosts must be checked before their parent cloud/vendor domains.
 	if (hostnameMatches(hostname, 'qianwenaiapi.com')) return identity('aliyun', 'qwen');
 	if (hostnameMatches(hostname, 'maas.aliyuncs.com')) return identity('aliyun', 'qwen');
-	if (hostnameMatches(hostname, 'dashscope.aliyuncs.com') || hostnameMatches(hostname, 'dashscope-intl.aliyuncs.com')) {
+	if (
+		hostnameMatches(hostname, 'dashscope.aliyuncs.com') ||
+		hostnameMatches(hostname, 'dashscope-intl.aliyuncs.com')
+	) {
 		return identity('aliyun', 'bailian');
 	}
-	if (hostnameMatches(hostname, 'hunyuan.cloud.tencent.com') || hostnameMatches(hostname, 'lkeap.cloud.tencent.com')) {
+	if (
+		hostnameMatches(hostname, 'hunyuan.cloud.tencent.com') ||
+		hostnameMatches(hostname, 'lkeap.cloud.tencent.com') ||
+		hostnameMatches(hostname, 'tencentmaas.com') ||
+		hostnameMatches(hostname, 'tencentmaas.cn')
+	) {
 		return identity('tencent', 'hunyuan');
 	}
 	if (hostnameMatches(hostname, 'api.z.ai')) return identity('zhipu', 'zai');
@@ -197,16 +293,22 @@ function endpointIdentity(url: URL): ProviderCatalogIdentity | null {
 	if (hostnameMatches(hostname, 'api.kimi.com')) return identity('moonshot', 'kimi');
 	if (hostnameMatches(hostname, 'aiplatform.googleapis.com')) return identity('google', 'vertexai');
 	if (hostnameMatches(hostname, 'xiaomimimo.com')) return identity('xiaomi', 'xiaomimimo');
+	if (hostnameMatches(hostname, 'kspmas.ksyun.com') || hostnameMatches(hostname, 'global-kspmas.ksyun.com')) {
+		return identity('kingsoft');
+	}
 
 	const domainRules: ReadonlyArray<readonly [string, ProviderCatalogIdentity]> = [
 		['deepseek.com', identity('deepseek')],
 		['volces.com', identity('volcengine')],
 		['bytepluses.com', identity('volcengine')],
 		['qianfan.baidubce.com', identity('baidu')],
+		['vod.gz.baidubce.com', identity('baidu')],
+		['aigc.exp.bcevod.com', identity('baidu')],
 		['bigmodel.cn', identity('zhipu')],
 		['moonshot.cn', identity('moonshot')],
 		['minimaxi.com', identity('minimax')],
 		['minimax.io', identity('minimax')],
+		['elevenlabs.io', identity('elevenlabs')],
 		['openai.com', identity('openai')],
 		['anthropic.com', identity('anthropic')],
 		['generativelanguage.googleapis.com', identity('google')],
@@ -234,12 +336,14 @@ function endpointIdentity(url: URL): ProviderCatalogIdentity | null {
 		['baichuan-ai.com', identity('baichuan')],
 		['qnaigc.com', identity('qiniu')],
 		['openai.qiniu.com', identity('qiniu')],
-		['modelink.ai', identity('qiniu')],
+		['modelink.ai', identity('modelink')],
+		['open-design.ai', identity('opendesign')],
 		['opencode.ai', identity('opencode')],
 		['zenmux.ai', identity('zenmux')],
 		['openrouter.ai', identity('openrouter')],
 		['siliconflow.cn', identity('siliconflow')],
 		['siliconflow.com', identity('siliconflow')],
+		['edgecloudapp.com', identity('wangsu')],
 	];
 	for (const [domain, matchedIdentity] of domainRules) {
 		if (hostnameMatches(hostname, domain)) return matchedIdentity;
@@ -251,7 +355,9 @@ function endpointIdentity(url: URL): ProviderCatalogIdentity | null {
 }
 
 type EndpointIdentityResult =
-	{ status: 'matched'; identity: ProviderCatalogIdentity } | { status: 'conflict' } | { status: 'none' };
+	| { status: 'matched'; identity: ProviderCatalogIdentity }
+	| { status: 'conflict' }
+	| { status: 'none' };
 
 function identityFromEndpointHosts(endpoints: ProviderEndpointsSource['endpoints']): EndpointIdentityResult {
 	let map: ProviderEndpointsMap;
@@ -327,6 +433,8 @@ function identityFromNameHint(normalizedName: string): ProviderCatalogIdentity |
 		[['meituan', '美团'], identity('meituan')],
 		[['moonshot', '月之暗面'], identity('moonshot')],
 		[['minimax'], identity('minimax')],
+		[['elevenlabs'], identity('elevenlabs')],
+		[['opendesign', 'open design'], identity('opendesign')],
 		[['openai'], identity('openai')],
 		[['anthropic', 'claude'], identity('anthropic')],
 		[['gemini', 'google', '谷歌'], identity('google')],
@@ -350,11 +458,14 @@ function identityFromNameHint(normalizedName: string): ProviderCatalogIdentity |
 		[['stepfun', '阶跃'], identity('stepfun')],
 		[['baichuan', '百川'], identity('baichuan')],
 		[['xiaomi', '小米'], identity('xiaomi')],
+		[['modelink'], identity('modelink')],
 		[['qiniu', '七牛', 'qnaigc'], identity('qiniu')],
+		[['kingsoft', '金山云', '星流', 'xingliu', 'starflow', 'kspmas'], identity('kingsoft')],
 		[['opencode', 'open code zen', 'opencode zen', 'opencode go'], identity('opencode')],
 		[['zenmux'], identity('zenmux')],
 		[['openrouter'], identity('openrouter')],
 		[['siliconflow', '硅基流动'], identity('siliconflow')],
+		[['wangsu', '网宿', 'edgecloudapp'], identity('wangsu')],
 		[['ollama'], identity('ollama')],
 	];
 	for (const [keywords, matchedIdentity] of vendorRules) {
@@ -425,14 +536,19 @@ export type StoredProviderPresentation = {
 	catalogLinks: ProviderCatalogLinks | null;
 	/** 未分类或自定义时为 null。自定义文案由 UI 翻译。 */
 	kindLabels: ProviderKindLabels | null;
+	/** 已保存类型的中、英、日、韩介绍。自定义、未分类或模板没有介绍时为 null。 */
+	kindDescriptions: Record<ProviderCatalogLocale, string> | null;
 };
 
 const PRESET_BY_EXACT_NAME = new Map(STATIC_ROWS.map((row) => [row.name.trim(), row]));
 
 function providerKindLabelsForPreset(row: StaticProviderImportPresetRow): ProviderKindLabels {
+	const en = row.catalog?.i18n.en.name?.trim() || row.name;
 	return {
-		en: row.catalog?.i18n.en.name?.trim() || row.name,
-		zh: row.catalog?.i18n.zh.name?.trim() || row.name,
+		en,
+		zh: row.catalog?.i18n.zh.name?.trim() || en,
+		ja: row.catalog?.i18n.ja.name?.trim() || en,
+		ko: row.catalog?.i18n.ko.name?.trim() || en,
 	};
 }
 
@@ -451,6 +567,7 @@ export function resolveStoredProviderPresentation(provider: {
 			iconKey: inferStaticProviderIconKey({ ...provider, vendor_key: vendorKey }),
 			catalogLinks: lookupStaticProviderCatalogLinks(provider),
 			kindLabels: null,
+			kindDescriptions: null,
 		};
 	}
 	if (kind === CUSTOM_PROVIDER_KIND) {
@@ -459,6 +576,7 @@ export function resolveStoredProviderPresentation(provider: {
 			iconKey: 'other',
 			catalogLinks: null,
 			kindLabels: null,
+			kindDescriptions: null,
 		};
 	}
 	const preset = PRESET_BY_EXACT_NAME.get(kind);
@@ -467,15 +585,25 @@ export function resolveStoredProviderPresentation(provider: {
 			vendorKey: 'other',
 			iconKey: 'other',
 			catalogLinks: null,
-			kindLabels: { en: kind, zh: kind },
+			kindLabels: { en: kind, zh: kind, ja: kind, ko: kind },
+			kindDescriptions: null,
 		};
 	}
 	const identity = identityForPreset(preset);
+	const copy = providerPresetCatalogCopy(preset);
 	return {
 		vendorKey: identity.vendorKey,
 		iconKey: identity.iconKey,
 		catalogLinks: catalogLinksFromRow(preset),
 		kindLabels: providerKindLabelsForPreset(preset),
+		kindDescriptions: PROVIDER_CATALOG_LOCALES.some((locale) => copy[locale])
+			? {
+					en: copy.en ?? '',
+					zh: copy.zh ?? '',
+					ja: copy.ja ?? '',
+					ko: copy.ko ?? '',
+			  }
+			: null,
 	};
 }
 
@@ -544,19 +672,6 @@ function protocolsForPreset(p: StaticProviderImportPresetRow): AdminProviderImpo
 	return out;
 }
 
-/** 从已解析的 endpoints map 取 OpenAI 协议展示摘要（base 或 chat-only）。 */
-export function summarizeOpenAiImportEndpoints(map: ProviderEndpointsMap): ProviderImportOpenAiSummary | null {
-	const cfg = map.openai;
-	if (!cfg) return null;
-	const url = cfg.base || cfg.endpoints?.chat || Object.values(cfg.endpoints ?? {})[0] || '';
-	if (!url) return null;
-	return {
-		url,
-		hasBase: Boolean(cfg.base),
-		capabilities: listConfiguredCapabilities(map, 'openai'),
-	};
-}
-
 /** 全部静态模板行（含 catalog 键与 endpoints）。 */
 export function listStaticProviderImportPresets(): StaticProviderImportPresetWithKey[] {
 	return STATIC_ROWS.filter((r) => String(r.name ?? '').trim().length > 0).map((row, index) => ({
@@ -579,6 +694,7 @@ export function listStaticProviderImportCatalogForAdmin(): AdminProviderImportCa
 			protocols: protocolsForPreset(p),
 			endpoints: serializeProviderEndpoints(map),
 			description: p.description != null && String(p.description).trim() ? String(p.description).trim() : null,
+			labels: catalogLabelsFromRow(p),
 			links: catalogLinksFromRow(p) ?? undefined,
 		};
 	});

@@ -14,6 +14,7 @@ import type {
 import {
 	AUDIO_ENDPOINT_PRICING_OPERATIONS,
 	buildAudioTokenPrecheckUsage,
+	buildSpeechTokenPrecheckUsage,
 	changedFieldsToJson,
 	computeAudioPerSecondMeteredCost,
 	computeAudioPerCharacterMeteredCost,
@@ -131,10 +132,15 @@ export type AudioCostBreakdown = {
 };
 
 function withUserAudioChargedFactor(breakdown: AudioCostBreakdown, billing: AudioBillingParams): AudioCostBreakdown {
-	return applyUserChargedCostToBreakdown(breakdown, billing.userChargedCostFactorsJson, billing.catalogModelId ?? '', {
-		mode: billing.userChargedCostFactorMode,
-		routeGroup: billing.routeGroup,
-	});
+	return applyUserChargedCostToBreakdown(
+		breakdown,
+		billing.userChargedCostFactorsJson,
+		billing.catalogModelId ?? '',
+		{
+			mode: billing.userChargedCostFactorMode,
+			routeGroup: billing.routeGroup,
+		},
+	);
 }
 
 async function resolveAudioBillingParams(
@@ -181,7 +187,7 @@ async function resolveRouteFactors(
 	>;
 }> {
 	const pricingAtUtc = pricingAtUtcFromParams(requestStartedAtMs);
-	const businessTimezone = businessTimezoneSnapshot ?? await getBusinessTimezone(repos);
+	const businessTimezone = businessTimezoneSnapshot ?? (await getBusinessTimezone(repos));
 	const routeFactors = resolveRouteEffectiveFactors({
 		priceOverrideJson: routePriceOverrideJson ?? null,
 		nowUtc: pricingAtUtc,
@@ -324,7 +330,8 @@ function buildAudioPerCharacterCosts(
 					billable_characters: billableCharacters,
 					price_per_character: pricePerCharacter,
 					minimum_characters: profile.audio.minimum_characters ?? 0,
-					usage_source: 'validated_request_input',
+					// 实时 WebSocket 没有上游字符回执，字符数由网关按客户端发出的文本估算。
+					usage_source: billing.durationSource === 'estimated' ? 'estimated' : 'validated_request_input',
 					supplier: {
 						path: 'profile',
 						source: 'model_x_factor',
@@ -480,8 +487,8 @@ function endpointAudioBillingKind(billing: AudioBillingParams): AudioCostBreakdo
 	return meter?.kind === 'tokens'
 		? 'audio_tokens'
 		: meter?.kind === 'characters'
-			? 'audio_per_character'
-			: 'audio_per_second';
+		? 'audio_per_character'
+		: 'audio_per_second';
 }
 
 function resolveAudioCostsForEndpoint(
@@ -537,7 +544,7 @@ function resolveAudioCostsForEndpoint(
 				charged_base_cost: value.chargedBaseCost,
 				pricing_at: factors.pricingAtUtc,
 				business_timezone: factors.businessTimezone,
-				duration_source: value.meterKind === 'duration' ? (billing.durationSource ?? null) : null,
+				duration_source: value.meterKind === 'duration' ? billing.durationSource ?? null : null,
 				file_bytes: billing.fileBytes ?? null,
 				snapshot: {
 					supplier: {
@@ -570,7 +577,7 @@ function resolveAudioCostsForProfile(
 	billing: AudioBillingParams,
 	profile: ParsedPricingProfile | null,
 	factors: Awaited<ReturnType<typeof resolveRouteFactors>>,
-	options?: { allowTokenPrecheckEstimate?: boolean },
+	options?: { allowTokenPrecheckEstimate?: boolean; tokenPrecheckUsage?: AudioTokenUsage },
 ): AudioCostBreakdown {
 	const mode = resolveAudioBillingMode(profile);
 
@@ -581,7 +588,9 @@ function resolveAudioCostsForProfile(
 	if (mode === 'token' && profile && profileHasAudioTokenPricing(profile)) {
 		const usage =
 			billing.tokenUsage ??
-			(options?.allowTokenPrecheckEstimate ? buildAudioTokenPrecheckUsage(billing.durationSeconds) : null);
+			(options?.allowTokenPrecheckEstimate
+				? options.tokenPrecheckUsage ?? buildAudioTokenPrecheckUsage(billing.durationSeconds)
+				: null);
 		if (!hasAuthoritativeAudioTokenUsage(usage)) {
 			return zeroAudioCostBreakdown(billing, factors, 'audio_tokens', {
 				error: 'missing_upstream_token_usage',
@@ -591,8 +600,8 @@ function resolveAudioCostsForProfile(
 			usage_source: billing.tokenUsage
 				? 'upstream'
 				: options?.allowTokenPrecheckEstimate
-					? 'precheck_estimate'
-					: 'upstream',
+				? 'precheck_estimate'
+				: 'upstream',
 		});
 	}
 
@@ -621,6 +630,7 @@ export async function estimateAudioSpeechCosts(
 		| 'requestStartedAtMs'
 		| 'businessTimezone'
 		| 'characters'
+		| 'tokenUsage'
 		| 'catalogModelId'
 		| 'userChargedCostFactorsJson'
 		| 'routeGroup'
@@ -672,11 +682,20 @@ export async function estimateAudioSpeechBudgetPrecheck(
 	let best: AudioCostBreakdown | null = null;
 	let byokStandardCostCeiling = 0;
 	for (const override of routePriceOverrides.length > 0 ? routePriceOverrides : [null]) {
-		const factors = await resolveRouteFactors(repos, override, billing.requestStartedAtMs, billing.businessTimezone, billing.modelPricingProfileJson);
+		const factors = await resolveRouteFactors(
+			repos,
+			override,
+			billing.requestStartedAtMs,
+			billing.businessTimezone,
+			billing.modelPricingProfileJson,
+		);
 		const routeParams = { ...params, routePriceOverrideJson: override };
 		const costs = billing.endpoint
 			? resolveAudioCostsForEndpoint(routeParams, factors)
-			: resolveAudioCostsForProfile(routeParams, profile, factors);
+			: resolveAudioCostsForProfile(routeParams, profile, factors, {
+			allowTokenPrecheckEstimate: true,
+			tokenPrecheckUsage: buildSpeechTokenPrecheckUsage(billing.inputCharacters),
+		});
 		if (!best || costs.chargedCost >= best.chargedCost) best = costs;
 		byokStandardCostCeiling = Math.max(byokStandardCostCeiling, costs.standardCost);
 	}
@@ -726,8 +745,8 @@ export async function estimateAudioBudgetPrecheck(
 		resolved.source === 'media'
 			? resolved.seconds
 			: hasVerifiedDurationCeiling
-				? Number(verifiedDurationCeiling)
-				: MAX_AUDIO_DURATION_SECONDS;
+			? Number(verifiedDurationCeiling)
+			: MAX_AUDIO_DURATION_SECONDS;
 	const params: AudioBillingParams = {
 		...billing,
 		durationSeconds,
@@ -739,7 +758,13 @@ export async function estimateAudioBudgetPrecheck(
 	let byokStandardCostCeiling = 0;
 	const overrides = routePriceOverrides.length > 0 ? routePriceOverrides : [billing.routePriceOverrideJson];
 	for (const override of overrides) {
-		const factors = await resolveRouteFactors(repos, override, billing.requestStartedAtMs, billing.businessTimezone, billing.modelPricingProfileJson);
+		const factors = await resolveRouteFactors(
+			repos,
+			override,
+			billing.requestStartedAtMs,
+			billing.businessTimezone,
+			billing.modelPricingProfileJson,
+		);
 		const routeParams = { ...params, routePriceOverrideJson: override };
 		const costs = billing.endpoint
 			? resolveAudioCostsForEndpoint(routeParams, factors)
@@ -803,7 +828,11 @@ export function audioGuardrailSettlementMode(params: {
 		if (params.durationSeconds === 0 && params.durationSource !== 'upstream' && params.durationSource !== 'media') {
 			return 'reserved';
 		}
-		if (params.durationSource != null && params.durationSource !== 'upstream' && params.durationSource !== 'media') {
+		if (
+			params.durationSource != null &&
+			params.durationSource !== 'upstream' &&
+			params.durationSource !== 'media'
+		) {
 			return 'reserved';
 		}
 		return 'actual';
@@ -921,8 +950,8 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 		? endpointKind === 'audio_tokens'
 			? 'token'
 			: endpointKind === 'audio_per_character'
-				? 'per_character'
-				: 'per_second'
+			? 'per_character'
+			: 'per_second'
 		: resolveAudioBillingMode(profile);
 	const billingCommitted = params.status === 'success' || params.chargeOnError === true;
 	const isByok = parseByokKeyId(params.providerKeyId) !== null;
@@ -950,7 +979,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 		? {
 				...params.ordinaryBudgetSettlement,
 				unknownCost: ordinarySettlementMode === 'reserved',
-			}
+		  }
 		: undefined;
 	let costs: AudioCostBreakdown;
 	if (!billingCommitted) {
@@ -960,8 +989,8 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			billingMode === 'token'
 				? 'audio_tokens'
 				: billingMode === 'per_character'
-					? 'audio_per_character'
-					: 'audio_per_second',
+				? 'audio_per_character'
+				: 'audio_per_second',
 			{ error: 'request_failed' },
 		);
 	} else {
@@ -971,7 +1000,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			? resolveAudioCostsForEndpoint(params.billing, factors)
 			: resolveAudioCostsForProfile(params.billing, profile, factors, {
 					allowTokenPrecheckEstimate: false,
-				});
+			  });
 	}
 	const adjustedBilling = applyPrivateByokBillingPolicy(
 		{
@@ -1006,7 +1035,9 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 	const id = writeIdentity.requestLogId;
 	const hasOrdinaryBudgetSettlement = ordinaryBudgetSettlement != null;
 	const userSnapshot =
-		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await getUserBudgetSnapshot(params.repos, params.userId) : null;
+		shouldChargeBudget || hasOrdinaryBudgetSettlement
+			? await getUserBudgetSnapshot(params.repos, params.userId)
+			: null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
 	const userRow =
 		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await params.repos.users.getById(params.userId) : null;
@@ -1029,7 +1060,7 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 						budget_spent: afterSpentVal,
 						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
 						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-					});
+				  });
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -1061,9 +1092,9 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 							text_tokens: usage.text_tokens,
 							total_tokens: usage.total_tokens,
 							upstream_usage: usage.raw_usage,
-						}
+					  }
 					: {}),
-			})
+		  })
 		: null;
 
 	console.log(
@@ -1084,7 +1115,10 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			modelName: params.modelName ?? null,
 			providerName: params.providerName ?? null,
 			requestBody: applyRequestBodyLoggingPolicy(params.requestBody, params.requestBodyLoggingMode),
-			upstreamRequestBody: applyRequestBodyLoggingPolicy(params.upstreamRequestBody, params.requestBodyLoggingMode),
+			upstreamRequestBody: applyRequestBodyLoggingPolicy(
+				params.upstreamRequestBody,
+				params.requestBodyLoggingMode,
+			),
 			requestProtocol: params.requestProtocol,
 			requestOperation: params.requestOperation ?? null,
 			upstreamProtocol: params.upstreamProtocol,
@@ -1158,9 +1192,9 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 						guardrailSettlementMode === 'reserved'
 							? 'audio_usage_unavailable_after_dispatch'
 							: isByok
-								? 'private_byok_list_price_settled'
-								: 'audio_request_usage_settled',
-				}
+							? 'private_byok_list_price_settled'
+							: 'audio_request_usage_settled',
+			  }
 			: undefined,
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(ordinaryBudgetSettlement),
 		chargedFromWallet: split.fromWallet,
@@ -1208,7 +1242,10 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 			upstreamRequestId: params.upstreamRequestId ?? null,
 			circuitEvents: params.circuitEvents,
 		}).catch((err: unknown) => {
-			console.warn('[Gateway Alert] webhook dispatch failed', err instanceof Error ? (err.stack ?? err.message) : err);
+			console.warn(
+				'[Gateway Alert] webhook dispatch failed',
+				err instanceof Error ? err.stack ?? err.message : err,
+			);
 		});
 	}
 
@@ -1216,6 +1253,12 @@ export async function recordAudioUsage(params: RecordAudioUsageParams): Promise<
 }
 
 /** Total funds precheck; the dispatch reservation is the authoritative concurrent admission. */
-export function canAffordAudioCost(budgetMax: number | null, budgetSpent: number, chargedCost: number, walletGranted = 0, walletSpent = 0): boolean {
- return canAffordTotalCost(budgetMax, budgetSpent, walletGranted, walletSpent, chargedCost);
+export function canAffordAudioCost(
+	budgetMax: number | null,
+	budgetSpent: number,
+	chargedCost: number,
+	walletGranted = 0,
+	walletSpent = 0,
+): boolean {
+	return canAffordTotalCost(budgetMax, budgetSpent, walletGranted, walletSpent, chargedCost);
 }

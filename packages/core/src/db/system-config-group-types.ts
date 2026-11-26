@@ -3,7 +3,7 @@ export interface ConfigSnapshot { key: string; value: string | null; revision: s
 export interface ConfigRevisionEntry { key: string; revision: string | null }
 export type ConfigRevisionVector = readonly ConfigRevisionEntry[];
 export type ToolConfigFamily = 'web-search' | 'web-fetch' | 'web-deep-search' | 'ai-detection';
-export type ToolConfigProvider = 'bocha' | 'tavily' | 'cleversee' | 'tencent_wsa' | 'firecrawl' | 'jina' | 'tencent_tms';
+export type ToolConfigProvider = 'bocha' | 'tavily' | 'cleversee' | 'tencent_wsa' | 'deepseek' | 'firecrawl' | 'jina' | 'tencent_tms';
 export type ConfigGroupAuditAction = 'save' | 'save_activate' | 'activate' | 'legacy_save' | 'reveal';
 export type ToolConfigAuditField = 'catalog' | 'active' | 'legacy_migration' | 'metered' | 'standard' | 'charged' | 'billingUnitChars' | 'region' | 'bizType' | 'apiKey' | 'secretId' | 'secretKey' | 'email';
 export type ToolConfigCredentialField = 'apiKey' | 'secretId' | 'secretKey' | 'email';

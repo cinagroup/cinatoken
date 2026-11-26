@@ -1,29 +1,40 @@
 'use client';
-
 import AdvancedEditorGate from '@/components/routing-workbench/AdvancedEditorGate';
+
+import '@/app/gateway/providers/providers-workspace.css';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
 
 /**
  * 上游供应商：CRUD、各协议 base URL 与单键 API Key；对应 Worker `/admin/providers`。
- * 已配置实例以卡片网格展示；`?q=` / `?filter=` 持久化筛选（`useSearchParams` + Suspense）。
+ * 已配置实例支持卡片与列表切换；`?q=` / `?filter=` 持久化筛选（`useSearchParams` + Suspense）。
  */
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ProviderAddCard } from '@/app/gateway/providers/components/provider-add-card';
-import { ProviderCard } from '@/app/gateway/providers/components/provider-card';
+import { useCatalogView } from '@/app/gateway/components/use-catalog-view';
+import { ArrowDownTrayIcon, PlusIcon } from '@heroicons/react/24/outline';
+import {
+	PROVIDER_LIST_COLUMNS,
+	ProviderCard,
+} from '@/app/gateway/providers/components/provider-card';
 import { ProviderImportModal } from '@/app/gateway/providers/components/provider-import-modal';
 import { ProviderModal } from '@/app/gateway/providers/components/provider-modal';
 import { ProviderSyncCheckButton } from '@/app/gateway/providers/components/provider-sync-check-button';
 import { ProviderSyncBanner } from '@/app/gateway/providers/components/provider-sync-banner';
 import { ProviderSyncModal } from '@/app/gateway/providers/components/provider-sync-modal';
 import { ProviderToolbar } from '@/app/gateway/providers/components/provider-toolbar';
-import { PROVIDER_SYNC_ORPHANS_KEY, useProviderSync } from '@/app/gateway/providers/use-provider-sync';
+import {
+	PROVIDER_SYNC_ORPHANS_KEY,
+	useProviderSync,
+} from '@/app/gateway/providers/use-provider-sync';
 import { useProvidersPageState } from '@/app/gateway/providers/use-providers-page-state';
 
 function ProvidersContent() {
 	const t = useTranslations('providers');
-	const tBrand = useTranslations('brand');
 	const tCommon = useTranslations('common');
 	const state = useProvidersPageState();
+	const [initialTab, setInitialTab] = useState<'basic' | 'endpoints' | 'routes'>('basic');
+	const [view, setView] = useCatalogView('octafuse.admin.providers.view');
 	const sync = useProviderSync({
 		onChanged: state.refreshProviders,
 		onReport: state.setOfficialReport,
@@ -37,27 +48,54 @@ function ProvidersContent() {
 		);
 	}
 
-	const officialUpdateProviders = state.providers.filter((p) => Number(p.official_update_count ?? 0) > 0);
+	const officialUpdateProviders = state.providers.filter(
+		(p) => Number(p.official_update_count ?? 0) > 0
+	);
 	const officialUpdateCount = officialUpdateProviders.length;
-	const officialUpdateKindCount = new Set(officialUpdateProviders.map((p) => p.kind)).size;
+	const officialUpdateKindCount = new Set(
+		officialUpdateProviders.map((p) => p.kind)
+	).size;
 	const orphanCount = state.providers.filter((p) => p.kind_orphaned).length;
 
-	const hasQueryOrFilter = Boolean(state.providerSearch.trim()) || state.selectedFilter !== 'all';
+	const hasQueryOrFilter =
+		Boolean(state.providerSearch.trim()) ||
+		state.selectedFilter !== 'all' ||
+		state.selectedProtocol !== 'all';
 
 	return (
-		<div className="min-h-full min-w-0 overflow-x-hidden bg-gray-100/90 p-4 pb-6 sm:p-6 lg:p-8">
-			<div className="mb-5 flex flex-wrap items-start justify-between gap-3 sm:mb-6">
+		<div className="providers-design-workspace min-h-full min-w-0 overflow-x-hidden bg-gray-50 p-4 pb-6 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-3">
 				<div className="min-w-0">
-					<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
-					<p className="mt-1 text-sm text-gray-500">{t('subtitle', { product: tBrand('product') })}</p>
-					<p className="mt-1 text-xs text-gray-400">{t('importHint')}</p>
+					<AdminPageTitle>
+						{t('title')}
+					</AdminPageTitle>
+					<p className="mt-1 text-sm text-gray-500">{t('overviewSubtitle')}</p>
 				</div>
-				<ProviderSyncCheckButton
-					checking={sync.checking}
-					lastCheckedAt={sync.lastCheckedAt}
-					hasUpdates={officialUpdateCount > 0 || orphanCount > 0}
-					onCheck={() => void sync.check()}
-				/>
+				<div className="flex flex-wrap items-start gap-2">
+					<ProviderSyncCheckButton
+						checking={sync.loading || sync.checking}
+						onCheck={() => sync.openSync()}
+					/>
+					<button
+						type="button"
+						onClick={state.openImportModal}
+						className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-xs font-medium text-gray-700 hover:bg-gray-100"
+					>
+						<ArrowDownTrayIcon className="h-4 w-4" aria-hidden />
+						{tCommon('import')}
+					</button>
+					<button
+						type="button"
+						onClick={() => {
+							setInitialTab('basic');
+							state.handleCreate();
+						}}
+						className="inline-flex h-9 items-center justify-center gap-2 rounded-lg admin-primary px-4 text-xs font-medium text-white"
+					>
+						<PlusIcon className="h-4 w-4" aria-hidden />
+						{t('addCard.title')}
+					</button>
+				</div>
 			</div>
 
 			<ProviderSyncBanner
@@ -69,8 +107,12 @@ function ProvidersContent() {
 			/>
 
 			<ProviderToolbar
+				view={view}
+				onViewChange={setView}
 				providerSearch={state.providerSearch}
 				selectedFilter={state.selectedFilter}
+				selectedProtocol={state.selectedProtocol}
+				onProtocolChange={state.setSelectedProtocol}
 				filterCounts={state.filterCounts}
 				filteredCount={state.filteredProviders.length}
 				totalCount={state.providers.length}
@@ -78,27 +120,83 @@ function ProvidersContent() {
 				onFilterChange={state.setSelectedFilter}
 			/>
 
-			<div className="admin-catalog-grid">
-				<ProviderAddCard onImport={state.openImportModal} onCreate={state.handleCreate} />
-				{state.filteredProviders.map((provider) => (
-					<ProviderCard
-						key={provider.id}
-						provider={provider}
-						copiedId={state.copiedId}
-						statusTogglingId={state.statusTogglingId}
-						onEdit={state.handleEdit}
-						onToggleStatus={state.handleToggleStatus}
-						onCopyApiKey={state.handleCopyApiKey}
-						onReviewOfficialUpdate={() =>
-							sync.openSync(provider.kind_orphaned ? PROVIDER_SYNC_ORPHANS_KEY : provider.kind)
-						}
-					/>
-				))}
+			<div
+				className={
+					view === 'list'
+						? 'provider-list-canvas overflow-hidden rounded-2xl'
+						: 'provider-card-canvas admin-catalog-grid'
+				}
+			>
+				{view === 'list' && (
+					<div
+						className={`provider-list-heading hidden gap-4 px-4 py-3 text-xs font-medium text-slate-500 xl:grid ${PROVIDER_LIST_COLUMNS}`}
+						aria-hidden
+					>
+						<span>{t('list.provider')}</span>
+						<span>{t('list.status')}</span>
+						<span>{t('list.protocols')}</span>
+						<span>{t('list.keyAndQuota')}</span>
+						<span>{t('list.routes')}</span>
+					</div>
+				)}
+				<div
+					className={view === 'list' ? 'provider-list-items' : 'contents'}
+					role={view === 'list' ? 'list' : undefined}
+					aria-label={view === 'list' ? t('title') : undefined}
+				>
+					{state.filteredProviders.map((provider) => (
+						<ProviderCard
+							key={provider.id}
+							view={view}
+							provider={provider}
+							copiedId={state.copiedId}
+							statusTogglingId={state.statusTogglingId}
+							onEdit={(provider) => {
+								setInitialTab('basic');
+								state.handleEdit(provider);
+							}}
+							onViewEndpoints={(provider) => {
+								setInitialTab('endpoints');
+								state.handleEdit(provider);
+							}}
+							onViewRoutes={(provider) => {
+								setInitialTab('routes');
+								state.handleEdit(provider);
+							}}
+							onToggleStatus={state.handleToggleStatus}
+							onCopyApiKey={state.handleCopyApiKey}
+							onReviewOfficialUpdate={() =>
+								sync.openSync(
+									provider.kind_orphaned
+										? PROVIDER_SYNC_ORPHANS_KEY
+										: provider.kind
+								)
+							}
+						/>
+					))}
+					{view === 'list' && state.filteredProviders.length === 0 ? (
+						<div
+							role="listitem"
+							className="p-8 text-center text-sm text-slate-500"
+						>
+							<p>{hasQueryOrFilter ? t('emptySearch') : t('empty')}</p>
+							{hasQueryOrFilter ? (
+								<p className="mt-1 text-xs text-slate-400">
+									{t('emptyFilterHint')}
+								</p>
+							) : null}
+						</div>
+					) : null}
+				</div>
 			</div>
-			{state.filteredProviders.length === 0 && hasQueryOrFilter ? (
+			{view === 'cards' && state.filteredProviders.length === 0 ? (
 				<p className="mt-4 text-center text-sm text-gray-500">
-					{t('emptySearch')}
-					<span className="mt-1 block text-xs text-gray-400">{t('emptyFilterHint')}</span>
+					{hasQueryOrFilter ? t('emptySearch') : t('empty')}
+					{hasQueryOrFilter && (
+						<span className="mt-1 block text-xs text-gray-400">
+							{t('emptyFilterHint')}
+						</span>
+					)}
 				</p>
 			) : null}
 
@@ -124,17 +222,20 @@ function ProvidersContent() {
 
 			<ProviderModal
 				open={state.showModal}
+				initialTab={initialTab}
 				editingProvider={state.editingProvider}
 				duplicateSourceId={state.duplicateSourceId}
 				formData={state.formData}
 				saveError={state.saveError}
 				isSaving={state.isSaving}
+				isApiKeyLoading={state.isApiKeyLoading}
 				isDeleting={state.isDeleting}
 				onClose={state.closeProviderModal}
-				onFormChange={state.setFormData}
+				onFormChange={state.handleFormChange}
 				onSave={state.handleSave}
 				onDelete={state.handleDelete}
 				onDuplicate={state.handleDuplicate}
+				onRoutesChanged={state.refreshProviders}
 			/>
 		</div>
 	);
@@ -156,4 +257,4 @@ function GatewayProvidersPage() {
 	);
 }
 
-export default function AdvancedPage() { return <AdvancedEditorGate feature="providers"><GatewayProvidersPage /></AdvancedEditorGate>; }
+export default function AdvancedPage() {return <AdvancedEditorGate feature="providers"><GatewayProvidersPage/></AdvancedEditorGate>;}

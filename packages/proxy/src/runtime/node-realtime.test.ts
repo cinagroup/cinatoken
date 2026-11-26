@@ -1,5 +1,8 @@
+
+import { Readable } from 'node:stream';
+import { createNodeDashScopeDeferredRuntime, createNodeElevenLabsRealtimeDispatch } from './node-realtime';
 import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
+import { afterEach, describe, it } from 'node:test';
 import { IncomingMessage } from 'node:http';
 import { Socket } from 'node:net';
 import type { RouteResult } from '../services/model-router';
@@ -55,7 +58,11 @@ function isValidWsCloseCode(code: number): boolean {
 	);
 }
 
+const testSockets:FakeSocket[]=[];
+afterEach(()=>{for(const socket of testSockets.splice(0))socket.emitClose();});
+
 class FakeSocket implements NodeWebSocket {
+ constructor(){testSockets.push(this);}
 	readyState = 1;
 	bufferedAmount = 0;
 	binaryType = '';
@@ -157,6 +164,14 @@ class FakeSocket implements NodeWebSocket {
 
 	emitOpen(): void {
 		for (const listener of [...this.openListeners]) listener();
+	}
+
+
+	emitUnexpectedResponse(status: number, body: string, headers: Record<string, string>): void {
+		const response = Readable.from([Buffer.from(body)]) as IncomingMessage;
+		response.statusCode = status;
+		response.headers = headers;
+		for (const listener of [...this.rejectionListeners]) listener(response, response);
 	}
 
 	rejectHandshake(): void {
@@ -455,7 +470,7 @@ describe('Node DashScope realtime adapter', () => {
 		const result = await resultPromise;
 		assert.ok(upstream);
 
-		upstream!.emitUpstreamMessage(
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(
 			JSON.stringify({
 				header: { event: 'task-finished', task_id: 'task-1' },
 				payload: { usage: { duration: 1.5 } },
@@ -465,7 +480,7 @@ describe('Node DashScope realtime adapter', () => {
 		assert.doesNotThrow(() => client.emitPeerClose(1005));
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
-		assert.equal(upstream!.closeCodes[0], 1000);
+		assert.equal((upstream as FakeSocket | null)!.closeCodes[0], 1000);
 	});
 
 	it('forwards messages queued while the client socket is paused', async () => {
@@ -494,9 +509,209 @@ describe('Node DashScope realtime adapter', () => {
 		await resultPromise;
 		assert.ok(upstream);
 
-		assert.equal(upstream!.sent.length, 0);
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 0);
 		client.resume();
-		assert.equal(typeof upstream!.sent[0], 'string');
-		assert.equal(JSON.parse(String(upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+		assert.equal(typeof (upstream as FakeSocket | null)!.sent[0], 'string');
+		assert.equal(JSON.parse(String((upstream as FakeSocket | null)!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+	});
+});
+
+
+describe('Node DashScope deferred realtime runtime', () => {
+	it('queues downstream frames from construction and relays them once connected upstream', async () => {
+		const client = new FakeSocket();
+		const received: Array<string | ArrayBuffer | Uint8Array> = [];
+		let upstream: FakeSocket | null = null;
+		let upstreamUrl = '';
+		const WebSocketCtor = function (url: string): NodeWebSocket {
+			upstreamUrl = url;
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+
+		const runtime = createNodeDashScopeDeferredRuntime(client, WebSocketCtor);
+		// 监听器注册之前到达的 run-task 帧要先排队
+		client.emitMessage(JSON.stringify({ header: { action: 'run-task' }, payload: { model: 'm', task: 'asr' } }), false);
+		runtime.client.onMessage((data) => received.push(data));
+		assert.equal(typeof received[0], 'string');
+
+		const opened = await runtime.connectUpstream(
+			route({ providerModelName: 'fun-asr-realtime-v2' }),
+			'audio.transcriptions.realtime.inference'
+		);
+		assert.ok('socket' in opened);
+		assert.match(upstreamUrl, /wss:\/\/dashscope/);
+
+		const upstreamFrames: Array<string | ArrayBuffer | Uint8Array> = [];
+		opened.socket.onMessage((data) => upstreamFrames.push(data));
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ header: { event: 'task-started' } }), false);
+		assert.equal(typeof upstreamFrames[0], 'string');
+
+		runtime.client.send(JSON.stringify({ header: { event: 'task-started' } }));
+		assert.equal(typeof client.sent[0], 'string');
+		runtime.client.close(1000, 'done');
+		assert.equal(client.closeCodes[0], 1000);
+	});
+
+	it('aborts a pending upstream connection when the session signal fires', async () => {
+		const client = new FakeSocket();
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+		const runtime = createNodeDashScopeDeferredRuntime(client, WebSocketCtor);
+		const controller = new AbortController();
+		const pending = runtime.connectUpstream(
+			route(),
+			'audio.transcriptions.realtime.inference',
+			controller.signal
+		);
+		await new Promise<void>((resolve) => setImmediate(resolve));
+		controller.abort();
+		await assert.rejects(pending, {name: 'RequestExecutionStoppedError'});
+		assert.equal((upstream as FakeSocket | null)!.closeCodes[0], 1000);
+	});
+});
+
+
+describe('Node ElevenLabs realtime adapter', () => {
+	const elevenRoute = (overrides: Partial<RouteResult> = {}) =>
+		route({
+			providerId: 'elevenlabs',
+			providerName: 'ElevenLabs',
+			providerModelName: 'eleven_flash_v2_5',
+			upstreamProtocol: 'elevenlabs',
+			upstreamOperation: 'audio.speech.realtime',
+			providerEndpoints: { elevenlabs: { base: 'https://api.elevenlabs.io/v1' } },
+			...overrides,
+		});
+
+	it('connects with xi-api-key, bridges frames and reports TTS usage', async () => {
+		const client = new FakeSocket();
+		let upstream: FakeSocket | null = null;
+		let upstreamUrl = '';
+		let upstreamHeaders: Record<string, string> = {};
+		const WebSocketCtor = function (url: string, options?: { headers?: Record<string, string> }): NodeWebSocket {
+			upstreamUrl = url;
+			upstreamHeaders = options?.headers ?? {};
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+
+		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
+		const result = await dispatch(elevenRoute(), {
+			operation: 'audio.speech.realtime',
+			voiceId: 'voice_1',
+			query: { model_id: 'gateway-model', output_format: 'pcm_16000' },
+		});
+
+		const url = new URL(upstreamUrl);
+		assert.equal(url.protocol, 'wss:');
+		assert.equal(url.pathname, '/v1/text-to-speech/voice_1/stream-input');
+		assert.equal(url.searchParams.get('model_id'), 'eleven_flash_v2_5');
+		assert.equal(upstreamHeaders['xi-api-key'], 'secret');
+		assert.equal(result.response.headers.get('x-octafuse-realtime-upgrade'), '1');
+		assert.equal(result.response.headers.get('x-octafuse-realtime-protocol'), 'elevenlabs');
+
+		client.emitMessage(JSON.stringify({ text: ' ', xi_api_key: 'sk-client' }), false);
+		client.emitMessage(JSON.stringify({ text: 'Hello' }), false);
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 2);
+		assert.ok(!String((upstream as FakeSocket | null)!.sent[0]).includes('sk-client'));
+
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ audio: 'AAAA' }), false);
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ isFinal: true }), false);
+		assert.equal(client.sent.length, 2);
+		(upstream as FakeSocket | null)!.emitClose();
+		const usage = await result.usagePromise;
+		assert.equal(usage.audio_characters, 5);
+		assert.equal(usage.stream_error, undefined);
+	});
+
+	it('forwards messages the client sent before the upstream finished connecting', async () => {
+		const client = new FakeSocket();
+		client.pause();
+		client.emitMessage(JSON.stringify({ text: ' ' }), false);
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
+		await dispatch(elevenRoute(), { operation: 'audio.speech.realtime', voiceId: 'voice_1', query: {} });
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 0);
+		client.resume();
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 1);
+	});
+
+	it('forwards an upstream first frame sent in the same tick as open (session_started)', async () => {
+		const client = new FakeSocket();
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			const upstream = new FakeSocket();
+			queueMicrotask(() => {
+				upstream.emitOpen();
+				upstream.emitUpstreamMessage(JSON.stringify({ message_type: 'session_started' }), false);
+			});
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
+		await dispatch(
+			elevenRoute({ upstreamOperation: 'audio.transcriptions.realtime' }),
+			{ operation: 'audio.transcriptions.realtime', query: { audio_format: 'pcm_16000' } },
+		);
+		assert.equal(client.sent.length, 1);
+		assert.equal(JSON.parse(String(client.sent[0])).message_type, 'session_started');
+	});
+
+	it('returns the upstream handshake rejection, rewriting quota_exceeded to 402', async () => {
+		const client = new FakeSocket();
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			queueMicrotask(() =>
+				upstream?.emitUnexpectedResponse(
+					401,
+					JSON.stringify({ detail: { status: 'quota_exceeded', message: 'out of credits' } }),
+					{ 'content-type': 'application/json' }
+				)
+			);
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
+		const result = await dispatch(elevenRoute(), {
+			operation: 'audio.speech.realtime',
+			voiceId: 'voice_1',
+			query: {},
+		});
+		assert.equal(result.response.status, 402);
+		assert.equal(result.response.headers.get('x-octafuse-realtime-upgrade'), null);
+		assert.match(await result.response.text(), /out of credits/);
+		// 握手失败时下游不能被关闭，留给 failover 重试下一条路由
+		assert.equal(client.closeCodes.length, 0);
+	});
+
+	it('bills STT audio bytes using the query audio_format', async () => {
+		const client = new FakeSocket();
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
+		const result = await dispatch(
+			elevenRoute({ providerModelName: 'scribe_v2_realtime', upstreamOperation: 'audio.transcriptions.realtime' }),
+			{ operation: 'audio.transcriptions.realtime', query: { audio_format: 'pcm_16000' } }
+		);
+		client.emitMessage(
+			JSON.stringify({ message_type: 'input_audio_chunk', audio_base_64: Buffer.alloc(64_000).toString('base64') }),
+			false
+		);
+		client.emitPeerClose(1000, 'done');
+		const usage = await result.usagePromise;
+		assert.equal(usage.audio_duration_seconds, 2);
 	});
 });

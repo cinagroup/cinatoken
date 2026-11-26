@@ -7,6 +7,7 @@ import type {
 	ConfigGroupAuditPageOptions,
 	ToolConfigFamily,
 } from '../db/system-config-group-types';
+import type { DashboardOverview, DashboardOverviewWindow } from './repository-dtos';
 import type {
 	GlobalUserAuditLogRow,
 	ModelRow,
@@ -42,6 +43,7 @@ import type { ApiKeyListSortField, ApiKeyListSortOrder } from '../db/api-keys-li
 import type { UserListSortField, UserListSortOrder } from '../db/users-list-sort';
 import type { ProviderProtocolBases } from '../db/providers-types';
 import type { SystemConfigRow } from '../db/system-config-types';
+import type { RequestLogMatchGroup } from '../db/request-log-filters';
 import type {
 	AdminApiKeyListItem,
 	EntityCountSnapshot,
@@ -64,7 +66,11 @@ import type {
 	UserTokenTimeseriesRow,
 } from './repository-dtos';
 import type { ResolvedModelSurfaceRow } from '../route-topology';
-import type { RoutePoolStickyBindingRow, RoutePoolStickyBindingTargetCount } from '../db/route-pool-sticky-types';
+import type {
+	RoutePoolStickyBindingRow,
+	RoutePoolStickyActiveBindingRow,
+	RoutePoolStickyBindingTargetCount,
+} from '../db/route-pool-sticky-types';
 import type { AdminApiKeyRow, AdminSessionRow, InsertAdminApiKeyParams } from '../db/admin-access-types';
 import type { AdminApiKeyAuditContext, AdminApiKeyAuditCursor, AdminApiKeyAuditRow } from '../db/admin-access-audit';
 import type { AdminSharedKeysRepository } from '../db/admin-shared-key-governance';
@@ -386,6 +392,8 @@ export interface RouteDataPoliciesRepository {
 	invalidateForProvider(providerId: string, params: InvalidateRouteDataPoliciesParams): Promise<number>;
 }
 import type { McpServersRepository } from '../db/mcp-servers.repository';
+import type { OAuthAccessTokensRepository } from '../db/oauth-access-tokens.repository';
+import type { OAuthServerRepository } from '../db/oauth-server.repository';
 
 export interface AdminAccessRepository {
 	listApiKeys(): Promise<AdminApiKeyRow[]>;
@@ -418,7 +426,7 @@ export interface AdminAccessRepository {
 	deleteExpiredSessions(nowIso: string): Promise<void>;
 }
 
-export type { McpServersRepository };
+export type { McpServersRepository, OAuthAccessTokensRepository, OAuthServerRepository };
 
 /** 管理端分析聚合 */
 export interface AdminAnalyticsRepository {
@@ -550,6 +558,8 @@ export interface AdminKeyMutationWithAudit {
 }
 
 export interface ApiKeysRepository {
+ /** Internal accounting only; validates the exact OAuth token, owner, workspace and active key. */
+ getOAuthActorKeyLookupHash(input:import('../db/oauth-actor-key-hash').OAuthActorKeyLookup):Promise<string|null>;
 	/** Current-key metadata lookup after the same Gateway key has authenticated. */
 	getCurrentById(id: string): Promise<ManagementGatewayKeyRow | null>;
 	listForManagement(params: ManagementGatewayKeyListParams): Promise<ManagementGatewayKeyRow[]>;
@@ -664,7 +674,8 @@ export interface ModelsRepository {
 		contextWindow: unknown;
 		maxTokens: unknown;
 		pricingProfile?: unknown;
-		description: unknown;
+		note?: unknown;
+		description?: unknown;
 		metadata: unknown;
 		inputModalities?: unknown;
 		outputModalities?: unknown;
@@ -681,6 +692,8 @@ export interface ModelsRepository {
 		tags?: string[],
 	): Promise<boolean>;
 	deleteModelCascade(id: string): Promise<number>;
+	/** Delete only when no active or disabled routes reference the model. Tags cascade via FK. */
+	deleteModelIfUnrouted(id: string): Promise<number>;
 }
 
 /** 推理路径：模型行（含 tags）、活跃路由列表、按 modelId 取路由 */
@@ -785,6 +798,8 @@ export interface RoutePoolStickyBindingsRepository {
 		nowIso: string;
 		/** When set, also allow overwrite of a still-valid row with this token. */
 		expectedToken?: string | null;
+		/** 明文 affinity key，供后台列出用户；缺省时保留已有值。 */
+		affinityKey?: string | null;
 	}): Promise<boolean>;
 	/** Sliding TTL renew; CAS on binding_token. Returns true when updated. */
 	touchBinding(params: {
@@ -793,6 +808,8 @@ export interface RoutePoolStickyBindingsRepository {
 		expectedToken: string;
 		expiresAt: string;
 		nowIso: string;
+		/** 补全旧行缺失的明文 affinity key（只在原值为空时写入）。 */
+		affinityKey?: string | null;
 	}): Promise<boolean>;
 	/** Clear sticky binding; CAS on binding_token. Returns true when deleted. */
 	clearBinding(params: { routePoolId: string; affinityHash: string; expectedToken: string }): Promise<boolean>;
@@ -805,6 +822,17 @@ export interface RoutePoolStickyBindingsRepository {
 	 * Active binding counts per target: epoch matches pool.sticky_epoch and not expired.
 	 */
 	listBindingTargetCounts(routePoolId: string, nowIso: string): Promise<RoutePoolStickyBindingTargetCount[]>;
+	/**
+	 * Page of active bindings (epoch matches pool.sticky_epoch and not expired),
+	 * most recently updated first. `total` counts all rows matching the filter.
+	 */
+	listActiveBindings(params: {
+		routePoolId: string;
+		nowIso: string;
+		limit: number;
+		offset: number;
+		routeTargetId?: string | null;
+	}): Promise<{ rows: RoutePoolStickyActiveBindingRow[]; total: number }>;
 	/** Rows that are expired or epoch-mismatched (GC debt). */
 	countStaleBindings(routePoolId: string, nowIso: string): Promise<number>;
 	/** Best-effort table hygiene; not required for correctness. */
@@ -823,11 +851,14 @@ export interface ProvidersRepository {
 		kind?: string;
 		/** `providers.endpoints` JSON 文本 */
 		endpoints: string | null;
-		description: unknown;
+		note?: unknown;
+		description?: unknown;
 		apiKey?: string;
 		status?: string;
 		/** 非空 = 接受用户共享密钥池注入的官方渠道。 */
 		sharedChannelType?: string | null;
+		/** `providers.custom_params` JSON 文本（按协议分组的默认 headers/body），未传 = `null`。 */
+		customParams?: string | null;
 	}): Promise<void>;
 	updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number>;
 	deleteProviderById(id: string): Promise<number>;
@@ -843,6 +874,62 @@ export type RequestLogsByKeyIdFilter = {
 	excludeStatus?: string;
 	includeStatuses?: string[];
 };
+
+/** {@link RequestLogsRepository.getRequestLogSummary} 可用的分组维度。 */
+export const REQUEST_LOG_SUMMARY_DIMENSIONS = [
+	'provider',
+	'model',
+	'user',
+	'provider_key',
+	'route_group',
+	'status',
+] as const;
+export type RequestLogSummaryDimension = (typeof REQUEST_LOG_SUMMARY_DIMENSIONS)[number];
+
+/** 汇总行的分组键字段；未参与分组的维度不出现。`null` 表示该列在日志里为空。 */
+export type RequestLogSummaryKey = {
+	provider_id?: string | null;
+	model_id?: string | null;
+	user_id?: string | null;
+	provider_key_id?: string | null;
+	route_group?: string | null;
+	status?: string | null;
+};
+
+/**
+ * 展示快照：仅在 `includeLabels` 且对应维度参与分组时出现，取组内 `MAX()`（日志写入时的名称快照，组内通常唯一）。
+ * `null` 表示组内该列全为空。
+ */
+export type RequestLogSummaryLabels = {
+	user_email?: string | null;
+	model_name?: string | null;
+	provider_name?: string | null;
+	provider_key_label?: string | null;
+};
+
+/** 汇总指标：条数与 Token 为整数，金额为 6 位小数十进制字符串（避免浮点往返）。 */
+export type RequestLogSummaryMetrics = {
+	request_count: number;
+	success_count: number;
+	error_count: number;
+	incomplete_count: number;
+	cancelled_count: number;
+	input_tokens: number;
+	output_tokens: number;
+	cache_read_tokens: number;
+	cache_write_tokens: number;
+	reasoning_tokens: number;
+	total_tokens: number;
+	standard_cost: string;
+	metered_cost: string;
+	charged_cost: string;
+	charged_wallet_cost: string;
+	/** `status = 'error'` 的日志上的 `metered_cost` / `charged_cost` 合计，已包含在上面的总额里。 */
+	error_metered_cost: string;
+	error_charged_cost: string;
+};
+
+export type RequestLogSummaryRow = RequestLogSummaryKey & RequestLogSummaryLabels & RequestLogSummaryMetrics;
 
 export interface RequestLogsRepository {
 	/**
@@ -877,6 +964,26 @@ export interface RequestLogsRepository {
 		userId: string;
 		workspaceId: string;
 	}): Promise<GenerationRequestLogRow | null>;
+	getDashboardOverview(options: DashboardOverviewWindow): Promise<DashboardOverview>;
+	/**
+	 * 按维度聚合区间内请求日志（所有状态都计入）。区间为半开 `[startDate, endDate)`，两端均为 ISO 8601 UTC 时刻。
+	 * 没有日志的分组不返回行；返回行数超过 `limit` 时只保证至多 `limit` 行，调用方可传 `最大值 + 1` 判断是否越界。
+	 */
+	getRequestLogSummary(options: {
+		groupBy: RequestLogSummaryDimension[];
+		startDate: string;
+		endDate: string;
+		providerIds?: string[];
+		modelId?: string;
+		modelIdPrefix?: string;
+		routeGroup?: string;
+		status?: string;
+		/** 附带展示快照（见 {@link RequestLogSummaryLabels}）。 */
+		includeLabels?: boolean;
+		limit: number;
+		/** 跳过前 N 组（按分组键排序），默认 0。 */
+		offset?: number;
+	}): Promise<RequestLogSummaryRow[]>;
 	getRequestLogsByKeyId(
 		apiKeyId: string,
 		page: number,
@@ -899,8 +1006,16 @@ export interface RequestLogsRepository {
 		providerId?: string;
 		/** Public provider display-name snapshot captured on the request log. */
 		providerName?: string;
-		/** Match any of these `provider_id` values. Combined with `providerId` when both are set. */
+		/** Match any of these `provider_id` values, or any provider of `providerKinds`. Combined with `providerId` when both are set. */
 		providerIds?: string[];
+		/** Provider kinds (`providers.kind`; empty string = unclassified), resolved against the current provider catalog. ORed with `providerIds`. */
+		providerKinds?: string[];
+		/** Match any of these `model_id` values, or any model of `modelVendors`. Combined with `modelId` when both are set. */
+		modelIds?: string[];
+		/** Model vendors (`models.vendor`), resolved against the current model catalog. ORed with `modelIds`. */
+		modelVendors?: string[];
+		/** Rows must match at least one group. Conditions inside a group are ANDed. Combined with the other filters by AND. */
+		anyOf?: RequestLogMatchGroup[];
 		/** Case-sensitive literal `model_id` startsWith; `%`, `_`, and `\` are ordinary characters. */
 		modelIdPrefix?: string;
 		routeGroup?: string;
@@ -978,7 +1093,11 @@ export interface RequestLogsRepository {
 	}): Promise<RouteAvailabilityAggregate[]>;
 	/** Bounded oldest-first hygiene; never deletes inside request settlement. */
 	deleteProviderAttemptAvailabilityBefore(options: { cutoffIso: string; limit: number }): Promise<number>;
-	getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number>;
+	getDistinctActiveUsersCount(options: {
+		startDate: string;
+		endDate: string;
+		endExclusive?: boolean;
+	}): Promise<number>;
 }
 
 export interface SystemConfigRepository {
@@ -986,7 +1105,10 @@ export interface SystemConfigRepository {
 	getConfigSnapshots(keys: readonly string[]): Promise<ConfigSnapshot[]>;
 	/** Complete family read-set CAS and metadata-only group audit; no automatic retry. */
 	applyConfigGroupIfRevisions(input: ConfigGroupApplyInput): Promise<ConfigGroupApplyResult>;
-	listConfigGroupAudit(family: ToolConfigFamily, options: ConfigGroupAuditPageOptions): Promise<ConfigGroupAuditRow[]>;
+	listConfigGroupAudit(
+		family: ToolConfigFamily,
+		options: ConfigGroupAuditPageOptions,
+	): Promise<ConfigGroupAuditRow[]>;
 	listSystemConfigRows(): Promise<SystemConfigRow[]>;
 	/** Admin write: config and metadata-only audit commit or roll back together. */
 	upsertSystemConfigValueWithAudit(input: SystemConfigAuditWrite): Promise<void>;

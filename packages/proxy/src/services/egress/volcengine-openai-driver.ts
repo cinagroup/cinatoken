@@ -1,7 +1,7 @@
 import type { NativeMediaOptions } from './native-media-lifecycle';
 /**
  * OpenAI `POST /v1/images/generations` → 火山方舟 / BytePlus 生图。
- * 只出非流式 JSON。流式走 `/v1/volcengine/images/generations` 透传。
+ * 只出非流式 JSON。流式走 `/volcengine/api/v3/images/generations` 透传。
  */
 import {
 	applyUpstreamExtraFields,

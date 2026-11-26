@@ -1,3 +1,4 @@
+import { catalogNotePatch } from '../catalog-note-compat';
 import {
 	modelPricingScheduleUpdate,
 	modelPricingScheduleChanged,
@@ -20,14 +21,14 @@ import {
 
 const MODEL_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens, m.pricing_profile,
 				(SELECT json_group_array(mt.tag) FROM model_tags mt WHERE mt.model_id = m.id) AS tags,
-				m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
+				m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
 				(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id) AS routes_count,
 				(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 			 FROM models m ORDER BY m.id ASC`;
 
 const MODEL_DETAIL_WITH_ROUTE_COUNTS_SQL = `SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens, m.pricing_profile,
 					(SELECT json_group_array(mt.tag) FROM model_tags mt WHERE mt.model_id = m.id) AS tags,
-					m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
+					m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at,
 					(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id) AS routes_count,
 					(SELECT COUNT(*) FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 				 FROM models m WHERE m.id = ?`;
@@ -51,7 +52,7 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 			contextWindow: unknown;
 			maxTokens: unknown;
 			pricingProfile?: unknown;
-			description: unknown;
+			note: unknown;
 			metadata: unknown;
 			inputModalities?: unknown;
 			outputModalities?: unknown;
@@ -59,8 +60,8 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 		}): Promise<void> {
 			await raw
 				.prepare(
-					`INSERT INTO models (id, display_name, vendor, context_window, max_tokens, pricing_profile, description, metadata, input_modalities, output_modalities, released_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+					`INSERT INTO models (id, display_name, vendor, context_window, max_tokens, pricing_profile, description, note, metadata, input_modalities, output_modalities, released_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				)
 				.bind(
 					params.id,
@@ -69,7 +70,8 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 					params.contextWindow ?? null,
 					params.maxTokens,
 					params.pricingProfile == null ? null : String(params.pricingProfile),
-					params.description ?? null,
+					params.note ?? null,
+					params.note ?? null,
 					params.metadata ?? null,
 					params.inputModalities == null ? null : String(params.inputModalities),
 					params.outputModalities == null ? null : String(params.outputModalities),
@@ -87,6 +89,7 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 		},
 
 		async updateModelByPatch(id: string, rest: Record<string, unknown>): Promise<number> {
+ rest = catalogNotePatch(rest);
 			const patch: string[] = [];
 			const bindValues: unknown[] = [];
 			for (const [key, value] of Object.entries(rest)) {
@@ -104,6 +107,7 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 		},
 
 		async updateModelWithPolicyPrecondition(id, rest, expectedRoutePolicy, tags): Promise<boolean> {
+ rest = catalogNotePatch(rest);
 			assertModelPolicyExpected(expectedRoutePolicy);
 			const patch = modelPolicyPatch(rest);
 			let expected = 'id = ? COLLATE BINARY AND route_policy IS ? COLLATE BINARY';
@@ -120,7 +124,9 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 				if (!model) return false;
 				if (modelPricingScheduleChanged(model.pricing_profile, nextSchedule)) {
 					const snapshot = await raw
-						.prepare('SELECT id, price_override FROM model_routes WHERE model_id = ? COLLATE BINARY ORDER BY id')
+						.prepare(
+							'SELECT id, price_override FROM model_routes WHERE model_id = ? COLLATE BINARY ORDER BY id',
+						)
 						.bind(id)
 						.all<ModelPricingRouteSnapshot>();
 					if (!snapshot.success) throw new Error('Invalid model pricing route snapshot');
@@ -149,7 +155,9 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 				for (const tag of cleanTags)
 					statements.push(
 						raw
-							.prepare(`INSERT INTO model_tags (model_id, tag) SELECT id, ? FROM models WHERE ${expected}`)
+							.prepare(
+								`INSERT INTO model_tags (model_id, tag) SELECT id, ? FROM models WHERE ${expected}`,
+							)
 							.bind(tag, ...expectedValues),
 					);
 			}
@@ -184,6 +192,16 @@ export function createD1ModelsRepository(db: D1DatabaseClient): ModelsRepository
 			await raw.prepare('DELETE FROM model_routes WHERE model_id = ?').bind(id).run();
 			await raw.prepare('DELETE FROM model_tags WHERE model_id = ?').bind(id).run();
 			const deleted = await raw.prepare('DELETE FROM models WHERE id = ?').bind(id).run();
+			return deleted.meta.changes;
+		},
+
+		async deleteModelIfUnrouted(id: string): Promise<number> {
+			const deleted = await raw
+				.prepare(
+					'DELETE FROM models WHERE id = ? AND NOT EXISTS (SELECT 1 FROM model_routes WHERE model_id = ?)',
+				)
+				.bind(id, id)
+				.run();
 			return deleted.meta.changes;
 		},
 	};

@@ -5,7 +5,9 @@
 		"description": "An update to Nano Banana 2, built for high-efficiency image generation and conversational editing with improved visual quality, multi-turn character consistency, accurate text rendering, and search-grounded generation across 1K, 2K, and 4K resolutions.",
 		"i18n": {
 			"en": "An update to Nano Banana 2, built for high-efficiency image generation and conversational editing with improved visual quality, multi-turn character consistency, accurate text rendering, and search-grounded generation across 1K, 2K, and 4K resolutions.",
-			"zh": "Nano Banana 2 的升级版本，专为高效图片生成与对话式编辑打造，提升了视觉质量、多轮角色一致性、精准文字渲染，并支持 1K、2K、4K 分辨率的搜索增强生成。"
+			"zh": "Nano Banana 2 的升级版本，专为高效图片生成与对话式编辑打造，提升了视觉质量、多轮角色一致性、精准文字渲染，并支持 1K、2K、4K 分辨率的搜索增强生成。",
+			"ja": "Nano Banana 2 の更新版で、効率のよい画像生成と会話形式の編集向けです。画質、複数ターンでのキャラクターの一貫性、文字の正確さが上がり、1K・2K・4K で検索に基づく生成もできます。",
+			"ko": "Nano Banana 2의 업데이트로, 효율적인 이미지 생성과 대화형 편집용입니다. 화질, 여러 턴에 걸친 캐릭터 일관성, 글자 정확도가 올라갔고, 1K·2K·4K에서 검색에 기반한 생성도 됩니다."
 		},
 		"vendor": "google",
 		"context_window": null,
@@ -54,7 +56,9 @@
 		"description": "A fast Google model for high-quality image generation and editing with multimodal reasoning. Also known as Nano Banana 2, it combines fast generation with advanced editing and multimodal visual reasoning.",
 		"i18n": {
 			"en": "A fast Google model for high-quality image generation and editing with multimodal reasoning. Also known as Nano Banana 2, it combines fast generation with advanced editing and multimodal visual reasoning.",
-			"zh": "结合多模态推理能力的高速 Google 图片生成与编辑模型。亦称 Nano Banana 2，将高速生成与高级编辑和多模态视觉推理结合起来。"
+			"zh": "结合多模态推理能力的高速 Google 图片生成与编辑模型。亦称 Nano Banana 2，将高速生成与高级编辑和多模态视觉推理结合起来。",
+			"ja": "マルチモーダルな推論を備えた、速い Google の画像生成・編集モデルです。Nano Banana 2 とも呼ばれ、速い生成に高度な編集と視覚的な推論を組み合わせています。",
+			"ko": "멀티모달 추론을 갖춘 빠른 Google 이미지 생성·편집 모델입니다. Nano Banana 2로도 불리며, 빠른 생성에 고급 편집과 시각 추론을 묶었습니다."
 		},
 		"vendor": "google",
 		"context_window": null,
@@ -95,7 +99,7 @@
 			"input": ["text", "image"],
 			"output": ["image"]
 		},
-		"released": "2026-02-01"
+		"released": "2026-05-28"
 	},
 	{
 		"id": "gemini-3-pro-image-preview",
@@ -103,7 +107,9 @@
 		"description": "Google's advanced image generation preview for grounded creation and detailed visual editing. Built on Gemini 3 Pro, it emphasizes grounded creation, stronger multimodal reasoning, and detailed image editing.",
 		"i18n": {
 			"en": "Google's advanced image generation preview for grounded creation and detailed visual editing. Built on Gemini 3 Pro, it emphasizes grounded creation, stronger multimodal reasoning, and detailed image editing.",
-			"zh": "Google 高级图片生成预览模型，擅长有依据的创作与精细视觉编辑。基于 Gemini 3 Pro，强调有依据的创作、更强的多模态推理和精细图像编辑。"
+			"zh": "Google 高级图片生成预览模型，擅长有依据的创作与精细视觉编辑。基于 Gemini 3 Pro，强调有依据的创作、更强的多模态推理和精细图像编辑。",
+			"ja": "根拠のある制作と細かい視覚編集が得意な、Google の上位画像生成プレビューです。Gemini 3 Pro を基に、根拠のある制作、より強いマルチモーダル推論、細かい画像編集を重視しています。",
+			"ko": "근거 있는 제작과 세밀한 시각 편집에 강한 Google 상위 이미지 생성 프리뷰입니다. Gemini 3 Pro를 바탕으로, 근거 있는 제작, 더 강한 멀티모달 추론, 세밀한 이미지 편집을 중시합니다."
 		},
 		"vendor": "google",
 		"context_window": null,
@@ -144,6 +150,119 @@
 			"input": ["text", "image"],
 			"output": ["image"]
 		},
-		"released": "2025-11-01"
+		"released": "2025-11-20",
+		"retired": "2026-06-25"
+	},
+	{
+		"id": "gemini-3.1-flash-lite-image",
+		"display_name": "Gemini 3.1 Flash Lite Image",
+		"description": "Google's lightweight image generation and editing model, also known as Nano Banana 2 Lite. Text and image input are billed at $0.25 per million tokens; image output at $30. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+		"i18n": {
+			"en": "Google's lightweight image generation and editing model, also known as Nano Banana 2 Lite. Text and image input are billed at $0.25 per million tokens; image output at $30. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+			"zh": "Google 轻量级图片生成与编辑模型，亦称 Nano Banana 2 Lite。文本与图片输入按每百万 token 0.25 美元计费，图片输出 30 美元。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+			"ja": "Google の軽量な画像生成・編集モデルです。Nano Banana 2 Lite とも呼ばれます。テキスト・画像入力は 100 万トークンあたり 0.25 ドル、画像出力は 30 ドルです。人民元価格は公式人民元刊例ではなく、米ドル刊例に ×7 を掛けた換算の仮置き価格です。",
+			"ko": "Google의 경량 이미지 생성·편집 모델로, Nano Banana 2 Lite로도 불립니다. 텍스트·이미지 입력은 토큰 100만 개당 0.25달러, 이미지 출력은 30달러입니다. 위안화 가격은 공식 위안화 게재가가 아닌, 달러 게재가 ×7 환산의 임시 가격입니다."
+		},
+		"vendor": "google",
+		"context_window": null,
+		"max_tokens": null,
+		"pricing": {
+			"usd": {
+				"image_billing_mode": "token",
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.25,
+						"output_price": 1.5,
+						"cache_read_price": null,
+						"cache_write_price": null,
+						"image_input_price": 0.25,
+						"image_input_cache_price": null,
+						"image_output_price": 30
+					}
+				]
+			},
+			"cny": {
+				"image_billing_mode": "token",
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 1.75,
+						"output_price": 10.5,
+						"cache_read_price": null,
+						"cache_write_price": null,
+						"image_input_price": 1.75,
+						"image_input_cache_price": null,
+						"image_output_price": 210
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"image"
+			]
+		},
+		"released": "2026-06-30"
+	},
+	{
+		"id": "gemini-3-pro-image",
+		"display_name": "Gemini 3 Pro Image",
+		"description": "Google's advanced image generation model for grounded creation and detailed visual editing, also known as Nano Banana Pro. Text and image input are billed at $2 per million tokens; image output at $120. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+		"i18n": {
+			"en": "Google's advanced image generation model for grounded creation and detailed visual editing, also known as Nano Banana Pro. Text and image input are billed at $2 per million tokens; image output at $120. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+			"zh": "Google 高级图片生成模型，擅长有依据的创作与精细视觉编辑，亦称 Nano Banana Pro。文本与图片输入按每百万 token 2 美元计费，图片输出 120 美元。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+			"ja": "Google の上位画像生成モデルです。Nano Banana Pro とも呼ばれ、根拠のある制作と細かい視覚編集が得意です。テキスト・画像入力は 100 万トークンあたり 2 ドル、画像出力は 120 ドルです。人民元価格は公式人民元刊例ではなく、米ドル刊例に ×7 を掛けた換算の仮置き価格です。",
+			"ko": "Google의 상위 이미지 생성 모델로, 근거 있는 제작과 세밀한 시각 편집에 강하며 Nano Banana Pro로도 불립니다. 텍스트·이미지 입력은 토큰 100만 개당 2달러, 이미지 출력은 120달러입니다. 위안화 가격은 공식 위안화 게재가가 아닌, 달러 게재가 ×7 환산의 임시 가격입니다."
+		},
+		"vendor": "google",
+		"context_window": null,
+		"max_tokens": null,
+		"pricing": {
+			"usd": {
+				"image_billing_mode": "token",
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 2,
+						"output_price": 12,
+						"cache_read_price": null,
+						"cache_write_price": null,
+						"image_input_price": 2,
+						"image_input_cache_price": null,
+						"image_output_price": 120
+					}
+				]
+			},
+			"cny": {
+				"image_billing_mode": "token",
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 14,
+						"output_price": 84,
+						"cache_read_price": null,
+						"cache_write_price": null,
+						"image_input_price": 14,
+						"image_input_cache_price": null,
+						"image_output_price": 840
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"image"
+			]
+		},
+		"released": "2026-05-28"
 	}
 ]

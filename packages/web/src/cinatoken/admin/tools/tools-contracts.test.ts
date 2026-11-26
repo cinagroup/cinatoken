@@ -22,7 +22,7 @@ import {
 	validToolVersion,
 } from './tools-token'
 
-test('all four families and ten engines project only safe ordinary state', () => {
+test('all four families and thirteen engines project only safe ordinary state', () => {
 	const raw = {
 		...fixtureOverview(),
 		secret: 'private',
@@ -33,7 +33,7 @@ test('all four families and ten engines project only safe ordinary state', () =>
 	const parsed = toolOverviewData.parse(raw)
 	assert.equal(
 		parsed.families.reduce((sum, family) => sum + family.providers.length, 0),
-		10
+		13
 	)
 	assert.equal(JSON.stringify(parsed).includes('private'), false)
 })

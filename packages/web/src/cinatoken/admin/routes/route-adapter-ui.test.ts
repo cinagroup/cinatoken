@@ -109,7 +109,7 @@ test('native task guidance differs from the OpenAI conversion that waits for ups
 	)
 	assert.ok(
 		native.includes(
-			'GET /v1/dashscope/tasks/:taskId?model=public%2Fmodel%20name'
+			'GET /dashscope/api/v1/tasks/:taskId?model=public%2Fmodel%20name'
 		)
 	)
 	assert.ok(native.includes('same Gateway Key'))
@@ -132,10 +132,9 @@ test('WebSocket guide uses catalog model ID and selected operation while unknown
 	}
 	const html = await render('en', draft, 'speech')
 	assert.ok(
-		html.includes(
-			'model=public%2Fmodel%20name&amp;operation=audio.speech.realtime.session'
-		)
+		html.includes('/dashscope/api-ws/v1/realtime?model=public%2Fmodel%20name')
 	)
+	assert.ok(html.includes('audio.speech.realtime.session'))
 	assert.equal(
 		await render('en', { ...draft, adapter: 'future-adapter' }, 'speech'),
 		''

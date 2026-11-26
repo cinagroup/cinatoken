@@ -621,4 +621,4 @@ assert.match(toolsGroup, /family, created_at DESC, id DESC/u);
 assert.doesNotMatch(toolsGroup, /\b(?:FOREIGN KEY|REFERENCES|config_value|value_hash|request_body|secret_key_hash)\b/u);
 for (const column of ['changed_fields_json', 'credentials_json', 'revision_before_json', 'revision_after_json']) assert.match(toolsGroup, new RegExp('\\b' + column + '\\s+TEXT\\s+NOT NULL', 'u'));
 
-assert.deepEqual(mysqlMigrations.slice(75), ['0076_user_wallet_credit.sql', '0077_key_rate_limit_and_ingress.sql', '0078_provider_kind.sql', '0079_mcp_servers.sql']);
+assert.deepEqual(mysqlMigrations.slice(75), ['0076_user_wallet_credit.sql', '0077_key_rate_limit_and_ingress.sql', '0078_provider_kind.sql', '0079_mcp_servers.sql','0086_catalog_notes.sql','0087_split_audio_adapter_families.sql','0088_request_log_provider_index.sql','0089_sticky_binding_affinity_key.sql','0090_oauth_access_tokens.sql','0091_oauth_authorization_server.sql','0092_oauth_client_credentials.sql','0093_provider_custom_params.sql','0094_tools_deepseek_audit.sql']);

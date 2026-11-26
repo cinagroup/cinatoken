@@ -10,13 +10,10 @@ import {
 
 describe('buildGeminiUpstreamActionUrl', () => {
 	it('rejects empty base URL', () => {
-		assert.throws(
-			() => buildGeminiUpstreamActionUrl('', 'gemini-2.5-pro', 'generateContent'),
-			/base URL is empty/
-		);
+		assert.throws(() => buildGeminiUpstreamActionUrl('', 'gemini-2.5-pro', 'generateContent'), /base URL is empty/);
 		assert.throws(
 			() => buildGeminiUpstreamActionUrl('   ', 'gemini-2.5-pro', 'generateContent'),
-			/base URL is empty/
+			/base URL is empty/,
 		);
 	});
 
@@ -26,18 +23,18 @@ describe('buildGeminiUpstreamActionUrl', () => {
 				buildGeminiUpstreamActionUrl(
 					'https://generativelanguage.googleapis.com',
 					'gemini-2.5-pro',
-					'streamGenerateContent'
+					'streamGenerateContent',
 				),
-			/must include path prefix/
+			/must include path prefix/,
 		);
 		assert.throws(
 			() =>
 				buildGeminiUpstreamActionUrl(
 					'https://generativelanguage.googleapis.com/',
 					'gemini-2.5-pro',
-					'streamGenerateContent'
+					'streamGenerateContent',
 				),
-			/must include path prefix/
+			/must include path prefix/,
 		);
 	});
 
@@ -46,9 +43,9 @@ describe('buildGeminiUpstreamActionUrl', () => {
 			buildGeminiUpstreamActionUrl(
 				'https://generativelanguage.googleapis.com/v1beta/models',
 				'gemini-2.5-flash',
-				'generateContent'
+				'generateContent',
 			),
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
 		);
 	});
 
@@ -57,9 +54,9 @@ describe('buildGeminiUpstreamActionUrl', () => {
 			buildGeminiUpstreamActionUrl(
 				'https://aiplatform.googleapis.com/v1/publishers/google/models',
 				'gemini-2.5-flash',
-				'streamGenerateContent'
+				'streamGenerateContent',
 			),
-			'https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash:streamGenerateContent'
+			'https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash:streamGenerateContent',
 		);
 	});
 
@@ -68,9 +65,9 @@ describe('buildGeminiUpstreamActionUrl', () => {
 			buildGeminiUpstreamActionUrl(
 				'https://generativelanguage.googleapis.com/v1beta/models/',
 				'gemini-2.5-flash',
-				'generateContent'
+				'generateContent',
 			),
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
 		);
 	});
 
@@ -79,8 +76,8 @@ describe('buildGeminiUpstreamActionUrl', () => {
 			buildGeminiUpstreamActionUrl(
 				'https://generativelanguage.googleapis.com/v1beta/models',
 				'model/with/slash',
-				'generateContent'
-			).includes('model%2Fwith%2Fslash')
+				'generateContent',
+			).includes('model%2Fwith%2Fslash'),
 		);
 	});
 
@@ -89,9 +86,9 @@ describe('buildGeminiUpstreamActionUrl', () => {
 			buildGeminiUpstreamActionUrl(
 				'https://api.qnaigc.com//bypass/vertex/v1/models',
 				'gemini-3.1-flash-lite-preview',
-				'streamGenerateContent'
+				'streamGenerateContent',
 			),
-			'https://api.qnaigc.com/bypass/vertex/v1/models/gemini-3.1-flash-lite-preview:streamGenerateContent'
+			'https://api.qnaigc.com/bypass/vertex/v1/models/gemini-3.1-flash-lite-preview:streamGenerateContent',
 		);
 	});
 });
@@ -99,7 +96,7 @@ describe('buildGeminiUpstreamActionUrl', () => {
 describe('applyGeminiStreamQueryParams', () => {
 	it('sets alt=sse for streamGenerateContent', () => {
 		const u = new URL(
-			'https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash:streamGenerateContent?key=test'
+			'https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash:streamGenerateContent?key=test',
 		);
 		applyGeminiStreamQueryParams(u, 'streamGenerateContent');
 		assert.equal(u.searchParams.get('alt'), 'sse');
@@ -107,7 +104,7 @@ describe('applyGeminiStreamQueryParams', () => {
 
 	it('overrides existing alt for streamGenerateContent', () => {
 		const u = new URL(
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=json'
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=json',
 		);
 		applyGeminiStreamQueryParams(u, 'streamGenerateContent');
 		assert.equal(u.searchParams.get('alt'), 'sse');
@@ -115,7 +112,7 @@ describe('applyGeminiStreamQueryParams', () => {
 
 	it('does not set alt for generateContent', () => {
 		const u = new URL(
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=test'
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=test',
 		);
 		applyGeminiStreamQueryParams(u, 'generateContent');
 		assert.equal(u.searchParams.has('alt'), false);
@@ -136,7 +133,7 @@ describe('resolveGeminiUpstreamAuth', () => {
 	it('normalizes trailing slash, host case, and duplicate slashes', () => {
 		assert.equal(
 			normalizeGeminiUpstreamBaseForAuthMatch('https://api.qnaigc.com//bypass/vertex/v1/models/'),
-			'https://api.qnaigc.com/bypass/vertex/v1/models'
+			'https://api.qnaigc.com/bypass/vertex/v1/models',
 		);
 	});
 });

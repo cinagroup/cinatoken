@@ -128,7 +128,7 @@ export function budgetLazyResetNeedsPersist(
 }
 
 /** 懒周期重置写库时的审计标签（`getUserInfo` / `getKeyInfo` / 代理鉴权）。 */
-export type LazyBudgetResetAuditKind = 'user_info' | 'key_info' | 'api_key_auth' | 'budget_transition';
+export type LazyBudgetResetAuditKind = 'user_info' | 'key_info' | 'api_key_auth' | 'budget_transition' | 'oauth_access_token_auth';
 
 const LAZY_RESET_AUDIT: Record<LazyBudgetResetAuditKind, { reasonCode: string; reasonText: string; source: string }> = {
 	user_info: {
@@ -150,6 +150,11 @@ const LAZY_RESET_AUDIT: Record<LazyBudgetResetAuditKind, { reasonCode: string; r
 		reasonCode: 'budget_transition_lazy_reset',
 		reasonText: 'Period reset (budget transition)',
 		source: 'admin_budget_transition',
+	},
+	oauth_access_token_auth: {
+		reasonCode: 'oauth_access_token_auth_lazy_reset',
+		reasonText: 'Period reset (access token auth)',
+		source: 'gateway_auth',
 	},
 };
 
@@ -219,7 +224,7 @@ export async function persistLazyBudgetResetIfNeeded(
 					snapRow,
 					{ budget_spent, budget_reset_at, budget_max: nextBudgetMax },
 					maxChanged,
-				)
+			  )
 			: null;
 	const labels = LAZY_RESET_AUDIT[args.kind];
 	const didPersist = await updateUserBudgetWithAuditTx(repos, {
@@ -564,8 +569,8 @@ export async function updateUserPlan(
 		params.budget_reset_at !== undefined
 			? params.budget_reset_at
 			: params.budget_period !== 'none'
-				? computeFirstReset(params.budget_period)
-				: null;
+			? computeFirstReset(params.budget_period)
+			: null;
 	return repos.users.updateUserPlan(
 		userId,
 		params.budget_max,

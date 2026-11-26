@@ -37,7 +37,7 @@ test('legacy pricing edits use the same atomic model CAS for catalog schedule al
  const calls: unknown[][] = [];
  const repos = {
   modelRouting: { getModelById: async () => { calls.push(['read']); return { id:'model',route_policy:' raw policy ' }; } },
-  models: { updateModelWithPolicyPrecondition: async (...args: unknown[]) => { calls.push(['cas',...args]); return true; } },
+  models: {getModelDetailWithRouteCounts:async()=>({id:'model',route_policy:null}), updateModelWithPolicyPrecondition: async (...args: unknown[]) => { calls.push(['cas',...args]); return true; } },
  } as unknown as GatewayRepositories;
  await updateModelService(repos,'model',{pricing_profile:{tiers:[{upto:null,input_price:1,output_price:2}]},tags:['safe']});
  assert.deepEqual(calls.map(call=>call[0]),['read','cas']);
@@ -50,7 +50,7 @@ test('legacy pricing conflicts fail closed without sequential route writes', asy
  let attempts=0;
  const repos = {
   modelRouting: {getModelById:async()=>({id:'model',route_policy:null})},
-  models: {updateModelWithPolicyPrecondition:async()=>{attempts++;return false;}},
+  models: {getModelDetailWithRouteCounts:async()=>({id:'model',route_policy:null}),updateModelWithPolicyPrecondition:async()=>{attempts++;return false;}},
  } as unknown as GatewayRepositories;
  await assert.rejects(updateModelService(repos,'model',{pricing_profile:null}), (error: unknown)=>(error as {status?:number}).status===409);
  assert.equal(attempts,1);

@@ -7,9 +7,9 @@ export const TOOL_CONFIG_FAMILY_KEYS = {
 	'ai-detection': ['AI_DETECTION_ACTIVE', 'AI_DETECTION_CATALOG', 'BILLING_CURRENCY'],
 } as const;
 export const TOOL_CONFIG_FAMILY_PROVIDERS = {
-	'web-search': ['bocha', 'tavily', 'cleversee', 'tencent_wsa'],
-	'web-fetch': ['firecrawl', 'tavily', 'jina'],
-	'web-deep-search': ['firecrawl', 'jina'],
+	'web-search': ['bocha', 'tavily', 'cleversee', 'tencent_wsa', 'deepseek'],
+	'web-fetch': ['firecrawl', 'tavily', 'jina', 'deepseek'],
+	'web-deep-search': ['firecrawl', 'jina', 'deepseek'],
 	'ai-detection': ['tencent_tms'],
 } as const;
 const familyFields = new Set(['catalog', 'active', 'legacy_migration']);

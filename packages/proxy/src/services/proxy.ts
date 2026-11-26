@@ -1,3 +1,31 @@
+
+import type { UpstreamHeadersTimeoutOptions } from "./egress/upstream-fetch-timeout";
+
+import { DEFAULT_STREAM_FIRST_CHUNK_TIMEOUT_MS } from "./stream-timeout-env";
+
+import {
+	dispatchElevenLabsSttPassthrough,
+	dispatchElevenLabsTtsPassthrough,
+	type ElevenLabsPassthroughOptions,
+	type ElevenLabsSttPassthroughRequest,
+	type ElevenLabsTtsPassthroughRequest,
+} from "./egress/elevenlabs-passthrough";
+
+import {
+	dispatchElevenLabsRealtime,
+	type ElevenLabsRealtimeDispatchOptions,
+	type ElevenLabsRealtimeParams,
+} from "./egress/elevenlabs-realtime-driver";
+
+import type { RealtimeSocket } from "./egress/dashscope-realtime-socket";
+
+import type { RealtimeUpstreamConnect } from "./egress/dashscope-realtime-session";
+
+import {
+	dispatchGeminiEmbedRoute,
+	type GeminiEmbedAction,
+} from "./egress/gemini-embed-driver";
+import { type DispatchAttemptContext, type ProxyFailoverResult } from './failover-dispatch';
 import { createRequestDeadline, preparationRead } from '@octafuse/core';
 import { createResourceCompletionGroup } from './resource-completion';
 import { dispatchOpenAiAudioTranscriptions } from "./egress/openai-audio-driver";
@@ -151,7 +179,7 @@ function firstEventTimeoutMsFor(config: { timeoutMs: number; groups: string[] | 
 	return resolveFirstEventTimeoutMs(config.timeoutMs, config.groups, routeGroup);
 }
 
-function textStreamDispatchOptions(
+export function textStreamDispatchOptions(
 	firstEvent: { timeoutMs: number; groups: string[] | '*' },
 	routeGroup: string,
 	options?: FailoverDispatchOptions,
@@ -808,4 +836,164 @@ export async function proxyGeminiContent(
 		dispatchOptions,
 	);
 	});
+}
+
+export type ElevenLabsRealtimeProxyOptions = FailoverDispatchOptions &
+	Omit<ElevenLabsRealtimeDispatchOptions, 'beforeUpstreamDispatch'>;
+
+
+/** 代理 ElevenLabs 原生文本转语音透传（四种变体共用 `audio.speech`）。 */
+export async function proxyElevenLabsTtsPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	request: ElevenLabsTtsPassthroughRequest,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions & { elevenLabs?: ElevenLabsPassthroughOptions }
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		"elevenlabs",
+		(
+			route,
+			signal,
+			timing?: RequestTimingCollector | null,
+			attempt?: RequestTimingAttempt,
+ beforeFetch?: () => Promise<void>
+		) =>
+			dispatchElevenLabsTtsPassthrough(route, request, signal, timing, attempt, {...options?.elevenLabs,beforeUpstreamDispatch:beforeFetch}),
+		requestSignal,
+		delegatedDispatchOptions(options)
+	);
+}
+
+
+/** 代理 ElevenLabs 原生语音转文字透传（multipart，不转 OpenAI transcriptions）。 */
+export async function proxyElevenLabsSttPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	request: ElevenLabsSttPassthroughRequest,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions & { elevenLabs?: ElevenLabsPassthroughOptions }
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		"elevenlabs",
+		(
+			route,
+			signal,
+			timing?: RequestTimingCollector | null,
+			attempt?: RequestTimingAttempt,
+ beforeFetch?: () => Promise<void>
+		) =>
+			dispatchElevenLabsSttPassthrough(route, request, signal, timing, attempt, {...options?.elevenLabs,beforeUpstreamDispatch:beforeFetch}),
+		requestSignal,
+		delegatedDispatchOptions(options)
+	);
+}
+
+
+/** 代理 ElevenLabs 原生实时 WebSocket（TTS stream-input / 实时转写），建连失败时按普通路由规则切换供应商。 */
+export async function proxyElevenLabsRealtime(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	params: ElevenLabsRealtimeParams,
+	requestSignal?: AbortSignal,
+	options?: ElevenLabsRealtimeProxyOptions
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		"elevenlabs",
+		(
+			route,
+			signal,
+			timing?: RequestTimingCollector | null,
+			attempt?: RequestTimingAttempt,
+ beforeFetch?: () => Promise<void>
+		) => dispatchElevenLabsRealtime(route, params, signal, timing, attempt, {...options,beforeUpstreamDispatch:beforeFetch}),
+		requestSignal,
+		delegatedDispatchOptions(options)
+	);
+}
+
+
+/**
+ * 延迟连接版本（DashScope inference 新入口）：下游已升级，这里只负责选路由并连上游（含 failover）。
+ * 成功时返回已连上的上游 socket，由调用方交给会话桥接；桥接结束后用 `finishUsage` 回填用量。
+ */
+export async function proxyDashScopeRealtimeDeferred(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	operation: DashScopeRealtimeOperation,
+	connectUpstream: RealtimeUpstreamConnect,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions
+): Promise<{
+	result: ProxyFailoverResult;
+	upstream: RealtimeSocket | null;
+	finishUsage: (usage: UsageFromStream) => void;
+}> {
+	const opened: { socket: RealtimeSocket | null } = { socket: null };
+	let finishUsage: (usage: UsageFromStream) => void = () => undefined;
+	const usagePromise = new Promise<UsageFromStream>((resolve) => {
+		finishUsage = resolve;
+	});
+	const result = await failoverDispatch(
+		repos,
+		routes,
+		"dashscope",
+		async (
+			route,
+			signal,
+			timing?: RequestTimingCollector | null,
+			attempt?: RequestTimingAttempt
+		) => {
+			const connected = await connectUpstream(route, operation, signal, timing, attempt);
+			if ("response" in connected) {
+				return {
+					response: connected.response,
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: connected.requestId,
+				};
+			}
+			opened.socket = connected.socket;
+			// 下游已经升级，这里用 200 仅表示“上游已连上”，供 failover 判定成功。
+			return {
+				response: new Response(null, { status: 200 }),
+				usagePromise,
+				upstreamRequestId: connected.requestId,
+			};
+		},
+		requestSignal,
+		options
+	);
+	return { result, upstream: opened.socket, finishUsage };
+}
+
+
+/** 代理 Gemini 原生 `embedContent` / `batchEmbedContents`。 */
+export async function proxyGeminiEmbeddings(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	action: GeminiEmbedAction,
+	body: Record<string, unknown>,
+	search: string,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions
+): Promise<ProxyResult> {
+	return failoverDispatch(
+		repos,
+		routes,
+		"gemini",
+		(
+			route,
+			signal,
+			timing?: RequestTimingCollector | null,
+			attempt?: RequestTimingAttempt
+		) => dispatchGeminiEmbedRoute(route, body, action, search, signal, timing, attempt),
+		requestSignal,
+		options
+	);
 }

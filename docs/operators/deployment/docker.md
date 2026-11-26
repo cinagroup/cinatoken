@@ -2,6 +2,14 @@
 
 本文描述在容器环境同时运行 **`@octafuse/proxy`**（代理服务，对外推理）与 **`@octafuse/admin`**（管理后台，管理 UI + `/api/admin/*`），二者**共用同一关系型库**（Postgres 或 **MySQL 8**）。默认生产仍以 Cloudflare 为主（见 [cloudflare.md](./cloudflare.md)）。
 
+## 管理后台的 Proxy 基础地址
+
+在 **Admin 容器的运行时环境变量**中设置 `GATEWAY_PROXY_URL=https://gateway.example.com`。REST 服务文档、模拟器和 MCP 接入共用此默认地址；修改变量后重启 Admin，无需重新构建镜像。仓库内置 Compose 模板已透传此变量。
+
+填写浏览器可访问的基础地址，可带反向代理路径前缀；不要填容器主机名、凭证、查询参数或 `/v1`、`/mcp` 接口路径。模拟器与 MCP 测试仍直接从浏览器访问 Proxy，跨域部署需保留原有的 CORS 配置。
+
+优先使用当前浏览器的手动覆盖，其次是部署环境变量；只有在 localhost / 回环地址访问 Admin 时才回退到本地 `:8787`。点击「恢复默认地址」可清除浏览器覆盖。旧的独立浏览器配置会作为兼容回退读取（REST、模拟器、MCP 顺序）；首次保存共享地址或恢复默认时清理旧项。API Key 不随地址共享，也不存入此配置。
+
 ## 1. 本文覆盖范围
 
 本文聚焦 **Full self-hosted PG / MySQL**（以及 Hybrid 中代理服务侧容器）的镜像、环境变量、Compose 与迁移。完整拓扑矩阵（含 Cloudflare 全托管）见 **[runtime-data.md](../../developers/architecture/runtime-data.md)**。
@@ -18,9 +26,10 @@
 |`DATABASE_URL`|是|Postgres 或 **`mysql://`** 连接串（与所选驱动一致）|
 |`SHARED_KEY_ENCRYPTION_SECRET`|是|至少 32 字符；Admin 与 Proxy 使用同一个已配置的值，供供应商、Shared Key 与 BYOK 密钥加密。升级既有加密数据时必须保留原值，不生成默认值或直接替换。|
 |`PORT`|否|默认 `8787`|
-|`STREAM_FIRST_CHUNK_TIMEOUT_MS`|否|文本流式：尚未收到非空 chunk 的等待上限，毫秒。空则代码默认 `120000`（2 分钟）。需要更宽时可覆盖为 `180000`。|
-|`STREAM_IDLE_TIMEOUT_MS`|否|文本流式：已吐 chunk 后的空闲上限，毫秒。空则代码默认 `90000`（90 秒）。Cloudflare Worker 上再提高收益有限（上游约 100s 无字节可能被平台掐）。|
+|`STREAM_FIRST_CHUNK_TIMEOUT_MS`|否|文本流式：尚未收到带内容的 SSE 事件（注释心跳不算）的等待上限，毫秒。空则代码默认 `120000`（2 分钟）。需要更宽时可覆盖为 `180000`。|
+|`STREAM_IDLE_TIMEOUT_MS`|否|文本流式：已出内容后，两次带内容事件之间的空闲上限，毫秒。空则代码默认 `90000`（90 秒）。Cloudflare Worker 上再提高收益有限（上游约 100s 无字节可能被平台掐）。|
 |`USAGE_SAFETY_TIMEOUT_MS`|否|文本流式：`usagePromise` 绝对兜底，毫秒。空则代码默认 `600000`（10 分钟）。需要更宽时可覆盖为 `900000`。|
+|`STREAM_HEADERS_TIMEOUT_MS`|否|文本流式：等待上游响应头的上限，毫秒。空则代码默认 `60000`（60 秒）。超时同次请求内换下一个候选；最后一个候选至少等满首包上限。|
 |`AUTO_MIGRATE`|否|设为 `1`/`true`/`yes`/`on` 时，容器启动前自动执行幂等迁移（见 §5）。默认关闭。|
 |迁移方式（备选）|—|未设 `AUTO_MIGRATE` 时，使用 **`Dockerfile.migrate`** 镜像，通过 `docker compose --profile migrate run --rm migrate` 执行。|
 
@@ -103,6 +112,8 @@ docker run --rm -p 8789:8789 \
 - **应急 / 验证**：仍可使用 **`workflow_dispatch`** 在 Actions 里手动勾选镜像与架构；**不会**自动创建 GitHub Release。
 
 本地 `docker build` / `docker compose build` 可用于开发验证，但生产发版以 **tag → GHCR** 为准。
+
+**Admin 镜像的构建耗时**：`Dockerfile.admin` 的 `builder` 阶段固定为 `--platform=$BUILDPLATFORM`，`next build` 只在 CI 机器本机架构（amd64）上原生跑一次，`linux/arm64` 镜像只在 `runner` 阶段按目标平台各自组装（仅 `COPY`），不再用 QEMU 模拟编译。此前 arm64 走 QEMU，`next build`（含 TypeScript 类型检查）约 450 秒，原生约 55 秒，整个 admin 镜像约 16 分钟。这个做法要求 standalone 产物与架构无关：构建后会删除 `sharp` 的原生二进制（Admin 使用 `images.unoptimized`，不会加载它），并检查 standalone 里没有任何 `.node` / `.so` 文件。以后给 Admin 加带原生二进制的依赖时，这一步会让镜像构建失败，需改为按目标架构分别构建。
 
 **手动 dispatch** 下可选择 **`linux/amd64`**、**`linux/arm64`**（默认两者均勾选），须至少勾选一种架构。标签策略：**commit sha**、**分支名**、**semver**（在版本 tag 上）、**`latest`**（`main` 上手动构建，或 **稳定版 `vX.Y.Z` tag** 推送时）。
 

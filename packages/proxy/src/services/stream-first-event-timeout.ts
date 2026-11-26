@@ -181,3 +181,34 @@ function prependChunk(
 		},
 	});
 }
+
+
+function prependChunks(
+	reader: ReadableStreamDefaultReader<Uint8Array>,
+	chunks: Uint8Array[],
+	alreadyDone: boolean
+): ReadableStream<Uint8Array> {
+	let index = 0;
+	return new ReadableStream<Uint8Array>({
+		async pull(controller) {
+			if (index < chunks.length) {
+				controller.enqueue(chunks[index]!);
+				index += 1;
+				return;
+			}
+			if (alreadyDone) {
+				controller.close();
+				return;
+			}
+			const next = await reader.read();
+			if (next.done) {
+				controller.close();
+				return;
+			}
+			controller.enqueue(next.value);
+		},
+		cancel(reason) {
+			return reader.cancel(reason);
+		},
+	});
+}

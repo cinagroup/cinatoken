@@ -397,7 +397,11 @@ export const providersTable = gatewaySchema.table(
 		apiKey: text('api_key').notNull().default(''),
 		/** `active` | `disabled` */
 		status: text('status').notNull().default('active'),
-		description: text('description'),
+		/** Operator note. Catalog introductions are resolved from static presets. */
+		note: text('note'),
+	description: text('description'),
+		/** JSON: `{ "<protocol>": { headers?, body? } }`，按协议分组的默认 custom_params，无 force_override。 */
+		customParams: text('custom_params'),
 		sharedChannelType: text('shared_channel_type'),
 		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
@@ -412,6 +416,8 @@ export const modelsTable = gatewaySchema.table('models', {
 	/** Chat completion max output tokens; NULL for image-generation models. */
 	maxTokens: integer('max_tokens').default(8192),
 	pricingProfile: text('pricing_profile'),
+	/** Operator note. Catalog introductions are resolved from static presets. */
+	note: text('note'),
 	description: text('description'),
 	metadata: text('metadata'),
 	inputModalities: text('input_modalities'),
@@ -527,6 +533,7 @@ export const routePoolStickyBindingsTable = gatewaySchema.table('route_pool_stic
 		withTimezone: true,
 		mode: 'string',
 	}).notNull(),
+	affinityKey: text('affinity_key'),
 });
 
 export const modelSurfacesTable = gatewaySchema.table('model_surfaces', {
@@ -604,6 +611,8 @@ export const apiKeyRequestLogsTable = gatewaySchema.table('api_key_request_logs'
 	workspaceId: text('workspace_id').references(() => workspacesTable.id, {
 		onDelete: 'set null',
 	}),
+	/** 访问令牌调用（OAuth）：此时 api_key_id 为空 */
+	oauthAccessTokenId: text('oauth_access_token_id'),
 	userEmail: text('user_email'),
 	modelId: text('model_id'),
 	providerId: text('provider_id'),
@@ -707,7 +716,10 @@ export const providerAttemptAvailabilityTable = gatewaySchema.table(
 		index('idx_provider_attempt_availability_route_observed').on(t.routeTargetId, t.observedAt),
 		index('idx_provider_attempt_availability_observed').on(t.observedAt),
 		check('provider_attempt_availability_attempt_index_chk', sql`${t.attemptIndex} BETWEEN 1 AND 128`),
-		check('provider_attempt_availability_outcome_chk', sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`),
+		check(
+			'provider_attempt_availability_outcome_chk',
+			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`,
+		),
 		check(
 			'provider_attempt_availability_reason_chk',
 			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`,
@@ -955,7 +967,10 @@ export const guardrailsTable = gatewaySchema.table(
 		check('guardrails_default_kind_chk', sql`NOT (${t.isWorkspaceDefault} AND ${t.isAccountDefault})`),
 		check('guardrails_account_scope_key_chk', sql`${t.isAccountDefault} = (${t.accountScopeKey} IS NOT NULL)`),
 		check('guardrails_status_chk', sql`${t.status} IN ('active', 'archived')`),
-		check('guardrails_versions_chk', sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`),
+		check(
+			'guardrails_versions_chk',
+			sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`,
+		),
 	],
 );
 
@@ -1102,7 +1117,10 @@ export const guardrailBudgetReservationsTable = gatewaySchema.table(
 	(t) => [
 		uniqueIndex('uk_guardrail_budget_reservation_request_assignment').on(t.requestId, t.assignmentId),
 		check('guardrail_budget_reservations_scope_chk', sql`${t.scopeType} IN ('user', 'api_key')`),
-		check('guardrail_budget_reservations_period_chk', sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
+		check(
+			'guardrail_budget_reservations_period_chk',
+			sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`,
+		),
 		check(
 			'guardrail_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.reservedMicros} > 0 AND ${t.settledMicros} >= 0`,
@@ -1153,7 +1171,10 @@ export const userBudgetReservationsTable = gatewaySchema.table(
 		}).notNull(),
 	},
 	(t) => [
-		check('user_budget_reservations_epoch_chk', sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`),
+		check(
+			'user_budget_reservations_epoch_chk',
+			sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`,
+		),
 		check(
 			'user_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.limitMicros} <= 9007199254740991 AND ${t.reservedMicros} > 0 AND ${t.reservedMicros} <= 9007199254740991 AND ${t.settledMicros} >= 0 AND ${t.settledMicros} <= 9007199254740991`,
@@ -1679,7 +1700,10 @@ export const batchItemsTable = gatewaySchema.table(
 		primaryKey({ columns: [t.batchId, t.ordinal] }),
 		uniqueIndex('uk_batch_items_custom').on(t.batchId, t.customId),
 		index('idx_batch_items_status_ordinal').on(t.batchId, t.status, t.ordinal),
-		check('batch_items_status_chk', sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`),
+		check(
+			'batch_items_status_chk',
+			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`,
+		),
 		check(
 			'batch_items_request_range_chk',
 			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`,

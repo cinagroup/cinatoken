@@ -9,6 +9,7 @@ import { hasAdminPermission } from '@/lib/admin-principal';
 import { handleAdminRouteError, jsonErr } from './error-response';
 import {
 	acceptMcpItemChange,
+	acceptMcpItemChanges,
 	createMcpServer,
 	deleteMcpServer,
 	getMcpServer,
@@ -145,6 +146,21 @@ adminMcpServersRoutes.patch('/:id/items/:itemId', async (c) => {
 		return c.json({ success: true, data });
 	} catch (error) {
 		return handleAdminRouteError(c, error, 'Failed to update MCP item price');
+	}
+});
+
+adminMcpServersRoutes.post('/:id/items/accept', async (c) => {
+	let body: { ids?: unknown };
+	try {
+		body = await c.req.json();
+	} catch {
+		return jsonErr(c, 400, 'Invalid JSON body');
+	}
+	try {
+		const data = await acceptMcpItemChanges(c.get('repositories'), c.req.param('id'), body.ids);
+		return c.json({ success: true, data });
+	} catch (error) {
+		return handleAdminRouteError(c, error, 'Failed to accept MCP item changes');
 	}
 });
 

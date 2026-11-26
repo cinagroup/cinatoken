@@ -1,3 +1,4 @@
+import { maskProviderApiKeyForAdmin } from '@octafuse/core/db/provider-key-utils';
 import type { GatewayProvider } from '@/lib/types';
 import {
 	listConfiguredCapabilities,
@@ -12,6 +13,7 @@ import { GEMINI_GENERATE_OPERATION } from '@octafuse/core/route-topology';
 import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
 import type {
 	GeminiLegacyPerActionEndpoints,
+	ProtocolCustomParamsForm,
 	ProtocolEndpointForm,
 	ProviderCapabilityBadge,
 	ProviderFormData,
@@ -20,6 +22,16 @@ import type {
 	ProviderProtocolSummary,
 } from './types';
 import { EMPTY_PROTOCOL_FORM } from './types';
+import { UPSTREAM_PROTOCOLS } from '@octafuse/core/upstream-protocol';
+import { PROVIDER_ENDPOINT_FIELDS } from './provider-endpoint-fields';
+
+/** Fixed-width middle mask; never show short credentials or private service-account fields. */
+export function providerApiKeyPreview(apiKey: string): string {
+	if (!apiKey.trim()) return '';
+	const masked = maskProviderApiKeyForAdmin(apiKey);
+	const hidden = '••••••••••••';
+	return masked === '***' ? hidden : masked.replace('…', hidden);
+}
 
 /** 完整 capability → 卡片紧凑标签（OpenAI images.* → images；audio.transcriptions → audio）。 */
 export function capabilityDisplayBadges(
@@ -33,10 +45,12 @@ export function capabilityDisplayBadges(
 		badges.push('images');
 	}
 	if (capabilities.some((capability) => capability.startsWith('audio.'))) badges.push('audio');
+	if (set.has('embeddings')) badges.push('embeddings');
 	if (set.has('messages')) badges.push('messages');
 	if (set.has(GEMINI_GENERATE_OPERATION) || set.has('generateContent') || set.has('streamGenerateContent')) {
 		badges.push('modelsGenerate');
 	}
+	if (set.has('models.embed')) badges.push('modelsEmbed');
 	return badges;
 }
 
@@ -75,10 +89,15 @@ function protocolFormFromConfig(cfg: ProtocolEndpointsConfig | undefined): Proto
 	form.images_generations = eps['images.generations'] ?? '';
 	form.images_generations_multimodal = eps['images.generations.multimodal'] ?? '';
 	form.images_edits = eps['images.edits'] ?? '';
+	form.embeddings = eps.embeddings ?? '';
+ form.rerank=eps.rerank ?? '';
+	form.modelsEmbed = eps['models.embed'] ?? '';
 	form.audio_transcriptions = eps['audio.transcriptions'] ?? '';
 	form.audio_transcriptions_multimodal = eps['audio.transcriptions.multimodal'] ?? '';
 	form.audio_transcriptions_tasks = eps['audio.transcriptions.tasks'] ?? '';
 	form.audio_speech = eps['audio.speech'] ?? '';
+	form.audio_speech_realtime = eps['audio.speech.realtime'] ?? '';
+	form.audio_transcriptions_realtime = eps['audio.transcriptions.realtime'] ?? '';
 	form.audio_speech_multimodal = eps['audio.speech.multimodal'] ?? '';
 	form.audio_realtime_inference = eps['audio.realtime.inference'] ?? '';
 	form.audio_realtime_session = eps['audio.realtime.session'] ?? '';
@@ -119,8 +138,43 @@ function protocolFormFromConfig(cfg: ProtocolEndpointsConfig | undefined): Proto
 	return form;
 }
 
-/** Provider 行 → 弹窗表单（endpoints + status；api_key 留空表示不改）。 */
-export function providerToFormData(provider: GatewayProvider): Omit<ProviderFormData, 'id' | 'name' | 'description'> {
+/** `providers.custom_params` JSON → 按协议分组的表单状态；缺失/非法一律视为未配置（前端容错优先，不抛错）。 */
+export function providerCustomParamsToFormData(
+	provider: GatewayProvider,
+): Partial<Record<UpstreamProtocol, ProtocolCustomParamsForm>> {
+	const raw = provider.custom_params;
+	if (!raw) return {};
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(raw);
+	} catch {
+		return {};
+	}
+	if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+	const result: Partial<Record<UpstreamProtocol, ProtocolCustomParamsForm>> = {};
+	for (const protocol of UPSTREAM_PROTOCOLS) {
+		const entry = (parsed as Record<string, unknown>)[protocol];
+		if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue;
+		const { headers, body } = entry as { headers?: unknown; body?: unknown };
+		const headerRows =
+			headers && typeof headers === 'object' && !Array.isArray(headers)
+				? Object.entries(headers as Record<string, unknown>).map(([name, value]) => ({
+						name,
+						value: typeof value === 'string' ? value : String(value ?? ''),
+				  }))
+				: [];
+		const bodyText =
+			body && typeof body === 'object' && !Array.isArray(body) && Object.keys(body).length > 0
+				? JSON.stringify(body, null, 2)
+				: '';
+		if (headerRows.length === 0 && !bodyText) continue;
+		result[protocol] = { headers: headerRows, bodyText };
+	}
+	return result;
+}
+
+/** Provider 行 → 弹窗表单；真实密钥由编辑器单独加载。 */
+export function providerToFormData(provider: GatewayProvider): Omit<ProviderFormData, 'id' | 'name' | 'note'> {
 	const map = parseProviderEndpoints(provider);
 	return {
 		api_key: '',
@@ -133,6 +187,8 @@ export function providerToFormData(provider: GatewayProvider): Omit<ProviderForm
 		dashscope: protocolFormFromConfig(map.dashscope),
 		minimax: protocolFormFromConfig(map.minimax),
 		volcengine: protocolFormFromConfig(map.volcengine),
+		elevenlabs: protocolFormFromConfig(map.elevenlabs),
+		customParams: providerCustomParamsToFormData(provider),
 	};
 }
 
@@ -140,63 +196,19 @@ function configFromProtocolForm(
 	protocol: UpstreamProtocol,
 	form: ProtocolEndpointForm,
 ): ProtocolEndpointsConfig | undefined {
-	const base = form.base.trim();
+	const base = form.mode === 'partial' ? '' : form.base.trim();
 	const endpoints: NonNullable<ProtocolEndpointsConfig['endpoints']> = {};
-	if (protocol === 'openai') {
-		if (form.chat.trim()) endpoints.chat = form.chat.trim();
-		if (form.responses.trim()) endpoints.responses = form.responses.trim();
-		if (form.images_generations.trim()) endpoints['images.generations'] = form.images_generations.trim();
-		if (form.images_edits.trim()) endpoints['images.edits'] = form.images_edits.trim();
-		if (form.audio_transcriptions.trim()) {
-			endpoints['audio.transcriptions'] = form.audio_transcriptions.trim();
+	if (form.mode !== 'all') {
+		for (const { field, capability } of PROVIDER_ENDPOINT_FIELDS[protocol]) {
+			if (form.selectedCapabilities && !form.selectedCapabilities.includes(capability)) continue;
+			if (protocol === 'gemini' && field === 'modelsGenerate' && form.legacyPerAction) {
+				const { generateContent, streamGenerateContent } = form.legacyPerAction;
+				if (generateContent.trim()) endpoints.generateContent = generateContent.trim();
+				if (streamGenerateContent.trim()) endpoints.streamGenerateContent = streamGenerateContent.trim();
+			} else if (form[field].trim()) {
+				endpoints[capability] = form[field].trim();
+			}
 		}
-		if (form.audio_speech.trim()) endpoints['audio.speech'] = form.audio_speech.trim();
-	} else if (protocol === 'anthropic') {
-		if (form.messages.trim()) endpoints.messages = form.messages.trim();
-	} else if (protocol === 'gemini') {
-		if (form.legacyPerAction) {
-			const gen = form.legacyPerAction.generateContent.trim();
-			const stream = form.legacyPerAction.streamGenerateContent.trim();
-			if (gen) endpoints.generateContent = gen;
-			if (stream) endpoints.streamGenerateContent = stream;
-		} else if (form.modelsGenerate.trim()) {
-			endpoints[GEMINI_GENERATE_OPERATION] = form.modelsGenerate.trim();
-		}
-	} else if (protocol === 'minimax') {
-		if (form.audio_transcriptions.trim()) {
-			endpoints['audio.transcriptions'] = form.audio_transcriptions.trim();
-		}
-		if (form.audio_speech.trim()) endpoints['audio.speech'] = form.audio_speech.trim();
-		if (form.images_generations.trim()) {
-			endpoints['images.generations'] = form.images_generations.trim();
-		}
-	} else if (protocol === 'volcengine') {
-		if (form.images_generations.trim()) {
-			endpoints['images.generations'] = form.images_generations.trim();
-		}
-	} else {
-		if (form.images_generations_multimodal.trim()) {
-			endpoints['images.generations.multimodal'] = form.images_generations_multimodal.trim();
-		}
-		if (form.audio_transcriptions.trim()) endpoints['audio.transcriptions'] = form.audio_transcriptions.trim();
-		if (form.audio_transcriptions_multimodal.trim()) {
-			endpoints['audio.transcriptions.multimodal'] = form.audio_transcriptions_multimodal.trim();
-		}
-		if (form.audio_transcriptions_tasks.trim()) {
-			endpoints['audio.transcriptions.tasks'] = form.audio_transcriptions_tasks.trim();
-		}
-		if (form.audio_speech.trim()) endpoints['audio.speech'] = form.audio_speech.trim();
-		if (form.audio_speech_multimodal.trim()) {
-			endpoints['audio.speech.multimodal'] = form.audio_speech_multimodal.trim();
-		}
-		if (form.audio_realtime_inference.trim()) {
-			endpoints['audio.realtime.inference'] = form.audio_realtime_inference.trim();
-		}
-		if (form.audio_realtime_session.trim()) {
-			endpoints['audio.realtime.session'] = form.audio_realtime_session.trim();
-		}
-		if (form.audio_hotwords.trim()) endpoints['audio.hotwords'] = form.audio_hotwords.trim();
-		if (form.audio_voices.trim()) endpoints['audio.voices'] = form.audio_voices.trim();
 	}
 	if (!base && Object.keys(endpoints).length === 0) return undefined;
 	const cfg: ProtocolEndpointsConfig = {};
@@ -217,21 +229,84 @@ export function formDataToEndpointsMap(form: ProviderFormData): ProviderEndpoint
 	const dashscope = configFromProtocolForm('dashscope', form.dashscope);
 	const minimax = configFromProtocolForm('minimax', form.minimax);
 	const volcengine = configFromProtocolForm('volcengine', form.volcengine);
+	const elevenlabs = configFromProtocolForm('elevenlabs', form.elevenlabs);
 	if (openai) map.openai = openai;
 	if (anthropic) map.anthropic = anthropic;
 	if (gemini) map.gemini = gemini;
 	if (dashscope) map.dashscope = dashscope;
 	if (minimax) map.minimax = minimax;
 	if (volcengine) map.volcengine = volcengine;
+	if (elevenlabs) map.elevenlabs = elevenlabs;
 	return map;
+}
+
+/**
+ * 校验所有已填 `bodyText` 的协议分组均为合法 JSON 对象；保存前调用，失败时返回首个出错的协议名
+ * 供 UI 展示（不在这里静默吞掉非法 JSON，否则用户永远不知道自己写错了）。
+ */
+export function findInvalidCustomParamsBodyProtocol(form: ProviderFormData): UpstreamProtocol | null {
+	for (const protocol of UPSTREAM_PROTOCOLS) {
+		const bodyText = form.customParams[protocol]?.bodyText?.trim();
+		if (!bodyText) continue;
+		try {
+			const parsed = JSON.parse(bodyText);
+			if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+				return protocol;
+			}
+		} catch {
+			return protocol;
+		}
+	}
+	return null;
+}
+
+/** 表单 → API `custom_params` 对象；调用前应先用 {@link findInvalidCustomParamsBodyProtocol} 校验。 */
+export function formDataToCustomParamsMap(
+	form: ProviderFormData,
+): Record<string, { headers?: Record<string, string>; body?: Record<string, unknown> }> {
+	const result: Record<string, { headers?: Record<string, string>; body?: Record<string, unknown> }> = {};
+	for (const protocol of UPSTREAM_PROTOCOLS) {
+		const entry = form.customParams[protocol];
+		if (!entry) continue;
+		const headers: Record<string, string> = {};
+		for (const { name, value } of entry.headers) {
+			const trimmedName = name.trim();
+			if (trimmedName) headers[trimmedName] = value;
+		}
+		let body: Record<string, unknown> | undefined;
+		const bodyText = entry.bodyText.trim();
+		if (bodyText) {
+			try {
+				const parsed = JSON.parse(bodyText) as unknown;
+				if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+					body = parsed as Record<string, unknown>;
+				}
+			} catch {
+				// 调用方应已通过 findInvalidCustomParamsBodyProtocol 拦截；此处兜底忽略，不让保存请求崩溃
+			}
+		}
+		const hasHeaders = Object.keys(headers).length > 0;
+		if (hasHeaders || body) {
+			result[protocol] = { ...(hasHeaders ? { headers } : {}), ...(body ? { body } : {}) };
+		}
+	}
+	return result;
+}
+
+/** Read-only preview of the exact endpoints field submitted by the provider form. */
+export function formatProviderEndpointsPreview(form: ProviderFormData): string {
+	return JSON.stringify({ endpoints: formDataToEndpointsMap(form) }, null, 2);
 }
 
 export function formDataToEndpointsJson(form: ProviderFormData): string | null {
 	return serializeProviderEndpoints(formDataToEndpointsMap(form));
 }
 
-export function getProviderProtocolSummaries(provider: GatewayProvider): ProviderProtocolSummary[] {
-	const map = parseProviderEndpoints(provider);
+export function protocolSummariesFromEndpoints(
+	endpoints: GatewayProvider['endpoints'],
+	providerId = '',
+): ProviderProtocolSummary[] {
+	const map = parseProviderEndpoints({ endpoints });
 	const rows: ProviderProtocolSummary[] = [];
 
 	const appendProtocol = (key: ProviderProtocolSummary['key'], label: string) => {
@@ -246,10 +321,13 @@ export function getProviderProtocolSummaries(provider: GatewayProvider): Provide
 					action: key === 'gemini' ? 'generateContent' : undefined,
 					// 异步任务 URL 必须保留任务占位符，供应商卡片才能展示完整端点。
 					taskId: key === 'dashscope' ? '{task_id}' : undefined,
-					providerId: provider.id,
+					// ElevenLabs 文本转语音的音色是路径参数，卡片上保留占位符。
+					voiceId: key === 'elevenlabs' ? '{voice_id}' : undefined,
+					providerId,
 				})
 					.replace(/%7Bmodel%7D/gi, '{model}')
 					.replace(/%7Btask_id%7D/gi, '{task_id}')
+					.replace(/%7Bvoice_id%7D/gi, '{voice_id}')
 					.replace(/:generateContent$/i, ':{action}');
 				const override =
 					Boolean(config.endpoints?.[capability]) ||
@@ -286,7 +364,12 @@ export function getProviderProtocolSummaries(provider: GatewayProvider): Provide
 	appendProtocol('dashscope', 'DashScope');
 	appendProtocol('minimax', 'MiniMax');
 	appendProtocol('volcengine', 'Volcengine');
+	appendProtocol('elevenlabs', 'ElevenLabs');
 	return rows;
+}
+
+export function getProviderProtocolSummaries(provider: GatewayProvider): ProviderProtocolSummary[] {
+	return protocolSummariesFromEndpoints(provider.endpoints, provider.id);
 }
 
 export function providerHasApiKey(provider: GatewayProvider): boolean {
@@ -294,9 +377,9 @@ export function providerHasApiKey(provider: GatewayProvider): boolean {
 	return Boolean(masked) && masked !== '(empty)' && !provider.has_pending_key;
 }
 
-export function getProviderKeyStatus(provider: GatewayProvider): ProviderKeyStatusKind {
+/** 只反映密钥是否已填写，与供应商启用/停用无关。 */
+export function getProviderKeyStatus(provider: GatewayProvider): Exclude<ProviderKeyStatusKind, 'disabled'> {
 	if (provider.has_pending_key) return 'pending';
-	if (provider.status === 'disabled') return 'disabled';
 	if (!providerHasApiKey(provider)) return 'no_key';
 	return 'key_set';
 }
@@ -312,7 +395,17 @@ export function providerMatchesSearch(provider: GatewayProvider, query: string):
 			...protocol.endpoints.map((endpoint) => endpoint.url),
 		])
 		.join(' ');
-	return [provider.name, provider.id, provider.description ?? '', provider.status ?? '', endpointSearch]
+	return [
+		provider.name,
+		provider.id,
+		provider.note ?? '',
+		provider.kind_descriptions?.en ?? '',
+		provider.kind_descriptions?.zh ?? '',
+		provider.kind_descriptions?.ja ?? '',
+		provider.kind_descriptions?.ko ?? '',
+		provider.status ?? '',
+		endpointSearch,
+	]
 		.join(' ')
 		.toLowerCase()
 		.includes(normalized);
@@ -335,45 +428,97 @@ export function providerMatchesListFilter(provider: GatewayProvider, filter: Pro
 	return getProviderProtocolSummaries(provider).some((protocol) => protocol.key === filter);
 }
 
-/** 某协议 Advanced 区是否有任意覆盖（用于默认展开）。 */
+/** 原始单项地址是否存在；包括未启用模式的草稿。 */
 export function protocolFormHasOverrides(protocol: UpstreamProtocol, form: ProtocolEndpointForm): boolean {
-	if (protocol === 'openai') {
-		return !!(
-			form.chat.trim() ||
-			form.responses.trim() ||
-			form.images_generations.trim() ||
-			form.images_edits.trim() ||
-			form.audio_transcriptions.trim() ||
-			form.audio_speech.trim()
-		);
-	}
-	if (protocol === 'anthropic') return !!form.messages.trim();
-	if (protocol === 'gemini') {
-		return !!(
-			form.modelsGenerate.trim() ||
-			form.legacyPerAction ||
-			form.generateContent.trim() ||
-			form.streamGenerateContent.trim()
-		);
-	}
-	if (protocol === 'minimax') {
-		return !!(form.audio_transcriptions.trim() || form.audio_speech.trim() || form.images_generations.trim());
-	}
-	if (protocol === 'volcengine') return !!form.images_generations.trim();
-	return !!(
-		form.images_generations_multimodal.trim() ||
-		form.audio_transcriptions.trim() ||
-		form.audio_transcriptions_multimodal.trim() ||
-		form.audio_transcriptions_tasks.trim() ||
-		form.audio_speech.trim() ||
-		form.audio_speech_multimodal.trim() ||
-		form.audio_realtime_inference.trim() ||
-		form.audio_realtime_session.trim() ||
-		form.audio_hotwords.trim() ||
-		form.audio_voices.trim()
+	return (
+		PROVIDER_ENDPOINT_FIELDS[protocol].some(({ field }) => Boolean(form[field].trim())) ||
+		(protocol === 'gemini' && Boolean(form.legacyPerAction))
 	);
 }
 
+export function getProtocolEndpointMode(protocol: UpstreamProtocol, form: ProtocolEndpointForm): 'all' | 'partial' {
+	return form.mode ?? (protocolFormHasOverrides(protocol, form) ? 'partial' : 'all');
+}
+
+/** Suggest a URL only; callers must explicitly accept it before it becomes configured. */
+export function suggestProtocolEndpointUrl(
+	protocol: UpstreamProtocol,
+	base: string,
+	capability: ProviderEndpointCapability,
+	legacyAction?: 'generateContent' | 'streamGenerateContent',
+): string | null {
+	if (!base.trim()) return null;
+	try {
+		if (!['http:', 'https:'].includes(new URL(base.trim()).protocol)) return null;
+		const url = resolveUpstreamEndpoint(
+			protocol,
+			capability,
+			{ [protocol]: { base: base.trim() } },
+			{
+				model: '{model}',
+				action: capability === 'models.embed' ? 'embedContent' : legacyAction ?? 'generateContent',
+				taskId: '{task_id}',
+				voiceId: '{voice_id}',
+			},
+		).replace(/%7B(model|task_id|voice_id)%7D/gi, '{$1}');
+		return protocol === 'gemini' && !legacyAction
+			? url.replace(/:(generateContent|embedContent)$/, ':{action}')
+			: url;
+	} catch {
+		return null;
+	}
+}
+
+/** Existing filled endpoints are selected by default; an explicit empty selection stays empty. */
+export function getSelectedProtocolCapabilities(
+	protocol: UpstreamProtocol,
+	form: ProtocolEndpointForm,
+): ProviderEndpointCapability[] {
+	if (form.selectedCapabilities) return form.selectedCapabilities;
+	return PROVIDER_ENDPOINT_FIELDS[protocol]
+		.filter(
+			({ field }) =>
+				Boolean(form[field].trim()) ||
+				(protocol === 'gemini' &&
+					field === 'modelsGenerate' &&
+					Boolean(
+						form.legacyPerAction?.generateContent.trim() ||
+							form.legacyPerAction?.streamGenerateContent.trim(),
+					)),
+		)
+		.map(({ capability }) => capability);
+}
+
+export function toggleProtocolCapability(
+	protocol: UpstreamProtocol,
+	form: ProtocolEndpointForm,
+	capability: ProviderEndpointCapability,
+	selected: boolean,
+): ProtocolEndpointForm {
+	const capabilities = new Set(getSelectedProtocolCapabilities(protocol, form));
+	if (selected) capabilities.add(capability);
+	else capabilities.delete(capability);
+	return {
+		...form,
+		mode: 'partial',
+		selectedCapabilities: PROVIDER_ENDPOINT_FIELDS[protocol]
+			.filter((item) => capabilities.has(item.capability))
+			.map((item) => item.capability),
+	};
+}
+
+export function switchProtocolEndpointMode(
+	protocol: UpstreamProtocol,
+	form: ProtocolEndpointForm,
+	mode: 'all' | 'partial',
+): ProtocolEndpointForm {
+	return {
+		...form,
+		mode,
+		selectedCapabilities: getSelectedProtocolCapabilities(protocol, form),
+	};
+}
+
 export function protocolFormIsConfigured(protocol: UpstreamProtocol, form: ProtocolEndpointForm): boolean {
-	return Boolean(form.base.trim()) || protocolFormHasOverrides(protocol, form);
+	return Boolean(configFromProtocolForm(protocol, form));
 }

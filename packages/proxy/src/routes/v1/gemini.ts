@@ -1,3 +1,9 @@
+import { GEMINI_EMBED_OPERATION, type GeminiEmbedAction } from '@octafuse/core';
+
+import { describeEmbeddingsOutcome, describeGeminiOutcome } from '../../services/accounting';
+import { proxyGeminiEmbeddings } from '../../services/proxy';
+
+import { runProxyPipeline, type AuthedEnv } from '../../services/proxy-pipeline';
 import type { Env } from '../../app';
 import { resolveGeminiLoggedRequestId } from '../../services/egress/upstream-request-id';
 import { recordUsage } from '../../services/usage-tracker';
@@ -522,3 +528,51 @@ geminiRoutes.post('/models/:modelAction', async (c) => {
 
 	return response;
 });
+
+
+type GeminiEmbedPipelineBody = {
+	payload: Record<string, unknown>;
+	action: GeminiEmbedAction;
+	search: string;
+};
+
+
+/** Embeddings 日志脱敏：去掉 `content` 与 `requests[].content` 原文，只记条数与其余参数。 */
+export function geminiEmbedBodyRedactedForLog(
+	body: Record<string, unknown>,
+	action?: GeminiEmbedAction
+): Record<string, unknown> {
+	const out: Record<string, unknown> = {};
+	for (const [k, v] of Object.entries(body)) {
+		if (k === 'content') continue;
+		if (k === 'requests' && Array.isArray(v)) {
+			out._requests_count = v.length;
+			continue;
+		}
+		out[k] = v;
+	}
+	if (action) out._gemini_action = action;
+	return out;
+}
+
+
+function geminiEmbedUpstreamWireBodyForLog(
+	route: RouteResult,
+	body: Record<string, unknown>,
+	action: GeminiEmbedAction
+): string | null {
+	const merged = buildRouteRequestBody(route, body) as Record<string, unknown>;
+	return finalizeRequestLogJson(geminiEmbedBodyRedactedForLog(merged, action));
+}
+
+
+/** 路径 action 是否为向量入口（单条或批量）。 */
+function parseGeminiEmbedAction(modelAction: string): { modelId: string; action: GeminiEmbedAction } | null {
+	const idx = modelAction.lastIndexOf(':');
+	if (idx <= 0 || idx >= modelAction.length - 1) return null;
+	const modelId = modelAction.slice(0, idx).trim();
+	const actionRaw = modelAction.slice(idx + 1).trim();
+	if (!modelId) return null;
+	if (actionRaw !== 'embedContent' && actionRaw !== 'batchEmbedContents') return null;
+	return { modelId, action: actionRaw };
+}

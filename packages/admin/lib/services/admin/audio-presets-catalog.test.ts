@@ -12,15 +12,36 @@ const EXPECTED_AUDIO_IDS = [
 	'cosyvoice-v3-plus',
 	'cosyvoice-v3.5-flash',
 	'cosyvoice-v3.5-plus',
+	'elevenlabs-flash-v2',
+	'elevenlabs-flash-v2.5',
+	'elevenlabs-multilingual-v2',
+	'elevenlabs-scribe-v2',
+	'elevenlabs-scribe-v2-medical',
+	'elevenlabs-scribe-v2-realtime',
+	'elevenlabs-turbo-v2.5',
+	'elevenlabs-v3',
+	'elevenlabs-v3-conversational',
+	'elevenlabs-v4',
+	'elevenlabs-v4-turbo',
 	'fun-asr',
 	'fun-asr-realtime',
 	'gpt-4o-mini-transcribe',
 	'gpt-4o-transcribe',
 	'gpt-4o-transcribe-diarize',
+	'gpt-live-transcribe',
+	'gpt-realtime-whisper',
+	'gpt-transcribe',
 	'minimax-asr-1.0',
 	'minimax-speech-2.8-hd',
 	'minimax-speech-2.8-turbo',
 	'qwen-audio-3.0-asr-flash',
+	'qwen-audio-3.1-asr-flash',
+	'qwen-audio-3.1-asr-flash-filetrans',
+	'qwen-audio-3.1-asr-flash-message',
+	'qwen-audio-3.1-asr-flash-streaming',
+	'qwen-audio-3.1-tts-flash',
+	'qwen-audio-3.1-tts-next',
+	'qwen-audio-3.1-tts-plus',
 	'qwen-audio-3.0-asr-flash-filetrans',
 	'qwen-audio-3.0-asr-flash-streaming',
 	'qwen-audio-3.0-tts-flash',
@@ -37,7 +58,8 @@ type PresetPricingJson = Partial<ParsedPricingProfile> & {
 
 const asPricing = (raw: unknown): PresetPricingJson => raw as PresetPricingJson;
 
-function isAudioPresetPricing(usd: PresetPricingJson): boolean {
+function isAudioPresetPricing(usd: PresetPricingJson | null | undefined): boolean {
+	if (usd == null) return false;
 	if (usd.audio_billing_mode === 'per_second' && usd.audio != null) return true;
 	if (usd.audio_billing_mode === 'per_character' && usd.audio != null) return true;
 	if (usd.audio_billing_mode === 'token' && Array.isArray(usd.tiers) && usd.tiers.length > 0) {
@@ -46,23 +68,27 @@ function isAudioPresetPricing(usd: PresetPricingJson): boolean {
 	return false;
 }
 
-describe('static audio model presets (*-audio.json)', () => {
+describe('static audio model presets (*-audio-asr.json / *-audio-tts.json)', () => {
 	it('every audio preset uses an explicit audio billing mode', () => {
 		const audioRows = listStaticModelPresets().filter((r) => isAudioPresetPricing(asPricing(r.pricing.usd)));
 		assert.deepEqual(audioRows.map((r) => r.id).sort(), EXPECTED_AUDIO_IDS);
 		for (const row of audioRows) {
 			assert.ok(row.vendor, `vendor required for ${row.id}`);
-			if (asPricing(row.pricing.usd).audio_billing_mode === 'per_character') {
-				assert.equal((row.modalities?.output ?? []).includes('speech'), true);
+			const mode = asPricing(row.pricing.usd).audio_billing_mode;
+			const input = row.modalities?.input ?? [];
+			const output = row.modalities?.output ?? [];
+			const tokenTts = mode === 'token' && output.includes('audio') && !input.includes('audio');
+			if (mode === 'per_character' || tokenTts) {
+				assert.ok(output.some(value=>['speech','audio'].includes(value)),row.id);
 			} else {
-				assert.equal((row.modalities?.input ?? []).includes('audio'), true);
-				assert.equal((row.modalities?.output ?? []).includes('transcription'), true);
+				assert.equal(input.includes('audio'), true, row.id);
+				assert.ok((row.modalities?.output ?? []).some(value=>['transcription','text'].includes(value)), row.id);
 			}
 		}
 	});
 
-	it('Admin import catalog marks audio kind for the same ids', () => {
-		const audioCatalog = listStaticModelPresetCatalogForAdmin().filter((r) => r.kind === 'audio');
+	it('Admin import catalog marks asr/tts kind for the same ids', () => {
+		const audioCatalog = listStaticModelPresetCatalogForAdmin().filter((r) => r.kind === 'asr' || r.kind === 'tts');
 		assert.deepEqual(audioCatalog.map((r) => r.id).sort(), EXPECTED_AUDIO_IDS);
 	});
 
@@ -106,6 +132,22 @@ describe('static audio model presets (*-audio.json)', () => {
 		assert.equal(asPricing(fileAsr.pricing.cny).audio?.price_per_second, 0.00022);
 
 		// 官方标价为「元/万字符」；目录存「每字符」单价，供 usage.characters × price 扣费。
+		const qwen31 = byId.get('qwen-audio-3.1-asr-flash')!;
+		assert.equal(asPricing(qwen31.pricing.usd).audio_billing_mode, 'token');
+		assert.equal(asPricing(qwen31.pricing.usd).tiers?.[0]?.input_price, 0.15);
+		assert.equal(asPricing(qwen31.pricing.usd).tiers?.[0]?.output_price, 0.47);
+		assert.equal(asPricing(qwen31.pricing.cny).tiers?.[0]?.input_price, 0.8);
+		assert.equal(asPricing(qwen31.pricing.cny).tiers?.[0]?.output_price, 2.7);
+		assert.equal(qwen31.context_window, 8192);
+		assert.equal(qwen31.max_tokens, 1024);
+
+		const qwen31Tts = byId.get('qwen-audio-3.1-tts-flash')!;
+		assert.equal(asPricing(qwen31Tts.pricing.usd).audio_billing_mode, 'token');
+		assert.equal(asPricing(qwen31Tts.pricing.usd).tiers?.[0]?.input_price, 0.23);
+		assert.equal(asPricing(qwen31Tts.pricing.usd).tiers?.[0]?.output_price, 1.87);
+		assert.equal(asPricing(qwen31Tts.pricing.cny).tiers?.[0]?.input_price, 1.5);
+		assert.equal(asPricing(qwen31Tts.pricing.cny).tiers?.[0]?.output_price, 12);
+
 		const tts = byId.get('qwen-audio-3.0-tts-plus')!;
 		assert.equal(asPricing(tts.pricing.cny).audio_billing_mode, 'per_character');
 		assert.equal(asPricing(tts.pricing.cny).audio?.price_per_character, 0.00014);
@@ -121,5 +163,45 @@ describe('static audio model presets (*-audio.json)', () => {
 		const cosy35 = byId.get('cosyvoice-v3.5-plus')!;
 		assert.equal(asPricing(cosy35.pricing.cny).audio?.price_per_character, 0.00015);
 		assert.equal(asPricing(cosy35.pricing.usd).audio?.price_per_character, 0.0000214285714);
+	});
+
+	it('locks ElevenLabs official USD list prices and CNY = USD × 7 placeholders', () => {
+		const byId = new Map(listStaticModelPresets().map((r) => [r.id, r]));
+		const perChar = (id: string) => asPricing(byId.get(id)!.pricing.usd).audio as { price_per_character: number };
+		assert.equal(perChar('elevenlabs-v4').price_per_character, 0.00008);
+		assert.equal(perChar('elevenlabs-v4-turbo').price_per_character, 0.00004);
+		assert.equal(perChar('elevenlabs-v3').price_per_character, 0.00008);
+		assert.equal(perChar('elevenlabs-v3-conversational').price_per_character, 0.00004);
+		assert.equal(perChar('elevenlabs-flash-v2').price_per_character, 0.00004);
+		assert.equal(perChar('elevenlabs-multilingual-v2').price_per_character, 0.00008);
+		assert.equal(perChar('elevenlabs-flash-v2.5').price_per_character, 0.00004);
+		assert.equal(perChar('elevenlabs-turbo-v2.5').price_per_character, 0.00004);
+		const scribe = byId.get('elevenlabs-scribe-v2')!;
+		assert.equal(asPricing(scribe.pricing.usd).audio_billing_mode, 'per_second');
+		assert.equal(
+			(asPricing(scribe.pricing.usd).audio as { price_per_second: number }).price_per_second,
+			0.00006111,
+		);
+		assert.equal(
+			(asPricing(scribe.pricing.cny).audio as { price_per_second: number }).price_per_second,
+			0.00042777,
+		);
+		const perCharCny = (id: string) =>
+			asPricing(byId.get(id)!.pricing.cny).audio as { price_per_character: number };
+		assert.equal(perCharCny('elevenlabs-v4').price_per_character, 0.00056);
+		assert.equal(perCharCny('elevenlabs-v4-turbo').price_per_character, 0.00028);
+		assert.equal(perCharCny('elevenlabs-flash-v2.5').price_per_character, 0.00028);
+		assert.deepEqual(byId.get('elevenlabs-scribe-v2-medical')!.pricing.usd, scribe.pricing.usd);
+		assert.deepEqual(byId.get('elevenlabs-scribe-v2-medical')!.pricing.cny, scribe.pricing.cny);
+		const realtime = byId.get('elevenlabs-scribe-v2-realtime')!;
+		assert.equal(asPricing(realtime.pricing.usd).audio_billing_mode, 'per_second');
+		assert.equal(
+			(asPricing(realtime.pricing.usd).audio as { price_per_second: number }).price_per_second,
+			0.00010833,
+		);
+		assert.equal(
+			(asPricing(realtime.pricing.cny).audio as { price_per_second: number }).price_per_second,
+			0.00075833,
+		);
 	});
 });

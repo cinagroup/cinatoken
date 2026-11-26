@@ -1,5 +1,7 @@
 'use client';
 
+import { FinancialInput } from './financial-value';
+
 import type { ReactNode } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import {
@@ -94,9 +96,9 @@ function toggleDay(days: number[], day: number): number[] {
 
 function factorInputClass(tone: 'blue' | 'emerald' | 'violet' | 'slate', comfortable = false): string {
 	if (comfortable)
-		return 'h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 font-mono text-sm tabular-nums outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10';
+		return 'h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 font-mono text-sm tabular-nums outline-none focus:border-gray-500 focus:ring-2 focus:ring-gray-500/10';
 	if (tone === 'blue') {
-		return 'w-full min-w-0 rounded border border-blue-200 bg-blue-50/40 px-1.5 py-1 font-mono text-xs tabular-nums';
+		return 'w-full min-w-0 rounded border border-gray-200 bg-gray-50/40 px-1.5 py-1 font-mono text-xs tabular-nums';
 	}
 	if (tone === 'emerald') {
 		return 'w-full min-w-0 rounded border border-emerald-200 bg-emerald-50/40 px-1.5 py-1 font-mono text-xs tabular-nums';
@@ -169,7 +171,7 @@ export function DailyScheduleEditor(props: Props) {
 											className={
 												comfortable
 													? 'text-xs text-slate-500'
-													: 'rounded bg-gray-100 px-2 py-0.5 text-[11px] text-gray-500'
+													: 'rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500'
 											}
 										>
 											{everyday
@@ -189,13 +191,13 @@ export function DailyScheduleEditor(props: Props) {
 												: 'flex flex-wrap items-center gap-1'
 										}
 									>
-										<span className="mr-0.5 text-[10px] font-medium text-gray-500">{dayLabels.days}</span>
+										<span className="mr-0.5 text-xs font-medium text-gray-500">{dayLabels.days}</span>
 										<button
 											type="button"
 											disabled={lockWindows}
 											onClick={() => updateRow(i, { days: [] })}
 											className={`${
-												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-[10px]'
+												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-xs'
 											} font-medium ${
 												everyday ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
 											} disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-gray-100`}
@@ -207,7 +209,7 @@ export function DailyScheduleEditor(props: Props) {
 											disabled={lockWindows}
 											onClick={() => updateRow(i, { days: [...ISO_WEEKDAYS_MON_FRI] })}
 											className={`${
-												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-[10px]'
+												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-xs'
 											} font-medium ${
 												weekdays ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
 											} disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-gray-100`}
@@ -219,7 +221,7 @@ export function DailyScheduleEditor(props: Props) {
 											disabled={lockWindows}
 											onClick={() => updateRow(i, { days: [...ISO_WEEKDAYS_SAT_SUN] })}
 											className={`${
-												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-[10px]'
+												comfortable ? 'rounded-md px-2.5 py-1.5 text-xs' : 'rounded px-1.5 py-0.5 text-xs'
 											} font-medium ${
 												weekend ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
 											} disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-gray-100`}
@@ -239,12 +241,12 @@ export function DailyScheduleEditor(props: Props) {
 													className={`${
 														comfortable
 															? 'min-w-7 rounded-md px-1.5 py-1.5 text-xs'
-															: 'min-w-6 rounded px-1 py-0.5 text-[10px]'
+															: 'min-w-6 rounded px-1 py-0.5 text-xs'
 													} font-medium tabular-nums ${
 														on
 															? comfortable
-																? 'bg-blue-50 text-blue-700'
-																: 'bg-blue-600 text-white'
+																? 'bg-gray-50 text-gray-800'
+																: 'admin-primary'
 															: 'bg-gray-100 text-gray-500 hover:bg-gray-200'
 													} disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-gray-100`}
 												>
@@ -259,6 +261,8 @@ export function DailyScheduleEditor(props: Props) {
 										comfortable
 											? summarizeWindow
 												? 'grid grid-cols-3 items-end gap-3'
+												: isSingle
+												? 'grid grid-cols-2 items-end gap-3 sm:grid-cols-[repeat(3,minmax(0,1fr))_auto]'
 												: 'grid grid-cols-2 items-end gap-3 sm:grid-cols-[repeat(5,minmax(0,1fr))_auto]'
 											: inline
 											? 'flex w-full shrink-0 items-end gap-1.5 sm:w-auto sm:min-w-[22rem]'
@@ -272,7 +276,7 @@ export function DailyScheduleEditor(props: Props) {
 													className={
 														comfortable
 															? 'mb-2 block text-xs font-medium text-gray-500'
-															: 'mb-0.5 block text-[10px] font-medium text-gray-500'
+															: 'mb-0.5 block text-xs font-medium text-gray-500'
 													}
 												>
 													{startLabel}
@@ -297,7 +301,7 @@ export function DailyScheduleEditor(props: Props) {
 													className={
 														comfortable
 															? 'mb-2 block text-xs font-medium text-gray-500'
-															: 'mb-0.5 block text-[10px] font-medium text-gray-500'
+															: 'mb-0.5 block text-xs font-medium text-gray-500'
 													}
 												>
 													{endLabel}
@@ -325,19 +329,20 @@ export function DailyScheduleEditor(props: Props) {
 												className={
 													comfortable
 														? 'mb-2 block text-xs font-medium text-gray-500'
-														: 'mb-0.5 block text-[10px] font-medium text-slate-700/80'
+														: 'mb-0.5 block text-xs font-medium text-slate-700/80'
 												}
 											>
 												{props.factorLabel}
 											</label>
-											<input
+											<FinancialInput
+												kind="factor"
+												compact={!comfortable}
 												type="text"
 												aria-label={props.factorLabel}
 												inputMode="decimal"
 												placeholder="1"
 												value={(w as SingleScheduleFormWindow).factor}
 												onChange={(e) => updateRow(i, { factor: e.target.value })}
-												className={factorInputClass('slate', comfortable)}
 											/>
 										</div>
 									) : (
@@ -347,19 +352,20 @@ export function DailyScheduleEditor(props: Props) {
 													className={
 														comfortable
 															? 'mb-2 block text-xs font-medium text-gray-500'
-															: 'mb-0.5 block text-[10px] font-medium text-blue-700/80'
+															: 'mb-0.5 block text-xs font-medium text-gray-800/80'
 													}
 												>
 													{props.chargedFactorLabel}
 												</label>
-												<input
+												<FinancialInput
+													kind="factor"
+													compact={!comfortable}
 													type="text"
 													aria-label={props.chargedFactorLabel}
 													inputMode="decimal"
 													placeholder="1"
 													value={(w as DualScheduleFormWindow).charged_factor}
 													onChange={(e) => updateRow(i, { charged_factor: e.target.value })}
-													className={factorInputClass('blue', comfortable)}
 												/>
 											</div>
 											<div className="min-w-0 flex-[0.85]">
@@ -367,19 +373,20 @@ export function DailyScheduleEditor(props: Props) {
 													className={
 														comfortable
 															? 'mb-2 block text-xs font-medium text-gray-500'
-															: 'mb-0.5 block text-[10px] font-medium text-emerald-700/80'
+															: 'mb-0.5 block text-xs font-medium text-emerald-700/80'
 													}
 												>
 													{props.meteredFactorLabel}
 												</label>
-												<input
+												<FinancialInput
+													kind="factor"
+													compact={!comfortable}
 													type="text"
 													aria-label={props.meteredFactorLabel}
 													inputMode="decimal"
 													placeholder="1"
 													value={(w as DualScheduleFormWindow).metered_factor}
 													onChange={(e) => updateRow(i, { metered_factor: e.target.value })}
-													className={factorInputClass('emerald', comfortable)}
 												/>
 											</div>
 											<div className="min-w-0 flex-[0.85]">
@@ -387,19 +394,20 @@ export function DailyScheduleEditor(props: Props) {
 													className={
 														comfortable
 															? 'mb-2 block text-xs font-medium text-gray-500'
-															: 'mb-0.5 block text-[10px] font-medium text-violet-700/80'
+															: 'mb-0.5 block text-xs font-medium text-violet-700/80'
 													}
 												>
 													{props.providerFactorLabel}
 												</label>
-												<input
+												<FinancialInput
+													kind="factor"
+													compact={!comfortable}
 													type="text"
 													aria-label={props.providerFactorLabel}
 													inputMode="decimal"
 													placeholder="1"
 													value={(w as DualScheduleFormWindow).provider_factor ?? ''}
 													onChange={(e) => updateRow(i, { provider_factor: e.target.value })}
-													className={factorInputClass('violet', comfortable)}
 												/>
 											</div>
 										</>

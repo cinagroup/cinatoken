@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPageTitle } from '@/components/admin-page-title';
+
 /**
  * 用户（邮箱）用量分析：预算占用、成功率等；支持 CSV 导出。
  */
@@ -9,14 +11,17 @@ import { useTranslations } from 'next-intl';
 import { AnalyticsInsights, AnalyticsControls, AnalyticsLoadError } from '@/components/AnalyticsInsights';
 import { analyticsColumnVisible, type AnalyticsView } from '@/lib/analytics-insights';
 import { AnalyticsTokenCount } from '@/components/AnalyticsTokenCount';
+import { AnalyticsTtftCell } from '@/components/AnalyticsTtftCell';
 import { AnalyticsTokenDisplayPicker } from '@/components/AnalyticsTokenDisplayPicker';
 import { useAnalyticsRange } from '@/lib/use-analytics-range';
-import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
+import { AnalyticsRangeControl } from '@/components/AnalyticsRangeControl';
+import { FinancialAmount } from '@/components/FinancialAmount';
+import { ArrowDownTrayIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { readApiJson, readJson } from '@/lib/api-json';
 import { compareAnalyticsTableRows } from '@/lib/analytics-range';
 import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
 import { formatLatencyMs } from '@/lib/format-latency';
-import { successRateClassName } from '@/lib/analytics-rate-style';
+import { cacheHitRateClassName, successRateClassName } from '@/lib/analytics-rate-style';
 import type { TokenDisplayMode } from '@/lib/format-token-count';
 import type { ApiResponse, ModelUsageRow, UserUsageRow } from '@/lib/types';
 import { csvRowsToString, downloadCsvFile, filenameTimestamp } from '@/lib/csv';
@@ -65,7 +70,7 @@ export default function UserUsagePage() {
 	const [refresh, setRefresh] = useState(0);
 	const queryGeneration = useRef(0);
 	const [isLoading, setIsLoading] = useState(true);
-	const [rangeValue, setRangeValue] = useAnalyticsRange();
+	const [rangeValue, setRangeValue] = useAnalyticsRange(true);
 	const [committedQuery, setCommittedQuery] = useState(rangeValue);
 	const [sortKey, setSortKey] = useState<SortKey>('request_count');
 	const [sortDir, setSortDir] = useState<SortDir>('desc');
@@ -87,7 +92,9 @@ export default function UserUsagePage() {
 			try {
 				const { start_date, end_date } = rangeValue;
 				const params = new URLSearchParams({ start_date, end_date });
-				const response = await fetch(`/api/admin/analytics/users?${params.toString()}`, { signal: controller.signal });
+				const response = await fetch(`/api/admin/analytics/users?${params.toString()}`, {
+					signal: controller.signal,
+				});
 				const data = await readApiJson<UserUsageRow[]>(response);
 				if (controller.signal.aborted) return;
 				if (!response.ok || !data.success) throw new Error(data.message);
@@ -161,7 +168,8 @@ export default function UserUsagePage() {
 			console.error('Fetch user model usage error:', e);
 			if (generation === queryGeneration.current) setDetailError(true);
 		} finally {
-			if (generation === queryGeneration.current) setModelRowsLoading((prev) => ({ ...prev, [userEmail]: false }));
+			if (generation === queryGeneration.current)
+				setModelRowsLoading((prev) => ({ ...prev, [userEmail]: false }));
 		}
 	};
 
@@ -214,14 +222,24 @@ export default function UserUsagePage() {
 	};
 
 	return (
-		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
-			<div className="mb-6">
-				<h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-				<p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
-			</div>
-			<div className="mb-4 grid min-w-0 gap-4 rounded-xl border border-gray-200 bg-white p-3 sm:p-4 2xl:grid-cols-[minmax(0,1fr)_auto] 2xl:items-end">
-				<GatewayTimeRangePicker value={rangeValue} onChange={setRangeValue} className="flex-1 min-w-0" />
-				<AnalyticsTokenDisplayPicker value={tokenDisplayMode} onChange={setTokenDisplayMode} />
+		<div className="admin-content-workspace content-tone-analytics min-w-0 p-4 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+				<div>
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
+					<p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+				</div>
+				<div className="flex flex-wrap items-center gap-2">
+					<AnalyticsRangeControl value={rangeValue} onChange={setRangeValue} />
+					<button
+						type="button"
+						onClick={exportCsv}
+						disabled={isLoading || loadError || sorted.length === 0}
+						className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-40"
+					>
+						<ArrowDownTrayIcon className="h-4 w-4" aria-hidden="true" />
+						{tCommon('exportCsv')}
+					</button>
+				</div>
 			</div>
 
 			{loadError && <AnalyticsLoadError onRetry={() => setRefresh((n) => n + 1)} />}
@@ -230,7 +248,9 @@ export default function UserUsagePage() {
 					{tA('insights.detailError')}
 				</p>
 			)}
-			{!isLoading && !loadError && <AnalyticsInsights rows={filteredRows} currency={billingCurrency} scope="users" />}
+			{!isLoading && !loadError && (
+				<AnalyticsInsights rows={filteredRows} currency={billingCurrency} scope="users" />
+			)}
 			<AnalyticsControls
 				search={search}
 				onSearch={setSearch}
@@ -238,18 +258,12 @@ export default function UserUsagePage() {
 				onView={setView}
 				count={filteredRows.length}
 				users={true}
-			/>
-			<div className="bg-white rounded-lg shadow-md overflow-hidden">
-				<div className="px-4 py-3 border-b border-gray-200 flex flex-wrap justify-between items-center gap-x-4 gap-y-2 text-sm">
-					<button
-						type="button"
-						onClick={exportCsv}
-						disabled={isLoading || loadError || sorted.length === 0}
-						className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-800 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						{tCommon('exportCsv')}
-					</button>
-				</div>
+			>
+				{(view === 'cost' || view === 'all') && (
+					<AnalyticsTokenDisplayPicker value={tokenDisplayMode} onChange={setTokenDisplayMode} label="" />
+				)}
+			</AnalyticsControls>
+			<div className="admin-content-panel admin-table-surface overflow-hidden rounded-xl border border-gray-200 bg-white">
 				<div className="overflow-x-auto">
 					<table className="admin-data-table min-w-full divide-y divide-gray-200">
 						<thead className="bg-gray-50">
@@ -368,16 +382,36 @@ export default function UserUsagePage() {
 									<Fragment key={r.user_email}>
 										<tr
 											className={`cursor-pointer hover:bg-gray-50 ${
-												isExpanded ? 'bg-blue-50/40' : budgetCritical ? 'bg-red-50' : budgetHigh ? 'bg-yellow-50' : ''
+												isExpanded
+													? 'bg-gray-50/40'
+													: budgetCritical
+													? 'bg-red-50'
+													: budgetHigh
+													? 'bg-yellow-50'
+													: ''
 											}`}
 											onClick={() => void toggleUserModels(r.user_email)}
 										>
-											<td hidden={!analyticsColumnVisible('user_email', view)} className="px-4 py-3 text-sm">
-												<button
-													type="button"
-													className="text-left font-medium text-blue-600 hover:text-blue-800"
-													aria-expanded={isExpanded}
-												>
+											<td
+												hidden={!analyticsColumnVisible('user_email', view)}
+												className="px-4 py-3 text-sm"
+											>
+												<div className="flex items-center gap-2">
+													<button
+														type="button"
+														aria-label={tA('insights.detailLabel')}
+														aria-expanded={isExpanded}
+														onClick={(event) => {
+															event.stopPropagation();
+															void toggleUserModels(r.user_email);
+														}}
+														className="rounded p-1 text-gray-500 hover:bg-gray-100"
+													>
+														<ChevronRightIcon
+															className={`h-4 w-4 ${isExpanded ? 'rotate-90' : ''}`}
+															aria-hidden="true"
+														/>
+													</button>
 													<Link
 														href={`/admin/request-logs?${logQuery.toString()}`}
 														className="hover:underline"
@@ -385,7 +419,7 @@ export default function UserUsagePage() {
 													>
 														{r.user_email}
 													</Link>
-												</button>
+												</div>
 											</td>
 											<td
 												hidden={!analyticsColumnVisible('request_count', view)}
@@ -393,10 +427,16 @@ export default function UserUsagePage() {
 											>
 												{r.request_count.toLocaleString()}
 											</td>
-											<td hidden={!analyticsColumnVisible('input_tokens', view)} className="px-4 py-3 text-sm">
+											<td
+												hidden={!analyticsColumnVisible('input_tokens', view)}
+												className="px-4 py-3 text-sm"
+											>
 												<AnalyticsTokenCount value={r.input_tokens} mode={tokenDisplayMode} />
 											</td>
-											<td hidden={!analyticsColumnVisible('output_tokens', view)} className="px-4 py-3 text-sm">
+											<td
+												hidden={!analyticsColumnVisible('output_tokens', view)}
+												className="px-4 py-3 text-sm"
+											>
 												<AnalyticsTokenCount value={r.output_tokens} mode={tokenDisplayMode} />
 											</td>
 											<td
@@ -409,13 +449,21 @@ export default function UserUsagePage() {
 												hidden={!analyticsColumnVisible('charged_cost', view)}
 												className="px-4 py-3 text-sm text-gray-600 tabular-nums"
 											>
-												{formatGatewayMoneyCode(r.charged_cost, billingCurrency, 4)}
+												<FinancialAmount
+													value={r.charged_cost}
+													standard={r.standard_cost}
+													currency={billingCurrency}
+												/>
 											</td>
 											<td
 												hidden={!analyticsColumnVisible('metered_cost', view)}
 												className="px-4 py-3 text-sm text-gray-600 tabular-nums"
 											>
-												{formatGatewayMoneyCode(r.metered_cost, billingCurrency, 4)}
+												<FinancialAmount
+													value={r.metered_cost}
+													standard={r.standard_cost}
+													currency={billingCurrency}
+												/>
 											</td>
 											<td
 												hidden={!analyticsColumnVisible('distinct_models', view)}
@@ -429,15 +477,18 @@ export default function UserUsagePage() {
 											>
 												{formatDate(r.last_active_at)}
 											</td>
-											<td hidden={!analyticsColumnVisible('budget_usage_rate', view)} className="px-4 py-3 text-sm">
+											<td
+												hidden={!analyticsColumnVisible('budget_usage_rate', view)}
+												className="px-4 py-3 text-sm"
+											>
 												{r.budget_usage_rate != null ? (
 													<span
 														className={
 															budgetCritical
 																? 'text-red-600 font-medium'
 																: budgetHigh
-																	? 'text-yellow-600'
-																	: 'text-gray-600'
+																? 'text-yellow-600'
+																: 'text-gray-600'
 														}
 													>
 														{r.budget_usage_rate.toFixed(1)}%
@@ -456,12 +507,17 @@ export default function UserUsagePage() {
 													2,
 												)}
 											</td>
-											<td hidden={!analyticsColumnVisible('success_rate', view)} className="px-4 py-3 text-sm">
-												<span className={successRateClassName(r.success_rate)}>{r.success_rate.toFixed(1)}%</span>
+											<td
+												hidden={!analyticsColumnVisible('success_rate', view)}
+												className="px-4 py-3 text-sm"
+											>
+												<span className={successRateClassName(r.success_rate)}>
+													{r.success_rate.toFixed(1)}%
+												</span>
 											</td>
 										</tr>
 										{isExpanded ? (
-											<tr key={`${r.user_email}:models`} className="bg-blue-50/60">
+											<tr key={`${r.user_email}:models`} className="bg-gray-50/60">
 												<td
 													colSpan={
 														[
@@ -479,57 +535,75 @@ export default function UserUsagePage() {
 															'success_rate',
 														].filter((key) => analyticsColumnVisible(key, view)).length
 													}
-													className="border-l-4 border-blue-300 px-5 py-4"
+													className="border-l-4 border-gray-300 px-5 py-4"
 												>
 													{isModelRowsLoading ? (
-														<div className="py-4 text-sm text-gray-500">{tA('loadingModelUsage')}</div>
+														<div className="py-4 text-sm text-gray-500">
+															{tA('loadingModelUsage')}
+														</div>
 													) : modelRows.length === 0 ? (
-														<div className="py-4 text-sm text-gray-500">{tA('noModelUsageForUser')}</div>
+														<div className="py-4 text-sm text-gray-500">
+															{tA('noModelUsageForUser')}
+														</div>
 													) : (
-														<div className="overflow-hidden rounded-lg border border-blue-200 bg-white shadow-sm ring-1 ring-blue-100">
+														<div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm ring-1 ring-gray-100">
 															<table className="min-w-full divide-y divide-gray-200">
 																<thead className="bg-gray-50">
 																	<tr>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.model')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.routeGroup')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.requests')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.inputTokens')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.outputTokens')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
+																			{tA('columns.cacheHitRate')}
+																		</th>
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.standard')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.charged')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.metered')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-																			{tA('columns.avgChargedPerReq')}
-																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.successRate')}
 																		</th>
-																		<th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
 																			{tA('columns.avgLatencyMs')}
+																		</th>
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
+																			{tA('columns.ttft')}
+																		</th>
+																		<th className="px-3 py-2 text-left text-xs font-medium normal-case tracking-normal text-gray-500">
+																			{tA('columns.avgUpstreamMs')}
 																		</th>
 																	</tr>
 																</thead>
 																<tbody className="divide-y divide-gray-100">
 																	{modelRows.map((modelRow) => {
-																		const modelLogQuery = new URLSearchParams(logQuery);
-																		modelLogQuery.set('model_id', modelRow.model_id);
-																		modelLogQuery.set('route_group', modelRow.route_group);
+																		const modelLogQuery = new URLSearchParams(
+																			logQuery,
+																		);
+																		modelLogQuery.set(
+																			'model_id',
+																			modelRow.model_id,
+																		);
+																		modelLogQuery.set(
+																			'route_group',
+																			modelRow.route_group,
+																		);
 																		return (
 																			<tr
 																				key={`${r.user_email}\t${modelRow.model_id}\t${modelRow.route_group}`}
@@ -538,8 +612,10 @@ export default function UserUsagePage() {
 																				<td className="px-3 py-2 text-sm">
 																					<Link
 																						href={`/admin/request-logs?${modelLogQuery.toString()}`}
-																						className="text-blue-600 hover:underline"
-																						onClick={(event) => event.stopPropagation()}
+																						className="text-gray-800 hover:underline"
+																						onClick={(event) =>
+																							event.stopPropagation()
+																						}
 																					>
 																						{modelRow.model_id}
 																					</Link>
@@ -551,31 +627,86 @@ export default function UserUsagePage() {
 																					{modelRow.request_count.toLocaleString()}
 																				</td>
 																				<td className="px-3 py-2 text-sm">
-																					<AnalyticsTokenCount value={modelRow.input_tokens} mode={tokenDisplayMode} />
+																					<AnalyticsTokenCount
+																						value={modelRow.input_tokens}
+																						mode={tokenDisplayMode}
+																					/>
 																				</td>
 																				<td className="px-3 py-2 text-sm">
-																					<AnalyticsTokenCount value={modelRow.output_tokens} mode={tokenDisplayMode} />
-																				</td>
-																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
-																					{formatGatewayMoneyCode(modelRow.standard_cost ?? 0, billingCurrency, 4)}
-																				</td>
-																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
-																					{formatGatewayMoneyCode(modelRow.charged_cost, billingCurrency, 4)}
-																				</td>
-																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
-																					{formatGatewayMoneyCode(modelRow.metered_cost, billingCurrency, 4)}
-																				</td>
-																				<td className="px-3 py-2 text-sm text-gray-600">
-																					{formatGatewayMoneyCode(modelRow.avg_charged_per_request, billingCurrency, 6)}
+																					<AnalyticsTokenCount
+																						value={modelRow.output_tokens}
+																						mode={tokenDisplayMode}
+																					/>
 																				</td>
 																				<td className="px-3 py-2 text-sm">
-																					<span className={successRateClassName(modelRow.success_rate)}>
-																						{modelRow.success_rate.toFixed(1)}%
+																					<span
+																						className={cacheHitRateClassName(
+																							modelRow.cache_hit_rate,
+																						)}
+																					>
+																						{modelRow.input_tokens > 0
+																							? `${modelRow.cache_hit_rate.toFixed(
+																									1,
+																							  )}%`
+																							: '—'}
 																					</span>
 																				</td>
-																				<td className="px-3 py-2 text-sm text-gray-600">
+																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
+																					{formatGatewayMoneyCode(
+																						modelRow.standard_cost ?? 0,
+																						billingCurrency,
+																						4,
+																					)}
+																				</td>
+																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
+																					<FinancialAmount
+																						value={modelRow.charged_cost}
+																						standard={
+																							modelRow.standard_cost
+																						}
+																						currency={billingCurrency}
+																					/>
+																				</td>
+																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
+																					<FinancialAmount
+																						value={modelRow.metered_cost}
+																						standard={
+																							modelRow.standard_cost
+																						}
+																						currency={billingCurrency}
+																					/>
+																				</td>
+																				<td className="px-3 py-2 text-sm">
+																					<span
+																						className={successRateClassName(
+																							modelRow.success_rate,
+																						)}
+																					>
+																						{modelRow.success_rate.toFixed(
+																							1,
+																						)}
+																						%
+																					</span>
+																				</td>
+																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
 																					{modelRow.avg_latency_ms != null
-																						? formatLatencyMs(modelRow.avg_latency_ms)
+																						? formatLatencyMs(
+																								modelRow.avg_latency_ms,
+																						  )
+																						: tCommon('noData')}
+																				</td>
+																				<td className="px-3 py-2 text-sm">
+																					<AnalyticsTtftCell
+																						metrics={modelRow}
+																						noDataLabel={tCommon('noData')}
+																					/>
+																				</td>
+																				<td className="px-3 py-2 text-sm text-gray-600 tabular-nums">
+																					{modelRow.avg_upstream_response_ms !=
+																					null
+																						? formatLatencyMs(
+																								modelRow.avg_upstream_response_ms,
+																						  )
 																						: tCommon('noData')}
 																				</td>
 																			</tr>

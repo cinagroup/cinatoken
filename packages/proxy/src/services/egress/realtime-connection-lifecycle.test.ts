@@ -98,6 +98,8 @@ type NodeEvents = {
 	error: [Error];
 };
 class NodeSocket extends EventEmitter<NodeEvents> implements NodeWebSocket {
+	pause() {}
+	resume() {}
 	readyState = 1;
 	bufferedAmount = 0;
 	binaryType = '';

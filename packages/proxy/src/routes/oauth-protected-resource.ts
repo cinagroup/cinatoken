@@ -1,0 +1,30 @@
+/**
+ * `GET /.well-known/oauth-protected-resource[/mcp[/{slug}]]`（RFC 9728）。
+ * 无需鉴权；内置（`MCP_OAUTH_ISSUER`）与外部（`MCP_OAUTH_AUTHORIZATION_SERVER`）模式都未配置时返回 404，行为与未接入前一致。
+ */
+import { Hono } from 'hono';
+import type { Context } from 'hono';
+import type { Env } from '../app';
+import {
+	buildProtectedResourceMetadata,
+	publicOrigin,
+	readMcpOAuthAuthorizationServer,
+} from '../services/mcp/oauth-discovery';
+
+export const oauthProtectedResourceRoutes = new Hono<Env>();
+
+export async function serveProtectedResourceMetadata(c: Context<Env>, mcpPath: string): Promise<Response> {
+	const server = await readMcpOAuthAuthorizationServer(c.get('repositories'));
+	if (!server) return c.json({ error: 'Not found' }, 404);
+	return c.json(
+		buildProtectedResourceMetadata({ origin: publicOrigin(c), mcpPath, authorizationServer: server }),
+		200,
+		{ 'Cache-Control': 'public, max-age=300' }
+	);
+}
+
+// 根路径形式：资源即聚合入口 /mcp
+oauthProtectedResourceRoutes.get('/', (c) => serveProtectedResourceMetadata(c, '/mcp'));
+// 路径后缀形式：/.well-known/oauth-protected-resource/mcp[/{slug}]
+oauthProtectedResourceRoutes.get('/mcp', (c) => serveProtectedResourceMetadata(c, '/mcp'));
+oauthProtectedResourceRoutes.get('/mcp/:slug', (c) => serveProtectedResourceMetadata(c, `/mcp/${c.req.param('slug')}`));

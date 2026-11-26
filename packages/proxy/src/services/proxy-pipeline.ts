@@ -1,3 +1,5 @@
+
+import { requestParameterSourcesForLog } from './request-log-shared';
 import { runRequestGuardrails } from './request-guardrails';
 import { runGeminiRequestGuardrails } from './gemini-request-guardrails';
 import { buildModelFallbackPlan } from './model-fallback-plan';
@@ -71,6 +73,7 @@ export type PipelineDispatchContext<TBody> = {
 export interface ProxyEndpointSpec<TBody> {
 	requestProtocol: Extract<UpstreamProtocol, 'openai' | 'anthropic' | 'gemini'>;
 	requestOperation: string;
+ requestBodyForSources?: (body:TBody)=>Record<string,unknown>;
 	strategyCapability: string;
 	logTag: string;
 	parseRequest: (c: Context<AuthedEnv>) => Promise<PipelineParseResult<TBody> | Response>;
@@ -471,6 +474,7 @@ export async function runProxyPipeline<TBody>(
 					requestOperation: spec.requestOperation,
 					requestBodyForLog,
 					upstreamRequestBody: spec.accounting.upstreamWireBodyForLog(proxyResult.chosenRoute, body),
+ requestParameterSources:requestParameterSourcesForLog(proxyResult.chosenRoute,spec.requestBodyForSources?.(body) ?? (body && typeof body === 'object' && !Array.isArray(body) ? body as Record<string,unknown> : {}),spec.accounting.upstreamWireBodyForLog(proxyResult.chosenRoute,body),c.req.raw.headers),
 					chosenRoute: proxyResult.chosenRoute,
 					stickyTrace,
 					requestStartedAtMs: start,
@@ -479,6 +483,7 @@ export async function runProxyPipeline<TBody>(
 					circuitEvents: alertCircuitEvents,
 					suppressErrorAlert: proxyResult.suppressErrorAlert,
 				});
+				event.request_body_logging_mode = c.get('requestBodyLoggingMode');
 				const unknownCost =
 					timedOut ||
 					!described.hasUsage ||

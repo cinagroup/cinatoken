@@ -9,7 +9,7 @@ import { protectAdminConfigResponse } from "@/lib/admin-config-cache";
 function fixture(permissions: AdminPermission[] | null) {
 	let reads = 0;
 	let lastOptions: unknown;
-	const repositories = {
+	const repositories = {client:{driver:"d1"},
 		requestLogs: {
 			getRequestLogs: async (options: unknown) => {
 				reads++;
@@ -52,6 +52,7 @@ test("request-log user_id deep link uses the stored user identity instead of cur
 		pageSize: 20,
  id: undefined,
  providerIds: undefined,
+ providerKinds:undefined,modelIds:undefined,modelVendors:undefined,anyOf:undefined,
  modelIdPrefix: undefined,
 		apiKeyId: undefined,
 		userId: "user-42",

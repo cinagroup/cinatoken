@@ -218,7 +218,7 @@ test('route, trace and multimodal usage match log semantics', () => {
 	)
 	assert.equal(
 		requestLogProtocolPath('dashscope', 'audio.transcriptions.multimodal'),
-		'/v1/dashscope/services/aigc/multimodal-generation/generation'
+		'/dashscope/api/v1/services/aigc/multimodal-generation/generation'
 	)
 	const catalog = logModelsCatalogSchema.parse({
 		success: true,
@@ -310,24 +310,28 @@ test('MCP model-prefix deep links remain scoped through route validation and API
 
 test('native media protocols retain filters and show actual Proxy entry paths', () => {
 	for (const [protocol, operation, path] of [
-		['minimax', 'audio.speech', '/v1/minimax/t2a_v2'],
-		['minimax', 'audio.transcriptions', '/v1/minimax/speech_to_text'],
-		['minimax', 'images.generations', '/v1/minimax/image_generation'],
-		['volcengine', 'images.generations', '/v1/volcengine/images/generations'],
+		['minimax', 'audio.speech', '/minimax/v1/t2a_v2'],
+		['minimax', 'audio.transcriptions', '/minimax/v1/speech_to_text'],
+		['minimax', 'images.generations', '/minimax/v1/image_generation'],
+		[
+			'volcengine',
+			'images.generations',
+			'/volcengine/api/v3/images/generations',
+		],
 		[
 			'dashscope',
 			'audio.speech',
-			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
+			'/dashscope/api/v1/services/audio/tts/SpeechSynthesizer',
 		],
 		[
 			'dashscope',
 			'audio.speech.multimodal',
-			'/v1/dashscope/services/aigc/multimodal-generation/generation',
+			'/dashscope/api/v1/services/aigc/multimodal-generation/generation',
 		],
 		[
 			'dashscope',
 			'audio.transcriptions.async',
-			'/v1/dashscope/services/audio/asr/transcription',
+			'/dashscope/api/v1/services/audio/asr/transcription',
 		],
 	]) {
 		const filters = validateRequestLogSearch({ protocol })

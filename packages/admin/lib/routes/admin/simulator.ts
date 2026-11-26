@@ -20,6 +20,7 @@ adminSimulatorRoutes.use("*", async (c, next) => {
 				},
 				403
 			);
+	if (!["GET","HEAD","OPTIONS"].includes(c.req.method)) return c.json({success:false,message:"Forbidden"},403);
 	await next();
 });
 

@@ -43,7 +43,7 @@ Operator
 | `@opennextjs/cloudflare` | 1.19.4 |
 | 代理服务 gzip | 194.31 KiB |
 | 管理后台 gzip | 2925.55 KiB |
-| 当时 D1 migrations | 13 个全部成功（2.8.0 当前为 27 个） |
+| 当时 D1 migrations | 13 个全部成功（2.18.0 当前为 35 个） |
 
 Cloudflare Workers Free 的单 Worker gzip 上限为 3 MiB；管理后台实测低于该上限，但余量不大。部署时应检查自己终端中的 `Total Upload ... gzip`，不要只依赖本文的历史数值。限制以 [Cloudflare Workers Limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size) 为准。若免费额度余量吃紧或流量上来，也推荐升级 [Workers Paid](https://developers.cloudflare.com/workers/platform/pricing/)（约 $5/月）——量大管饱，性价比极高。
 

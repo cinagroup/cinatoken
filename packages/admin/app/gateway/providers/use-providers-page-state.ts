@@ -4,6 +4,7 @@ import { useAdvancedEditorRequest } from '@/components/routing-workbench/Advance
 import { useCallback, useEffect, useMemo, useRef, useState, type SetStateAction } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { providerImportCatalogMatchesQuery } from '@/lib/provider-import-preset';
 import { sortProvidersByKindThenName } from '@/lib/provider-kind';
 import type { ProviderSyncReport } from '@/lib/provider-sync-diff';
 import { useFeedback } from '@/components/feedback';
@@ -11,12 +12,18 @@ import { useReplaceListPageQuery } from '@/lib/use-replace-list-query';
 import { useProviderApi } from './provider-api';
 import { providerMatchesListFilter, providerMatchesSearch, providerToFormData } from './provider-utils';
 import { readApiJson } from '@/lib/api-json';
-import type { GatewayProvider, ProviderFormData, ProviderImportCatalogRow, ProviderListFilter } from './types';
+import type {
+	GatewayProvider,
+	ProviderFormData,
+	ProviderImportCatalogRow,
+	ProviderListFilter,
+} from './types';
 import {
 	DEFAULT_PROVIDER_LIST_FILTER,
 	EMPTY_PROTOCOL_FORM,
 	EMPTY_PROVIDER_FORM,
 	PROVIDER_LIST_FILTERS,
+	parseProviderListFilters,
 	parseProviderListFilterParam,
 } from './types';
 
@@ -34,6 +41,7 @@ function emptyFilterCounts(): Record<ProviderListFilter, number> {
 		dashscope: 0,
 		minimax: 0,
 		volcengine: 0,
+		elevenlabs: 0,
 	};
 }
 
@@ -64,16 +72,25 @@ export function useProvidersPageState() {
 	const [isLoading, setIsLoading] = useState(true);
 	const searchParam = searchParams.get('q');
 	const filterParam = searchParams.get('filter');
+	const protocolParam = searchParams.get('protocol');
 	const [filters, setFilters] = useState(() => ({
 		searchParam,
 		filterParam,
+		protocolParam,
+		protocol: parseProviderListFilters(filterParam, protocolParam).protocol,
 		search: searchParam ?? '',
 		filter: filterParam === null ? DEFAULT_PROVIDER_LIST_FILTER : parseProviderListFilterParam(filterParam),
 	}));
-	if (filters.searchParam !== searchParam || filters.filterParam !== filterParam) {
+	if (
+		filters.searchParam !== searchParam ||
+		filters.filterParam !== filterParam ||
+		filters.protocolParam !== protocolParam
+	) {
 		setFilters({
 			searchParam,
 			filterParam,
+			protocolParam,
+			protocol: parseProviderListFilters(filterParam, protocolParam).protocol,
 			search: searchParam === null ? filters.search : searchParam,
 			filter: filterParam === null ? filters.filter : parseProviderListFilterParam(filterParam),
 		});
@@ -98,7 +115,17 @@ export function useProvidersPageState() {
 	const keyRequestRef = useRef<AbortController | null>(null);
 	const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const isCurrentScope = useCallback(
-		(scope: AbortController | null) => scope !== null && !scope.signal.aborted && lifetimeRef.current === scope,
+		(scope: AbortController | null) =>
+			scope !== null && !scope.signal.aborted && lifetimeRef.current === scope,
+		[],
+	);
+	const selectedProtocol = filters.protocol;
+	const setSelectedProtocol = useCallback(
+		(protocol: SetStateAction<ProviderListFilter>) =>
+			setFilters((previous) => ({
+				...previous,
+				protocol: typeof protocol === 'function' ? protocol(previous.protocol) : protocol,
+			})),
 		[],
 	);
 	const [showModal, setShowModal] = useState(false);
@@ -107,6 +134,7 @@ export function useProvidersPageState() {
 	const [formData, setFormData] = useState<ProviderFormData>(EMPTY_PROVIDER_FORM);
 	const [saveError, setSaveError] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
+	const [isApiKeyLoading, setIsApiKeyLoading] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [copiedId, setCopiedId] = useState<string | null>(null);
 	const [showImportModal, setShowImportModal] = useState(false);
@@ -117,7 +145,7 @@ export function useProvidersPageState() {
 	const [importSelected, setImportSelected] = useState<Record<string, boolean>>({});
 	const [importSubmitting, setImportSubmitting] = useState(false);
 	const [statusTogglingId, setStatusTogglingId] = useState<string | null>(null);
-	const loadedApiKeyRef = useRef<string | null>(null);
+	const apiKeyTouchedRef = useRef(false);
 	const apiKeyLoadGenRef = useRef(0);
 
 	useReplaceListPageQuery(() => {
@@ -127,8 +155,9 @@ export function useProvidersPageState() {
 		if (selectedFilter !== DEFAULT_PROVIDER_LIST_FILTER) {
 			params.set('filter', selectedFilter);
 		}
+		if (selectedProtocol !== 'all') params.set('protocol', selectedProtocol);
 		return params;
-	}, [providerSearch, selectedFilter]);
+	}, [providerSearch, selectedFilter, selectedProtocol]);
 
 	// 差异只在手动检查后才有；把结果合并到卡片，供徽标和「有更新」筛选使用。
 	const providers = useMemo(() => {
@@ -151,8 +180,13 @@ export function useProvidersPageState() {
 		[providers, locale, customKindLabel],
 	);
 	const searchMatchedProviders = useMemo(
-		() => orderedProviders.filter((provider) => providerMatchesSearch(provider, providerSearch)),
-		[providerSearch, orderedProviders],
+		() =>
+			orderedProviders.filter(
+				(provider) =>
+					providerMatchesSearch(provider, providerSearch) &&
+					providerMatchesListFilter(provider, selectedProtocol),
+			),
+		[providerSearch, orderedProviders, selectedProtocol],
 	);
 
 	const filterCounts = useMemo(() => {
@@ -174,11 +208,14 @@ export function useProvidersPageState() {
 		[searchMatchedProviders, selectedFilter],
 	);
 
-	const importSelectedCount = useMemo(() => Object.values(importSelected).filter(Boolean).length, [importSelected]);
+	const importSelectedCount = useMemo(
+		() => Object.values(importSelected).filter(Boolean).length,
+		[importSelected],
+	);
 	const filteredImportCatalogRows = useMemo(() => {
 		const query = importCatalogSearch.trim().toLowerCase();
 		if (!query) return importCatalogRows;
-		return importCatalogRows.filter((row) => row.name.toLowerCase().includes(query));
+		return importCatalogRows.filter((row) => providerImportCatalogMatchesQuery(row, query));
 	}, [importCatalogSearch, importCatalogRows]);
 
 	const requestProviders = useCallback(
@@ -192,11 +229,14 @@ export function useProvidersPageState() {
 					signal: request.signal,
 				});
 				const data = await readApiJson<GatewayProvider[]>(response);
-				if (!isCurrentScope(scope) || request.signal.aborted || listRequestRef.current !== request) return null;
+				if (!isCurrentScope(scope) || request.signal.aborted || listRequestRef.current !== request)
+					return null;
 				if (!data.success || !data.data) throw new Error(data.message || 'Failed to load providers');
 				return {
 					request,
-					rows: [...data.data].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })),
+					rows: [...data.data].sort((a, b) =>
+						a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+					),
 				};
 			} catch (error) {
 				if (isCurrentScope(scope) && !request.signal.aborted) console.error('Fetch providers error:', error);
@@ -210,7 +250,12 @@ export function useProvidersPageState() {
 		const scope = lifetimeRef.current;
 		if (!scope || !isCurrentScope(scope)) return;
 		const result = await requestProviders(scope);
-		if (!result || !isCurrentScope(scope) || result.request.signal.aborted || listRequestRef.current !== result.request)
+		if (
+			!result ||
+			!isCurrentScope(scope) ||
+			result.request.signal.aborted ||
+			listRequestRef.current !== result.request
+		)
 			return;
 		if (result.rows) setProviders(result.rows);
 		setIsLoading(false);
@@ -248,9 +293,12 @@ export function useProvidersPageState() {
 			const request = new AbortController();
 			keyRequestRef.current = request;
 			try {
-				const response = await editorFetch(`/api/admin/providers/${encodeURIComponent(provider.id)}/api-key`, {
-					signal: request.signal,
-				});
+				const response = await editorFetch(
+					`/api/admin/providers/${encodeURIComponent(provider.id)}/api-key`,
+					{
+						signal: request.signal,
+					},
+				);
 				const data = await readApiJson<{ api_key: string }>(response);
 				if (!isCurrentScope(scope) || request.signal.aborted || keyRequestRef.current !== request) return;
 				if (!data.success || !data.data?.api_key) throw new Error(data.message || 'Failed to reveal API key');
@@ -295,8 +343,17 @@ export function useProvidersPageState() {
 		[isCurrentScope, refreshProviders, notify, tCommon],
 	);
 
+	const handleFormChange = useCallback(
+		(next: ProviderFormData) => {
+			if (next.api_key !== formData.api_key) apiKeyTouchedRef.current = true;
+			setFormData(next);
+		},
+		[formData.api_key],
+	);
+
 	const handleCreate = useCallback(() => {
-		loadedApiKeyRef.current = null;
+		setIsApiKeyLoading(false);
+		apiKeyTouchedRef.current = false;
 		apiKeyLoadGenRef.current += 1;
 		setEditingProvider(null);
 		setDuplicateSourceId(null);
@@ -314,35 +371,39 @@ export function useProvidersPageState() {
 	}, []);
 
 	const handleEdit = useCallback((provider: GatewayProvider) => {
+		setIsApiKeyLoading(true);
 		const loadGen = ++apiKeyLoadGenRef.current;
-		loadedApiKeyRef.current = null;
+		apiKeyTouchedRef.current = false;
 		setEditingProvider(provider);
 		setDuplicateSourceId(null);
 		setFormData({
 			id: provider.id,
 			name: provider.name,
 			...providerToFormData(provider),
-			description: provider.description ?? '',
+			note: provider.note ?? '',
 		});
 		setShowModal(true);
 		setSaveError('');
 		void fetchProviderApiKeyPlaintext(provider.id)
 			.then((apiKey) => {
-				if (apiKeyLoadGenRef.current !== loadGen) return;
-				loadedApiKeyRef.current = apiKey;
+				if (apiKeyLoadGenRef.current !== loadGen || apiKeyTouchedRef.current) return;
 				setFormData((current) => {
-					if (current.id !== provider.id || current.api_key.trim()) return current;
+					if (current.id !== provider.id || apiKeyTouchedRef.current) return current;
 					return { ...current, api_key: apiKey };
 				});
 			})
 			.catch((error) => {
 				if (apiKeyLoadGenRef.current !== loadGen) return;
 				console.error('Load provider API key error:', error);
+			})
+			.finally(() => {
+				if (apiKeyLoadGenRef.current === loadGen) setIsApiKeyLoading(false);
 			});
 	}, []);
 
 	const handleDuplicate = useCallback((provider: GatewayProvider) => {
-		loadedApiKeyRef.current = null;
+		setIsApiKeyLoading(false);
+		apiKeyTouchedRef.current = false;
 		apiKeyLoadGenRef.current += 1;
 		setEditingProvider(null);
 		setDuplicateSourceId(provider.id);
@@ -352,7 +413,7 @@ export function useProvidersPageState() {
 			...providerToFormData(provider),
 			api_key: '',
 			status: 'disabled',
-			description: provider.description ?? '',
+			note: provider.note ?? '',
 		});
 		setShowModal(true);
 		setSaveError('');
@@ -458,7 +519,7 @@ export function useProvidersPageState() {
 		}
 		setImportSubmitting(true);
 		try {
-			const result = await importProviderPresets(ids);
+			const result = await importProviderPresets(ids, locale);
 			if (!isCurrentScope(scope)) return;
 			if (result.success) {
 				const { created, skipped_existing: skippedExisting, failed } = result.data;
@@ -471,7 +532,10 @@ export function useProvidersPageState() {
 					);
 				}
 				if (failed.length > 0) {
-					summary.push(t('import.resultFailed'), ...failed.map((failure) => `  ${failure.id}: ${failure.message}`));
+					summary.push(
+						t('import.resultFailed'),
+						...failed.map((failure) => `  ${failure.id}: ${failure.message}`),
+					);
 				}
 				notify(failed.length > 0 ? 'error' : 'success', summary.join('\n'));
 				setShowImportModal(false);
@@ -486,7 +550,7 @@ export function useProvidersPageState() {
 		} finally {
 			if (isCurrentScope(scope)) setImportSubmitting(false);
 		}
-	}, [importSelected, isCurrentScope, refreshProviders, t, notify, tImport]);
+	}, [importSelected, locale, isCurrentScope, refreshProviders, t, notify, tImport]);
 
 	const handleSave = useCallback(async () => {
 		const scope = lifetimeRef.current;
@@ -502,14 +566,11 @@ export function useProvidersPageState() {
 		setSaveError('');
 		setIsSaving(true);
 		try {
-			const unchangedKey =
-				Boolean(editingProvider) &&
-				loadedApiKeyRef.current !== null &&
-				formData.api_key.trim() === loadedApiKeyRef.current;
-			const result = await saveProvider(
-				unchangedKey ? { ...formData, api_key: '' } : formData,
-				editingProvider?.id ?? null,
-			);
+			const result = await saveProvider(formData, editingProvider?.id ?? null, {
+				// An untouched field may still be waiting for the reveal request, or its load may have failed.
+				// Omit it in that case; an explicit user edit sends the actual value, including an empty string.
+				updateApiKey: !editingProvider || apiKeyTouchedRef.current,
+			});
 			if (!isCurrentScope(scope)) return;
 			if (result.success) {
 				setShowModal(false);
@@ -520,11 +581,11 @@ export function useProvidersPageState() {
 		} catch (error) {
 			if (!isCurrentScope(scope)) return;
 			console.error('Save error:', error);
-			setSaveError('Save failed, please try again');
+			setSaveError(tCommon('saveFailed'));
 		} finally {
 			if (isCurrentScope(scope)) setIsSaving(false);
 		}
-	}, [editingProvider, formData, isCurrentScope, refreshProviders, tModal]);
+	}, [editingProvider, formData, isCurrentScope, refreshProviders, tModal, tCommon]);
 
 	const closeProviderModal = useCallback(() => {
 		if (isSaving || isDeleting) return;
@@ -538,6 +599,8 @@ export function useProvidersPageState() {
 		setProviderSearch,
 		selectedFilter,
 		setSelectedFilter,
+		selectedProtocol,
+		setSelectedProtocol,
 		filterCounts,
 		filteredProviders,
 		copiedId,
@@ -546,9 +609,10 @@ export function useProvidersPageState() {
 		editingProvider,
 		duplicateSourceId,
 		formData,
-		setFormData,
+		handleFormChange,
 		saveError,
 		isSaving,
+		isApiKeyLoading,
 		isDeleting,
 		showImportModal,
 		setShowImportModal,

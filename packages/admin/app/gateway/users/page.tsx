@@ -1,25 +1,44 @@
 'use client';
 
+import { AdminContentMark } from '@/components/admin-content-mark';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
+
 /**
  * 网关用户列表：预算在 `users`；筛选与分页；跳转详情。
  */
-import { FilterDisclosure } from '@/components/FilterDisclosure';
+import { AdaptiveFilterGroup } from '@/components/adaptive-filter-group';
+import { useAdminDialog } from '@/components/use-admin-dialog';
+import { buildUserCreatePayload } from './user-detail-form';
 import { useTranslations } from 'next-intl';
-import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { MagnifyingGlassIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+	PlusIcon,
+	XMarkIcon,
+	MagnifyingGlassIcon,
+	ArrowsUpDownIcon,
+	KeyIcon,
+	CodeBracketIcon,
+	AdjustmentsHorizontalIcon,
+} from '@heroicons/react/24/outline';
 import { InfoHintPopover } from '@/components/InfoHintPopover';
 import { readApiJson } from '@/lib/api-json';
 import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
 import { summarizeChargedCostFactors } from '@/lib/summarize-charged-cost-factors';
 import { summarizeMetadata } from '@/lib/summarize-metadata';
-import { nextListSortStateWithAscToggle } from '@/lib/toggle-list-sort';
 import type { GatewayUserListItem } from '@/lib/types';
 import { useBillingCurrency } from '@/lib/use-billing-currency';
 import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
 
 type UserListSortKey =
-	'budget_spent' | 'budget_max' | 'budget_base' | 'budget_reset_at' | 'wallet_granted' | 'wallet_spent' | 'created_at';
+	| 'budget_spent'
+	| 'budget_max'
+	| 'budget_base'
+	| 'budget_reset_at'
+	| 'wallet_granted'
+	| 'wallet_spent'
+	| 'created_at';
 type SortDir = 'asc' | 'desc';
 type UsersListRequest = {
 	url: string;
@@ -76,7 +95,7 @@ function budgetUsageRatio(spent: number, max: number | null | undefined): number
 function budgetBarClass(ratio: number): string {
 	if (ratio >= 1) return 'bg-red-500';
 	if (ratio >= 0.8) return 'bg-amber-500';
-	return 'bg-blue-500';
+	return 'bg-gray-700';
 }
 
 function spentToneClass(ratio: number | null, idle: boolean): string {
@@ -121,11 +140,13 @@ function periodLabel(
 
 function SummaryChip({
 	children,
+	icon,
 	title,
 	invalid,
 	onClick,
 }: {
 	children: ReactNode;
+	icon?: ReactNode;
 	title: string;
 	invalid?: boolean;
 	onClick: () => void;
@@ -134,13 +155,15 @@ function SummaryChip({
 		<button
 			type="button"
 			title={title}
+			aria-label={title}
 			onClick={onClick}
-			className={`flex w-full min-w-0 max-w-full items-center rounded-md px-2 py-1 text-left text-xs ring-1 ring-inset transition-colors hover:bg-white ${
+			className={`flex w-full min-w-0 max-w-full items-center gap-1.5 rounded-md px-2 py-1 text-left text-xs ring-1 ring-inset transition-colors hover:bg-white ${
 				invalid
 					? 'bg-red-50 text-red-700 ring-red-200 hover:bg-red-50'
 					: 'bg-slate-50 text-slate-700 ring-slate-200 hover:ring-slate-300'
 			}`}
 		>
+			<span className="shrink-0 text-gray-400">{icon}</span>
 			<span className="min-w-0 truncate font-medium">{children}</span>
 		</button>
 	);
@@ -180,6 +203,10 @@ export default function GatewayUsersPage() {
 	const [isSaving, setIsSaving] = useState(false);
 	const [metadataViewUser, setMetadataViewUser] = useState<GatewayUserListItem | null>(null);
 	const [factorsViewUser, setFactorsViewUser] = useState<GatewayUserListItem | null>(null);
+	const createRef = useAdminDialog(showCreate, isSaving, () => setShowCreate(false));
+	const metadataRef = useAdminDialog(Boolean(metadataViewUser), false, () => setMetadataViewUser(null));
+	const factorsRef = useAdminDialog(Boolean(factorsViewUser), false, () => setFactorsViewUser(null));
+	const requestSequence = useRef(0);
 	const { currency: billingCurrency } = useBillingCurrency();
 	const { formatDateTime, formatDate, formatTime } = useGatewayDateTime();
 
@@ -229,7 +256,7 @@ export default function GatewayUsersPage() {
 				setList((current) => ({
 					request,
 					users: data.success && data.data ? data.data : current.users,
-					total: data.success && data.data ? (data.total ?? 0) : current.total,
+					total: data.success && data.data ? data.total ?? 0 : current.total,
 					error: data.success && data.data ? '' : data.message || `Failed to load users (${response.status})`,
 				}));
 			} catch (error) {
@@ -248,13 +275,6 @@ export default function GatewayUsersPage() {
 
 	const totalPages = Math.ceil(total / pageSize);
 
-	const toggleSort = (key: UserListSortKey) => {
-		const next = nextListSortStateWithAscToggle(sortKey, sortDir, key);
-		setSortKey(next.sortKey as UserListSortKey);
-		setSortDir(next.sortDir);
-		setPage(1);
-	};
-
 	const hasFilters = Boolean(
 		filterEmail.trim() || filterExternalSystem.trim() || filterExternalUserId.trim() || filterStatus,
 	);
@@ -267,6 +287,7 @@ export default function GatewayUsersPage() {
 		setPage(1);
 	};
 
+	const toggleSort = (next: UserListSortKey) => { setSortKey(next); setSortDir(sortKey === next && sortDir === 'asc' ? 'desc' : 'asc'); };
 	const sortButtonProps = { sortKey, sortDir, onSort: toggleSort };
 
 	const openCreate = () => {
@@ -285,43 +306,22 @@ export default function GatewayUsersPage() {
 
 	const submitCreate = async () => {
 		setSaveError('');
+		const invalid = Array.from(createRef.current?.querySelectorAll('input') ?? []).find(
+			(input) => input.validity.badInput,
+		);
+		if (invalid) {
+			invalid.reportValidity();
+			setSaveError(t('createErrors.amountInvalid'));
+			return;
+		}
 		setIsSaving(true);
 		try {
-			const extS = createForm.external_system.trim();
-			const extU = createForm.external_user_id.trim();
-			if ((extS && !extU) || (!extS && extU)) {
-				setSaveError('External system and external user ID must both be set or both empty');
-				setIsSaving(false);
+			let body: Record<string, unknown>;
+			try {
+				body = buildUserCreatePayload(createForm);
+			} catch (error) {
+				setSaveError(t(`createErrors.${error instanceof Error ? error.message : 'invalid'}`));
 				return;
-			}
-			const email = createForm.email.trim();
-			if (!email) {
-				setSaveError('Email is required');
-				setIsSaving(false);
-				return;
-			}
-			const body: Record<string, unknown> = {
-				email,
-				external_system: extS || null,
-				external_user_id: extU || null,
-				budget_period: createForm.budget_period,
-			};
-			if (createForm.budget_max.trim() !== '') {
-				body.budget_max = parseFloat(createForm.budget_max);
-			} else {
-				body.budget_max = null;
-			}
-			if (createForm.budget_base.trim() !== '') {
-				body.budget_base = parseFloat(createForm.budget_base);
-			}
-			if (createForm.metadata.trim() !== '') {
-				try {
-					body.metadata = JSON.parse(createForm.metadata);
-				} catch {
-					setSaveError('Metadata must be valid JSON');
-					setIsSaving(false);
-					return;
-				}
 			}
 
 			const response = await fetch('/api/admin/users', {
@@ -334,7 +334,7 @@ export default function GatewayUsersPage() {
 				setShowCreate(false);
 				fetchUsers();
 			} else {
-				setSaveError(data.message || 'Create failed');
+				setSaveError(data.message || tCommon('createFailed'));
 			}
 		} catch (e) {
 			console.error(e);
@@ -350,121 +350,138 @@ export default function GatewayUsersPage() {
 		{ value: 'disabled', label: tOptions('userStatus.disabled') },
 	];
 	const showSkeleton = isLoading && users.length === 0;
-	const inputClass =
-		'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
 
 	return (
-		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
-			<div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+		<div className="admin-content-workspace content-tone-accounts min-w-0 p-4 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-semibold tracking-tight text-gray-900">{t('title')}</h1>
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
 					<p className="mt-1 max-w-2xl text-sm text-gray-500">{t('subtitle')}</p>
 				</div>
 				<button
 					type="button"
 					onClick={openCreate}
-					className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+					className="inline-flex items-center gap-2 h-9 rounded-lg admin-primary px-3 py-2 text-xs font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
 				>
 					<PlusIcon className="h-4 w-4" />
 					{t('newUser')}
 				</button>
 			</div>
 
-			<div className="mb-4 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
-				<div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
-					<div className="grid min-w-0 flex-1 gap-3 xl:grid-cols-[minmax(13rem,1fr)_minmax(0,3fr)]">
-						<div className="min-w-0">
-							<label className="mb-1 block text-xs font-medium text-gray-500">{t('filters.email')}</label>
-							<div className="relative">
-								<MagnifyingGlassIcon
-									className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
-									aria-hidden
-								/>
-								<input
-									type="search"
-									value={filterEmail}
-									onChange={(e) => {
-										setFilterEmail(e.target.value);
-										setPage(1);
-									}}
-									className={`${inputClass} pl-9`}
-									placeholder={t('filters.emailPlaceholder')}
-									autoComplete="off"
-								/>
-							</div>
-						</div>
-						<FilterDisclosure
-							activeCount={[filterExternalSystem, filterExternalUserId, filterStatus].filter(Boolean).length}
-						>
-							<div className="admin-filter-grid">
-								<div className="min-w-0">
-									<label className="mb-1 block text-xs font-medium text-gray-500">{t('filters.externalSystem')}</label>
-									<input
-										type="text"
-										value={filterExternalSystem}
-										onChange={(e) => {
-											setFilterExternalSystem(e.target.value);
-											setPage(1);
-										}}
-										className={inputClass}
-										placeholder={t('filters.externalSystemPlaceholder')}
-										autoComplete="off"
-									/>
-								</div>
-								<div className="min-w-0">
-									<label className="mb-1 block text-xs font-medium text-gray-500">{t('filters.externalUserId')}</label>
-									<input
-										type="text"
-										value={filterExternalUserId}
-										onChange={(e) => {
-											setFilterExternalUserId(e.target.value);
-											setPage(1);
-										}}
-										className={inputClass}
-										placeholder={t('filters.externalUserIdPlaceholder')}
-										autoComplete="off"
-									/>
-								</div>
-								<div className="min-w-0">
-									<label className="mb-1 block text-xs font-medium text-gray-500">{t('filters.status')}</label>
-									<div className="inline-flex w-full rounded-lg bg-gray-100 p-0.5">
-										{statusFilterOptions.map((option) => {
-											const selected = filterStatus === option.value;
-											return (
-												<button
-													key={option.value || 'all'}
-													type="button"
-													onClick={() => {
-														setFilterStatus(option.value);
-														setPage(1);
-													}}
-													className={`flex-1 rounded-md px-2.5 py-1.5 text-xs font-medium capitalize transition-colors ${
-														selected ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-800'
-													}`}
-												>
-													{option.label}
-												</button>
-											);
-										})}
-									</div>
-								</div>
-							</div>
-						</FilterDisclosure>
-					</div>
-					{hasFilters && (
-						<div className="flex shrink-0 items-end pb-0.5">
-							<button
-								type="button"
-								onClick={clearFilters}
-								className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-							>
-								<XMarkIcon className="h-3.5 w-3.5" aria-hidden />
-								{tCommon('clearFilters')}
-							</button>
-						</div>
-					)}
+			<section aria-label={t('ui.filters')} className="admin-filter-surface mb-5 flex flex-wrap items-end gap-3">
+				<div className="relative min-w-0 flex-1 basis-64 sm:max-w-sm">
+					<MagnifyingGlassIcon
+						className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+						aria-hidden
+					/>
+					<input
+						type="search"
+						aria-label={t('filters.email')}
+						value={filterEmail}
+						onChange={(event) => {
+							setFilterEmail(event.target.value);
+							setPage(1);
+						}}
+						placeholder={t('filters.emailPlaceholder')}
+						className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+					/>
 				</div>
-			</div>
+				<select
+					aria-label={t('filters.status')}
+					value={filterStatus}
+					onChange={(event) => {
+						setFilterStatus(event.target.value);
+						setPage(1);
+					}}
+					className="h-10 rounded-lg border border-gray-200 bg-white px-3 text-xs text-gray-600"
+				>
+					<option value="">{t('ui.allStatuses')}</option>
+					{statusFilterOptions
+						.filter((option) => option.value)
+						.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+				</select>
+				<AdaptiveFilterGroup
+					label={t('ui.moreFilters')}
+					activeCount={[filterExternalSystem, filterExternalUserId].filter(Boolean).length}
+				>
+					{[
+						{
+							label: t('filters.externalSystem'),
+							value: filterExternalSystem,
+							set: setFilterExternalSystem,
+							placeholder: t('filters.externalSystemPlaceholder'),
+						},
+						{
+							label: t('filters.externalUserId'),
+							value: filterExternalUserId,
+							set: setFilterExternalUserId,
+							placeholder: t('filters.externalUserIdPlaceholder'),
+						},
+					].map((field) => (
+						<label key={field.label} className="admin-identity-field block space-y-2 text-xs text-gray-500">
+							{field.label}
+							<input
+								autoComplete="off"
+								value={field.value}
+								onChange={(event) => {
+									field.set(event.target.value);
+									setPage(1);
+								}}
+								placeholder={field.placeholder}
+								className="block h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-100"
+							/>
+						</label>
+					))}
+				</AdaptiveFilterGroup>
+				<div className="ml-auto flex items-center gap-2">
+					<select
+						aria-label={t('ui.sort')}
+						value={sortKey}
+						onChange={(event) => {
+							setSortKey(event.target.value as UserListSortKey);
+							setPage(1);
+						}}
+						className="h-10 max-w-48 rounded-lg border border-gray-200 bg-white px-3 text-xs text-gray-600"
+					>
+						{(
+							[
+								'created_at',
+								'budget_spent',
+								'budget_max',
+								'budget_base',
+								'budget_reset_at',
+								'wallet_granted',
+								'wallet_spent',
+							] as const
+						).map((key) => (
+							<option key={key} value={key}>
+								{t(`ui.sortOptions.${key}`)}
+							</option>
+						))}
+					</select>
+					<button
+						type="button"
+						onClick={() => {
+							setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+							setPage(1);
+						}}
+						aria-label={t(sortDir === 'asc' ? 'ui.ascending' : 'ui.descending')}
+						title={t(sortDir === 'asc' ? 'ui.ascending' : 'ui.descending')}
+						className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500"
+					>
+						<ArrowsUpDownIcon className="h-4 w-4" aria-hidden />
+					</button>
+				</div>
+				{hasFilters && (
+					<button type="button" onClick={clearFilters} className="text-xs text-gray-500 hover:text-gray-900">
+						{tCommon('clearFilters')}
+					</button>
+				)}
+			</section>
 
 			{listError && (
 				<div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
@@ -472,22 +489,17 @@ export default function GatewayUsersPage() {
 				</div>
 			)}
 
-			<div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+			<div className="admin-content-panel admin-table-surface overflow-hidden rounded-xl border border-gray-200 bg-white">
 				<div className={`overflow-x-auto ${isLoading ? 'opacity-70' : ''}`}>
-					<table className="admin-data-table w-full min-w-[64rem] table-fixed">
+					<table className="admin-data-table w-full min-w-[56rem] table-fixed">
 						<colgroup>
-							<col className="w-[22%]" />
-							<col className="w-[16%]" />
-							<col className="w-[11%]" />
-							<col className="w-[9%]" />
-							<col className="w-[6%]" />
-							<col className="w-[13%]" />
-							<col className="w-[12%]" />
-							<col className="w-[11%]" />
+							{['26%', '21%', '16%', '12%', '15%', '10%'].map((width) => (
+								<col key={width} style={{ width }} />
+							))}
 						</colgroup>
 						<thead className="border-b border-gray-200 bg-gray-50/80">
 							<tr>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
+								<th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
 									{t('table.user')}
 								</th>
 								<th className="px-4 py-2.5 text-right">
@@ -499,13 +511,29 @@ export default function GatewayUsersPage() {
 											</InfoHintPopover>
 										</div>
 										<div className="inline-flex items-center gap-1 text-[10px] font-medium normal-case tracking-normal whitespace-nowrap">
-											<SortButton label={t('table.spent')} columnKey="budget_spent" {...sortButtonProps} />
+											<SortButton
+												label={t('table.spent')}
+												columnKey="budget_spent"
+												{...sortButtonProps}
+											/>
 											<span className="text-gray-300">/</span>
-											<SortButton label={t('table.max')} columnKey="budget_max" {...sortButtonProps} />
+											<SortButton
+												label={t('table.max')}
+												columnKey="budget_max"
+												{...sortButtonProps}
+											/>
 											<span className="text-gray-300">·</span>
-											<SortButton label={t('table.base')} columnKey="budget_base" {...sortButtonProps} />
+											<SortButton
+												label={t('table.base')}
+												columnKey="budget_base"
+												{...sortButtonProps}
+											/>
 											<span className="text-gray-300">·</span>
-											<SortButton label={t('table.cycle')} columnKey="budget_reset_at" {...sortButtonProps} />
+											<SortButton
+												label={t('table.cycle')}
+												columnKey="budget_reset_at"
+												{...sortButtonProps}
+											/>
 										</div>
 									</div>
 								</th>
@@ -518,66 +546,53 @@ export default function GatewayUsersPage() {
 											</InfoHintPopover>
 										</div>
 										<div className="inline-flex items-center gap-1 text-[10px] font-medium normal-case tracking-normal whitespace-nowrap">
-											<SortButton label={t('table.walletBalance')} columnKey="wallet_granted" {...sortButtonProps} />
+											<SortButton
+												label={t('table.walletBalance')}
+												columnKey="wallet_granted"
+												{...sortButtonProps}
+											/>
 											<span className="text-gray-300">/</span>
-											<SortButton label={t('table.walletSpent')} columnKey="wallet_spent" {...sortButtonProps} />
+											<SortButton
+												label={t('table.walletSpent')}
+												columnKey="wallet_spent"
+												{...sortButtonProps}
+											/>
 										</div>
 									</div>
 								</th>
-								<th className="px-4 py-2.5 text-right" title={t('help.rateLimitRpm')}>
-									<div className="inline-flex items-center justify-end gap-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-										<span>{t('table.rateLimit')}</span>
-										<InfoHintPopover label={t('hints.rateLimitTitle')}>
-											<p>{t('help.rateLimitRpm')}</p>
+								<th className="px-4 py-3 text-right text-xs font-medium text-gray-500">
+									<span className="inline-flex items-center gap-1">
+										{t('table.wallet')}
+										<InfoHintPopover label={t('hints.walletTitle')}>
+											<p>{t('hints.budgetVsWallet')}</p>
 										</InfoHintPopover>
-									</div>
+									</span>
 								</th>
-								<th
-									className="px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap"
-									title={t('table.keysActiveOfTotal')}
-								>
-									{t('table.keys')}
+								<th className="px-4 py-3 text-right text-xs font-medium text-gray-500">
+									{t('ui.access')}
 								</th>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t('table.metadata')}
+								<th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
+									{t('ui.configuration')}
 								</th>
-								<th
-									className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap"
-									title={t('help.chargedCostFactors')}
-								>
-									{t('table.chargedCostFactors')}
+								<th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
+									{t('table.created')}
 								</th>
 								<SortableTh label={t('table.created')} columnKey="created_at" {...sortButtonProps} />
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-100">
 							{showSkeleton &&
-								Array.from({ length: 8 }).map((_, index) => (
+								Array.from({ length: 6 }).map((_, index) => (
 									<tr key={`skeleton-${index}`} className="animate-pulse">
-										<td className="px-4 py-4">
-											<div className="h-4 w-48 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="ml-auto h-4 w-28 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="ml-auto h-4 w-16 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="ml-auto h-4 w-12 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="ml-auto h-4 w-8 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="h-4 w-20 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="h-4 w-16 rounded bg-gray-100" />
-										</td>
-										<td className="px-4 py-4">
-											<div className="h-4 w-16 rounded bg-gray-100" />
-										</td>
+										{['w-48', 'w-28', 'w-20', 'w-12', 'w-16', 'w-20'].map((width, cell) => (
+											<td key={cell} className="px-4 py-4">
+												<div
+													className={`h-4 max-w-full rounded bg-gray-100 ${width} ${
+														cell > 0 && cell < 4 ? 'ml-auto' : ''
+													}`}
+												/>
+											</td>
+										))}
 									</tr>
 								))}
 							{users.map((u) => {
@@ -590,13 +605,15 @@ export default function GatewayUsersPage() {
 								const ratio = budgetUsageRatio(u.budget_spent, u.budget_max);
 								const spentLabel = formatGatewayMoneyCode(u.budget_spent, billingCurrency, 2);
 								const maxLabel =
-									u.budget_max != null ? formatGatewayMoneyCode(u.budget_max, billingCurrency, 2) : tCommon('noLimit');
+									u.budget_max != null
+										? formatGatewayMoneyCode(u.budget_max, billingCurrency, 2)
+										: tCommon('noLimit');
 								const periodText = periodActive
-									? (periodLabel(u.budget_period, {
+									? periodLabel(u.budget_period, {
 											daily: tOptions('budgetPeriod.daily'),
 											weekly: tOptions('budgetPeriod.weekly'),
 											monthly: tOptions('budgetPeriod.monthly'),
-										}) ?? u.budget_period)
+									  }) ?? u.budget_period
 									: null;
 								const cycleText = [periodText, u.budget_reset_at ? formatDate(u.budget_reset_at) : null]
 									.filter(Boolean)
@@ -604,7 +621,7 @@ export default function GatewayUsersPage() {
 								const resetToText = hasBase
 									? t('table.resetTo', {
 											amount: formatGatewayMoneyCode(u.budget_base, billingCurrency, 2),
-										})
+									  })
 									: null;
 								const resetHint = [cycleText, resetToText].filter(Boolean).join(' ');
 								const budgetIdle = ratio == null && Number(u.budget_spent) === 0 && !resetHint;
@@ -612,19 +629,19 @@ export default function GatewayUsersPage() {
 								const walletSpent = Number(u.wallet_spent ?? 0);
 								const walletIdle = walletRemaining === 0 && walletSpent === 0;
 								const walletDepleted = walletRemaining <= 0 && Number(u.wallet_granted ?? 0) > 0;
-								const externalLabel = [u.external_system, u.external_user_id].filter(Boolean).join(' · ');
+								const externalLabel = u.external_system;
 								return (
 									<tr
 										key={u.id}
 										role="link"
 										tabIndex={0}
-										aria-label={`User detail: ${u.email || u.id}`}
-										className={`cursor-pointer transition-colors hover:bg-blue-50/40 focus:bg-blue-50/60 focus:outline-none ${
+										aria-label={`${t('title')}: ${u.email || u.id}`}
+										className={`cursor-pointer transition-colors hover:bg-gray-50/40 focus:bg-gray-50/60 focus:outline-none ${
 											disabled ? 'bg-gray-50/60' : ''
 										}`}
 										onClick={() => router.push(detailHref)}
 										onKeyDown={(e) => {
-											if (e.key === 'Enter' || e.key === ' ') {
+											if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
 												e.preventDefault();
 												router.push(detailHref);
 											}
@@ -632,30 +649,45 @@ export default function GatewayUsersPage() {
 									>
 										<td className="px-4 py-3.5 overflow-hidden">
 											<div className="flex min-w-0 items-start gap-2.5">
-												<span
-													className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-														disabled ? 'bg-gray-400' : 'bg-emerald-500'
-													}`}
-													title={u.status}
-													role="img"
-													aria-label={`Status: ${u.status}`}
-												/>
+												<span className="admin-account-avatar">
+													<span
+														aria-hidden
+														className="!static !h-auto !w-auto !border-0 !bg-transparent"
+													>
+														{(u.email?.trim().slice(0, 1) || '?').toUpperCase()}
+													</span>
+													<span
+														className={`h-2 w-2 shrink-0 rounded-full ${
+															disabled ? 'bg-gray-400' : 'bg-emerald-500'
+														}`}
+														title={u.status}
+														role="img"
+														aria-label={tOptions(
+															disabled ? 'userStatus.disabled' : 'userStatus.active',
+														)}
+													/>
+												</span>
 												<div className="min-w-0">
 													<div className="flex min-w-0 items-center gap-2">
 														<span
-															className={`truncate text-sm font-medium ${disabled ? 'text-gray-500' : 'text-gray-900'}`}
+															className={`truncate text-sm font-medium ${
+																disabled ? 'text-gray-500' : 'text-gray-900'
+															}`}
 															title={u.email || undefined}
 														>
 															{u.email || tCommon('noData')}
 														</span>
 														{disabled && (
-															<span className="inline-flex shrink-0 items-center rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-600 ring-1 ring-inset ring-gray-200">
+															<span className="inline-flex shrink-0 items-center rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium normal-case tracking-normal text-gray-600 ring-1 ring-inset ring-gray-200">
 																{tOptions('userStatus.disabled')}
 															</span>
 														)}
 													</div>
 													{externalLabel ? (
-														<div className="mt-0.5 truncate font-mono text-[11px] text-gray-400" title={externalLabel}>
+														<div
+															className="mt-0.5 truncate font-mono text-xs text-gray-400"
+															title={externalLabel}
+														>
 															{externalLabel}
 														</div>
 													) : null}
@@ -664,15 +696,28 @@ export default function GatewayUsersPage() {
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden">
 											<div className="w-full text-right">
-												<div className={`text-sm tabular-nums ${spentToneClass(ratio, budgetIdle)}`}>
+												<div
+													className={`text-sm tabular-nums ${spentToneClass(
+														ratio,
+														budgetIdle,
+													)}`}
+												>
 													{spentLabel}
 													<span className="text-gray-400"> / </span>
-													<span className={u.budget_max == null ? 'text-gray-400' : undefined}>{maxLabel}</span>
+													<span
+														className={u.budget_max == null ? 'text-gray-400' : undefined}
+													>
+														{maxLabel}
+													</span>
 												</div>
 												{resetHint ? (
 													<div
-														className="mt-0.5 truncate text-[11px] text-gray-400"
-														title={u.budget_reset_at ? formatDateTime(u.budget_reset_at) : resetHint}
+														className="mt-0.5 truncate text-xs text-gray-400"
+														title={
+															u.budget_reset_at
+																? formatDateTime(u.budget_reset_at)
+																: resetHint
+														}
 													>
 														{resetHint}
 													</div>
@@ -683,42 +728,53 @@ export default function GatewayUsersPage() {
 										<td className="px-4 py-3.5 overflow-hidden text-right">
 											<div
 												className={`text-sm tabular-nums ${
-													walletIdle ? 'text-gray-400' : walletDepleted ? 'text-red-600' : 'font-medium text-gray-900'
+													walletIdle
+														? 'text-gray-400'
+														: walletDepleted
+														? 'text-red-600'
+														: 'font-medium text-gray-900'
 												}`}
 											>
 												{formatGatewayMoneyCode(walletRemaining, billingCurrency, 2)}
 											</div>
-											<div className="mt-0.5 text-[11px] tabular-nums text-gray-400">
-												{t('table.walletSpent')} {formatGatewayMoneyCode(walletSpent, billingCurrency, 2)}
+											<div className="mt-0.5 text-xs tabular-nums text-gray-400">
+												{t('table.walletSpent')}{' '}
+												{formatGatewayMoneyCode(walletSpent, billingCurrency, 2)}
 											</div>
 										</td>
-										<td className="px-4 py-3.5 overflow-hidden text-right" title={t('help.rateLimitRpm')}>
+										<td
+											className="px-4 py-3.5 overflow-hidden text-right"
+											title={t('help.rateLimitRpm')}
+										>
 											{(() => {
 												const rpm = userRpm(u);
 												return rpm == null ? (
 													<span className="text-sm text-gray-400">{tCommon('noLimit')}</span>
 												) : (
-													<span className={`text-sm tabular-nums ${rpm === 0 ? 'text-amber-700' : 'text-gray-900'}`}>
+													<span
+														className={`text-sm tabular-nums ${
+															rpm === 0 ? 'text-amber-700' : 'text-gray-900'
+														}`}
+													>
 														{t('table.rateLimitRpmValue', { rpm })}
 													</span>
 												);
 											})()}
-										</td>
-										<td className="px-4 py-3.5 overflow-hidden text-right">
-											<span
-												className="inline-flex items-center justify-end tabular-nums text-sm"
+											<button
+												type="button"
+												onClick={(event) => {
+													event.stopPropagation();
+													router.push(`${detailHref}?section=keys`);
+												}}
+												aria-label={t('ui.manageUserKeys', {
+													user: u.email || u.id,
+												})}
 												title={t('table.keysActiveOfTotal')}
+												className="mt-1 flex w-full items-center justify-end gap-1.5 text-xs tabular-nums text-gray-500 hover:text-gray-950"
 											>
-												<span
-													className={
-														u.active_keys_count === 0 && (u.keys_count ?? 0) > 0 ? 'text-gray-400' : 'text-gray-900'
-													}
-												>
-													{u.active_keys_count}
-												</span>
-												<span className="text-gray-400"> / </span>
-												<span className="text-gray-700">{u.keys_count ?? u.active_keys_count}</span>
-											</span>
+												<KeyIcon className="h-3.5 w-3.5" aria-hidden />
+												{u.active_keys_count} / {u.keys_count ?? u.active_keys_count}
+											</button>
 										</td>
 										<td
 											className="px-4 py-3.5 overflow-hidden"
@@ -726,29 +782,42 @@ export default function GatewayUsersPage() {
 											onKeyDown={(e) => e.stopPropagation()}
 										>
 											{meta.empty ? (
-												<span className="text-gray-300">{tCommon('noData')}</span>
+												factors.empty ? (
+													<span className="text-gray-300">{tCommon('noData')}</span>
+												) : null
 											) : (
-												<SummaryChip title={meta.summary} invalid={!meta.ok} onClick={() => setMetadataViewUser(u)}>
+												<SummaryChip
+													icon={<CodeBracketIcon className="h-3.5 w-3.5" aria-hidden />}
+													title={`${tCommon('metadata')}: ${meta.summary}`}
+													invalid={!meta.ok}
+													onClick={() => setMetadataViewUser(u)}
+												>
 													{displayMetadataSummary(meta.summary)}
 												</SummaryChip>
 											)}
-										</td>
-										<td
-											className="px-4 py-3.5 overflow-hidden"
-											onClick={(e) => e.stopPropagation()}
-											onKeyDown={(e) => e.stopPropagation()}
-										>
-											{factors.empty ? (
-												<span className="text-gray-300">{tCommon('noData')}</span>
-											) : (
-												<SummaryChip title={factors.summary} onClick={() => setFactorsViewUser(u)}>
+											<div className="mt-1.5" />
+											{factors.empty ? null : (
+												<SummaryChip
+													icon={
+														<AdjustmentsHorizontalIcon
+															className="h-3.5 w-3.5"
+															aria-hidden
+														/>
+													}
+													title={`${t('fields.chargedCostFactors')}: ${factors.summary}`}
+													onClick={() => setFactorsViewUser(u)}
+												>
 													{factors.summary}
 												</SummaryChip>
 											)}
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden whitespace-nowrap">
-											<div className="truncate text-sm text-gray-700">{formatDate(u.created_at)}</div>
-											<div className="truncate text-[11px] tabular-nums text-gray-400">{formatTime(u.created_at)}</div>
+											<div className="truncate text-sm text-gray-700">
+												{formatDate(u.created_at)}
+											</div>
+											<div className="truncate text-xs tabular-nums text-gray-400">
+												{formatTime(u.created_at)}
+											</div>
 										</td>
 									</tr>
 								);
@@ -790,27 +859,58 @@ export default function GatewayUsersPage() {
 			</div>
 
 			{showCreate && (
-				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-					<div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-						<div className="px-6 py-4 border-b flex justify-between items-center">
-							<h2 className="text-xl font-bold text-gray-900">{t('createTitle')}</h2>
-							<button type="button" onClick={() => setShowCreate(false)} className="text-gray-400 hover:text-gray-600">
-								×
+				<div className="fixed inset-0 bg-gray-950/40 flex items-center justify-center z-50 p-3 sm:p-6">
+					<div
+						ref={createRef}
+						tabIndex={-1}
+						role="dialog"
+						aria-modal="true"
+						aria-labelledby="create-user-title"
+						className="admin-content-dialog flex max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-panel outline-none"
+					>
+						<div className="admin-dialog-header px-6 py-4 border-b flex justify-between items-center">
+							<h2
+								id="create-user-title"
+								className="admin-dialog-title text-base font-medium text-gray-900"
+							>
+								<AdminContentMark />
+								{t('createTitle')}
+							</h2>
+							<button
+								type="button"
+								disabled={isSaving}
+								aria-label={tCommon('close')}
+								onClick={() => setShowCreate(false)}
+								className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100"
+							>
+								<XMarkIcon className="h-5 w-5" aria-hidden />
 							</button>
 						</div>
-						<div className="p-6 space-y-5">
+						<fieldset
+							disabled={isSaving}
+							className="admin-dialog-body min-h-0 space-y-5 overflow-y-auto p-5"
+						>
 							{saveError && (
-								<div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">{saveError}</div>
+								<div
+									role="alert"
+									className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm"
+								>
+									{saveError}
+								</div>
 							)}
 							<p className="text-sm text-gray-600">{t('help.createUser')}</p>
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-1">
+								<label
+									htmlFor="create-user-email"
+									className="block text-sm font-medium text-gray-700 mb-1"
+								>
 									{t('fields.email')}{' '}
 									<span aria-hidden="true" className="ml-0.5 text-red-500">
 										*
 									</span>
 								</label>
 								<input
+									id="create-user-email"
 									type="email"
 									required
 									aria-required="true"
@@ -821,47 +921,82 @@ export default function GatewayUsersPage() {
 									placeholder="user@example.com"
 								/>
 							</div>
-							<div className="rounded-lg border border-sky-200 bg-sky-50/70 p-4 space-y-3">
-								<h3 className="text-sm font-semibold text-sky-950">{t('table.budget')}</h3>
-								<div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+							<details className="rounded-xl border border-gray-200 bg-gray-50/60 p-4">
+								<summary className="cursor-pointer text-sm font-medium text-gray-900">
+									{t('table.budget')}
+								</summary>
+								<div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">
+										<label
+											htmlFor="create-user-budget_max"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
 											{t('fields.budgetMax')}{' '}
-											<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+											<span className="ml-1 text-xs font-normal text-gray-400">
+												{tCommon('optional')}
+											</span>
 										</label>
 										<input
+											id="create-user-budget_max"
 											type="number"
 											step="0.01"
 											value={createForm.budget_max}
-											onChange={(e) => setCreateForm({ ...createForm, budget_max: e.target.value })}
+											onChange={(e) =>
+												setCreateForm({
+													...createForm,
+													budget_max: e.target.value,
+												})
+											}
 											className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-sm"
 											placeholder={tCommon('noLimit')}
 										/>
 										<p className="mt-1 text-xs text-gray-500">{t('help.budgetMax')}</p>
 									</div>
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">
+										<label
+											htmlFor="create-user-budget_base"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
 											{t('fields.budgetBase')}{' '}
-											<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+											<span className="ml-1 text-xs font-normal text-gray-400">
+												{tCommon('optional')}
+											</span>
 										</label>
 										<input
+											id="create-user-budget_base"
 											type="number"
 											step="0.01"
 											value={createForm.budget_base}
-											onChange={(e) => setCreateForm({ ...createForm, budget_base: e.target.value })}
+											onChange={(e) =>
+												setCreateForm({
+													...createForm,
+													budget_base: e.target.value,
+												})
+											}
 											className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-sm"
 											placeholder={tCommon('optional')}
 										/>
 										<p className="mt-1 text-xs text-gray-500">{t('help.budgetBase')}</p>
 									</div>
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">
+										<label
+											htmlFor="create-user-budget_period"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
 											{t('fields.budgetPeriod')}{' '}
-											<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+											<span className="ml-1 text-xs font-normal text-gray-400">
+												{tCommon('optional')}
+											</span>
 										</label>
 										<select
+											id="create-user-budget_period"
 											value={createForm.budget_period}
-											onChange={(e) => setCreateForm({ ...createForm, budget_period: e.target.value })}
+											onChange={(e) =>
+												setCreateForm({
+													...createForm,
+													budget_period: e.target.value,
+												})
+											}
 											className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-sm"
 										>
 											<option value="none">{tOptions('budgetPeriod.none')}</option>
@@ -872,34 +1007,51 @@ export default function GatewayUsersPage() {
 										<p className="mt-1 text-xs text-gray-500">{t('help.budgetPeriod')}</p>
 									</div>
 								</div>
-							</div>
-							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-1">
+							</details>
+							<details className="border-t border-gray-100 pt-4">
+								<summary className="cursor-pointer text-sm font-medium text-gray-900">
+									{tCommon('metadata')}
+								</summary>
+								<label
+									htmlFor="create-user-metadata"
+									className="block text-sm font-medium text-gray-700 mb-1"
+								>
 									{t('fields.metadataJsonObject')}{' '}
-									<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+									<span className="ml-1 text-xs font-normal text-gray-400">
+										{tCommon('optional')}
+									</span>
 								</label>
 								<textarea
+									id="create-user-metadata"
 									value={createForm.metadata}
 									onChange={(e) => setCreateForm({ ...createForm, metadata: e.target.value })}
 									rows={4}
 									className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-xs"
 									placeholder="{}"
 								/>
-							</div>
+							</details>
 
-							<div className="pt-4 border-t border-gray-200">
-								<h3 className="text-sm font-semibold text-gray-900">
+							<details className="pt-4 border-t border-gray-100">
+								<summary className="text-sm font-medium text-gray-900">
 									{t('externalIdentity.title')}{' '}
-									<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
-								</h3>
+									<span className="ml-1 text-xs font-normal text-gray-400">
+										{tCommon('optional')}
+									</span>
+								</summary>
 								<p className="mt-1 text-xs text-gray-500">{t('externalIdentity.createHint')}</p>
 								<div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">
+										<label
+											htmlFor="create-user-external_system"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
 											{t('fields.externalSystem')}{' '}
-											<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+											<span className="ml-1 text-xs font-normal text-gray-400">
+												{tCommon('optional')}
+											</span>
 										</label>
 										<input
+											id="create-user-external_system"
 											type="text"
 											value={createForm.external_system}
 											onChange={(e) =>
@@ -913,11 +1065,17 @@ export default function GatewayUsersPage() {
 										/>
 									</div>
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">
+										<label
+											htmlFor="create-user-external_user_id"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
 											{t('fields.externalUserId')}{' '}
-											<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
+											<span className="ml-1 text-xs font-normal text-gray-400">
+												{tCommon('optional')}
+											</span>
 										</label>
 										<input
+											id="create-user-external_user_id"
 											type="text"
 											value={createForm.external_user_id}
 											onChange={(e) =>
@@ -931,9 +1089,9 @@ export default function GatewayUsersPage() {
 										/>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div className="px-6 py-4 border-t flex justify-end gap-2">
+							</details>
+						</fieldset>
+						<div className="admin-dialog-footer shrink-0 border-t border-gray-100 bg-gray-50 px-5 py-3 flex justify-end gap-2">
 							<button
 								type="button"
 								onClick={() => setShowCreate(false)}
@@ -946,7 +1104,7 @@ export default function GatewayUsersPage() {
 								type="button"
 								onClick={submitCreate}
 								disabled={isSaving}
-								className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:opacity-50"
+								className="px-4 py-2 admin-primary rounded-md text-sm disabled:opacity-50"
 							>
 								{isSaving ? tCommon('saving') : tCommon('create')}
 							</button>
@@ -959,24 +1117,41 @@ export default function GatewayUsersPage() {
 				(() => {
 					const m = summarizeMetadata(metadataViewUser.metadata);
 					return (
-						<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-							<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-								<div className="px-6 py-4 border-b flex justify-between items-center">
+						<div className="fixed inset-0 bg-gray-950/40 flex items-center justify-center z-50 p-3 sm:p-6">
+							<div
+								ref={metadataRef}
+								tabIndex={-1}
+								role="dialog"
+								aria-modal="true"
+								aria-labelledby="user-metadata-title"
+								className="admin-content-dialog flex max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-panel outline-none"
+							>
+								<div className="admin-dialog-header px-6 py-4 border-b flex justify-between items-center">
 									<div className="min-w-0">
-										<h2 className="text-lg font-bold text-gray-900">{tCommon('metadata')}</h2>
-										<p className="mt-0.5 text-xs text-gray-500 font-mono truncate" title={metadataViewUser.id}>
+										<h2
+											id="user-metadata-title"
+											className="admin-dialog-title text-base font-medium text-gray-900"
+										>
+											<AdminContentMark />
+											{tCommon('metadata')}
+										</h2>
+										<p
+											className="mt-0.5 text-xs text-gray-500 font-mono truncate"
+											title={metadataViewUser.id}
+										>
 											{[metadataViewUser.email, metadataViewUser.id].filter(Boolean).join(' · ')}
 										</p>
 									</div>
 									<button
 										type="button"
 										onClick={() => setMetadataViewUser(null)}
+										aria-label={tCommon('close')}
 										className="text-gray-400 hover:text-gray-600"
 									>
-										×
+										<XMarkIcon className="h-4 w-4" aria-hidden />
 									</button>
 								</div>
-								<div className="p-6 overflow-y-auto">
+								<div className="admin-dialog-body p-6 overflow-y-auto">
 									{m.empty ? (
 										<div className="text-sm text-gray-500">{t('metadata.none')}</div>
 									) : (
@@ -996,6 +1171,7 @@ export default function GatewayUsersPage() {
 									<button
 										type="button"
 										onClick={() => setMetadataViewUser(null)}
+										aria-label={tCommon('close')}
 										className="px-3 py-1.5 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-900"
 									>
 										{tCommon('close')}
@@ -1010,24 +1186,41 @@ export default function GatewayUsersPage() {
 				(() => {
 					const f = summarizeChargedCostFactors(factorsViewUser.charged_cost_factors);
 					return (
-						<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-							<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-								<div className="px-6 py-4 border-b flex justify-between items-center">
+						<div className="fixed inset-0 bg-gray-950/40 flex items-center justify-center z-50 p-3 sm:p-6">
+							<div
+								ref={factorsRef}
+								tabIndex={-1}
+								role="dialog"
+								aria-modal="true"
+								aria-labelledby="user-factors-title"
+								className="admin-content-dialog flex max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-panel outline-none"
+							>
+								<div className="admin-dialog-header px-6 py-4 border-b flex justify-between items-center">
 									<div className="min-w-0">
-										<h2 className="text-lg font-bold text-gray-900">{t('fields.chargedCostFactors')}</h2>
-										<p className="mt-0.5 text-xs text-gray-500 font-mono truncate" title={factorsViewUser.id}>
+										<h2
+											id="user-factors-title"
+											className="admin-dialog-title text-base font-medium text-gray-900"
+										>
+											<AdminContentMark />
+											{t('fields.chargedCostFactors')}
+										</h2>
+										<p
+											className="mt-0.5 text-xs text-gray-500 font-mono truncate"
+											title={factorsViewUser.id}
+										>
 											{[factorsViewUser.email, factorsViewUser.id].filter(Boolean).join(' · ')}
 										</p>
 									</div>
 									<button
 										type="button"
 										onClick={() => setFactorsViewUser(null)}
+										aria-label={tCommon('close')}
 										className="text-gray-400 hover:text-gray-600"
 									>
-										×
+										<XMarkIcon className="h-4 w-4" aria-hidden />
 									</button>
 								</div>
-								<div className="p-6 overflow-y-auto">
+								<div className="admin-dialog-body p-6 overflow-y-auto">
 									{f.empty ? (
 										<div className="text-sm text-gray-500">{t('chargedCostFactors.none')}</div>
 									) : (
@@ -1040,6 +1233,7 @@ export default function GatewayUsersPage() {
 									<button
 										type="button"
 										onClick={() => setFactorsViewUser(null)}
+										aria-label={tCommon('close')}
 										className="px-3 py-1.5 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-900"
 									>
 										{tCommon('close')}

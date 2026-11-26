@@ -1,7 +1,9 @@
 'use client';
 
+import { FinancialInput } from './financial-value';
 import { type ReactNode } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { InfoHintPopover } from './InfoHintPopover';
 import { useTranslations } from 'next-intl';
 
 import type { ImageBillingModeDraft, ImagePerImageDraft, PricingTierDraftRow } from '@/lib/pricing-tiers-draft';
@@ -9,21 +11,25 @@ import { getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
 import { createEmptyTierRow, DRAFT_UPTO_OPEN_SENTINEL, ensureLastRowOpenUptoDraft } from '@/lib/pricing-tiers-draft';
 
 export type PricingTiersEditorProps = {
+	columnLabels?: Partial<Record<'upto' | 'input' | 'output' | 'cacheRead' | 'cacheWrite', string>>;
 	rows: PricingTierDraftRow[];
 	onChange: (rows: PricingTierDraftRow[]) => void;
 	/** 至少保留行数；低于则禁用删除（默认 0，可删光） */
 	minRows?: number;
 	/** Optional title on the same row as Add / Preview (e.g. Models form). */
 	title?: string;
+	/** Move detailed billing instructions into the shared help popover. */
+	hintDisplay?: 'inline' | 'popover';
 	/** Left side of the Add / Preview row, left-aligned (e.g. billing / provider factor on routes form). */
 	toolbarStart?: ReactNode;
 	/** ISO 4217，与网关 `BILLING_CURRENCY` 一致 */
 	billingCurrencyCode?: string;
 	/**
 	 * `image`：展示 Image token 单价列（text / cached text / image in / cached image in / image out）。
+	 * `embedding`：仅 input 单价（向量按输入 token 计费）。
 	 * `llm`（默认）：chat 常用 input/output/cache 列。
 	 */
-	variant?: 'llm' | 'image';
+	variant?: 'llm' | 'image' | 'embedding';
 	/** Image variant：token / per_image 模式（与 `perImageDraft` 成对传入） */
 	imageBillingMode?: ImageBillingModeDraft;
 	onImageBillingModeChange?: (mode: ImageBillingModeDraft) => void;
@@ -43,21 +49,26 @@ function updateRow(
 const DEFAULT_PROMOTED_FINITE_UPTO = '1000000';
 
 function PriceCell(props: {
+	currency: string;
 	value: string;
 	placeholder: string;
 	ariaLabel: string;
+	hint?: string;
 	onChange: (value: string) => void;
 }) {
 	return (
 		<td className="px-1 py-1.5">
-			<input
+			<FinancialInput
+				compact
+				currency={props.currency}
+				className="min-w-[6rem]"
 				type="text"
 				inputMode="decimal"
 				value={props.value}
 				onChange={(e) => props.onChange(e.target.value)}
-				className="w-full min-w-[4rem] rounded border border-gray-200 px-1.5 py-1 font-mono text-[11px] tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
 				placeholder={props.placeholder}
 				aria-label={props.ariaLabel}
+				title={props.hint}
 			/>
 		</td>
 	);
@@ -65,9 +76,11 @@ function PriceCell(props: {
 
 export function PricingTiersEditor({
 	rows,
+	columnLabels,
 	onChange,
 	minRows = 0,
 	title,
+	hintDisplay = 'inline',
 	toolbarStart,
 	billingCurrencyCode = 'USD',
 	variant = 'llm',
@@ -83,8 +96,8 @@ export function PricingTiersEditor({
 	const tCommon = useTranslations('common');
 	const billCode = billingCurrencyCode.trim().toUpperCase();
 	const billSym = getGatewayCurrencySymbol(billCode);
-	const perMPlaceholder = `${billSym}/M`;
-	const perImagePlaceholder = `${billSym}/image`;
+	const perMPlaceholder = '0';
+	const perImagePlaceholder = '0';
 	const unitFooter =
 		variant === 'image'
 			? imageBillingMode === 'per_image'
@@ -95,7 +108,8 @@ export function PricingTiersEditor({
 	const hasToolbarLeft = Boolean(toolbarStart) || Boolean(title);
 	const isImage = variant === 'image';
 	const isPerImage = isImage && imageBillingMode === 'per_image';
-	const colSpan = isImage && !isPerImage ? 7 : isPerImage ? 1 : 6;
+	const isEmbedding = variant === 'embedding';
+	const colSpan = isImage && !isPerImage ? 7 : isPerImage ? 1 : isEmbedding ? 3 : 6;
 	/** Image 列名与 Route 只读区共用 `pricing.readOnlyImage`，避免两套文案分叉 */
 	const imageColHeaders =
 		isImage && !isPerImage
@@ -105,7 +119,7 @@ export function PricingTiersEditor({
 					tImage('imageInput'),
 					tImage('cachedImageInput'),
 					tImage('imageOutput'),
-				] as const)
+			  ] as const)
 			: null;
 
 	const addTier = () => {
@@ -113,8 +127,10 @@ export function PricingTiersEditor({
 		const promoted =
 			rows.length > 0
 				? rows.map((r, i) =>
-						i === rows.length - 1 && r.upto.trim() === '' ? { ...r, upto: DEFAULT_PROMOTED_FINITE_UPTO } : r,
-					)
+						i === rows.length - 1 && r.upto.trim() === ''
+							? { ...r, upto: DEFAULT_PROMOTED_FINITE_UPTO }
+							: r,
+				  )
 				: [];
 		const newLast = {
 			...createEmptyTierRow(),
@@ -148,12 +164,36 @@ export function PricingTiersEditor({
 		<div className="space-y-3">
 			<div>
 				<div
-					className={`flex min-h-[1.25rem] flex-wrap items-start gap-x-3 gap-y-2 ${hasToolbarLeft ? 'justify-between' : 'justify-end'}`}
+					className={`flex min-h-[1.25rem] flex-wrap items-start gap-x-3 gap-y-2 ${
+						hasToolbarLeft ? 'justify-between' : 'justify-end'
+					}`}
 				>
 					{hasToolbarLeft ? (
 						<div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1.5 text-left">
 							{toolbarStart}
-							{title ? <span className="text-sm font-medium text-gray-800">{title}</span> : null}
+							{title ? (
+								<span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-gray-800">
+									{title}
+									{hintDisplay === 'popover' ? (
+										<>
+											<span className="whitespace-nowrap rounded bg-gray-100 px-2 py-0.5 text-xs font-normal text-gray-500">
+												{billCode} ·{' '}
+												{isPerImage
+													? t('unitPerImage', { currency: billSym })
+													: t('unitPerM', { currency: billSym })}
+											</span>
+											<InfoHintPopover label={title} openOnHover openOnFocus portal align="start">
+												<p className="leading-6">{unitFooter}</p>
+												{isImage && !isPerImage ? (
+													<p className="mt-2 leading-6">
+														{t('imageHint', { currency: billSym })}
+													</p>
+												) : null}
+											</InfoHintPopover>
+										</>
+									) : null}
+								</span>
+							) : null}
 						</div>
 					) : null}
 					<div className="flex shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
@@ -170,11 +210,13 @@ export function PricingTiersEditor({
 						) : null}
 					</div>
 				</div>
-				<p className="mt-1 text-xs leading-5 text-slate-500">{unitFooter}</p>
+				{hintDisplay === 'inline' ? (
+					<p className="mt-1 text-xs leading-5 text-slate-500">{unitFooter}</p>
+				) : null}
 			</div>
 			{isImage && onImageBillingModeChange ? (
 				<div className="space-y-1.5">
-					<p className="text-[11px] font-medium text-gray-600">{tBilling('modeLabel')}</p>
+					<p className="text-xs font-medium text-gray-600">{tBilling('modeLabel')}</p>
 					<div
 						className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
 						role="group"
@@ -191,6 +233,7 @@ export function PricingTiersEditor({
 								<button
 									key={opt.id}
 									type="button"
+									aria-pressed={active}
 									onClick={() => {
 										if (imageBillingMode !== opt.id) {
 											onImageBillingModeChange(opt.id);
@@ -209,15 +252,22 @@ export function PricingTiersEditor({
 					</div>
 				</div>
 			) : null}
-			{isImage && !isPerImage ? <p className="text-[11px] text-gray-500 leading-relaxed">{t('imageHint')}</p> : null}
+			{isImage && !isPerImage && hintDisplay === 'inline' ? (
+				<p className="text-xs text-gray-500 leading-relaxed">{t('imageHint', { currency: billSym })}</p>
+			) : null}
 			{isPerImage && onPerImageDraftChange ? (
 				<div className="overflow-hidden rounded-md border border-gray-200 bg-white">
 					<div className="grid gap-3 p-3 sm:grid-cols-2">
 						<div>
-							<label className="mb-1 block text-[11px] font-medium text-gray-600">{tBilling('outputDefault')}</label>
-							<input
+							<label className="mb-1 block text-xs font-medium text-gray-600">
+								{tBilling('outputDefault')}
+							</label>
+							<FinancialInput
+								compact
+								currency={billCode}
 								type="text"
 								inputMode="decimal"
+								aria-label={tBilling('outputDefault')}
 								value={perImage.default}
 								onChange={(e) =>
 									onPerImageDraftChange({
@@ -225,17 +275,19 @@ export function PricingTiersEditor({
 										default: e.target.value,
 									})
 								}
-								className="w-full rounded border border-gray-200 px-2 py-1.5 font-mono text-sm tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
 								placeholder={perImagePlaceholder}
 							/>
 						</div>
 						<div>
-							<label className="mb-1 block text-[11px] font-medium text-gray-600">
+							<label className="mb-1 block text-xs font-medium text-gray-600">
 								{tBilling('inputDefaultOptional')}
 							</label>
-							<input
+							<FinancialInput
+								compact
+								currency={billCode}
 								type="text"
 								inputMode="decimal"
+								aria-label={tBilling('inputDefaultOptional')}
 								value={perImage.inputDefault}
 								onChange={(e) =>
 									onPerImageDraftChange({
@@ -243,13 +295,15 @@ export function PricingTiersEditor({
 										inputDefault: e.target.value,
 									})
 								}
-								className="w-full rounded border border-gray-200 px-2 py-1.5 font-mono text-sm tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
 								placeholder={tBilling('inputDefaultEmpty')}
 							/>
 						</div>
 						<div className="sm:col-span-2">
-							<label className="mb-1 block text-[11px] font-medium text-gray-600">{tBilling('uncertainPolicy')}</label>
+							<label className="mb-1 block text-xs font-medium text-gray-600">
+								{tBilling('uncertainPolicy')}
+							</label>
 							<select
+								aria-label={tBilling('uncertainPolicy')}
 								value={perImage.uncertainResultPolicy || 'requested'}
 								onChange={(e) =>
 									onPerImageDraftChange({
@@ -257,7 +311,7 @@ export function PricingTiersEditor({
 										uncertainResultPolicy: e.target.value as 'requested' | 'zero',
 									})
 								}
-								className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
+								className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500/30"
 							>
 								<option value="requested">{tBilling('policyRequested')}</option>
 								<option value="zero">{tBilling('policyZero')}</option>
@@ -272,12 +326,12 @@ export function PricingTiersEditor({
 							<thead
 								className={
 									isImage
-										? 'bg-gray-50 text-[11px] font-medium text-gray-500'
-										: 'bg-gray-50 text-[10px] font-semibold uppercase tracking-wide text-gray-500'
+										? 'bg-gray-50 text-xs font-medium text-gray-500'
+										: 'bg-gray-50 text-xs font-medium normal-case tracking-normal text-gray-500'
 								}
 							>
 								<tr>
-									<th className="whitespace-nowrap px-2 py-2">{t('upto')}</th>
+									<th className="whitespace-nowrap px-2 py-2">{columnLabels?.upto ?? t('upto')}</th>
 									{imageColHeaders ? (
 										imageColHeaders.map((label) => (
 											<th key={label} className="whitespace-nowrap px-2 py-2">
@@ -286,10 +340,22 @@ export function PricingTiersEditor({
 										))
 									) : (
 										<>
-											<th className="whitespace-nowrap px-2 py-2">{t('input')}</th>
-											<th className="whitespace-nowrap px-2 py-2">{t('output')}</th>
-											<th className="whitespace-nowrap px-2 py-2">{t('cacheRead')}</th>
-											<th className="whitespace-nowrap px-2 py-2">{t('cacheWrite')}</th>
+											<th className="whitespace-nowrap px-2 py-2">
+												{columnLabels?.input ?? t('input')}
+											</th>
+											{isEmbedding ? null : (
+												<>
+													<th className="whitespace-nowrap px-2 py-2">
+														{columnLabels?.output ?? t('output')}
+													</th>
+													<th className="whitespace-nowrap px-2 py-2">
+														{columnLabels?.cacheRead ?? t('cacheRead')}
+													</th>
+													<th className="whitespace-nowrap px-2 py-2">
+														{columnLabels?.cacheWrite ?? t('cacheWrite')}
+													</th>
+												</>
+											)}
 										</>
 									)}
 									<th className="w-10 px-1 py-2 text-center"> </th>
@@ -310,9 +376,12 @@ export function PricingTiersEditor({
 												<td className="px-1 py-1.5">
 													{isLast ? (
 														<div
-															className="flex min-h-[1.75rem] min-w-[4.5rem] items-center rounded border border-dashed border-gray-200 bg-gray-50 px-1.5 font-mono text-[11px] text-gray-600 tabular-nums"
+															className="flex h-9 min-w-[4.5rem] items-center rounded border border-dashed border-gray-200 bg-gray-50 px-1.5 font-mono text-xs text-gray-600 tabular-nums"
 															title={t('lastTierOpenEnded')}
-															aria-label={`upto open bound for tier ${r.id}`}
+															aria-label={t('tierField', {
+																tier: rowIndex + 1,
+																field: t('lastTierOpenEnded'),
+															})}
 														>
 															{tCommon('infinity')}
 														</div>
@@ -328,30 +397,50 @@ export function PricingTiersEditor({
 																	}),
 																)
 															}
-															className="w-full min-w-[4.5rem] rounded border border-gray-200 px-1.5 py-1 font-mono text-[11px] tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
+															className="h-9 w-full min-w-[6rem] rounded-lg border border-gray-200 px-2 font-mono text-sm tabular-nums focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500/10"
 															placeholder="0"
-															aria-label={`upto for tier ${r.id}`}
+															aria-label={t('tierField', {
+																tier: rowIndex + 1,
+																field: columnLabels?.upto ?? t('upto'),
+															})}
 														/>
 													)}
 												</td>
 												{isImage ? (
 													<>
 														<PriceCell
+															currency={billCode}
 															value={r.input_price}
 															placeholder={perMPlaceholder}
-															ariaLabel={`text input price ${r.id}`}
-															onChange={(v) => onChange(updateRow(rows, r.id, { input_price: v }))}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: tImage('textInput'),
+															})}
+															onChange={(v) =>
+																onChange(updateRow(rows, r.id, { input_price: v }))
+															}
 														/>
 														<PriceCell
+															currency={billCode}
 															value={r.cache_read_price}
-															placeholder={tPricing('emptyCachePlaceholder')}
-															ariaLabel={`cached text price ${r.id}`}
-															onChange={(v) => onChange(updateRow(rows, r.id, { cache_read_price: v }))}
+															placeholder="—"
+															hint={tPricing('emptyCachePlaceholder')}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: tImage('cachedText'),
+															})}
+															onChange={(v) =>
+																onChange(updateRow(rows, r.id, { cache_read_price: v }))
+															}
 														/>
 														<PriceCell
+															currency={billCode}
 															value={r.image_input_price}
 															placeholder={perMPlaceholder}
-															ariaLabel={`image input price ${r.id}`}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: tImage('imageInput'),
+															})}
 															onChange={(v) =>
 																onChange(
 																	updateRow(rows, r.id, {
@@ -361,9 +450,14 @@ export function PricingTiersEditor({
 															}
 														/>
 														<PriceCell
+															currency={billCode}
 															value={r.image_input_cache_price}
-															placeholder={tPricing('emptyCachePlaceholder')}
-															ariaLabel={`cached image input price ${r.id}`}
+															placeholder="—"
+															hint={tPricing('emptyCachePlaceholder')}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: tImage('cachedImageInput'),
+															})}
 															onChange={(v) =>
 																onChange(
 																	updateRow(rows, r.id, {
@@ -373,9 +467,13 @@ export function PricingTiersEditor({
 															}
 														/>
 														<PriceCell
+															currency={billCode}
 															value={r.image_output_price}
 															placeholder={perMPlaceholder}
-															ariaLabel={`image output price ${r.id}`}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: tImage('imageOutput'),
+															})}
 															onChange={(v) =>
 																onChange(
 																	updateRow(rows, r.id, {
@@ -388,35 +486,71 @@ export function PricingTiersEditor({
 												) : (
 													<>
 														<PriceCell
+															currency={billCode}
 															value={r.input_price}
 															placeholder={perMPlaceholder}
-															ariaLabel={`input price ${r.id}`}
-															onChange={(v) => onChange(updateRow(rows, r.id, { input_price: v }))}
-														/>
-														<PriceCell
-															value={r.output_price}
-															placeholder={perMPlaceholder}
-															ariaLabel={`output price ${r.id}`}
-															onChange={(v) => onChange(updateRow(rows, r.id, { output_price: v }))}
-														/>
-														<PriceCell
-															value={r.cache_read_price}
-															placeholder={tPricing('emptyCachePlaceholder')}
-															ariaLabel={`cache read ${r.id}`}
-															onChange={(v) => onChange(updateRow(rows, r.id, { cache_read_price: v }))}
-														/>
-														<PriceCell
-															value={r.cache_write_price}
-															placeholder={tPricing('emptyCachePlaceholder')}
-															ariaLabel={`cache write ${r.id}`}
+															ariaLabel={t('tierField', {
+																tier: rowIndex + 1,
+																field: columnLabels?.input ?? t('input'),
+															})}
 															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, {
-																		cache_write_price: v,
-																	}),
-																)
+																onChange(updateRow(rows, r.id, { input_price: v }))
 															}
 														/>
+														{isEmbedding ? null : (
+															<>
+																<PriceCell
+																	currency={billCode}
+																	value={r.output_price}
+																	placeholder={perMPlaceholder}
+																	ariaLabel={t('tierField', {
+																		tier: rowIndex + 1,
+																		field: columnLabels?.output ?? t('output'),
+																	})}
+																	onChange={(v) =>
+																		onChange(
+																			updateRow(rows, r.id, { output_price: v }),
+																		)
+																	}
+																/>
+																<PriceCell
+																	currency={billCode}
+																	value={r.cache_read_price}
+																	placeholder="—"
+																	hint={tPricing('emptyCachePlaceholder')}
+																	ariaLabel={t('tierField', {
+																		tier: rowIndex + 1,
+																		field:
+																			columnLabels?.cacheRead ?? t('cacheRead'),
+																	})}
+																	onChange={(v) =>
+																		onChange(
+																			updateRow(rows, r.id, {
+																				cache_read_price: v,
+																			}),
+																		)
+																	}
+																/>
+																<PriceCell
+																	currency={billCode}
+																	value={r.cache_write_price}
+																	placeholder="—"
+																	hint={tPricing('emptyCachePlaceholder')}
+																	ariaLabel={t('tierField', {
+																		tier: rowIndex + 1,
+																		field:
+																			columnLabels?.cacheWrite ?? t('cacheWrite'),
+																	})}
+																	onChange={(v) =>
+																		onChange(
+																			updateRow(rows, r.id, {
+																				cache_write_price: v,
+																			}),
+																		)
+																	}
+																/>
+															</>
+														)}
 													</>
 												)}
 												<td className="px-0 py-1.5 text-center">
@@ -424,10 +558,14 @@ export function PricingTiersEditor({
 														type="button"
 														disabled={!canRemove}
 														onClick={() => removeTier(r.id)}
-														className="rounded px-1 text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-30"
+														className="inline-flex h-9 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-30"
 														title={t('removeTier')}
+														aria-label={t('tierField', {
+															tier: rowIndex + 1,
+															field: t('removeTier'),
+														})}
 													>
-														×
+														<TrashIcon className="h-3.5 w-3.5" aria-hidden />
 													</button>
 												</td>
 											</tr>

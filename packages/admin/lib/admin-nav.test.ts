@@ -15,13 +15,32 @@ describe('matchAdminNavRoute', () => {
 		assert.equal(matchAdminNavRoute('/admin/mcp')?.nameKey, 'mcpServers');
 	});
 
-	it('lists REST services, then MCP servers, then invocations', () => {
+	it('lists REST services, then MCP servers', () => {
 		const tools = ADMIN_NAV_GROUPS.find((group) => group.groupKey === 'tools');
 		assert.deepEqual(
 			tools?.items.map((item) => item.nameKey),
 			['toolsConfig', 'mcpServers', 'toolInvocations'],
 		);
 	});
+
+	it('keeps request and audit logs in their own group, after users', () => {
+		const keys = ADMIN_NAV_GROUPS.map((group) => group.groupKey);
+		assert.equal(keys.indexOf('logs'), keys.indexOf('user') + 1);
+		assert.deepEqual(
+			ADMIN_NAV_GROUPS.find((group) => group.groupKey === 'logs')?.items.map((item) => item.nameKey),
+			['requestLogs', 'auditLogs'],
+		);
+		assert.deepEqual(
+			ADMIN_NAV_GROUPS.find((group) => group.groupKey === 'user')?.items.map((item) => item.nameKey),
+			['users', 'apiKeys', 'sharedKeys'],
+		);
+	});
+
+	it('keeps integration keys separate and includes CinaToken asset operations and maintenance', () => {
+  assert.deepEqual(ADMIN_NAV_GROUPS.find(group=>group.groupKey==='integration')?.items.map(item=>item.nameKey),['adminApiKeys']);
+  assert.deepEqual(ADMIN_NAV_GROUPS.find(group=>group.groupKey==='system')?.items.map(item=>item.nameKey),['withdrawals','nftMints','config','maintenance']);
+  assert.equal(matchAdminNavRoute('/admin/maintenance')?.nameKey,'maintenance');
+ });
 
 	it('treats user detail as Users', () => {
 		assert.equal(matchAdminNavRoute('/admin/users/abc-123')?.nameKey, 'users');

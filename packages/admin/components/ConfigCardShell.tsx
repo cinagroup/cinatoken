@@ -1,7 +1,28 @@
 'use client';
 
+import { AdminContentMark } from './admin-content-mark';
 import { useId, type ReactNode } from 'react';
 import { InfoHintPopover } from './InfoHintPopover';
+import {
+	ClockIcon,
+	CurrencyDollarIcon,
+	ArrowsRightLeftIcon,
+	ScaleIcon,
+	BellIcon,
+	ShieldCheckIcon,
+	WrenchScrewdriverIcon,
+	ChatBubbleLeftRightIcon,
+} from '@heroicons/react/24/outline';
+const SECTION_ICONS = {
+	'config-timezone': ClockIcon,
+	'config-currency': CurrencyDollarIcon,
+	'config-routing': ArrowsRightLeftIcon,
+	'config-multipliers': ScaleIcon,
+	'config-webhooks': BellIcon,
+	'maintenance-status': ShieldCheckIcon,
+	'maintenance-enable': WrenchScrewdriverIcon,
+	'maintenance-messages': ChatBubbleLeftRightIcon,
+};
 
 /** Compact settings card with an optional explanation and independent save footer. */
 export function ConfigCardShell({
@@ -20,15 +41,17 @@ export function ConfigCardShell({
 	id?: string;
 }) {
 	const titleId = useId();
+	const Icon = SECTION_ICONS[id as keyof typeof SECTION_ICONS];
 	return (
 		<section
 			id={id}
 			aria-labelledby={titleId}
-			className="flex min-w-0 flex-col rounded-xl border border-gray-200 bg-white p-4 sm:p-6"
+			className="admin-content-panel flex min-w-0 flex-col rounded-xl border border-gray-200 bg-white p-4 sm:p-6"
 		>
 			<div className="mb-5">
 				<div className="flex items-center gap-2">
-					<h2 id={titleId} className="text-base font-semibold text-gray-900">
+					{Icon ? <AdminContentMark icon={Icon} compact /> : null}
+					<h2 id={titleId} className="text-base font-medium text-gray-900">
 						{title}
 					</h2>
 					{hint && (

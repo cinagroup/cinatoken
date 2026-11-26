@@ -14,6 +14,10 @@ import { adminBudgetAuditLogsRoutes } from '@/lib/routes/admin/budget-audit-logs
 import { adminBusinessTimezoneRoutes } from '@/lib/routes/admin/business-timezone';
 import { adminConfigRoutes } from '@/lib/routes/admin/config';
 import { adminKeysRoutes } from '@/lib/routes/admin/keys';
+import { adminOAuthAccessTokensRoutes } from '@/lib/routes/admin/oauth-access-tokens';
+import { adminOAuthRoutes } from '@/lib/routes/admin/oauth';
+import { adminMaintenanceRoutes } from '@/lib/routes/admin/maintenance';
+import { getAdminWriteFreeze } from '@/lib/services/admin/maintenance-service';
 import { adminUsersRoutes } from '@/lib/routes/admin/users';
 import { adminModelRoutes } from '@/lib/routes/admin/model-routes';
 import { adminModelEndpointsRoutes } from '@/lib/routes/admin/model-endpoints';
@@ -182,6 +186,19 @@ export function createAdminApp(): Hono<AdminEnv> {
 		await next();
 	});
 
+	// 维护模式（block_admin_writes）：冻结期间拒绝写接口，维护开关 / 集成密钥 / 调试台除外。
+	app.use('/admin/*', async (c, next) => {
+		const freeze = await getAdminWriteFreeze(c.get('repositories'), c.req.method, c.req.path);
+		if (freeze) {
+			return c.json(
+				{ success: false, message: freeze.message, code: 'gateway.maintenance' },
+				503,
+				{ 'Retry-After': String(freeze.retryAfterSeconds), 'X-OctaFuse-Error-Code': 'gateway.maintenance' }
+			);
+		}
+		return next();
+	});
+
 	app.use('/admin/*', async (c, next) => {
 		if (
 			(c.req.path === '/admin/access-keys' || c.req.path.startsWith('/admin/access-keys/')) &&
@@ -228,6 +245,8 @@ export function createAdminApp(): Hono<AdminEnv> {
 
 	app.route('/admin/users', adminUsersRoutes);
 	app.route('/admin/keys', adminKeysRoutes);
+	app.route('/admin/oauth-access-tokens', adminOAuthAccessTokensRoutes);
+	app.route('/admin/oauth', adminOAuthRoutes);
 	app.route('/admin/providers', adminProvidersRoutes);
 	app.route('/admin/models', adminModelsRoutes);
 	app.route('/admin/routes', adminModelRoutes);
@@ -239,6 +258,7 @@ export function createAdminApp(): Hono<AdminEnv> {
 	app.route('/admin/request-logs', adminRequestLogsRoutes);
 	app.route('/admin/budget-audit-logs', adminBudgetAuditLogsRoutes);
 	app.route('/admin/business-timezone', adminBusinessTimezoneRoutes);
+	app.route('/admin/maintenance', adminMaintenanceRoutes);
 	app.route('/admin/analytics', adminAnalyticsRoutes);
 	app.route('/admin/access-keys', adminAccessKeysRoutes);
 	app.route('/admin/shared-keys', adminSharedKeysRoutes);

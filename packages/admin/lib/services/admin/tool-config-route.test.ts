@@ -127,6 +127,7 @@ function fixture(
 			"utf8"
 		)
 	);
+	db.exec(readFileSync(resolve(import.meta.dirname,"../../../../core/migrations-d1/0094_tools_deepseek_audit.sql"),"utf8"));
 	for (const [key, value] of Object.entries(options.values ?? {}))
 		db.prepare("INSERT INTO system_config(key,value) VALUES (?,?)").run(
 			key,
@@ -279,7 +280,7 @@ test("Tools exact method authorization separates read, write and audited reveal"
 		{ kind: "deny" }
 	);
 });
-test("fixed overview reads one 15-key snapshot, retains missing USD and projects four families/ten providers without raw secrets", async () => {
+test("fixed overview reads one 15-key snapshot, retains missing USD and projects four families/thirteen providers without raw secrets", async () => {
 	const f = fixture({
 		values: {
 			WEB_SEARCH_PROVIDER: "tavily",
@@ -298,7 +299,7 @@ test("fixed overview reads one 15-key snapshot, retains missing USD and projects
 			body.data.families.flatMap(
 				(row: { providers: unknown[] }) => row.providers
 			).length,
-			10
+			13
 		);
 		assert.deepEqual(body.data.billingCurrency, {
 			value: "USD",

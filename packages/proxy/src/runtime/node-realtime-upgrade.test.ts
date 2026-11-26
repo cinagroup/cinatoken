@@ -90,6 +90,7 @@ function realApp() {
 	const db: D1Database = { prepare: unexpected, batch: unexpected, exec: unexpected, withSession: unexpected, dump: unexpected };
 	const storage = createD1StorageContext(db);
 	const key: ResolvedGatewayKeyRow = {
+		wallet_granted: 0, wallet_spent: 0, user_rate_limit: null, rate_limit: null,
 		id: 'synthetic-key-id', key: KEY, user_id: 'synthetic-user-id', workspace_id: 'synthetic-workspace-id',
 		name: 'Test', status: 'active', metadata: null, last_used_at: null,
 		created_at: '2026-09-05T00:00:00Z', updated_at: '2026-09-05T00:00:00Z', user_email: null,

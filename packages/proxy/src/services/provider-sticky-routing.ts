@@ -16,7 +16,10 @@ import { getProviderCircuitRemainingMs } from './provider-circuit-breaker';
 import type { UpstreamFailureClassification } from './upstream-failure-classifier';
 
 export type StickyRoutingPorts = Readonly<{
-	routePoolSticky: Pick<GatewayRepositories['routePoolSticky'], 'getBinding' | 'tryBind' | 'touchBinding' | 'clearBinding'>;
+	routePoolSticky: Pick<
+		GatewayRepositories['routePoolSticky'],
+		'getBinding' | 'tryBind' | 'touchBinding' | 'clearBinding'
+	>;
 }>;
 export type StickyRoutingCandidate = Readonly<{ targetId: string; providerId: string }>;
 type StickyCredentialCandidate = Pick<RouteResult, 'targetId' | 'providerKeyId' | 'gatewayPrivateByokFallback'>;
@@ -31,13 +34,7 @@ export type StickyLookupStatus =
 	| 'invalid_epoch'
 	| 'invalid_target'
 	| 'invalid_circuit';
-export type StickyResultStatus =
-	| 'kept'
-	| 'cleared'
-	| 'bound'
-	| 'rebound'
-	| 'storage_error'
-	| 'unchanged';
+export type StickyResultStatus = 'kept' | 'cleared' | 'bound' | 'rebound' | 'storage_error' | 'unchanged';
 
 export type StickyTraceSnapshot = {
 	lookup: StickyLookupStatus;
@@ -49,6 +46,8 @@ export type StickySession = {
 	config: RoutePoolStickyRoutingConfig;
 	routePoolId: string;
 	affinityHash: string;
+	/** 明文 affinity key，写入绑定行供后台列出用户。 */
+	affinityKey: string;
 	/** Previous expires_at from DB (for touch throttle). */
 	previousExpiresAt: string | null;
 	bindingToken: string | null;
@@ -64,11 +63,13 @@ export type StickySession = {
 	mutations: Promise<unknown>[];
 };
 
-export function stickyConfigFromSurface(surface: {
-	pool_sticky_enabled?: unknown;
-	pool_sticky_idle_ttl_seconds?: unknown;
-	pool_sticky_epoch?: unknown;
-} | null): RoutePoolStickyRoutingConfig {
+export function stickyConfigFromSurface(
+	surface: {
+		pool_sticky_enabled?: unknown;
+		pool_sticky_idle_ttl_seconds?: unknown;
+		pool_sticky_epoch?: unknown;
+	} | null,
+): RoutePoolStickyRoutingConfig {
 	return parseRoutePoolStickyConfig({
 		stickyEnabled: surface?.pool_sticky_enabled,
 		stickyIdleTtlSeconds: surface?.pool_sticky_idle_ttl_seconds,
@@ -92,7 +93,7 @@ function shouldThrottleTouch(expiresAtMs: number, idleTtlSec: number, nowMs: num
 
 export function shouldInvalidateStickyBinding(
 	classification: UpstreamFailureClassification,
-	opts?: { imageAbort?: boolean }
+	opts?: { imageAbort?: boolean },
 ): boolean {
 	if (opts?.imageAbort) return false;
 	return classification.action === 'retry_key';
@@ -100,7 +101,7 @@ export function shouldInvalidateStickyBinding(
 
 export function mergeStickyIntoAttempts<T extends StickyCredentialCandidate>(
 	attempts: T[],
-	stickyRoute: T | null
+	stickyRoute: T | null,
 ): T[] {
 	if (!stickyRoute) return attempts;
 	if (!attempts.some((route) => route.targetId === stickyRoute.targetId)) return attempts;
@@ -164,7 +165,7 @@ export async function resolveStickySession<T extends StickyRoutingCandidate>(
 		targetAvailable?: (route: T) => boolean;
 		nowMs?: number;
 		control?: PreparationControl;
-	}
+	},
 ): Promise<{ session: StickySession | null; stickyRoute: T | null }> {
 	const routePoolId = params.routePoolId?.trim() || '';
 	if (!routePoolId || !params.config.enabled || !params.affinityKey) {
@@ -183,6 +184,7 @@ export async function resolveStickySession<T extends StickyRoutingCandidate>(
 				config: params.config,
 				routePoolId,
 				affinityHash: '',
+				affinityKey: params.affinityKey,
 				previousExpiresAt: null,
 				bindingToken: null,
 				boundTargetId: null,
@@ -200,6 +202,7 @@ export async function resolveStickySession<T extends StickyRoutingCandidate>(
 		config: params.config,
 		routePoolId,
 		affinityHash,
+		affinityKey: params.affinityKey,
 		previousExpiresAt: null,
 		bindingToken: null,
 		boundTargetId: null,
@@ -211,7 +214,9 @@ export async function resolveStickySession<T extends StickyRoutingCandidate>(
 	};
 
 	try {
-		const row = await preparationRead(params.control, () => repos.routePoolSticky.getBinding(routePoolId, affinityHash));
+		const row = await preparationRead(params.control, () =>
+			repos.routePoolSticky.getBinding(routePoolId, affinityHash),
+		);
 		if (!row) {
 			session.lookup = 'miss';
 			return { session, stickyRoute: null };
@@ -259,16 +264,12 @@ export async function resolveStickySession<T extends StickyRoutingCandidate>(
 async function performStickyTouchIfNeeded(
 	repos: StickyRoutingPorts,
 	session: StickySession,
-	nowMs = Date.now()
+	nowMs = Date.now(),
 ): Promise<void> {
 	if (!session.bindingToken) return;
 	if (
 		session.previousExpiresAt &&
-		shouldThrottleTouch(
-			parseExpiresAtMs(session.previousExpiresAt),
-			session.config.idleTtlSeconds,
-			nowMs
-		)
+		shouldThrottleTouch(parseExpiresAtMs(session.previousExpiresAt), session.config.idleTtlSeconds, nowMs)
 	) {
 		session.result = 'kept';
 		return;
@@ -278,12 +279,12 @@ async function performStickyTouchIfNeeded(
 	session.result = 'kept';
 	try {
 		const ok = await repos.routePoolSticky.touchBinding({
-				routePoolId: session.routePoolId,
-				affinityHash: session.affinityHash,
-				expectedToken: token,
-				expiresAt,
-				nowIso: toIso(nowMs),
-			});
+			routePoolId: session.routePoolId,
+			affinityHash: session.affinityHash,
+			expectedToken: token,
+			expiresAt,
+			nowIso: toIso(nowMs),
+		});
 		if (!ok) session.result = 'unchanged';
 	} catch (err) {
 		console.warn('[Gateway Sticky] touch failed', err);
@@ -294,7 +295,7 @@ async function performStickyTouchIfNeeded(
 export function scheduleStickyTouchIfNeeded(
 	repos: StickyRoutingPorts,
 	session: StickySession,
-	nowMs = Date.now()
+	nowMs = Date.now(),
 ): void {
 	session.mutations.push(performStickyTouchIfNeeded(repos, session, nowMs));
 }
@@ -303,18 +304,17 @@ export function scheduleStickyTouchIfNeeded(
 export function scheduleStickyTouchAfter(
 	repos: StickyRoutingPorts,
 	session: StickySession,
-	ready: Promise<boolean>
+	ready: Promise<boolean>,
 ): void {
-	session.mutations.push((async () => {
-		if (!(await ready.catch(() => false))) return;
-		await performStickyTouchIfNeeded(repos, session);
-	})());
+	session.mutations.push(
+		(async () => {
+			if (!(await ready.catch(() => false))) return;
+			await performStickyTouchIfNeeded(repos, session);
+		})(),
+	);
 }
 
-export async function clearStickyBindingSync(
-	repos: StickyRoutingPorts,
-	session: StickySession
-): Promise<void> {
+export async function clearStickyBindingSync(repos: StickyRoutingPorts, session: StickySession): Promise<void> {
 	if (!session.bindingToken) {
 		session.result = 'unchanged';
 		return;
@@ -340,15 +340,13 @@ async function performStickyBind(
 	repos: StickyRoutingPorts,
 	session: StickySession,
 	route: Pick<StickyRoutingCandidate, 'targetId'>,
-	opts?: { rebound?: boolean; nowMs?: number }
+	opts?: { rebound?: boolean; nowMs?: number },
 ): Promise<void> {
 	const nowMs = opts?.nowMs ?? Date.now();
 	const bindingToken = crypto.randomUUID();
 	const expiresAt = toIso(nowMs + session.config.idleTtlSeconds * 1000);
 	const previousHadBinding =
-		session.lookup === 'hit' ||
-		session.lookup === 'invalid_target' ||
-		Boolean(session.boundTargetId);
+		session.lookup === 'hit' || session.lookup === 'invalid_target' || Boolean(session.boundTargetId);
 	const expectedToken = session.staleToken;
 	session.bindingToken = bindingToken;
 	session.boundTargetId = route.targetId;
@@ -356,15 +354,15 @@ async function performStickyBind(
 	session.result = opts?.rebound || previousHadBinding ? 'rebound' : 'bound';
 	try {
 		const ok = await repos.routePoolSticky.tryBind({
-				routePoolId: session.routePoolId,
-				affinityHash: session.affinityHash,
-				routeTargetId: route.targetId,
-				bindingToken,
-				poolEpoch: session.config.epoch,
-				expiresAt,
-				nowIso: toIso(nowMs),
-				expectedToken: expectedToken ?? undefined,
-			});
+			routePoolId: session.routePoolId,
+			affinityHash: session.affinityHash,
+			routeTargetId: route.targetId,
+			bindingToken,
+			poolEpoch: session.config.epoch,
+			expiresAt,
+			nowIso: toIso(nowMs),
+			expectedToken: expectedToken ?? undefined,
+		});
 		if (!ok) session.result = 'unchanged';
 	} catch (err) {
 		console.warn('[Gateway Sticky] bind failed', err);
@@ -376,7 +374,7 @@ export function scheduleStickyBind(
 	repos: StickyRoutingPorts,
 	session: StickySession,
 	route: Pick<StickyRoutingCandidate, 'targetId'>,
-	opts?: { rebound?: boolean; nowMs?: number }
+	opts?: { rebound?: boolean; nowMs?: number },
 ): void {
 	session.mutations.push(performStickyBind(repos, session, route, opts));
 }
@@ -387,12 +385,14 @@ export function scheduleStickyBindAfter(
 	session: StickySession,
 	route: Pick<StickyRoutingCandidate, 'targetId'>,
 	ready: Promise<boolean>,
-	opts?: { rebound?: boolean }
+	opts?: { rebound?: boolean },
 ): void {
-	session.mutations.push((async () => {
-		if (!(await ready.catch(() => false))) return;
-		await performStickyBind(repos, session, route, opts);
-	})());
+	session.mutations.push(
+		(async () => {
+			if (!(await ready.catch(() => false))) return;
+			await performStickyBind(repos, session, route, opts);
+		})(),
+	);
 }
 
 export function stickyMutationPromise(session: StickySession | null): Promise<unknown> | null {

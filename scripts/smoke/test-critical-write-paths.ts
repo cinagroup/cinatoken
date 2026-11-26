@@ -34,17 +34,18 @@ class MockStatement {
 	}
 }
 
-function createMockD1Database(options: { budgetSpentMicros?: number } = {}):
-	D1Database & { batches: D1PreparedStatement[][]; preparedSql: string[] } {
+function createMockD1Database(
+	options: { budgetSpentMicros?: number } = {},
+): D1Database & { batches: D1PreparedStatement[][]; preparedSql: string[] } {
 	const batches: D1PreparedStatement[][] = [];
 	const preparedSql: string[] = [];
 	return {
 		prepare(sql: string) {
 			preparedSql.push(sql);
-			const firstResult = options.budgetSpentMicros !== undefined
-				&& /SELECT budget_spent_micros\s+FROM users/.test(sql)
-				? { budget_spent_micros: options.budgetSpentMicros }
-				: null;
+			const firstResult =
+				options.budgetSpentMicros !== undefined && /SELECT budget_spent_micros\s+FROM users/.test(sql)
+					? { budget_spent_micros: options.budgetSpentMicros }
+					: null;
 			return new MockStatement(sql, 1, firstResult) as unknown as D1PreparedStatement;
 		},
 		async batch(statements: D1PreparedStatement[]) {
@@ -117,7 +118,7 @@ test('updateUserBudgetWithAuditTx runs update then audit batch when changes > 0'
 	assert.equal(db.batches[0]?.length, 2);
 });
 
-test('insertRequestUsageAndChargeTx batches log, stats and accounting writes together', async () => {
+test('insertRequestUsageAndChargeTx batches log, key activity, budget and audit together', async () => {
 	const db = createMockD1Database();
 	await insertRequestUsageAndChargeTx(db, {
 		userId: 'user-1',
@@ -169,7 +170,8 @@ test('insertRequestUsageAndChargeTx batches log, stats and accounting writes tog
 		},
 	});
 	assert.equal(db.batches.length, 1);
-	assert.equal(db.batches[0]?.length, 5);
+	assert.equal(db.batches[0]?.length, 6);
+	assert.ok(db.preparedSql.some(sql => /UPDATE api_keys SET last_used_at/.test(sql)));
 });
 
 test('postgres branch uses transaction callback', async () => {

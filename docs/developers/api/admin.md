@@ -21,7 +21,7 @@ OIDC Core 的标准 `sub` 上限为 255 个 ASCII 字符，保存的 Console use
 
 Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GET /api/auth/check` 仅在 CinaAuth 当前角色验证成功且主体一致时返回 `authenticated: true`、`principalType: "console"`、`verification: "verified"` 和精确 `subject`。API Key 验证成功不会返回 Console subject；身份服务故障可返回 `verification: "degraded"`，也不提供 subject。旧响应缺少 subject 时，严格 Web Gate 不授予管理权限；先发布后端扩展，再启用新管理页面。每个管理业务请求继续独立复验权限，前端入口验证不能替代它。
 
-集成密钥（Integration Keys）在后台 **系统集成 → 集成密钥（Integration Keys）** 创建。每个外部集成应使用独立、最小权限 Key；Key 主体记录为 `admin_key:<id>`。权限包括 `users.*`、`user_keys.*`、`providers.*`、`models.*`、`routes.*`、`config.*`、`analytics.read`、`logs.read`、`playground.execute`、`mcp.read`、`mcp.write` 和 `mcp.secrets.read`；`*.write` 自动包含对应 `*.read`，`*.secrets.read` 不随 write 授予，`*` 代表全部可委派业务权限，但不包含集成密钥或 Session 管理。
+集成密钥（Integration Keys）在后台 **系统集成 → 集成密钥（Integration Keys）** 创建。每个外部集成应使用独立、最小权限 Key；Key 主体记录为 `admin_key:<id>`。权限包括 `users.*`、`user_keys.*`、`oauth.read`、`oauth.write`、`oauth.consent`、`providers.*`、`models.*`、`routes.*`、`config.*`、`analytics.read`、`logs.read`、`playground.execute`、`mcp.read`、`mcp.write`、`mcp.secrets.read` 和 `maintenance.*`；`*.write` 自动包含对应 `*.read`，`*.secrets.read` 不随 write 授予，`*` 代表全部可委派业务权限，但不包含集成密钥或 Session 管理。
 
 升级迁移会把非空 `system_config.MASTER_KEY` 原值复制为普通全权限 Key `legacy-master`，确保旧调用方继续工作；随后的迁移会删除该配置行。新认证只读取 `admin_api_keys`。请在稳定后为外部系统创建具名 Key，并轮换或吊销 `legacy-master`。
 
@@ -103,6 +103,7 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/routes/context` | GET | 仅当前有效全局路由策略、计费币种和业务时区的归一化只读投影；要求 `routes.read` 与 `config.read` | Admin UI |
 | `/admin/routes/pools/:poolId` | PATCH | `route_pools.strategy` / `tier_strategies` / `sticky_routing`（Pool 策略与 Provider 粘性） | Admin UI |
 | `/admin/routes/pools/:poolId/sticky/bindings/summary` | GET | 活跃粘性绑定按 target 聚合（epoch 有效且未过期） | Admin UI |
+| `/admin/routes/pools/:poolId/sticky/bindings` | GET | 分页列出当前粘在 Provider 上的用户（可按 `route_target_id` 筛选） | Admin UI |
 | `/admin/routes/pools/:poolId/sticky/bindings/lookup` | GET | 按 `user_id` / `email` + surface 上下文反查单用户绑定 | Admin UI |
 | `/admin/routes/pools/:poolId/sticky/bindings/:affinityHash` | DELETE | 强制解绑（不校验 `binding_token`） | Admin UI |
 | `/admin/routes/pools/:poolId/sticky/reset` | POST | bump `sticky_epoch`，使本 pool 全部绑定失效 | Admin UI |
@@ -128,10 +129,13 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/mcp-servers/:id/sync` | POST | 拉取目录并返回新增、变更、移除差异；新条目默认停用 | Admin UI |
 | `/admin/mcp-servers/:id/items/status` | POST | 批量 `enabled` / `disabled` | Admin UI |
 | `/admin/mcp-servers/:id/items/:itemId` | PATCH | `{ pricing }` 设置工具按次价格（`v=2`、`unit=request`、`standard`、`chargedFactor`、`meteredFactor`、空 `config`；兼容 v1 独立单价），整组替换服务价格；`null` 恢复服务默认价格 | Admin UI |
+| `/admin/mcp-servers/:id/items/accept` | POST | 批量接受待发布定义：`{ "ids": [...] }`，返回 `{ accepted, skipped }`；已不在待审状态、已移除或不存在的 id 计入 `skipped`，不会报错 | Admin UI |
 | `/admin/mcp-servers/:id/items/:itemId/accept` | POST | 接受已启用条目的待发布定义 | Admin UI |
 | `/admin/access-keys`、`/:id`、`/:id/secret`、`/:id/rotate`、`/:id/revoke` | GET, POST, PATCH | `admin_api_keys`；仅 Console Session，同源写请求 | Admin UI |
 | `/admin/business-timezone` | GET | `system_config.BUSINESS_TIMEZONE` | Admin UI（Provider 首屏加载） |
+| `/admin/maintenance` | GET（`maintenance.read`）, PUT（`maintenance.write`） | `system_config.MAINTENANCE_MODE`；见下文「维护模式」 | Admin UI、数据迁移、运维脚本 |
 | `/admin/request-logs` | GET | `api_key_request_logs`（**GlobalLogs**，多条件筛选分页） | Admin UI |
+| `/admin/request-logs/summary` | GET | `api_key_request_logs`，按维度精确汇总条数、Token 与四项金额 | 外部集成方（门户对账） |
 | `/admin/budget-audit-logs` | GET | **`user_audit_logs`**（左联 **`users`** 取 `email` 等，多维筛选分页） | Admin UI |
 | `/admin/analytics/models` | GET | `api_key_request_logs`，可选联 `model_tags` | Admin UI |
 | `/admin/analytics/providers` | GET | `api_key_request_logs`，按 Provider 聚合 | Admin UI |
@@ -167,6 +171,58 @@ Web 支持粘贴远程 HTTP(S) URL 或 MCP 客户端 JSON 配置，不执行 std
 | **`GET /admin/models/import/catalog`** | Admin | Console Session 或 `models.read` | 仓库内 **静态 preset** 摘要，供导入 UI 勾选，**非**运行时 route 真相 |
 
 门户 / 公开站应使用 Proxy **`GET /catalog/models`**，详见 [用户接口 · 公开模型目录](./user.md#公开模型目录catalog-discovery)。用户个性化折扣用 **`GET /admin/users/:id/display-discounts`** overlay。门户仍走 Catalog + display-discounts；Agent 拉列表不再计入 RPM。Agent 与兼容客户端默认仍用 **`GET /v1/models`**（需用户 Key，默认 `default,free` route group）。
+
+---
+
+## 维护模式（`/admin/maintenance`） {#admin-maintenance}
+
+开启后，Proxy 对推理入口返回 **503** + `Retry-After`（错误码 `gateway.maintenance`），并可选同时冻结 Admin 的写接口。数据迁移的核心切换用它冻结写入；它也可单独用于任何维护窗口。运维说明见 [维护模式](../../operators/maintenance-mode.md)，客户端看到的响应见 [错误码](./error-codes.md)。
+
+状态存在 `system_config.MAINTENANCE_MODE`（JSON 文本，无 schema 迁移）。`PUT /admin/config` 不接受这个键，一律走本接口，避免写入未经校验的值。
+
+### `GET /admin/maintenance`
+
+需要 `maintenance.read`。直接读库（不走缓存），返回当前状态：
+
+```json
+{
+  "success": true,
+  "data": {
+    "config": {
+      "enabled": true,
+      "message": "",
+      "messages": { "en": "Back in about {minutes} minutes", "zh": "维护中，预计 {minutes} 分钟后恢复" },
+      "expected_end_at": "2026-10-25T05:30:00.000Z",
+      "block_admin_writes": true
+    },
+    "effective_message": "维护中，预计 29 分钟后恢复",
+    "remaining_minutes": 29,
+    "retry_after_seconds": 300,
+    "propagation_seconds": 5
+  }
+}
+```
+
+关闭时 `effective_message`、`remaining_minutes`、`retry_after_seconds` 为 `null`。`propagation_seconds` 是各 Proxy 节点读取配置的缓存上限，即开关最迟多久后全网生效。
+
+### `PUT /admin/maintenance`
+
+需要 `maintenance.write`。整体覆盖当前状态，请求体：
+
+| 字段 | 说明 |
+|------|------|
+| `enabled` | **必填**，布尔。`false` 时其余字段忽略，库里只留 `{"enabled":false}` |
+| `message` | 默认提示，≤500 字符，可含 `{minutes}`；空则用内置文案 |
+| `messages` | `{ "<语言>": "<提示>" }`，键如 `zh`、`en`、`zh-CN`，按请求的 `Accept-Language` 先精确后主语言匹配 |
+| `duration_minutes` | 预计时长（分钟，> 0，≤ 10080），由**服务端**按当前时间折算成 `expected_end_at` |
+| `expected_end_at` | ISO 8601 绝对时间；与 `duration_minutes` 二选一，同时给返回 400 |
+| `block_admin_writes` | 默认 `true`：冻结期间 Admin 写接口返回 503 |
+
+文案选择顺序：`messages` 匹配 → `message` → 内置文案（`Accept-Language` 首选 `zh*` 用中文，其余用英文）。模板含 `{minutes}` 但没有预计时间时，退回不带时间的内置文案，不会出现"预计  分钟"。
+
+### Admin 写冻结
+
+`block_admin_writes` 为真时，除 `GET` / `HEAD` / `OPTIONS` 外的 Admin 请求返回 `503`（`{ "success": false, "message": "...", "code": "gateway.maintenance" }` + `Retry-After`）。**不受影响**：`/admin/maintenance`（否则无法解除）、`/admin/access-keys/*`（迁移要临时签发密钥）、`/admin/playground/*`。门户的开通用户、加额请求会收到 503，应自行重试；加额有 `dedup_key` 幂等，重试不会重复加。读取配置失败时 Proxy 与 Admin 都 **fail-open**，宁可继续服务，也不因配置读取故障冻结全网。
 
 ---
 
@@ -778,19 +834,21 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
 
 一个 Provider = **一把** `api_key` + **`status`**（`active` \| `disabled`）+ **`kind`**。**无** `/admin/providers/:id/keys*` 子资源（迁移 0015 已删除 `provider_api_keys`）。
 
-`name` 是账号别名。`kind` 取导入模板的稳定英文 `name`（如 `OpenCode Zen`），或显式自定义 `__custom__`。已有行默认 `''`，表示尚未分类。唯一约束是 `(name, kind)`：同一别名可以属于不同类型；同一类型下同名返回 **409**，正文为 `A provider with this name and type already exists`。列表与详情会附带运行时解析的 `kind_labels`、`vendor_key`、`icon_key`、`catalog_links`（不落库）。已设置 `kind` 时图标与链接只跟模板走；`__custom__` 使用通用图标；空 `kind` 仍按名称与 Endpoint 推断。
+`name` 是账号别名。`kind` 取导入模板的稳定英文 `name`（如 `OpenCode Zen`），或显式自定义 `__custom__`。已有行默认 `''`，表示尚未分类。唯一约束是 `(name, kind)`：同一别名可以属于不同类型；同一类型下同名返回 **409**，正文为 `A provider with this name and type already exists`。列表与详情会附带运行时解析的 `kind_labels`、`kind_descriptions`（中、英、日、韩介绍，无模板时为 `null`）、`vendor_key`、`icon_key`、`catalog_links`（均不落库）。`note` 是运营手写备注。已设置 `kind` 时图标、介绍与链接只跟模板走；`__custom__` 使用通用图标且没有官方介绍；空 `kind` 仍按名称与 Endpoint 推断图标，介绍为 `null`。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/admin/providers` | 列表；`api_key` **脱敏**；含 `kind`、`endpoints`、`status`、`has_pending_key`、`quota_supported`、`routes_count`、`active_routes_count` |
-| POST | `/admin/providers` | 创建；**`name` + `api_key` + `kind` 必填**；`kind` 须为已知模板英文名或 `__custom__`；管理后台不提交 `id`，由服务端生成 UUID。API 仍可传可选 `id`。另可传 `description`、`endpoints`、`status` |
+| GET | `/admin/providers` | 列表；`api_key` **脱敏**；含 `kind`、`endpoints`、`custom_params`、`status`、`has_pending_key`、`quota_supported`、`routes_count`、`active_routes_count` |
+| POST | `/admin/providers` | 创建；**`name` + `api_key` + `kind` 必填**；`kind` 须为已知模板英文名或 `__custom__`；管理后台不提交 `id`，由服务端生成 UUID。API 仍可传可选 `id`。另可传 `note`、`endpoints`、`custom_params`、`status` |
 | GET | `/admin/providers/:id` | 详情（脱敏 `api_key`） |
-| PATCH | `/admin/providers/:id` | 部分更新；省略 `kind` = 不改类型；`kind: ""` = 标为尚未分类；`api_key` 空串/未传 = **不改密钥**；`status` 仅 `active` \| `disabled`。改 `kind` 不覆盖已有 `endpoints` |
+| PATCH | `/admin/providers/:id` | 部分更新；省略 `kind` = 不改类型；`kind: ""` = 标为尚未分类；省略 `api_key` = **不改密钥**；显式 `api_key: ""`（或 `null`）= **清空密钥**；`status` 仅 `active` \| `disabled`。改 `kind` 不覆盖已有 `endpoints`；省略 `custom_params` = 不改，显式 `null` = 清空 |
 | DELETE | `/admin/providers/:id` | 删除；仍被 `model_routes` 引用时返回 **409**，须先删除或改绑对应 Target |
 | GET | `/admin/providers/:id/api-key` | **揭示明文** `api_key`（`{ success, data: { api_key } }`） |
 | GET | `/admin/providers/:id/quota` | 用该账号现有 `api_key` 实时查询额度。权限是 `providers.read`，响应不含密钥。不支持的 `kind`、空密钥或导入占位密钥返回 **400**。上游非 2xx 或响应无法解析返回 **502**（`message` 只有状态码，没有响应体）。超时返回 **504** |
-| GET / POST | `/admin/providers/sync/diff`、`/sync/apply` | 与官方模板同步：`diff` 只读；`apply` 逐字段写入官方值。差异只在管理员手动检查时计算，列表接口不带 |
-| GET / POST | `/admin/providers/import/catalog`、`/import` | 静态模板导入（占位 key，须手动替换）。写入 `kind =` 模板英文名；仅同一 `kind` 下同名才追加 `(2)` 后缀 |
+| GET / POST | `/admin/providers/sync/diff`、`/sync/apply` | 与官方模板同步：`diff` 只读，只比对端点；`note` 不参与。差异只在管理员手动检查时计算，列表接口不带 |
+| GET / POST | `/admin/providers/import/catalog`、`/import` | 静态模板导入（占位 key，须手动替换）。写入 `kind =` 模板英文名；`name` 按 `locale`（`zh` 中文，`ja` 日文，`ko` 韩文，其余英文）；介绍不入库。仅同一 `kind` 下同名才追加 `(2)` 后缀 |
+
+**`custom_params`（Provider 级默认参数下界）**：JSON 对象，按**上游协议**分组，形如 `{ "openai": { "headers": {...}, "body": {...} }, "gemini": { "body": {...} } }`；协议 key 须为已支持的上游协议（`openai` / `anthropic` / `gemini` / `dashscope` / `minimax` / `volcengine` / `elevenlabs`），非法 key 返回 **400**。单个分组内的 `headers` / `body` 形状与 Route 级 `custom_params` 信封里的同名字段一致（受保护头不可配置，返回 **400**）；但 Provider 层**没有** `force_override`（该字段仍只属于 Route）。运行时该 Provider 下每条 Route 按自身 `upstream_protocol` 取出对应分组，与 Route 自己的 `custom_params` 合并为一份有效参数后再发往上游：headers 优先级为「协议默认头 < Provider < Route < 客户端（Route 未开 `force_override.headers` 时）」，body 优先级为「适配器默认 < Provider < Route < 客户端同名字段（Route 未开 `force_override.body` 时）」；**Route 打开 `force_override.body` 后，整份合并后的有效 body（含其中的 Provider 默认值）一起强制覆盖客户端**，不是只强制 Route 自己配置的字段。Provider 未配置该协议或该字段为空时行为与改造前完全一致。原生透传入口（DashScope / MiniMax / ElevenLabs / Volcengine 的直连路径）不合并 body 默认值（只替换 `model`），但仍会合并 headers。序列化后超过 32KB 返回 **400**。
 
 Web 列表与编辑保留服务端 `kind`，新建和复制可显式选择类型；普通编辑不回写未改的类型，复制仍要求新凭据且保持禁用。官方差异按字段手动选择，端点按整个协议替换，默认不选；旧类型迁移仅 PATCH `{kind}`，建议类型不会自动应用。`POST /admin/providers/sync/apply` 成功处理批次时另含顶层 `acknowledgement: { domain: "providers", operation: "sync" }`，不含 `id`；`data` 为 `{updated, skipped, failed:[{provider_id,message}]}`。失败可能发生在配置已持久化之后，不能断言零写入。Web 分开显示逐项未完成及可能部分应用的提示并隐藏原始错误文本，已知结果须重新检查再应用；缺失/错误 ACK 或结果计数不符保持未知写锁。服务端应用时重算当前官方值，未提供差异版本条件写入。
 
@@ -825,6 +883,8 @@ Web 额度只在支持的已配置账号详情中显式查询，不自动刷新�
 | `StepFun` | `GET /v1/accounts` | `balance` 为可用余额（CNY）。累计充值与累计赠送不写入快照 |
 | `Vercel AI Gateway` | `GET /v1/credits` | `balance` 为剩余额度（USD） |
 | `OpenCode Go` | `GET /zen/go/v1/usage` | `rolling` / `weekly` / `monthly` 的已用百分比与重置时间。`rolling` 记为 `5h`。`status: rate-limited` 视为该窗口已用尽 |
+| `Command Code` | `GET /alpha/billing/credits`；成功后再读 `GET /alpha/billing/subscriptions`，需要推算每月上限时再读 `GET /alpha/usage/summary` | 与 Provider API 同一把 Key。`monthlyCredits`、`purchasedCredits`、`freeCredits` 相加为剩余美元；有 `remainingCredits` 时以它为准。`windowLimits` 的 `fiveHour` / `weekly` 记为 `5h` / `weekly`（`used` / `cap` 为美元）。每月窗口优先用 `credits.monthlyCreditsGranted` 作上限，已用为上限减去 `monthlyCredits`。没有该字段、且已有滚动窗口时，用本账期 `totalMonthlyCredits` 加上剩余月度额度作为上限。重置时间取订阅 `currentPeriodEnd`。后两个请求失败或超时不影响已读到的余额和滚动窗口。按量计费且没有滚动窗口时，不编造每月窗口 |
+| `ElevenLabs` | `GET /v1/user/subscription` | 请求头是 `xi-api-key`。响应字段仍是 `character_count` / `character_limit`，产品已改称 credits，数值不变，记为窗口 `credits`。`next_character_count_reset_unix` 为重置时间。`status: free_disabled` 视为已用尽。欧盟等驻留域名与默认 `api.elevenlabs.io` 同一注册域时，请求发往已保存的端点主机 |
 | `MiniMax` | `GET https://www.minimaxi.com/v1/token_plan/remains`，失败时再请求 `GET https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` | 优先取 `general` 模型的 5 小时与每周窗口。`*_usage_count` 是剩余次数；次数为 0 时改用剩余百分比。两台主机都在 `minimaxi.com` 上 |
 | `Zhipu GLM (Coding Plan)` | `GET /api/monitor/usage/quota/limit` | `CREDIT_LIMIT` / `TOKENS_LIMIT`。`unit=3,number=5` 为 5 小时，`unit=6,number=1` 为每周。`usage` 是上限，`percentage` 是已用百分比 |
 | `Z.AI GLM (Coding Plan)` | 同上，`api.z.ai` | 同上 |
@@ -844,7 +904,8 @@ Web 额度只在支持的已配置账号详情中显式查询，不自动刷新�
       "rerank": "https://api.example.com/v1/rerank",
       "images.generations": "https://api.example.com/v1/images/generations",
       "images.edits": "https://api.example.com/v1/images/edits",
-      "audio.transcriptions": "https://api.example.com/v1/audio/transcriptions"
+      "audio.transcriptions": "https://api.example.com/v1/audio/transcriptions",
+      "embeddings": "https://api.example.com/v1/embeddings"
     }
   },
   "anthropic": {
@@ -855,13 +916,14 @@ Web 额度只在支持的已配置账号详情中显式查询，不自动刷新�
     "base": "https://generativelanguage.googleapis.com/v1beta/models",
     "auth": "query-key",
     "endpoints": {
-      "models.generate": "https://example.com/v1beta/models/{model}:{action}"
+      "models.generate": "https://example.com/v1beta/models/{model}:{action}",
+      "models.embed": "https://example.com/v1beta/models/{model}:{action}"
     }
   }
 }
 ```
 
-`base` 走标准路径派生；capability 完整 URL 模板存在则覆盖派生结果。Gemini canonical 键为 **`models.generate`**，模板必须含 `{model}` 与 `{action}`；历史 `generateContent` / `streamGenerateContent` 键仍可读写，但新 UI 与规范化后的路由只生成 `models.generate`。可选 **`gemini.auth`**：`query-key`（`?key=`）或 `bearer`（`Authorization`）；省略则为 `query-key`。`auth` 仅允许出现在 `gemini`。
+`base` 走标准路径派生；capability 完整 URL 模板存在则覆盖派生结果。Gemini canonical 键为 **`models.generate`**（向量模型另有 **`models.embed`**，用于 `:embedContent` / `:batchEmbedContents`），模板必须含 `{model}` 与 `{action}`；历史 `generateContent` / `streamGenerateContent` 键仍可读写，但新 UI 与规范化后的路由只生成 `models.generate`。可选 **`gemini.auth`**：`query-key`（`?key=`）或 `bearer`（`Authorization`）；省略则为 `query-key`。`auth` 仅允许出现在 `gemini`。
 
 ### Models / Routes
 
@@ -921,6 +983,7 @@ Web 路由编辑器直接使用 Core 注册表推导操作：DashScope 原生 TT
 
 - **Sticky 绑定可观测 / 排障**（挂在 `/admin/routes/pools/:poolId/sticky/*`，须在 `/:id` 通配之前注册）：
   - **`GET .../sticky/bindings/summary`** → `{ total_active, stale_count, targets: [{ route_target_id, active_count, share, last_updated_at }] }`。活跃行条件：`pool_epoch = route_pools.sticky_epoch` 且 `expires_at > now`。
+  - **`GET .../sticky/bindings?page=&page_size=&route_target_id=`** → `{ items: [{ affinity_hash, user_id, email, model_id, route_group, protocol, route_target_id, expires_at, remaining_seconds, updated_at }], total, page, page_size }`。按 `updated_at` 倒序；`page_size` 默认 20，上限 100。用户信息来自绑定行的 `affinity_key`（迁移 0034）；该迁移前写入、尚未续期的行 `user_id` / `model_id` 等为 `null`。
   - **`GET .../sticky/bindings/lookup?user_id=&email=&model_id=&route_group=&protocol=&request_operation=`**  
     用 surface 上下文（`resolveModelSurface`）校验属于该 pool，再按 `SHA-256(userId|model|routeGroup|protocol)` 查绑定。`email` 与 `user_id` 二选一。返回 `{ user_id, affinity_hash, affinity_key, binding }`；`binding` 可为 `null`。
   - **`DELETE .../sticky/bindings/:affinityHash`**：强制删除该 hash 行（管理端解绑，无 token CAS）。
@@ -1036,11 +1099,11 @@ OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`spe
 
 ### `GET /admin/models/import/catalog`
 
-- **行为**：返回 `packages/admin/lib/model-presets/*.json`（合并后）每条预设的摘要（`id`、`display_name`、`vendor`、`kind`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。`kind` 为 `llm` \| `image` \| `audio`（与管理后台模型列表 Kind 一致）；此处 `audio` **同时包含**语音转写与语音合成，与用户接口 `GET /v1/models?kind=audio` 对齐。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
+- **行为**：返回 `packages/admin/lib/model-presets/*.json`（合并后）每条预设的摘要（`id`、`display_name`、`vendor`、`kind`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。`kind` 为 `llm` \| `image` \| `asr` \| `tts` \| `embedding`（与管理后台模型列表 Kind 一致，规则见 [模型类型](../reference/model-kinds.md)）；语音识别与语音合成已分开，用户接口 `GET /v1/models?kind=asr` / `kind=tts` 与之对齐（`kind=audio` 为两者的兼容别名）。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
 
 ### `POST /admin/models/import`
 
-- **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**必填**；`ids` 须为非空字符串数组；重复 id 会去重；顺序保留）。
+- **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**`ids` 必填**；须为非空字符串数组；重复 id 会去重；顺序保留）。介绍留在静态目录，不写入 `note`。
 - **行为**：仅处理 `ids` 中在静态目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）把该分支**整段**写入 `models.pricing_profile`（含 `tiers` / 图音频单价，以及可选官方时段 `schedule`）；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建。标签由运营在导入后自行维护，导入**不**写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
 - **响应** `data`：`{ "billing_currency_used", "created", "updated"（恒为 0）, "skipped_existing": string[], "failed": [{ "id", "message" }] }`。
 
@@ -1131,7 +1194,7 @@ curl -sS "$GATEWAY_URL/v1/audio/transcriptions" \
    |---|---|---|---|
    | `doubao-seedream-5-0` | ¥0.22 / 张（一口价，不按分辨率翻倍） | **0.22** | **0.035** |
    | `doubao-seedream-5-0-pro` | 单图生成 ≤261 万像素（1.5K 及以下）¥0.30 / 以上 ¥0.60；参考图首张免费、之后 ¥0.02 | `by_size`：`1k` / `1.5k` **0.30**，`2k` **0.60**；缺省 **0.60**（方舟默认 2K）；`image.input.default=0.02` | **0.045** / **0.09**；input **0.003** |
-4. **Routes**：OpenAI SDK 入口选适配器 `volcengine-image`（上游 `volcengine` / `images.generations`）；流式与方舟原文走原生透传 `POST /v1/volcengine/images/generations`。`provider_model_name` 填方舟 Model ID。`watermark` 等由客户端请求或 route `custom_params` 按需传入，**不**写在模型预设里。
+4. **Routes**：OpenAI SDK 入口选适配器 `volcengine-image`（上游 `volcengine` / `images.generations`）；流式与方舟原文走原生透传 `POST /volcengine/api/v3/images/generations`。`provider_model_name` 填方舟 Model ID。`watermark` 等由客户端请求或 route `custom_params` 按需传入，**不**写在模型预设里。
 5. **Playground / Simulator**：选该路由 → generations；Seedream **图生图**走 `POST /v1/images/generations` + JSON `image`（勿用 multipart `/v1/images/edits`，火山无 OpenAI edits 形态）。
 6. **Request Logs**：核对 `pricing_audit.kind=image_per_image`、`billing_kind`、`output_image_count=1`、`charged_cost≈官方单价×charged_factor`。
 7. **curl**（用户 API Key）：
@@ -1230,6 +1293,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 |------|------|
 | `range` | `1h` / `1d` / `24h` / `7d` / `14d` / `30d`（UI 快捷按钮；`90d` 仍可通过 API 传入）；无 `start_date`+`end_date` 时默认 `1d` |
 | `start_date` / `end_date` | UTC `YYYY-MM-DD HH:mm:ss`；**与 Request Logs / Analytics 相同**；两者同时提供时优先于 `range` |
+| `preset` | 仪表盘对比提示。`today` 且起点等于业务日界时，与前一业务日的相同已过时长比较；其余值比较紧邻之前的等长时段，不影响请求时间窗解析 |
 
 响应 `data` 含：
 
@@ -1315,9 +1379,9 @@ Agent Tools 的八个 catalog/active 键仍接受受控通用 PUT 兼容；新 W
 
 | 工具 | Catalog 键 | Active 键 | Provider 白名单 |
 |------|------------|-----------|-----------------|
-| Web Search | `WEB_SEARCH_CATALOG` | `WEB_SEARCH_ACTIVE` | `bocha`、`tavily`、`cleversee`、`tencent_wsa` |
-| Web Fetch | `WEB_FETCH_CATALOG` | `WEB_FETCH_ACTIVE` | `firecrawl`、`tavily`、`jina` |
-| Web Deep Search | `WEB_DEEP_SEARCH_CATALOG` | `WEB_DEEP_SEARCH_ACTIVE` | `firecrawl`、`jina` |
+| Web Search | `WEB_SEARCH_CATALOG` | `WEB_SEARCH_ACTIVE` | `bocha`、`tavily`、`cleversee`、`tencent_wsa`、`deepseek` |
+| Web Fetch | `WEB_FETCH_CATALOG` | `WEB_FETCH_ACTIVE` | `firecrawl`、`tavily`、`jina`、`deepseek` |
+| Web Deep Search | `WEB_DEEP_SEARCH_CATALOG` | `WEB_DEEP_SEARCH_ACTIVE` | `firecrawl`、`jina`、`deepseek` |
 | AI Detection | `AI_DETECTION_CATALOG` | `AI_DETECTION_ACTIVE` | 当前 `tencent_tms`（多 provider 架构，可扩展） |
 
 Catalog JSON 以 Provider id 为键。新价格使用版本化 `pricing`，例如：
@@ -1365,11 +1429,11 @@ expected_version 是有界 opaque 完整 family 版本向量，包含 legacy 及
 
 ### 运维验收：Agent Tools（Playground / Simulator）
 
-Admin 内闭环：**Tools Config → Playground（引擎）→ Simulator（Proxy）→ Tools Invocations**。
+Admin 内闭环：**Tools Config → Playground（引擎）→ Simulator（Proxy）→ Request Logs**。
 
 1. **Config**：Admin → Tools → Configuration，在“连接设置”维护凭证，在“计费规则”维护**标准价、用户倍率、供应倍率**并保存；Active 指向已配齐凭证的引擎（AI Detection 第一版为 `tencent_tms`）。修改价格并保存后 catalog JSON 应包含 `pricing: { v: 2, standard, chargedFactor, meteredFactor }`。
 2. **Playground Tools**（不计费、不写 logs）：Admin → Playground → **Tools** 模式，或 Config 行内 **Test in Playground**（`?mode=tools&tool=…&provider=…`）。选工具 + **任意 catalog 引擎**（不限 Active）→ Send → 直连上游引擎，确认密钥与响应形态。
-3. **Simulator Tools**（真实 Proxy）：Admin → Simulator → Kind=**Tools** → 选工具与用户 API Key → Send 打到 `{proxy}/v1/tools/{id}` → 核对响应 `cost`（= charged）与预算；**Open Tools Invocations** / Request Logs 核对三列不同（若配置了不同单价）、`budget_spent` 仅增 charged、失败请求三列 0、`pricing_audit` v4 `fixed_tool_cost`。
+3. **Simulator Tools**（真实 Proxy）：Admin → Simulator → Kind=**Tools** → 选工具与用户 API Key → Send 打到 `{proxy}/v1/tools/{id}` → 核对响应 `cost`（= charged）与预算；**Open Request Logs**（已按该工具与所用 API Key 筛选）核对三列不同（若配置了不同单价）、`budget_spent` 仅增 charged、失败请求三列 0、`pricing_audit` v4 `fixed_tool_cost`。
 4. **边界**：Playground Tools **不经** Proxy、**不扣**用户预算、**不写** `api_key_request_logs`；Simulator Tools **走** Proxy 全链路。二者共用 **`@octafuse/tool-engines`** 引擎客户端（Admin 不得再依赖 `packages/proxy`）。LLM / Image / Audio 的 Routes 模式行为不变。
 5. **curl**（可选，用户 API Key，等价 Simulator）：
 
@@ -1420,6 +1484,8 @@ Web 工具调用 `source=all` 使用固定集合 `octafuse-mcp,octafuse-tools` �
 | `api_key_id` | 精确匹配 |
 | `user_email` | 精确匹配 |
 | `model_id` | 精确匹配 |
+| `model_ids` | 逗号分隔，最多 30 个，匹配其中任一 `model_id` |
+| `model_vendors` | 模型厂商 key（`models.vendor`，如 `openai`、`anthropic`），逗号分隔，最多 100 个。匹配当前模型目录里属于这些厂商的模型；与 `model_ids` 同时传时取并集 |
 | `provider_id` | 精确匹配 |
 | `ingress_host` | 实存入口 Host 精确匹配，大小写与端口保留；最长255 |
 | `provider_ids` | 逗号分隔，trim/去空/去重/排序后最多10个；每项最长600，原串最长6009；与单个 `provider_id` 按交集匹配，成功响应回显集合 |
@@ -1427,6 +1493,23 @@ Web 工具调用 `source=all` 使用固定集合 `octafuse-mcp,octafuse-tools` �
 | `route_group` | 精确匹配 |
 | `status` | 精确匹配 |
 | `start_date` / `end_date` | 过滤 `created_at`（UTC，格式：`YYYY-MM-DD HH:mm:ss`） |
+
+`kinds` 的取值：
+
+| 取值 | 匹配的日志 |
+|------|------------|
+| `model` | 全部模型请求（`provider_id` 不是 `octafuse-tools` / `octafuse-mcp`，含没有 `provider_id` 的日志） |
+| `model:llm`、`model:image`、`model:asr`、`model:tts`、`model:embedding` | 某一类模型请求。类型不落库，按顺序推断：`billing_kind` → `request_operation` / `upstream_operation` → 模型目录里该模型的类型 → `audio_tokens` 计费算 `asr` → 其余算 `llm`。与管理后台请求日志列表的类型标签同一套规则 |
+| `tool` | 全部 REST 工具调用（`provider_id=octafuse-tools`） |
+| `tool:<id>` | 某个 REST 工具，即日志的 `model_id`，如 `tool:web-search` |
+| `mcp` | 全部 MCP 工具调用（`provider_id=octafuse-mcp`） |
+| `mcp:<slug>` | 某个 MCP 服务（`model_id` 以 `mcp:<slug>/` 开头）。只看其中一个工具时再加 `model_id=mcp:<slug>/<tool>` |
+
+例如 `kinds=model:image,tool:web-search,mcp:docs` 返回图像模型请求、Web Search 调用与 `docs` 服务的 MCP 调用。
+
+`model_vendors` 与 `provider_kinds` 按当前目录解析：已删除的模型不属于任何厂商，已删除的供应商不属于任何类型，它们的历史日志只能用 `model_ids` / `provider_ids` 查。模型、供应商、类型三组条件之间是 AND，例如 `model_vendors=openai&provider_kinds=__custom__` 返回自定义供应商承接的 OpenAI 模型请求。
+
+D1 单条语句最多 100 个绑定参数：`kinds`、`model_ids`、`model_vendors`、`provider_ids`、`provider_kinds` 的取值个数，加上按模型类型筛选时模型目录里的非 LLM 模型数，合计不能超过 85，超出返回 400。Postgres / MySQL 没有这个限制。
 
 `data` 每条日志即 **`api_key_request_logs` 行**（读接口不 JOIN `models` / `providers`；展示名依赖写入时快照列）。**`model_name`** / **`provider_name`** 为请求当时展示名快照；**`provider_model_name`** 为上游模型 id；**`provider_key_id`** / **`provider_key_label`** / **`provider_key_fingerprint`** 为最终选用 Provider 快照（现为 **provider id / name / api_key 指纹**；0015 前旧行可能仍为历史 key 池 id）。**`request_body`** 为客户端入口侧脱敏 JSON（无提示词正文；长度有上限）。**`upstream_request_body`** 为合并路由 `custom_params` 后、与发往供应商的 wire 体结构对齐的脱敏快照（规则同 `request_body`；迁移前或旧行可能为 `null`）。**`request_protocol`**（入口）与 **`upstream_protocol`**（所选路由实际转发协议）见上文注。升级前列可能为 `null`。
 

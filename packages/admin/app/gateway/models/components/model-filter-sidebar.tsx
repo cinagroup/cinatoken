@@ -1,166 +1,182 @@
 'use client';
 
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
-import type { ComponentProps } from 'react';
-import { FilterNavButton, FilterNavSection } from '../../components/filter-nav';
+import {
+	CatalogViewToggle,
+	type CatalogView,
+} from '../../components/catalog-view-toggle';
 import { getModelVendorLabel } from '@/lib/model-vendor';
-import { ALL_VENDORS_KEY, type ModelListKindFilter } from '../types';
+import {
+	ALL_VENDORS_KEY,
+	type ModelLifecycleFilter,
+	type ModelListKindFilter,
+} from '../types';
 
 type Props = {
+	view: CatalogView;
+	onViewChange: (view: CatalogView) => void;
+	search: string;
+	onSearchChange: (value: string) => void;
+	filteredCount: number;
 	modelCount: number;
 	hasActiveFilter: boolean;
 	isAllVendors: boolean;
 	selectedVendor: string;
 	modelsByVendor: [string, unknown[]][];
 	selectedKind: ModelListKindFilter;
-	kindCounts: { llm: number; image: number; audio: number; rerank: number };
+	kindCounts: {
+		llm: number;
+		image: number;
+		asr: number;
+		tts: number;
+		embedding: number;
+	};
+	kindAllCount: number;
+	selectedLifecycle: ModelLifecycleFilter;
+	lifecycleCounts: { active: number; retired: number };
+	onSelectLifecycle: (lifecycle: ModelLifecycleFilter) => void;
 	onSelectVendor: (vendor: string) => void;
 	onSelectKind: (kind: ModelListKindFilter) => void;
 	onClearFilter: () => void;
 };
 
-function HorizontalSection(props: Omit<ComponentProps<typeof FilterNavSection>, 'orientation'>) {
-	return <FilterNavSection orientation="horizontal" {...props} />;
-}
-
-function HorizontalButton(props: Omit<ComponentProps<typeof FilterNavButton>, 'orientation'>) {
-	return <FilterNavButton orientation="horizontal" {...props} />;
-}
-
-export function ModelFilterSidebar(props: Props) {
-	const {
-		modelCount,
-		hasActiveFilter,
-		isAllVendors,
-		selectedVendor,
-		modelsByVendor,
-		selectedKind,
-		kindCounts,
-		onSelectVendor,
-		onSelectKind,
-		onClearFilter,
-	} = props;
-
+export function ModelFilterSidebar({
+	view,
+	onViewChange,
+	search,
+	onSearchChange,
+	filteredCount,
+	modelCount,
+	hasActiveFilter,
+	selectedVendor,
+	modelsByVendor,
+	selectedKind,
+	kindCounts,
+	kindAllCount,
+	selectedLifecycle,
+	onSelectLifecycle,
+	onSelectVendor,
+	onSelectKind,
+	onClearFilter,
+}: Props) {
 	const t = useTranslations('models.filter');
-	const tFilter = useTranslations('filter');
-
-	if (modelCount === 0) return null;
-
-	const vendorTotal = modelsByVendor.reduce((n, [, items]) => n + items.length, 0);
-
+	const f = useTranslations('filter');
+	const c = useTranslations('common');
+	const kinds = [
+		{ key: 'all', label: f('all'), count: kindAllCount },
+		...(['llm', 'image', 'asr', 'tts', 'embedding'] as const).map((key) => ({
+			key,
+			label: t(
+				{
+					llm: 'kindLlm',
+					image: 'kindImage',
+					asr: 'kindAsr',
+					tts: 'kindTts',
+					embedding: 'kindEmbedding',
+				}[key]
+			),
+			count: kindCounts[key],
+		})),
+	];
+	const selectClass =
+		'h-10 min-w-0 max-w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-100';
 	return (
-		<section className="mb-5 sm:mb-6" aria-label={t('title')}>
-			<div className="grid grid-cols-2 gap-3 rounded-lg border border-gray-200 bg-white p-3 md:hidden">
-				<label className="min-w-0 text-xs text-gray-500">
-					{t('kind')}
-					<select
-						value={selectedKind}
-						onChange={(event) => onSelectKind(event.target.value as ModelListKindFilter)}
-						className="mt-1 min-h-11 w-full min-w-0 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900"
+		<section aria-label={t('title')} className="admin-filter-surface mb-5 space-y-4">
+			<div className="flex flex-wrap items-center gap-3">
+				<div className="relative min-w-0 flex-1 basis-64 sm:max-w-sm">
+					<MagnifyingGlassIcon
+						className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+						aria-hidden
+					/>
+					<input
+						type="search"
+						value={search}
+						onChange={(event) => onSearchChange(event.target.value)}
+						aria-label={t('searchPlaceholder')}
+						placeholder={t('searchPlaceholder')}
+						className={`${selectClass} w-full pl-9 pr-9`}
+						autoComplete="off"
+					/>
+					{search && (
+						<button
+							type="button"
+							onClick={() => onSearchChange('')}
+							aria-label={t('clearSearch')}
+							className="absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+						>
+							<XMarkIcon className="h-4 w-4" aria-hidden />
+						</button>
+					)}
+				</div>
+				<select
+					aria-label={f('vendor')}
+					value={selectedVendor}
+					onChange={(event) => onSelectVendor(event.target.value)}
+					className={`${selectClass} w-40 sm:w-44`}
+				>
+					<option value={ALL_VENDORS_KEY}>{t('allVendors')}</option>
+					{modelsByVendor.map(([key, items]) => (
+						<option key={key} value={key}>
+							{getModelVendorLabel(key)} ({items.length})
+						</option>
+					))}
+				</select>
+				<select
+					aria-label={t('lifecycle')}
+					value={selectedLifecycle}
+					onChange={(event) =>
+						onSelectLifecycle(event.target.value as ModelLifecycleFilter)
+					}
+					className={selectClass}
+				>
+					<option value="all">{t('allLifecycles')}</option>
+					<option value="active">{t('lifecycleActive')}</option>
+					<option value="retired">{t('lifecycleRetired')}</option>
+				</select>
+				<span className="text-xs tabular-nums text-gray-500" aria-live="polite">
+					{c('showing', { filtered: filteredCount, total: modelCount })}
+				</span>
+				<div className="ml-auto [&>div>span]:sr-only">
+					<CatalogViewToggle value={view} onChange={onViewChange} />
+				</div>
+			</div>
+			<div
+				className="flex flex-wrap items-center gap-1 border-b border-gray-200 pb-3"
+				role="group"
+				aria-label={t('kind')}
+			>
+				{kinds.map((kind) => (
+					<button
+						type="button"
+						key={kind.key}
+						aria-pressed={selectedKind === kind.key}
+						onClick={() => onSelectKind(kind.key as ModelListKindFilter)}
+						className={`inline-flex min-h-9 items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
+							selectedKind === kind.key
+								? 'bg-gray-950 font-medium text-white'
+								: 'text-gray-600 hover:bg-gray-100 hover:text-gray-950'
+						}`}
 					>
-						<option value="all">
-							{tFilter('all')} ({modelCount})
-						</option>
-						<option value="llm">
-							{t('kindLlm')} ({kindCounts.llm})
-						</option>
-						<option value="image">
-							{t('kindImage')} ({kindCounts.image})
-						</option>
-						<option value="audio">
-							{t('kindAudio')} ({kindCounts.audio})
-						</option>
-					</select>
-				</label>
-				<label className="min-w-0 text-xs text-gray-500">
-					{tFilter('vendor')}
-					<select
-						value={selectedVendor}
-						onChange={(event) => onSelectVendor(event.target.value)}
-						className="mt-1 min-h-11 w-full min-w-0 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900"
-					>
-						<option value={ALL_VENDORS_KEY}>
-							{tFilter('all')} ({vendorTotal})
-						</option>
-						{modelsByVendor.map(([key, items]) => (
-							<option key={key} value={key}>
-								{getModelVendorLabel(key)} ({items.length})
-							</option>
-						))}
-					</select>
-				</label>
+						{kind.label}
+						<span
+							className={`font-mono tabular-nums ${
+								selectedKind === kind.key ? 'text-white/70' : 'text-gray-400'
+							}`}
+						>
+							{kind.count}
+						</span>
+					</button>
+				))}
 				{hasActiveFilter && (
 					<button
 						type="button"
 						onClick={onClearFilter}
-						className="col-span-2 min-h-9 text-left text-xs font-medium text-blue-600"
+						className="ml-auto rounded-lg px-3 py-2 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-950"
 					>
-						{tFilter('clear')}
+						{f('clear')}
 					</button>
 				)}
-			</div>
-			<div className="hidden flex-col items-stretch gap-y-2 md:flex">
-				<div className="flex min-w-0 items-center justify-between gap-3">
-					<HorizontalSection title={t('kind')} ariaLabel={t('kindAria')}>
-						<HorizontalButton
-							label={tFilter('all')}
-							count={modelCount}
-							isActive={selectedKind === 'all'}
-							onClick={() => onSelectKind('all')}
-						/>
-						<HorizontalButton
-							label={t('kindLlm')}
-							count={kindCounts.llm}
-							isActive={selectedKind === 'llm'}
-							onClick={() => onSelectKind('llm')}
-						/>
-						<HorizontalButton
-							label={t('kindImage')}
-							count={kindCounts.image}
-							isActive={selectedKind === 'image'}
-							onClick={() => onSelectKind('image')}
-						/>
-						<HorizontalButton
-							label={t('kindAudio')}
-							count={kindCounts.audio}
-							isActive={selectedKind === 'audio'}
-							onClick={() => onSelectKind('audio')}
-						/>
-						<HorizontalButton
-							label={t('kindRerank')}
-							count={kindCounts.rerank}
-							isActive={selectedKind === 'rerank'}
-							onClick={() => onSelectKind('rerank')}
-						/>
-					</HorizontalSection>
-					{hasActiveFilter ? (
-						<button
-							type="button"
-							onClick={onClearFilter}
-							className="shrink-0 rounded text-xs font-medium text-blue-600 hover:text-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-						>
-							{tFilter('clear')}
-						</button>
-					) : null}
-				</div>
-
-				<HorizontalSection title={tFilter('vendor')} ariaLabel={t('vendorAria')}>
-					<HorizontalButton
-						label={tFilter('all')}
-						count={vendorTotal}
-						isActive={isAllVendors}
-						onClick={() => onSelectVendor(ALL_VENDORS_KEY)}
-					/>
-					{modelsByVendor.map(([vendorKey, items]) => (
-						<HorizontalButton
-							key={vendorKey}
-							label={getModelVendorLabel(vendorKey)}
-							count={items.length}
-							isActive={selectedVendor === vendorKey}
-							onClick={() => onSelectVendor(vendorKey)}
-						/>
-					))}
-				</HorizontalSection>
 			</div>
 		</section>
 	);

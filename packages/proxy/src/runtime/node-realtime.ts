@@ -1,3 +1,14 @@
+
+import { createRealtimeSocket, type RealtimeSocket } from '../services/egress/dashscope-realtime-socket';
+
+import {
+	bridgeElevenLabsRealtime,
+	elevenLabsRealtimeRejectedResult,
+	resolveElevenLabsRealtimeTarget,
+	type ElevenLabsRealtimeNodeDispatch,
+} from '../services/egress/elevenlabs-realtime-driver';
+
+import type { DeferredRealtimeRuntime } from '../services/egress/dashscope-realtime-session';
 /**
  * Node Proxy 的实时 WebSocket 适配层：`@hono/node-server` 负责普通 HTTP，
  * 这里用 `ws` 接管 upgrade，并复用 DashScope 的事件改写、failover 与 usage collector。
@@ -257,11 +268,11 @@ async function connectUpstream(
 	});
 }
 
-function nodeRealtimeResponse(socket: NodeWebSocket): Response {
+function nodeRealtimeResponse(socket: NodeWebSocket, protocol = 'dashscope'): Response {
 	const response = new Response(null, {
 		status: 200,
 		headers: {
-			'X-Octafuse-Realtime-Protocol': 'dashscope',
+			'X-Octafuse-Realtime-Protocol': protocol,
 			'X-Octafuse-Realtime-Upgrade': '1',
 		},
 	});
@@ -522,4 +533,203 @@ export function createNodeWebSocketServer(): NodeWebSocketServer {
 		maxPayload: DASHSCOPE_REALTIME_MAX_CLIENT_MESSAGE_BYTES,
 		handleProtocols: (protocols) => pickDashScopeRealtimeSubprotocol(protocols),
 	});
+}
+
+
+/**
+ * 握手响应与上游首帧（如 ElevenLabs 的 `session_started`）常在同一个 TCP 包里，
+ * `ws` 会在 nextTick 里先把它们发出来，早于 promise 回调里挂的监听器。
+ * 因此在 `open` 的同一同步段里先挂缓冲监听，由调用方在自己订阅后回放。
+ */
+type EarlyUpstreamMessages = {
+	/** 停止缓冲并返回已缓冲的帧。 */
+	drain(): Array<{ data: Buffer; isBinary: boolean }>;
+};
+
+
+function createEarlyUpstreamMessages(upstream: NodeWebSocket): EarlyUpstreamMessages {
+	const buffered: Array<{ data: Buffer; isBinary: boolean }> = [];
+	const listener = (data: Buffer, isBinary: boolean) => {
+		if(buffered.length>=NODE_REALTIME_MAX_PENDING_MESSAGES||buffered.reduce((n,frame)=>n+frame.data.byteLength,0)+data.byteLength>NODE_REALTIME_MAX_PENDING_BYTES){terminateSocket(upstream);return;}
+ buffered.push({ data, isBinary });
+	};
+	upstream.on('message', listener);
+	return {
+		drain() {
+			upstream.off('message', listener);
+			return buffered.splice(0);
+		},
+	};
+}
+
+
+function realtimeCapability(operation: DashScopeRealtimeOperation):
+	| 'audio.realtime.inference'
+	| 'audio.realtime.session' {
+	return operation.endsWith('.inference')
+		? 'audio.realtime.inference'
+		: 'audio.realtime.session';
+}
+
+
+/** 读上游握手被拒时的响应体（有上限与超时，用于识别 ElevenLabs 的 `detail.status`）。 */
+function readRejectedBody(response: IncomingMessage, limitBytes = 8192, timeoutMs = 2000): Promise<string> {
+	return new Promise<string>((resolve) => {
+		const chunks: Buffer[] = [];
+		let size = 0;
+		let done = false;
+		const finish = () => {
+			if (done) return;
+			done = true;
+			clearTimeout(timer);
+			response.destroy();
+			resolve(Buffer.concat(chunks).toString('utf8'));
+		};
+		const timer = setTimeout(finish, timeoutMs);
+		response.on('data', (chunk: Buffer) => {
+			if (size >= limitBytes) return;
+			chunks.push(chunk.subarray(0,Math.max(0,limitBytes-size)));
+			size += chunk.length;
+			if (size >= limitBytes) finish();
+		});
+		response.on('end', finish);
+		response.on('error', finish);
+		response.on('close', finish);
+	});
+}
+
+
+/** 建立上游 WebSocket：成功返回已 open 的 socket；握手被拒返回上游状态码（可选带响应体）。 */
+async function connectNodeUpstream(
+ url:string, headers:Record<string,string>, signal:AbortSignal|undefined,
+ timing:RequestTimingCollector|null|undefined,attempt:RequestTimingAttempt|undefined,
+ WebSocketCtor:NodeWebSocketConstructor, options:{captureRejectedBody?:boolean}={},
+):Promise<{socket:NodeWebSocket;requestId:string|null;early:EarlyUpstreamMessages}|{response:Response;requestId:string|null}> {
+ const connection=createRealtimeConnectionLifecycle(signal,{});
+ try {
+  connection.throwIfStopped();
+  const target=new URL(url);
+  if(!['ws:','wss:'].includes(target.protocol)||target.username||target.password||target.hash)throw new Error('Invalid realtime upstream URL');
+  connection.markDispatched();
+  const upstream=new WebSocketCtor(target.toString(),{headers,maxPayload:DASHSCOPE_REALTIME_MAX_PROVIDER_MESSAGE_BYTES,followRedirects:false});
+  ownSocketErrorsUntilClose(upstream);
+  let requestId:string|null=null;
+  return await new Promise((resolve,reject)=>{
+   let settled=false;
+   const cleanup=()=>{connection.signal.removeEventListener('abort',onAbort);upstream.off('open',onOpen);upstream.off('upgrade',onUpgrade);upstream.off('unexpected-response',onUnexpectedResponse);upstream.off('error',onError);upstream.off('close',onClose);};
+   const fail=(error:unknown)=>{if(settled)return;settled=true;cleanup();terminateSocket(upstream);reject(error);};
+   const onAbort=()=>fail(connection.signal.reason);
+   const onError=()=>fail(new Error('Realtime upstream connection failed'));
+   const onClose=()=>fail(new Error('Realtime upstream closed before opening'));
+   const onUpgrade=(response:IncomingMessage)=>{requestId=extractUpstreamRequestId(toHeaders(response.headers));};
+   const onOpen=()=>{if(settled)return;try{connection.throwIfStopped();}catch(error){fail(error);return;}settled=true;cleanup();timing?.markAttemptHeaders(attempt,101);resolve({socket:upstream,requestId,early:createEarlyUpstreamMessages(upstream)});};
+   const onUnexpectedResponse=(_request:IncomingMessage,response:IncomingMessage)=>{
+    if(settled){response.destroy();return;}
+    requestId=extractUpstreamRequestId(toHeaders(response.headers));
+    const status=response.statusCode&&response.statusCode>=200&&response.statusCode<=599?response.statusCode:502;
+    timing?.markAttemptHeaders(attempt,status);
+    const text=options.captureRejectedBody?connection.wait(()=>readRejectedBody(response)):Promise.resolve('');
+    void text.then(body=>{if(settled){response.destroy();return;}settled=true;cleanup();response.destroy();terminateSocket(upstream);resolve({response:new Response(body||null,{status,headers:{'Content-Type':'application/json'}}),requestId});},fail);
+   };
+   upstream.on('open',onOpen);upstream.on('upgrade',onUpgrade);upstream.on('unexpected-response',onUnexpectedResponse);upstream.on('error',onError);upstream.on('close',onClose);
+   connection.signal.addEventListener('abort',onAbort,{once:true});if(connection.signal.aborted)onAbort();
+  });
+ } finally {connection.dispose();}
+}
+
+/** 把 `ws` socket 包成运行时无关的 `RealtimeSocket`。 */
+function wrapNodeSocket(socket: NodeWebSocket, early?: EarlyUpstreamMessages): RealtimeSocket {
+	return createRealtimeSocket({
+		send: (data) => {
+			if (typeof data === 'string') socket.send(data);
+			else socket.send(Buffer.isBuffer(data) ? data : Buffer.from(data as ArrayBuffer));
+		},
+		close: (code, reason) => closeSocket(socket, code ?? 1000, reason ?? ''),
+		subscribe: (handlers) => {
+			socket.on('message', (data, isBinary) => handlers.message(isBinary ? data : data.toString()));
+			socket.on('close', (code, reason) => handlers.close(code, reason.toString()));
+			socket.on('error', () => handlers.error());
+			for (const frame of early?.drain() ?? []) {
+				handlers.message(frame.isBinary ? frame.data : frame.data.toString());
+			}
+		},
+	});
+}
+
+
+/**
+ * ElevenLabs 实时入口的 Node 调度：下游已完成 upgrade 且暂停读；连上上游后桥接两端，
+ * 返回与 Worker 一致的 `ProxyDispatchResult`（用 `webSocket` 标记 + `X-Octafuse-Realtime-Upgrade`）。
+ */
+export function createNodeElevenLabsRealtimeDispatch(
+	client: NodeWebSocket,
+	WebSocketCtor: NodeWebSocketConstructor = wsModule.WebSocket
+): ElevenLabsRealtimeNodeDispatch {
+	// 第一次调度时才订阅下游（同一连接 failover 多次复用同一个包装）；订阅后到达的帧 / close 会排队到桥接开始。
+	let clientSocket: RealtimeSocket | null = null;
+	return async (route, params, requestSignal, timing, attempt, beforeDispatch): Promise<ProxyDispatchResult> => {
+		clientSocket ??= wrapNodeSocket(client);
+  const connection=createRealtimeConnectionLifecycle(requestSignal,{});
+  try {
+		const target = await connection.wait(()=>resolveElevenLabsRealtimeTarget(route,params,{signal:connection.signal}));
+  await connection.admit(beforeDispatch);
+  connection.markDispatched();
+		const opened = await connectNodeUpstream(
+			target.url,
+			target.headers,
+			connection.signal,
+			timing,
+			attempt,
+			WebSocketCtor,
+			{ captureRejectedBody: true }
+		);
+		if ('response' in opened) {
+			return elevenLabsRealtimeRejectedResult(opened.response, opened.requestId);
+		}
+		opened.socket.binaryType = 'nodebuffer';
+		const usagePromise = bridgeElevenLabsRealtime({
+			client: clientSocket,
+			upstream: wrapNodeSocket(opened.socket, opened.early),
+			operation: params.operation,
+			audioFormat: params.query.audio_format ?? null,
+ sessionLimits:params.sessionLimits,
+ requestSignal,
+			timing,
+		});
+		return {
+			response: nodeRealtimeResponse(client, 'elevenlabs'),
+			usagePromise,
+			upstreamRequestId: opened.requestId,
+		};
+  } catch(error){return connection.failure(error);} finally {connection.dispose();}
+	};
+}
+
+
+/**
+ * inference 新入口（延迟连接上游）的 Node 运行时：下游 `client` 已经完成 upgrade，
+ * 订阅在这里立刻开始排队，等第一帧 run-task 后再由会话选路由、连上游。
+ */
+export function createNodeDashScopeDeferredRuntime(
+	client: NodeWebSocket,
+	WebSocketCtor: NodeWebSocketConstructor = wsModule.WebSocket
+): DeferredRealtimeRuntime {
+	return {
+		client: wrapNodeSocket(client),
+
+  connectUpstream: async (route, operation, signal, timing, attempt) => {
+   const connection = createRealtimeConnectionLifecycle(signal,{});
+   try {
+    const opened = await connectUpstream(route,operation,connection,timing,attempt,WebSocketCtor,{});
+    if ('result' in opened) return {response:opened.result.response,requestId:opened.result.upstreamRequestId ?? null};
+    opened.socket.binaryType = 'nodebuffer';
+    return {socket:wrapNodeSocket(opened.socket),requestId:opened.requestId};
+   } catch (error) {
+    if (signal?.aborted) throw error;
+    const failed = connection.failure(error);
+    return {response:failed.response,requestId:failed.upstreamRequestId ?? null};
+   } finally { connection.dispose(); }
+
+		},
+	};
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState, type FormEvent } from 'react';
-import { ArrowDownTrayIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, CurrencyDollarIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import {
 	applyMcpImport,
@@ -12,19 +12,21 @@ import {
 import { useFeedback } from '@/components/feedback';
 import type { ServerForm } from '../mcp-types';
 import { McpDialog } from './mcp-dialog';
-import { McpPricingDraftSummary, McpPricingEditor } from './mcp-pricing-editor';
+import { McpPricingEditor } from './mcp-pricing-editor';
 import { McpConnectionEditor } from './mcp-connection-editor';
 import { McpAdvancedSettings } from './mcp-advanced-settings';
 import { pricingRuleFromDraft } from '../mcp-pricing-draft';
 const SECTIONS = ['connection', 'pricing', 'advanced'] as const;
-type Section = (typeof SECTIONS)[number];
+export type McpFormSection = (typeof SECTIONS)[number];
+type Section = McpFormSection;
 
 const INPUT =
-	'mt-1.5 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 read-only:bg-gray-50 read-only:text-gray-500';
+	'mt-1.5 w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-100 read-only:bg-gray-50 read-only:text-gray-500';
 
 export function McpServerFormModal({
 	currency,
 	mode,
+	initialSection = 'connection',
 	form,
 	busy,
 	urlMasked,
@@ -35,6 +37,7 @@ export function McpServerFormModal({
 }: {
 	currency: string;
 	mode: 'create' | 'edit';
+	initialSection?: McpFormSection;
 	form: ServerForm;
 	busy: boolean;
 	urlMasked?: string;
@@ -51,7 +54,7 @@ export function McpServerFormModal({
 	const [choices, setChoices] = useState<McpImportCandidate[] | null>(null);
 	const [choiceIndex, setChoiceIndex] = useState(0);
 	const [message, setMessage] = useState<{ tone: 'ok' | 'err'; text: string } | null>(null);
-	const [section, setSection] = useState<Section>('connection');
+	const [section, setSection] = useState<Section>(initialSection);
 	const [validation, setValidation] = useState<string | null>(null);
 	const [initialForm] = useState(() => JSON.stringify(form));
 	const { confirm } = useFeedback();
@@ -210,7 +213,7 @@ export function McpServerFormModal({
 								document.getElementById(`${formId}-${SECTIONS[target]}-tab`)?.focus();
 								setSection(SECTIONS[target]);
 							}}
-							className={`border-b-2 px-2 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 ${
+							className={`border-b-2 px-2 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-500 ${
 								section === key
 									? 'border-gray-900 text-gray-900'
 									: 'border-transparent text-gray-500 hover:text-gray-800'
@@ -221,14 +224,13 @@ export function McpServerFormModal({
 					))}
 				</div>
 			}
-			title={mode === 'create' ? t('add') : t('editSettings')}
+			title={mode === 'create' ? t('add') : `${t('editSettings')} · ${form.name}`}
 			subtitle={mode === 'create' ? t('createSubtitle') : t('editSubtitle')}
 			busy={busy}
 			onClose={() => void requestClose()}
 			footer={
 				<div className="flex items-center justify-between gap-3">
 					<div className="hidden min-w-0 sm:block">
-						<McpPricingDraftSummary value={form.pricing} currency={currency} />
 						<p className="mt-1 text-xs text-gray-500">{t('saveHint')}</p>
 					</div>
 					<div className="ml-auto flex gap-2">
@@ -236,14 +238,14 @@ export function McpServerFormModal({
 							type="button"
 							disabled={busy}
 							onClick={() => void requestClose()}
-							className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+							className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
 						>
 							{common('cancel')}
 						</button>
 						<button
 							type="submit"
 							form={formId}
-							disabled={busy || (section === 'connection' && entry === 'import')}
+							disabled={busy || entry === 'import'}
 							className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
 						>
 							{busy ? common('saving') : mode === 'create' ? t('createServer') : common('save')}
@@ -253,15 +255,22 @@ export function McpServerFormModal({
 			}
 		>
 			<div hidden={section !== 'connection'}>
-				<div className="mb-5 flex gap-1 rounded-lg bg-gray-100 p-1" role="group" aria-label={t('entryMode')}>
+				<div
+					className="mb-5 inline-flex max-w-full gap-1 rounded-lg bg-gray-100 p-1"
+					role="group"
+					aria-label={t('entryMode')}
+				>
 					{(['manual', 'import'] as const).map((key) => (
 						<button
 							key={key}
 							type="button"
 							disabled={busy}
 							aria-pressed={entry === key}
-							onClick={() => setEntry(key)}
-							className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
+							onClick={() => {
+								setEntry(key);
+								setValidation(null);
+							}}
+							className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
 								entry === key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
 							}`}
 						>
@@ -282,7 +291,7 @@ export function McpServerFormModal({
 				{entry === 'import' ? (
 					<div className="space-y-4">
 						<div>
-							<h3 className="font-semibold text-gray-900">{t('importTitle')}</h3>
+							<h3 className="font-medium text-gray-900">{t('importTitle')}</h3>
 							<p className="mt-1 text-sm leading-6 text-gray-500">{t('importHint')}</p>
 						</div>
 						<label className="block text-sm font-medium text-gray-700">
@@ -369,10 +378,16 @@ export function McpServerFormModal({
 						hidden={section !== 'pricing'}
 					>
 						<div className="mb-4">
-							<h3 className="text-sm font-semibold text-gray-900">{t('pricing.title')}</h3>
-							<p className="mt-1 text-xs leading-5 text-gray-500">{t('pricing.simpleDefaultHint')}</p>
+							<h3 className="flex items-center gap-2 text-sm font-medium text-gray-900">
+								<span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
+									<CurrencyDollarIcon className="h-4 w-4" aria-hidden="true" />
+								</span>
+								{t('defaultPrices')}
+							</h3>
+							<p className="mt-2 text-xs leading-5 text-gray-500">{t('pricing.simpleDefaultHint')}</p>
 						</div>
 						<McpPricingEditor
+							layout="rows"
 							value={form.pricing}
 							currency={currency}
 							onChange={(pricing) => onChange({ ...form, pricing })}

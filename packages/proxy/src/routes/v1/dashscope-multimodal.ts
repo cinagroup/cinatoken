@@ -6,7 +6,7 @@ import {
 import { estimateAudioSpeechBudgetPrecheck } from '../../services/audio-usage-charge';
 /**
  * DashScope 同步多模态 ASR HTTP 透传：
- * `POST /v1/dashscope/services/aigc/multimodal-generation/generation`
+ * `POST /dashscope/api/v1/services/aigc/multimodal-generation/generation`
  *
  * 请求/上游都是 dashscope + audio.transcriptions.multimodal，adapter 必须是 passthrough。
  * 返回原生 JSON，按 usage.duration / usage.seconds 计 audio_per_second。
@@ -695,6 +695,7 @@ async function finalizeMultimodalResponse(params: {
 					durationSource,
 					fileBytes: 0,
 					characters: response.ok ? (meta?.audioCharacters ?? usage?.audio_characters ?? null) : null,
+					tokenUsage: response.ok ? (meta?.audioTokenUsage ?? null) : null,
 					requestStartedAtMs: start,
 					businessTimezone,
 				},

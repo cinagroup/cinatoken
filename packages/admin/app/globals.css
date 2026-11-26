@@ -28,23 +28,23 @@
 		left: 0;
 		z-index: 1;
 		background-color: #fff;
-		box-shadow: 1px 0 #e5e7eb;
+		box-shadow: 1px 0 #e4e4e7;
 		max-width: 14rem;
 		overflow-wrap: anywhere;
 	}
 
 	.admin-data-table > thead > tr > th:first-child {
 		z-index: 2;
-		background-color: #f9fafb;
+		background-color: #fafafa;
 	}
 
 	.admin-data-table > tbody > tr:hover > td:first-child:not([colspan]) {
-		background-color: #f9fafb;
+		background-color: #fafafa;
 	}
 
 	.admin-data-table > tbody > tr.admin-data-row-open > td:first-child:not([colspan]),
 	.admin-data-table > tbody > tr.admin-data-row-open:hover > td:first-child:not([colspan]) {
-		background-color: #eff6ff;
+		background-color: #f4f4f5;
 	}
 
 	.admin-log-table {
@@ -67,12 +67,12 @@ html {
 @layer base {
 	body {
 		@apply bg-gray-50 text-gray-900 antialiased;
-		background-color: #f9fafb;
-		color: #111827;
+		background-color: #fafafa;
+		color: #18181b;
 	}
 
 	::selection {
-		@apply bg-blue-200 text-gray-900;
+		@apply bg-gray-200 text-gray-900;
 	}
 }
 
@@ -124,16 +124,262 @@ html {
 	background: #64748b;
 }
 
+/* Provider cards wrap within the space beside the flow nodes. */
+.route-provider-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+	align-items: start;
+	gap: 0.75rem;
+}
+
+/* Provider lists use their own available width, including beside flow nodes. */
+.route-provider-list {
+	container: route-providers / inline-size;
+	width: 100%;
+	max-width: 100%;
+	justify-self: stretch;
+}
+
+/* Model, surface and provider sections share the available workspace width. */
+.route-flow-list-layout {
+	width: 100%;
+}
+
+.route-provider-list-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: center;
+}
+
+/* Compact rows keep identity, status and routing metadata in one left-hand group. */
+.route-provider-list-content {
+	display: grid;
+	min-width: 0;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: center;
+	gap: 0.5rem 0.75rem;
+}
+
+.route-provider-list-summary {
+	display: flex;
+	min-width: 0;
+	padding-left: 2.25rem;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 0.375rem 0.75rem;
+}
+
+.route-provider-list-identity {
+	max-width: calc(100% + 2.25rem);
+	margin-left: -2.25rem;
+}
+
+/* With pricing below, use the full header width for right-aligned controls. */
+.route-provider-list-status {
+	margin-left: auto;
+	padding-top: 0.125rem;
+	justify-content: flex-end;
+}
+
+.route-provider-list-name {
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+}
+
+.route-provider-list-model {
+	grid-column: 1 / -1;
+	padding-left: 2.25rem;
+}
+
+.route-provider-list-model > button {
+	font-size: 0.75rem;
+}
+
+.route-provider-list-meta {
+	grid-column: 1 / -1;
+	padding-left: 2.25rem;
+	display: flex;
+	min-width: 0;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.375rem 0.75rem;
+}
+
+.route-provider-list-meta > * + * {
+	border-left: 1px solid rgb(203 213 225);
+	padding-left: 0.75rem;
+}
+
+.route-provider-pricing-columns {
+	display: grid;
+	width: 100%;
+	grid-template-columns: minmax(0, 1fr) repeat(2, 4.5rem);
+	gap: 0 0.5rem;
+}
+
+/* Both factor modes share the same pricing area and period alignment. */
+.route-provider-pricing-columns.route-provider-pricing-configured {
+	grid-template-columns: minmax(0, 1fr) repeat(3, 3.25rem);
+}
+
+/* Keep pricing beside the identity whenever both areas have enough room. */
+@container route-providers (min-width: 36rem) {
+	.route-provider-list-grid {
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 1fr);
+	}
+
+	.route-provider-list-content {
+		grid-column: 1;
+		grid-row: 1 / 4;
+	}
+
+	.route-provider-list-status {
+		margin-left: 0;
+		justify-content: flex-start;
+	}
+
+	.route-provider-list-pricing {
+		grid-column: 2;
+		grid-row: 1 / 4;
+	}
+}
+
+/* Wider rows retain the same information hierarchy instead of expanding into a table. */
+@container route-providers (min-width: 60rem) {
+	.route-provider-list-grid {
+		grid-template-columns: minmax(0, 1fr) 24rem;
+	}
+
+	.route-provider-list-content {
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+		gap: 0.375rem 0.75rem;
+	}
+
+	.route-provider-list-summary {
+		grid-column: 1;
+		grid-row: 1 / 3;
+	}
+
+	.route-provider-list-model,
+	.route-provider-list-meta {
+		grid-column: 2;
+		padding-left: 0;
+	}
+
+	.route-provider-list-model {
+		grid-row: 1;
+	}
+
+	.route-provider-list-meta {
+		grid-row: 2;
+	}
+}
+
+/* Stacked flows are compact rows with their add action at the right edge. */
+@media (max-width: 1279px) {
+	.route-flow-list-layout .route-flow-entry,
+	.route-flow-list-layout .route-flow-group {
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0;
+		padding-block: 0.5rem;
+	}
+
+	.route-flow-list-layout .route-flow-entry > :first-child,
+	.route-flow-list-layout .route-group-info {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.route-flow-list-layout .route-flow-connector-stacked {
+		flex: none;
+		padding-top: 0;
+	}
+
+	.route-flow-list-layout .route-flow-branch {
+		padding-block: 0.5rem;
+	}
+
+	.route-flow-list-layout .route-flow-branch-layout {
+		gap: 0.5rem;
+	}
+
+	.route-flow-list-layout .route-group-info {
+		display: block;
+	}
+
+	.route-flow-list-layout .route-group-label {
+		height: auto;
+		align-items: center;
+		padding: 0;
+	}
+
+	.route-flow-list-layout .route-group-rail {
+		display: none;
+	}
+
+	.route-flow-list-layout .route-group-details {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.25rem 0.75rem;
+		margin-top: 0.25rem;
+	}
+
+	.route-flow-list-layout .route-group-details > :first-child {
+		flex: 1 1 10rem;
+		padding-top: 0;
+	}
+
+	.route-flow-list-layout .route-group-details > :last-child {
+		margin-top: 0;
+	}
+}
+
+/* Leave space for period labels even on phone-sized provider lists. */
+@container route-providers (max-width: 24rem) {
+	.route-provider-pricing-columns {
+		grid-template-columns: minmax(0, 1fr) repeat(2, 3.5rem);
+	}
+
+	.route-provider-pricing-columns.route-provider-pricing-configured {
+		grid-template-columns: minmax(0, 1fr) repeat(3, 2.5rem);
+	}
+}
+
 /* Form inputs */
 input,
 textarea,
 select {
-	color: #111827;
+	color: #18181b;
+}
+
+/* Use one centered caret for closed single-choice selectors across the admin. */
+select:not([multiple]):not([size]),
+select:not([multiple])[size='1'] {
+	-webkit-appearance: none;
+	appearance: none;
+	background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2371717a%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E');
+	background-repeat: no-repeat;
+	background-position: right 0.75rem center;
+	background-size: 1rem 1rem;
+	padding-inline-end: 2.25rem;
+}
+
+@media (forced-colors: active) {
+	select:not([multiple]):not([size]),
+	select:not([multiple])[size='1'] {
+		-webkit-appearance: auto;
+		appearance: auto;
+		background-image: none;
+	}
 }
 
 input::placeholder,
 textarea::placeholder {
-	color: #9ca3af;
+	color: #71717a;
 }
 
 /* Public homepage theme. Kept local so dashboard styling stays independent. */
@@ -265,9 +511,7 @@ html[data-home-theme='light'] .home-surface {
 	justify-content: center;
 	border-width: 1px;
 	border-radius: 0.5rem;
-	transition:
-		border-color 160ms ease,
-		background-color 160ms ease;
+	transition: border-color 160ms ease, background-color 160ms ease;
 }
 
 .home-theme-menu {
@@ -295,9 +539,7 @@ html[data-home-theme='light'] .home-surface {
 	font-size: 0.8125rem;
 	line-height: 1.25rem;
 	text-align: left;
-	transition:
-		background-color 140ms ease,
-		color 140ms ease;
+	transition: background-color 140ms ease, color 140ms ease;
 }
 
 .home-theme-option:hover,
@@ -514,8 +756,7 @@ html[data-home-theme='light'] .home-surface {
 }
 
 .home-grid {
-	background-image:
-		linear-gradient(color-mix(in srgb, var(--home-text) 4%, transparent) 1px, transparent 1px),
+	background-image: linear-gradient(color-mix(in srgb, var(--home-text) 4%, transparent) 1px, transparent 1px),
 		linear-gradient(90deg, color-mix(in srgb, var(--home-text) 4%, transparent) 1px, transparent 1px);
 	background-size: 64px 64px;
 	mask-image: linear-gradient(to bottom, transparent, black 16%, black 72%, transparent);
@@ -533,22 +774,22 @@ html[data-home-theme='light'] .home-surface {
 @keyframes octafuse-toast-in {
 	from {
 		opacity: 0;
-		transform: translateX(1.25rem) scale(0.98);
+		transform: translateY(8px);
 	}
 	to {
 		opacity: 1;
-		transform: translateX(0) scale(1);
+		transform: translateY(0);
 	}
 }
 
 @keyframes octafuse-toast-out {
 	from {
 		opacity: 1;
-		transform: translateX(0) scale(1);
+		transform: translateY(0);
 	}
 	to {
 		opacity: 0;
-		transform: translateX(1.25rem) scale(0.98);
+		transform: translateY(8px);
 	}
 }
 
@@ -562,11 +803,11 @@ html[data-home-theme='light'] .home-surface {
 }
 
 .octafuse-toast-enter {
-	animation: octafuse-toast-in 280ms ease-out both;
+	animation: octafuse-toast-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .octafuse-toast-leaving {
-	animation: octafuse-toast-out 200ms ease-in both;
+	animation: octafuse-toast-out 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .octafuse-toast-progress {
@@ -701,4 +942,203 @@ html[data-console-theme='dark'] .console-shell .text-gray-600,
 html[data-console-theme='dark'] .console-shell .text-gray-500,
 html[data-console-theme='dark'] .console-shell .text-gray-400 {
 	color: var(--console-muted) !important;
+}
+
+/* Admin visual system. Workflow informed by unslop, Damir Sokolovsky (@heydamir),
+   CC BY 4.0: https://heydamir.design/unslop. Product layouts and data remain Octafuse's. */
+@layer base {
+	:root {
+		--admin-canvas: #fafafa;
+		--admin-sidebar: #f4f4f5;
+		--admin-surface: #fff;
+		--admin-border: #e4e4e7;
+		--admin-ink: #18181b;
+		--admin-secondary: #52525b;
+		--admin-muted: #71717a;
+	}
+
+	body {
+		font-feature-settings: 'cv11', 'ss01';
+	}
+	button,
+	input,
+	select,
+	textarea {
+		accent-color: var(--admin-ink);
+	}
+	button,
+	a,
+	input,
+	select,
+	textarea {
+		-webkit-tap-highlight-color: transparent;
+	}
+	button:focus-visible,
+	a:focus-visible,
+	input:focus-visible,
+	select:focus-visible,
+	textarea:focus-visible,
+	summary:focus-visible {
+		outline: 2px solid var(--admin-ink);
+		outline-offset: 3px;
+	}
+	input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not([type='color']),
+	select {
+		min-height: 36px;
+	}
+	input::placeholder,
+	textarea::placeholder {
+		opacity: 1;
+	}
+	svg[stroke='currentColor'] {
+		stroke-width: 1.5;
+	}
+	code,
+	pre,
+	time {
+		font-variant-numeric: tabular-nums;
+	}
+}
+
+@layer components {
+	.admin-shell {
+		background: var(--admin-canvas);
+	}
+	/* Page blocks fill the workspace; each page owns its responsive edge padding. */
+	.admin-workspace {
+		scrollbar-gutter: stable;
+	}
+	.admin-sidebar {
+		background: var(--admin-sidebar);
+		border-right: 1px solid var(--admin-border);
+	}
+	.admin-nav-item {
+		@apply flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-sm font-normal text-gray-600 transition-colors hover:bg-gray-200/60 hover:text-gray-950;
+	}
+	.admin-nav-item[aria-current='page'] {
+		@apply bg-gray-950 font-medium text-white shadow-sm hover:bg-gray-800 hover:text-white;
+	}
+	.admin-nav-item svg {
+		@apply h-4 w-4 shrink-0;
+	}
+	.admin-primary {
+		@apply rounded-lg bg-gray-950 font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50;
+	}
+	.admin-secondary {
+		@apply rounded-lg border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50;
+	}
+	.admin-badge {
+		@apply inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-normal text-gray-600 ring-1 ring-inset ring-gray-200;
+	}
+	.admin-data-table {
+		font-variant-numeric: tabular-nums;
+	}
+	.admin-data-table th {
+		@apply bg-gray-50 text-xs font-medium normal-case tracking-normal text-gray-500;
+	}
+	.admin-data-table td {
+		border-color: var(--admin-border);
+	}
+	.admin-data-table tbody tr {
+		@apply transition-colors;
+	}
+	.admin-data-table tbody tr:hover {
+		@apply bg-gray-50;
+	}
+	.admin-data-table :is(th, td) {
+		vertical-align: middle;
+	}
+}
+
+@media (min-width: 1024px) {
+	.admin-nav-item {
+		min-height: 36px;
+		padding-block: 8px;
+	}
+}
+
+/* Labeled controls align with the main filter row; complex audit choices remain on demand. */
+.admin-adaptive-fields .admin-audit-identities {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-adaptive-fields .admin-identity-field {
+	width: 11rem;
+}
+.admin-adaptive-fields .admin-key-user-field {
+	width: 16rem;
+}
+.admin-adaptive-fields .admin-adaptive-field {
+	width: 10rem;
+}
+
+/* Throughput stays with the chart title; chart controls wrap by panel width. */
+.dashboard-trend-panel {
+	container-type: inline-size;
+	container-name: dashboard-trend;
+}
+.dashboard-trend-header {
+	display: grid;
+	grid-template-areas: 'title' 'tabs';
+	gap: 16px;
+	align-items: center;
+}
+.dashboard-trend-title {
+	grid-area: title;
+}
+.dashboard-trend-tabs {
+	grid-area: tabs;
+	justify-self: start;
+}
+@container dashboard-trend (min-width: 28rem) {
+	.dashboard-trend-header {
+		grid-template-areas: 'title tabs';
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+	.dashboard-trend-tabs {
+		justify-self: end;
+	}
+}
+
+/* Two-line activity records; lower-priority metrics yield to identity on narrow cards. */
+.dashboard-activity-panel {
+	container-name: dashboard-activity;
+	container-type: inline-size;
+}
+.dashboard-activity-record {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 4.5rem;
+	column-gap: 0.75rem;
+}
+.dashboard-activity-time,
+.dashboard-activity-usage,
+.dashboard-activity-error-provider {
+	display: none;
+}
+.dashboard-activity-error-meta {
+	display: flex;
+}
+@container dashboard-activity (min-width: 24rem) {
+	.dashboard-activity-record {
+		grid-template-columns: 4.5rem minmax(0, 1fr) 4.5rem;
+	}
+	.dashboard-activity-time,
+	.dashboard-activity-error-provider {
+		display: block;
+	}
+	.dashboard-activity-inline-time,
+	.dashboard-activity-error-meta {
+		display: none;
+	}
+}
+@container dashboard-activity (min-width: 36rem) {
+	.dashboard-activity-record {
+		grid-template-columns: 4.5rem minmax(0, 1fr) 8.5rem 4.5rem;
+	}
+	.dashboard-activity-usage {
+		display: block;
+	}
+	.dashboard-activity-diagnostic {
+		grid-template-columns: 4.5rem minmax(0, 1fr) 4.5rem;
+	}
 }

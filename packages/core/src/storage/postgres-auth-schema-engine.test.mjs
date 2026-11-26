@@ -20,6 +20,17 @@ test('PostgreSQL key repositories do not trust the caller search_path',async t=>
   const orgKey=()=>f.pg.exec(`UPDATE ${g}.api_keys SET workspace_id='org-workspace' WHERE id='key'`);
   const insertParams=async(account=personal)=>({...account,id:'new-management',keyHash:await hashLookupKey('synthetic-new-management'),keyPreview:'test-preview',name:'New management',expiresAt:null,createdByUserId:'user',nowIso:f.now});
   const cases={
+    async 'OAuth accounting actor lookup ignores public and temporary shadows'(){
+      const actor={id:'oauth:fixture-token',userId:'user',workspaceId:'workspace',tokenId:'fixture-token'};
+      const hash=await hashLookupKey('synthetic-oauth-accounting-actor');
+      await f.pg.query(`INSERT INTO ${g}.api_keys(id,key,key_hash,user_id,workspace_id,metadata)
+        VALUES ($1,$2,$3,$4,$5,$6)`,[actor.id,'hashref:'+hash,hash,actor.userId,actor.workspaceId,
+          JSON.stringify({credential_kind:'oauth_access_token',oauth_access_token_id:actor.tokenId})]);
+      assert.equal(await keys.getOAuthActorKeyLookupHash(actor),hash);
+      assert.equal(await keys.getOAuthActorKeyLookupHash({...actor,workspaceId:'other-workspace'}),null);
+      await f.pg.query(`UPDATE ${g}.api_keys SET status='revoked' WHERE id=$1`,[actor.id]);
+      assert.equal(await keys.getOAuthActorKeyLookupHash(actor),null);
+    },
     async 'inference hash auth resolves user and workspace, never management key'(){
       const row=await auth(); assert.equal(row.id,'key');assert.equal(row.workspace_id,'workspace');assert.equal(row.budget_spent,1);
       assert.equal(await keys.getActiveApiKeyWithUserByLookupHash(f.managementHash),null);

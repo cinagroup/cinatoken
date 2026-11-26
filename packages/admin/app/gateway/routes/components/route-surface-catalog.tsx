@@ -14,7 +14,8 @@ import type { RouteFlowDensity, RouteListRow, RouteProtocolGroupSection } from '
 import {
 	FlowConnectorAdd,
 	RequestSurfaceNode,
-	RouteGroupNode,
+	RouteGroupInfo,
+	ModelUpstreamPool,
 	UpstreamPoolPanel,
 	openSectionStickyDialog,
 } from './route-model-flow';
@@ -59,25 +60,43 @@ type Props = {
 			priority: number;
 			weight: number;
 		}>,
+		initialTargetId?: string,
 	) => void;
 };
 
-function branchRailClass(index: number, count: number): string {
-	if (index === 0) return 'top-1/2 bottom-0';
-	if (index === count - 1) return 'top-0 bottom-1/2';
+function branchRailClass(index: number, count: number, alignTop: boolean): string {
+	if (index === 0) return alignTop ? 'top-14 bottom-0' : 'top-1/2 bottom-0';
+	if (index === count - 1) return alignTop ? 'top-0 bottom-[calc(100%-3.5rem)]' : 'top-0 bottom-1/2';
 	return 'inset-y-0';
 }
 
-function BranchConnectors({ index, count, colorClass }: { index: number; count: number; colorClass: string }) {
+function BranchConnectors({
+	alignTop = false,
+	index,
+	count,
+	colorClass,
+}: {
+	alignTop?: boolean;
+	index: number;
+	count: number;
+	colorClass: string;
+}) {
 	return (
 		<>
-			{count > 1 ? (
+			{count > 1 || alignTop ? (
 				<span
-					className={`absolute left-0 hidden w-px xl:block ${colorClass} ${branchRailClass(index, count)}`}
+					className={`absolute left-0 hidden w-px xl:block ${colorClass} ${branchRailClass(
+						index,
+						count,
+						alignTop,
+					)}`}
 					aria-hidden
 				/>
 			) : null}
-			<span className={`absolute left-0 top-1/2 hidden h-px w-4 xl:block ${colorClass}`} aria-hidden />
+			<span
+				className={`absolute left-0 hidden h-px w-4 xl:block ${colorClass} ${alignTop ? 'top-14' : 'top-1/2'}`}
+				aria-hidden
+			/>
 		</>
 	);
 }
@@ -86,38 +105,27 @@ function CatalogModelNode({ card, onEditModel }: { card: RouteModelGroup; onEdit
 	const tCard = useTranslations('routes.card');
 
 	return (
-		<div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2.5 shadow-sm">
+		<div className="route-catalog-model-node w-full min-w-0 rounded-xl border border-gray-200 bg-white px-3 py-3">
 			<div className="flex min-w-0 items-center gap-1">
 				<button
 					type="button"
 					onClick={() => onEditModel(card.model_id)}
-					className="min-w-0 flex-1 truncate text-left text-[13px] font-semibold leading-5 text-gray-900 underline-offset-2 hover:text-blue-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+					className="min-w-0 flex-1 truncate text-left text-[13px] font-medium leading-5 text-gray-900 underline-offset-2 hover:text-gray-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
 				>
 					{card.title}
 				</button>
 				<button
 					type="button"
 					onClick={() => onEditModel(card.model_id)}
-					className="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+					className="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
 					title={tCard('editModel', { title: card.title })}
 				>
 					<PencilSquareIcon className="h-3.5 w-3.5" />
 				</button>
 			</div>
-			<div className="mt-2 flex items-center">
-				<span
-					className={`rounded-md px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${
-						card.activeCount > 0
-							? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-							: 'bg-red-50 text-red-700 ring-red-200'
-					}`}
-				>
-					{tCard('activeTotalRoutes', {
-						active: card.activeCount,
-						total: card.groupRoutes.length,
-					})}
-				</span>
-			</div>
+			<p className="mt-2 text-xs leading-5 tabular-nums text-gray-500" title={tCard('routeSummaryHint')}>
+				{tCard('routeSummary', { active: card.activeCount, total: card.groupRoutes.length })}
+			</p>
 		</div>
 	);
 }
@@ -137,6 +145,7 @@ export function UnroutedModelsPanel({
 
 	return (
 		<details
+			open
 			className="group mt-3 rounded-lg border border-amber-200/70 bg-amber-50/50 px-3 py-2"
 			title={t('unroutedHint')}
 		>
@@ -145,20 +154,20 @@ export function UnroutedModelsPanel({
 					className="h-3.5 w-3.5 shrink-0 -rotate-90 transition-transform group-open:rotate-0"
 					aria-hidden
 				/>
-				<span className="font-semibold">{t('unroutedTitle')}</span>
-				<span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold">{cards.length}</span>
+				<span className="font-medium">{t('unroutedTitle')}</span>
+				<span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium">{cards.length}</span>
 				<span className="text-amber-800/80">{t('unroutedHint')}</span>
 			</summary>
 			<div className="mt-3 flex flex-wrap items-center gap-2 border-t border-amber-200/60 pt-3">
 				{cards.map((card) => (
 					<span
 						key={card.model_id}
-						className="inline-flex max-w-full items-center gap-0.5 rounded-full border border-amber-200/80 bg-white pl-2 pr-0.5 text-[11px] text-gray-800 shadow-sm"
+						className="inline-flex max-w-full items-center gap-0.5 rounded-full border border-amber-200/80 bg-white pl-2 pr-0.5 text-xs text-gray-800 shadow-sm"
 					>
 						<button
 							type="button"
 							onClick={() => onEditModel(card.model_id)}
-							className="max-w-[11rem] truncate py-0.5 font-medium hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+							className="max-w-[11rem] truncate py-0.5 font-medium hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
 							title={tCard('editModel', { title: card.title })}
 						>
 							{card.title}
@@ -166,7 +175,7 @@ export function UnroutedModelsPanel({
 						<button
 							type="button"
 							onClick={() => onCreate(card.model_id)}
-							className="rounded-full p-0.5 text-amber-700 hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+							className="rounded-full p-0.5 text-amber-700 hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
 							title={t('addRoute')}
 							aria-label={`${t('addRoute')}: ${card.title}`}
 						>
@@ -179,46 +188,8 @@ export function UnroutedModelsPanel({
 	);
 }
 
-function CatalogUpstream({
-	section,
-	card,
-	meta,
-	providerMeta,
-	globalRouteStrategy,
-	density,
-	togglingId,
-	onEdit,
-	onToggleStatus,
-	onOpenStrategyDialog,
-}: {
-	section: RouteProtocolGroupSection<RouteListRow>;
-	card: RouteModelGroup;
-	meta: GatewayModel | undefined;
-	providerMeta: Map<string, GatewayProvider>;
-	globalRouteStrategy: string | null;
-	density: RouteFlowDensity;
-	togglingId: string | null;
-	onEdit: Props['onEdit'];
-	onToggleStatus: Props['onToggleStatus'];
-	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
-}) {
-	return (
-		<UpstreamPoolPanel
-			section={section}
-			card={card}
-			meta={meta}
-			providerMeta={providerMeta}
-			globalRouteStrategy={globalRouteStrategy}
-			density={density}
-			togglingId={togglingId}
-			onEdit={onEdit}
-			onToggleStatus={onToggleStatus}
-			onOpenStrategyDialog={onOpenStrategyDialog}
-		/>
-	);
-}
-
-function GroupToUpstreamBranch({
+export function GroupToUpstreamBranch({
+	byModel = false,
 	section,
 	card,
 	meta,
@@ -236,6 +207,7 @@ function GroupToUpstreamBranch({
 	onOpenStrategyDialog,
 	onOpenProviderStickyDialog,
 }: {
+	byModel?: boolean;
 	section: RouteProtocolGroupSection<RouteListRow>;
 	card: RouteModelGroup;
 	meta: GatewayModel | undefined;
@@ -258,13 +230,27 @@ function GroupToUpstreamBranch({
 	const locale = useLocale();
 	const isDefaultGroup = section.group === 'default';
 	const railColor = isDefaultGroup ? 'bg-sky-300' : 'bg-violet-300';
+	const singleGroup = branchCount === 1;
+	const PoolPanel = byModel ? ModelUpstreamPool : UpstreamPoolPanel;
 
 	return (
-		<div className="relative py-2 xl:pl-4">
-			<BranchConnectors index={branchIndex} count={branchCount} colorClass={railColor} />
-			<div className="grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(260px,1fr)] xl:items-center">
-				<div className="relative flex min-w-0 flex-col justify-center xl:pr-8">
-					<RouteGroupNode
+		<div className="route-flow-branch relative py-3 xl:pl-4">
+			<BranchConnectors
+				alignTop={!singleGroup}
+				index={branchIndex}
+				count={branchCount}
+				colorClass={byModel ? 'bg-gray-300' : railColor}
+			/>
+			<div
+				className={`route-flow-branch-layout grid min-w-0 gap-y-3 ${
+					byModel
+						? 'xl:grid-cols-[minmax(160px,200px)_minmax(0,1fr)]'
+						: 'xl:grid-cols-[minmax(180px,240px)_minmax(0,1fr)]'
+				} ${singleGroup ? 'xl:items-center' : 'xl:items-start'}`}
+			>
+				<div className={`route-flow-group relative flex min-w-0 flex-col xl:pr-8 ${singleGroup ? '' : 'mt-3'}`}>
+					<RouteGroupInfo
+						centered={singleGroup}
 						modelId={card.model_id}
 						routeGroup={section.group}
 						copiedModelId={copiedModelId}
@@ -285,6 +271,7 @@ function GroupToUpstreamBranch({
 						}}
 					/>
 					<FlowConnectorAdd
+						alignTop={!singleGroup}
 						railClass={railColor}
 						label={t('addProvider')}
 						onClick={() =>
@@ -296,7 +283,7 @@ function GroupToUpstreamBranch({
 						}
 					/>
 				</div>
-				<CatalogUpstream
+				<PoolPanel
 					section={section}
 					card={card}
 					meta={meta}
@@ -307,6 +294,7 @@ function GroupToUpstreamBranch({
 					onEdit={onEdit}
 					onToggleStatus={onToggleStatus}
 					onOpenStrategyDialog={onOpenStrategyDialog}
+					onOpenProviderStickyDialog={onOpenProviderStickyDialog}
 				/>
 			</div>
 		</div>
@@ -357,12 +345,12 @@ function ModelToGroupsBranch({
 
 	return (
 		<div className="relative py-2 xl:pl-4">
-			<BranchConnectors index={modelIndex} count={modelCount} colorClass="bg-blue-300" />
+			<BranchConnectors index={modelIndex} count={modelCount} colorClass="bg-gray-300" />
 			<div className="xl:grid xl:grid-cols-[minmax(160px,220px)_minmax(0,1fr)]">
-				<div className="relative flex min-w-0 flex-col justify-center xl:pr-8">
+				<div className="route-flow-entry relative flex min-w-0 flex-col justify-center xl:pr-8">
 					<CatalogModelNode card={card} onEditModel={onEditModel} />
 					<FlowConnectorAdd
-						railClass="bg-blue-300"
+						railClass="bg-gray-300"
 						label={t('addRouteGroup')}
 						onClick={() =>
 							onCreate(card.model_id, {
@@ -440,41 +428,51 @@ function SurfaceCatalogSection({
 		0,
 	);
 	return (
-		<article className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+		<article
+			className={`route-surface-section ${
+				density === 'list' ? 'route-flow-list-layout ' : ''
+			}overflow-hidden rounded-xl border border-slate-200 bg-white`}
+		>
 			<button
 				type="button"
 				onClick={() => setCollapsed((value) => !value)}
 				aria-expanded={!collapsed}
-				className="flex w-full flex-wrap items-center gap-2 border-b border-slate-100 px-4 py-3 text-left hover:bg-slate-50 focus-visible:outline-blue-500"
+				className="flex w-full flex-wrap items-center gap-2 border-b border-slate-100 px-4 py-3 text-left hover:bg-slate-50 focus-visible:outline-gray-500"
 			>
 				<ChevronDownIcon
 					className={`h-4 w-4 text-slate-400 transition-transform ${collapsed ? '-rotate-90' : ''}`}
 					aria-hidden
 				/>
-				<span className="text-xs font-semibold text-slate-800">{surface.protocolLabel}</span>
-				<span className="min-w-0 break-all font-mono text-[11px] text-slate-500">
+				<span className="text-xs font-medium text-slate-800">{surface.protocolLabel}</span>
+				<span className="min-w-0 break-all font-mono text-xs text-slate-500">
 					{requestSurfacePath(surface.protocol, surface.requestOperation)}
 				</span>
-				<span className="ml-auto text-[11px] tabular-nums text-slate-500">
+				<span className="ml-auto text-xs tabular-nums text-slate-500">
 					{tw('surfaceCounts', { models: surface.models.length, routes: routeCount })}
 				</span>
 			</button>
 			{!collapsed ? (
 				<>
-					<div className="hidden grid-cols-[210px_220px_200px_minmax(0,1fr)] gap-0 border-b border-slate-100 bg-slate-50/70 px-4 py-2 text-[10px] font-medium uppercase tracking-wider text-slate-400 2xl:grid">
-						{['catalogColumnSurface', 'catalogColumnModel', 'catalogColumnGroup', 'catalogColumnProvider'].map(
-							(key) => (
-								<span key={key}>{t(key)}</span>
-							),
-						)}
+					<div className="hidden grid-cols-[210px_220px_200px_minmax(0,1fr)] gap-0 border-b border-slate-100 bg-slate-50/70 px-4 py-2 text-xs font-medium normal-case tracking-normal text-slate-400 2xl:grid">
+						{[
+							'catalogColumnSurface',
+							'catalogColumnModel',
+							'catalogColumnGroup',
+							'catalogColumnProvider',
+						].map((key) => (
+							<span key={key}>{t(key)}</span>
+						))}
 					</div>
-					<div className="bg-slate-50/70 px-3 sm:px-4">
+					<div className="route-surface-canvas bg-gray-50 px-3 sm:px-4">
 						<div className="xl:grid xl:grid-cols-[minmax(160px,210px)_minmax(0,1fr)]">
 							<div className="relative flex min-w-0 flex-col justify-center py-3 xl:pr-4">
 								<RequestSurfaceNode surface={surface} />
-								<span className="absolute right-0 top-1/2 hidden h-px w-4 bg-blue-300 xl:block" aria-hidden />
+								<span
+									className="absolute right-0 top-1/2 hidden h-px w-4 bg-gray-300 xl:block"
+									aria-hidden
+								/>
 								<div className="flex justify-center pt-1 xl:hidden" aria-hidden>
-									<ArrowDownIcon className="h-4 w-4 text-blue-400" />
+									<ArrowDownIcon className="h-4 w-4 text-gray-500" />
 								</div>
 							</div>
 							<div>

@@ -70,7 +70,8 @@ export type ChargeToolUsageParams = {
 	guardrailBudgetSettlement?: GuardrailBudgetSettlement;
 	/** Ordinary-user reservation settled atomically with the same request log. */
 	userBudgetSettlement?: ToolUserBudgetSettlement;
-	apiKeyId: string;
+	apiKeyId: string | null;
+	oauthAccessTokenId?: string | null;
 	workspaceId: string;
 	userId: string;
 	userEmail: string | null;
@@ -170,7 +171,9 @@ export async function terminateToolOrdinaryBudgetSafely(lease: OrdinaryBudgetLea
 		await lease.terminateUnknown(reason);
 	} catch (error) {
 		console.error(
-			`[Gateway Tools] ordinary budget cleanup failed requestId=${lease.requestId} state=${lease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+			`[Gateway Tools] ordinary budget cleanup failed requestId=${lease.requestId} state=${
+				lease.state
+			} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
 }
@@ -198,12 +201,12 @@ export async function chargeToolUsage(
 				metered: roundGatewayMoney(params.unitPrices.metered),
 				standard: roundGatewayMoney(params.unitPrices.standard),
 				charged: roundGatewayMoney(params.unitPrices.charged),
-			}
+		  }
 		: {
 				metered: roundGatewayMoney(meteredCost / divisor),
 				standard: roundGatewayMoney(standardCost / divisor),
 				charged: roundGatewayMoney(chargedCost / divisor),
-			};
+		  };
 
 	const toolProvider = params.toolProvider.trim();
 	const pricingAudit = buildFixedToolCostPricingAudit({
@@ -232,7 +235,7 @@ export async function chargeToolUsage(
 					budgetEpoch: params.userBudgetSettlement.budgetEpoch,
 					reservedMicros: params.userBudgetSettlement.reservedMicros,
 					unknownCost: params.userBudgetSettlement.mode === 'reserved',
-				}
+			  }
 			: undefined,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
 		currentReservedMicros: userRow == null ? 0 : Number(userRow.budget_reserved_micros),
@@ -251,7 +254,7 @@ export async function chargeToolUsage(
 						budget_spent: afterSpentVal,
 						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
 						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-					});
+				  });
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -266,6 +269,7 @@ export async function chargeToolUsage(
 			userId: params.userId,
 			apiKeyId: params.apiKeyId,
 			workspaceId: params.workspaceId,
+			oauthAccessTokenId: params.oauthAccessTokenId ?? null,
 			userEmail: params.userEmail,
 			modelId: params.toolId,
 			providerId: params.ledgerProviderId ?? 'octafuse-tools',
@@ -309,7 +313,7 @@ export async function chargeToolUsage(
 					requestId: params.userBudgetSettlement.requestId,
 					mode: params.userBudgetSettlement.mode,
 					reason: params.userBudgetSettlement.reason,
-				}
+			  }
 			: undefined,
 		chargedFromWallet: split.fromWallet,
 		audit: {

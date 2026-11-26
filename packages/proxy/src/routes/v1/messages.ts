@@ -1,3 +1,4 @@
+import {requestParameterSourcesForLog} from '../../services/request-log-shared';
 import { summarizeMessagesShapeForLog } from '../../services/request-log-messages-shape';
 import type { Env } from '../../app';
 /**
@@ -165,8 +166,8 @@ messagesRoutes.post('/', async (c) => {
 				presetResolution.code === 'preset_not_found'
 					? GatewayErrorCode.presetNotFound
 					: presetResolution.code === 'preset_invalid'
-						? GatewayErrorCode.presetInvalid
-						: GatewayErrorCode.invalidPresetReference,
+					? GatewayErrorCode.presetInvalid
+					: GatewayErrorCode.invalidPresetReference,
 			message: presetResolution.message,
 		});
 	}
@@ -197,7 +198,9 @@ messagesRoutes.post('/', async (c) => {
 		const guardrailResponse = gatewayErrorJson(c, {
 			status: guardrail.status,
 			code:
-				guardrail.code === 'guardrail_invalid' ? GatewayErrorCode.guardrailInvalid : GatewayErrorCode.guardrailBlocked,
+				guardrail.code === 'guardrail_invalid'
+					? GatewayErrorCode.guardrailInvalid
+					: GatewayErrorCode.guardrailBlocked,
 			message: guardrail.message,
 		});
 		const diagnosticPlan = routerMetadataEnabled
@@ -208,7 +211,7 @@ messagesRoutes.post('/', async (c) => {
 					requestProtocol: 'anthropic',
 					requestOperation: 'messages',
 					pricingAt: new Date(start),
-				})
+			  })
 			: null;
 		return attachOpenRouterMetadata(guardrailResponse, {
 			enabled: routerMetadataEnabled,
@@ -217,7 +220,8 @@ messagesRoutes.post('/', async (c) => {
 			requestedModelIds: preGuardrailModelIds,
 			candidates: diagnosticPlan?.ok ? diagnosticPlan.candidates : [],
 			timing,
-			pipeline: guardrail.code === 'guardrail_blocked' ? [routerMetadataGuardrailStage('request', 'blocked', 1)] : [],
+			pipeline:
+				guardrail.code === 'guardrail_blocked' ? [routerMetadataGuardrailStage('request', 'blocked', 1)] : [],
 		});
 	}
 	body = guardrail.body;
@@ -269,7 +273,10 @@ messagesRoutes.post('/', async (c) => {
 			},
 		);
 	}
-	const attachRoutedMetadata = (routedResponse: Response, chosenRoute: RouteResult | null = null): Promise<Response> =>
+	const attachRoutedMetadata = (
+		routedResponse: Response,
+		chosenRoute: RouteResult | null = null,
+	): Promise<Response> =>
 		attachOpenRouterMetadata(routedResponse, {
 			enabled: routerMetadataEnabled,
 			protocol: 'messages',
@@ -367,7 +374,7 @@ messagesRoutes.post('/', async (c) => {
 								stickyKeyDigest: sessionRouting.stickyKeyDigest,
 								stickySource: sessionRouting.stickySource,
 								baseModelId: 'global',
-							})
+						  })
 						: buildAffinityKey(apiKey.userId, 'global', 'partition-none', 'anthropic'),
 				tierKeyPrefix: buildTierKeyPrefix('global', 'partition-none', 'anthropic'),
 				byok: privateByokContextForApiKey(apiKey),
@@ -390,7 +397,10 @@ messagesRoutes.post('/', async (c) => {
 				requestProtocol: 'anthropic',
 				startMs: start,
 				timing,
-				modelFallbackTrace: buildModelFallbackTrace(parsedModels.value.modelIds, globalDispatch.fallbackAttempts),
+				modelFallbackTrace: buildModelFallbackTrace(
+					parsedModels.value.modelIds,
+					globalDispatch.fallbackAttempts,
+				),
 			});
 			if (budgetAdmission.guardrailReserved && !budgetAdmission.guardrailDispatched) {
 				await budgetAdmission.releaseGuardrailPreDispatch('upstream_dispatch_not_started');
@@ -477,7 +487,9 @@ messagesRoutes.post('/', async (c) => {
 			}
 
 			console.log(
-				`[Gateway Messages] forwarding baseModelId=${candidate.baseModelId} clientModel=${candidate.requestedModelId} providerIds=${candidate.routes.map((route) => route.providerId).join(',')} keyId=${apiKey.keyId}`,
+				`[Gateway Messages] forwarding baseModelId=${candidate.baseModelId} clientModel=${
+					candidate.requestedModelId
+				} providerIds=${candidate.routes.map((route) => route.providerId).join(',')} keyId=${apiKey.keyId}`,
 			);
 			const sessionDispatch = openRouterSessionDispatchOptions({
 				routing: sessionRouting,
@@ -500,7 +512,11 @@ messagesRoutes.post('/', async (c) => {
 					requestSignal,
 					{
 						affinityKey: sessionDispatch.affinityKey,
-						tierKeyPrefix: buildTierKeyPrefix(candidate.baseModelId, candidate.effectiveRouteGroup, 'anthropic'),
+						tierKeyPrefix: buildTierKeyPrefix(
+							candidate.baseModelId,
+							candidate.effectiveRouteGroup,
+							'anthropic',
+						),
 						strategy: candidate.strategy.base,
 						tierStrategies: candidate.strategy.tierOverrides,
 						timing,
@@ -528,15 +544,17 @@ messagesRoutes.post('/', async (c) => {
 					trustedGatewayError: result.meta?.gatewayGeneratedError === true,
 				});
 			} catch (upstreamError) {
-				await budgetAdmission.terminateGuardrailUnknown('upstream_dispatch_failed').catch((forfeitError: unknown) => {
-					console.error(
-						JSON.stringify({
-							message: 'guardrail budget forfeit failed after upstream exception',
-							request_id: requestCorrelationId,
-							error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
-						}),
-					);
-				});
+				await budgetAdmission
+					.terminateGuardrailUnknown('upstream_dispatch_failed')
+					.catch((forfeitError: unknown) => {
+						console.error(
+							JSON.stringify({
+								message: 'guardrail budget forfeit failed after upstream exception',
+								request_id: requestCorrelationId,
+								error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
+							}),
+						);
+					});
 				await terminateOrdinaryBudget('upstream_dispatch_failed');
 				throw upstreamError;
 			}
@@ -547,7 +565,7 @@ messagesRoutes.post('/', async (c) => {
 							materialized.response.status,
 							materialized.response.headers.get('content-type'),
 							materialized.errorBodyText,
-						);
+					  );
 			fallbackAttempts.push({
 				model: candidate.requestedModelId,
 				base_model: candidate.baseModelId,
@@ -559,7 +577,7 @@ messagesRoutes.post('/', async (c) => {
 					: {
 							provider_id: result.chosenRoute.providerId,
 							route_target_id: result.chosenRoute.targetId,
-						}),
+					  }),
 				...(materialized.response.headers.get(GATEWAY_ERROR_CODE_HEADER)
 					? { error_code: materialized.response.headers.get(GATEWAY_ERROR_CODE_HEADER)! }
 					: {}),
@@ -584,7 +602,10 @@ messagesRoutes.post('/', async (c) => {
 				if (circuitEvent) accumulatedCircuitEvents.push(circuitEvent);
 			}
 			if (!isLastCandidate && result.meta?.failoverForbidden !== true) {
-				timing.markEndpointFallback(nextCandidate?.baseModelId !== candidate.baseModelId, !result.suppressErrorAlert);
+				timing.markEndpointFallback(
+					nextCandidate?.baseModelId !== candidate.baseModelId,
+					!result.suppressErrorAlert,
+				);
 				continue;
 			}
 			selectedPlan = candidate;
@@ -637,21 +658,23 @@ messagesRoutes.post('/', async (c) => {
 	const upstreamResponseOk = response.ok;
 	let outputGuardrailBlocked = false;
 	if (guardrail.outputFilters.length > 0 && response.ok) {
-		const filtered = await filterGuardrailResponse(response, guardrail.outputFilters).catch(async (error: unknown) => {
-			await budgetAdmission
-				.terminateGuardrailUnknown('output_guardrail_failed_after_dispatch')
-				.catch((forfeitError: unknown) => {
-					console.error(
-						JSON.stringify({
-							message: 'guardrail budget forfeit failed after output Guardrail failure',
-							request_id: requestCorrelationId,
-							error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
-						}),
-					);
-				});
-			await terminateOrdinaryBudget('output_guardrail_failed_after_dispatch');
-			throw error;
-		});
+		const filtered = await filterGuardrailResponse(response, guardrail.outputFilters).catch(
+			async (error: unknown) => {
+				await budgetAdmission
+					.terminateGuardrailUnknown('output_guardrail_failed_after_dispatch')
+					.catch((forfeitError: unknown) => {
+						console.error(
+							JSON.stringify({
+								message: 'guardrail budget forfeit failed after output Guardrail failure',
+								request_id: requestCorrelationId,
+								error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
+							}),
+						);
+					});
+				await terminateOrdinaryBudget('output_guardrail_failed_after_dispatch');
+				throw error;
+			},
+		);
 		await auditGuardrailOutputDecision(repos, {
 			workspaceId: apiKey.workspaceId,
 			userId: apiKey.userId,
@@ -681,7 +704,9 @@ messagesRoutes.post('/', async (c) => {
 			});
 		} else {
 			if (filtered.redactionCount > 0) {
-				routerMetadataPipeline.push(routerMetadataGuardrailStage('response', 'redacted', filtered.redactionCount));
+				routerMetadataPipeline.push(
+					routerMetadataGuardrailStage('response', 'redacted', filtered.redactionCount),
+				);
 			}
 			response = filtered.response;
 		}
@@ -745,7 +770,7 @@ messagesRoutes.post('/', async (c) => {
 				const upstreamRequestBodyForLog = anthropicUpstreamWireBodyForLog(chosenRoute, upstreamBody);
 				return recordUsage(repos, {
 					api_key_id: apiKey.keyId,
-				ingress_host: apiKey.ingressHost,
+					ingress_host: apiKey.ingressHost,
 					workspace_id: apiKey.workspaceId,
 					request_log_id: requestCorrelationId,
 					user_id: apiKey.userId,
@@ -757,6 +782,7 @@ messagesRoutes.post('/', async (c) => {
 					provider_name: chosenRoute.providerName,
 					request_body: requestBodyForLog,
 					upstream_request_body: upstreamRequestBodyForLog,
+ request_parameter_sources:requestParameterSourcesForLog(chosenRoute,upstreamBody,upstreamRequestBodyForLog,c.req.raw.headers),
 					request_body_logging_mode: c.get('requestBodyLoggingMode'),
 					request_origin: new URL(c.req.url).origin,
 					...generationRequestLogContext(c.req.raw.headers),
@@ -804,20 +830,22 @@ messagesRoutes.post('/', async (c) => {
 									budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
 									reservedMicros: ordinaryBudgetLease.reservedMicros,
 									unknownCost: costUnknown,
-								}
+							  }
 							: undefined,
 				});
 			})
 			.catch(async (error: unknown) => {
-				await budgetAdmission.terminateGuardrailUnknown('usage_settlement_failed').catch((forfeitError: unknown) => {
-					console.error(
-						JSON.stringify({
-							message: 'guardrail budget forfeit failed after usage settlement failure',
-							request_id: requestCorrelationId,
-							error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
-						}),
-					);
-				});
+				await budgetAdmission
+					.terminateGuardrailUnknown('usage_settlement_failed')
+					.catch((forfeitError: unknown) => {
+						console.error(
+							JSON.stringify({
+								message: 'guardrail budget forfeit failed after usage settlement failure',
+								request_id: requestCorrelationId,
+								error: forfeitError instanceof Error ? forfeitError.message : String(forfeitError),
+							}),
+						);
+					});
 				await terminateOrdinaryBudget('usage_settlement_failed');
 				console.error(
 					JSON.stringify({

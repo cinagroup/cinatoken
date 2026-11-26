@@ -3,38 +3,103 @@
  * `adapter` 是 route target 上的配置 ID；运行时实现叫 driver，一个 driver 可服务多个 adapter。
  */
 import type { UpstreamProtocol } from '../upstream-protocol';
+import type { ModelKind } from '../db/model-kind';
 
 export const PASSTHROUGH_ROUTE_ADAPTER = 'passthrough';
 
+/**
+ * 厂商原生透传路径 = `/{厂商}` + 官方端点去掉 scheme 与 host 后剩下的部分。
+ * 官方 SDK 只需把 base_url 指到 `{gateway}/{厂商}/...`（与 ElevenLabs 的 `{gateway}/elevenlabs` 同理）。
+ * 国际区 host 不同但路径相同，具体走哪个上游由路由配置决定。
+ */
+
+/** DashScope 多模态生成透传：`POST /dashscope/api/v1/services/aigc/multimodal-generation/generation`。 */
 export const DASHSCOPE_MULTIMODAL_GENERATION_PATH =
-	'/v1/dashscope/services/aigc/multimodal-generation/generation';
+	'/dashscope/api/v1/services/aigc/multimodal-generation/generation';
 
 /** DashScope SpeechSynthesizer 透传：非流式与 SSE 共用这条路径，用 `X-DashScope-SSE` 区分。 */
 export const DASHSCOPE_SPEECH_SYNTHESIZER_PATH =
-	'/v1/dashscope/services/audio/tts/SpeechSynthesizer';
+	'/dashscope/api/v1/services/audio/tts/SpeechSynthesizer';
 
-/** DashScope 异步文件转写提交。任务查询是 `GET /v1/dashscope/tasks/:taskId`。 */
+/** DashScope 异步文件转写提交。任务查询是 `GET /dashscope/api/v1/tasks/:taskId`。 */
 export const DASHSCOPE_FILE_TRANSCRIPTION_PATH =
+	'/dashscope/api/v1/services/audio/asr/transcription';
+
+export const DASHSCOPE_TASKS_PATH = '/dashscope/api/v1/tasks';
+
+/**
+ * DashScope 实时 WebSocket（run-task 协议：Fun-ASR / Paraformer / CosyVoice）。
+ * 与官方 `wss://dashscope.aliyuncs.com/api-ws/v1/inference` 一致；模型在 run-task 帧的 `payload.model` 里，
+ * 网关升级后等第一帧 run-task 再选路由。
+ */
+export const DASHSCOPE_REALTIME_INFERENCE_PATH = '/dashscope/api-ws/v1/inference';
+
+/**
+ * DashScope 实时 WebSocket（session 协议：Qwen-ASR-Realtime / Qwen-TTS-Realtime）。
+ * 与官方 `wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model=` 一致，升级前用 `?model=` 选路由。
+ */
+export const DASHSCOPE_REALTIME_SESSION_PATH = '/dashscope/api-ws/v1/realtime';
+
+/** MiniMax 原生文件转写透传：`POST /minimax/v1/speech_to_text`。 */
+export const MINIMAX_SPEECH_TO_TEXT_PATH = '/minimax/v1/speech_to_text';
+
+/** MiniMax 同步语音合成透传：`POST /minimax/v1/t2a_v2`。非流式与 SSE 共用这条路径。 */
+export const MINIMAX_T2A_PATH = '/minimax/v1/t2a_v2';
+
+/** MiniMax 文生图 / 图生图透传：`POST /minimax/v1/image_generation`。 */
+export const MINIMAX_IMAGE_GENERATION_PATH = '/minimax/v1/image_generation';
+
+/** 火山方舟 / BytePlus Seedream 生图透传：`POST /volcengine/api/v3/images/generations`。非流式与 SSE 共用。 */
+export const VOLCENGINE_IMAGE_GENERATIONS_PATH = '/volcengine/api/v3/images/generations';
+
+/*
+ * 旧路径（`/v1/{厂商}/...`）。
+ * TEMP(soloent)：只为兼容旧版 Agent 与已接入的外部调用方，不是公开 API。
+ * 删除条件：使用旧实时路径的 Agent 版本退出流通，并且外部调用方已经迁移。
+ * 删除时一并去掉 proxy `app.ts` 里的别名 route、`auth.ts` / `runtime/node.ts` 的旧路径匹配与相关测试。
+ */
+export const LEGACY_DASHSCOPE_MULTIMODAL_GENERATION_PATH =
+	'/v1/dashscope/services/aigc/multimodal-generation/generation';
+export const LEGACY_DASHSCOPE_SPEECH_SYNTHESIZER_PATH =
+	'/v1/dashscope/services/audio/tts/SpeechSynthesizer';
+export const LEGACY_DASHSCOPE_FILE_TRANSCRIPTION_PATH =
 	'/v1/dashscope/services/audio/asr/transcription';
+export const LEGACY_DASHSCOPE_TASKS_PATH = '/v1/dashscope/tasks';
+/** 旧实时入口：`GET /v1/dashscope/realtime?model=&operation=`，升级前就要选路由。 */
+export const LEGACY_DASHSCOPE_REALTIME_PATH = '/v1/dashscope/realtime';
+export const LEGACY_MINIMAX_SPEECH_TO_TEXT_PATH = '/v1/minimax/speech_to_text';
+export const LEGACY_MINIMAX_T2A_PATH = '/v1/minimax/t2a_v2';
+export const LEGACY_MINIMAX_IMAGE_GENERATION_PATH = '/v1/minimax/image_generation';
+export const LEGACY_VOLCENGINE_IMAGE_GENERATIONS_PATH = '/v1/volcengine/images/generations';
 
-export const DASHSCOPE_TASKS_PATH = '/v1/dashscope/tasks';
+/**
+ * ElevenLabs 原生文本转语音透传。官方 SDK 的 base_url 指到 `{gateway}/elevenlabs` 即可。
+ * 同一 operation 覆盖四种变体：`/:voice_id`、`/stream`、`/with-timestamps`、`/stream/with-timestamps`。
+ */
+export const ELEVENLABS_TEXT_TO_SPEECH_PATH = '/elevenlabs/v1/text-to-speech/{voice_id}';
 
-/** MiniMax 原生文件转写透传：`POST /v1/minimax/speech_to_text`。 */
-export const MINIMAX_SPEECH_TO_TEXT_PATH = '/v1/minimax/speech_to_text';
+/** ElevenLabs 原生文件转写透传：`POST /elevenlabs/v1/speech-to-text`。 */
+export const ELEVENLABS_SPEECH_TO_TEXT_PATH = '/elevenlabs/v1/speech-to-text';
 
-/** MiniMax 同步语音合成透传：`POST /v1/minimax/t2a_v2`。非流式与 SSE 共用这条路径。 */
-export const MINIMAX_T2A_PATH = '/v1/minimax/t2a_v2';
+/**
+ * ElevenLabs 文本转语音 WebSocket（单路 stream-input）：
+ * `GET /elevenlabs/v1/text-to-speech/{voice_id}/stream-input?model_id=`。
+ * 模型在 query 的 `model_id` 里，升级前选路由。
+ */
+export const ELEVENLABS_TEXT_TO_SPEECH_REALTIME_PATH =
+	'/elevenlabs/v1/text-to-speech/{voice_id}/stream-input';
 
-/** MiniMax 文生图 / 图生图透传：`POST /v1/minimax/image_generation`。 */
-export const MINIMAX_IMAGE_GENERATION_PATH = '/v1/minimax/image_generation';
-
-/** 火山方舟 / BytePlus Seedream 生图透传：`POST /v1/volcengine/images/generations`。非流式与 SSE 共用。 */
-export const VOLCENGINE_IMAGE_GENERATIONS_PATH = '/v1/volcengine/images/generations';
+/** ElevenLabs 实时转写 WebSocket（Scribe Realtime）：`GET /elevenlabs/v1/speech-to-text/realtime?model_id=`。 */
+export const ELEVENLABS_SPEECH_TO_TEXT_REALTIME_PATH = '/elevenlabs/v1/speech-to-text/realtime';
 
 export const SURFACE_PATH_MODEL_PLACEHOLDER = '{model}';
 
+/** Gemini 原生向量入口 operation：`embedContent` 与 `batchEmbedContents` 共用。 */
+export const GEMINI_EMBED_OPERATION = 'models.embed';
+
 export type AdapterModality = 'text' | 'image' | 'audio' | 'video' | 'embedding';
-export type AdapterModelKind = 'llm' | 'image' | 'audio.transcription' | 'audio.speech';
+/** 与 `ModelKind`（`db/model-kind.ts`）同一词表。 */
+export type AdapterModelKind = ModelKind;
 export type AdapterExchange = 'unary' | 'sse' | 'websocket' | 'job';
 export type AdapterBilling = 'tokens' | 'per_image' | 'per_second' | 'per_character' | 'per_call';
 export type AdapterRequestPayload = 'json' | 'multipart';
@@ -61,8 +126,13 @@ export type AdapterPresetIntent =
 export interface AdapterDescriptor {
 	/** 写入 `model_routes.adapter` 的稳定 ID；语义变化时发新 ID，永不复用。 */
 	id: string;
-	/** Admin 选项唯一键。转换 adapter 等于 id；passthrough 变体为 `passthrough:{protocol}:{operation}`，同一 operation 的第二种模型种类再加后缀。 */
+	/** Admin 选项唯一键。转换 adapter 等于 id；passthrough 变体为 `passthrough:{protocol}:{operation}`，同一 operation 的另一种模型系列再加后缀。 */
 	optionKey: string;
+	/**
+	 * Admin 下拉名称的文案键。缺省用 `id`。
+	 * 同一 `passthrough` id 按系列拆开时，用它区分显示名。
+	 */
+	labelKey?: string;
 	request: { protocol: UpstreamProtocol; operation: string };
 	upstream: { protocol: UpstreamProtocol; operations: readonly string[] };
 	modality: AdapterModality;
@@ -103,27 +173,49 @@ export interface AdapterDescriptor {
  * 新增模型家族时在这里补 pattern，不要在 Admin 里再写一份。
  */
 const QWEN3_ASR_SYNC_MODELS = ['qwen3-asr-flash', 'qwen3-asr-flash-2*'] as const;
-const QWEN_AUDIO_ASR_SYNC_MODELS = ['qwen-audio-3.0-asr-flash', 'qwen-audio-3.0-asr-flash-2*'] as const;
+const QWEN_AUDIO_ASR_SYNC_MODELS = [
+	'qwen-audio-3.0-asr-flash',
+	'qwen-audio-3.0-asr-flash-2*',
+	'qwen-audio-3.1-asr-flash',
+] as const;
 const FUN_ASR_SYNC_MODELS = ['fun-asr-realtime*'] as const;
-const DASHSCOPE_SYNC_ASR_MODELS = [
-	...QWEN3_ASR_SYNC_MODELS,
-	...QWEN_AUDIO_ASR_SYNC_MODELS,
-	...FUN_ASR_SYNC_MODELS,
-] as const;
-const DASHSCOPE_ASYNC_ASR_MODELS = ['*-filetrans*', 'fun-asr', 'fun-asr-2*', 'paraformer-v*'] as const;
+const QWEN3_FILETRANS_MODELS = ['qwen3-asr-flash-filetrans*'] as const;
+const QWEN_AUDIO_FILETRANS_MODELS = ['qwen-audio-*-filetrans*'] as const;
+const FUN_ASR_ASYNC_MODELS = ['fun-asr', 'fun-asr-2*'] as const;
+const PARAFORMER_ASYNC_MODELS = ['paraformer-v*'] as const;
 const DASHSCOPE_ASR_SESSION_MODELS = ['qwen3-asr-flash-realtime*'] as const;
-const DASHSCOPE_ASR_INFERENCE_MODELS = [
-	'fun-asr-realtime*',
-	'paraformer-realtime*',
+const FUN_ASR_INFERENCE_MODELS = ['fun-asr-realtime*'] as const;
+const PARAFORMER_INFERENCE_MODELS = ['paraformer-realtime*'] as const;
+const QWEN_AUDIO_ASR_INFERENCE_MODELS = [
 	'qwen-audio-3.0-asr-flash-streaming*',
+	'qwen-audio-3.1-asr-flash-streaming*',
+	'qwen-audio-3.1-asr-flash-message*',
 ] as const;
-const COSYVOICE_AND_QWEN_AUDIO_TTS_MODELS = ['cosyvoice-*', 'qwen-audio-3.0-tts-*'] as const;
+const COSYVOICE_TTS_MODELS = ['cosyvoice-*'] as const;
+const QWEN_AUDIO_TTS_MODELS = [
+	'qwen-audio-3.0-tts-*',
+	'qwen-audio-3.1-tts-flash',
+	'qwen-audio-3.1-tts-plus',
+	'qwen-audio-3.1-tts-next',
+] as const;
 const QWEN_TTS_HTTP_MODELS = {
 	include: ['qwen3-tts-*', 'qwen-tts*'],
 	exclude: ['*realtime*'],
 } as const;
 const MINIMAX_TTS_MODELS = ['minimax/speech-*'] as const;
 const MINIMAX_NATIVE_TTS_MODELS = ['speech-*'] as const;
+/** ElevenLabs TTS：`eleven_*`，排除语音转语音与音色设计家族。 */
+const ELEVENLABS_TTS_MODELS = {
+	include: ['eleven_*'],
+	exclude: ['*_sts_*', '*_ttv_*', 'eleven_text_to_sound_*', 'eleven_music*'],
+} as const;
+/** ElevenLabs Scribe 文件转写；实时模型不走 HTTP。 */
+const ELEVENLABS_STT_MODELS = {
+	include: ['scribe_*'],
+	exclude: ['*realtime*'],
+} as const;
+/** ElevenLabs Scribe 实时转写（WebSocket）：`scribe_*_realtime`。 */
+const ELEVENLABS_STT_REALTIME_MODELS = { include: ['scribe_*realtime*'] } as const;
 const MINIMAX_IMAGE_MODELS = ['image-01*'] as const;
 const VOLCENGINE_IMAGE_MODELS = ['doubao-seedream-*', 'dola-seedream-*', 'seedream-*'] as const;
 const QWEN_TTS_REALTIME_SESSION_MODELS = ['qwen3-tts-*realtime*', 'qwen-tts-realtime*'] as const;
@@ -161,7 +253,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.transcriptions' },
 		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.multimodal'] },
 		modality: 'audio',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		exchange: 'unary',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -179,7 +271,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.transcriptions' },
 		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.multimodal'] },
 		modality: 'audio',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		exchange: 'unary',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -198,7 +290,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.transcriptions' },
 		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.multimodal'] },
 		modality: 'audio',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		exchange: 'unary',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -210,13 +302,30 @@ const CONVERSION_ADAPTERS = [
 		protectedUpstreamPaths: ['parameters.format'],
 	},
 	{
-		id: 'dashscope-asr-file-async',
-		optionKey: 'dashscope-asr-file-async',
-		upstreamModels: { include: DASHSCOPE_ASYNC_ASR_MODELS },
+		id: 'dashscope-asr-qwen-file-async',
+		optionKey: 'dashscope-asr-qwen-file-async',
+		upstreamModels: { include: QWEN3_FILETRANS_MODELS },
 		request: { protocol: 'openai', operation: 'audio.transcriptions' },
 		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.async'] },
 		modality: 'audio',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
+		exchange: 'job',
+		billing: 'per_second',
+		requestPayload: 'multipart',
+		responsePayload: 'json',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: '/v1/audio/transcriptions',
+		roles: ['upstream'],
+		protectedUpstreamPaths: ['input.file_urls'],
+	},
+	{
+		id: 'dashscope-asr-qwen-audio-file-async',
+		optionKey: 'dashscope-asr-qwen-audio-file-async',
+		upstreamModels: { include: QWEN_AUDIO_FILETRANS_MODELS },
+		request: { protocol: 'openai', operation: 'audio.transcriptions' },
+		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.async'] },
+		modality: 'audio',
+		modelKind: 'asr',
 		exchange: 'job',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -228,13 +337,47 @@ const CONVERSION_ADAPTERS = [
 		protectedUpstreamPaths: ['input.file_urls'],
 	},
 	{
+		id: 'dashscope-asr-fun-async',
+		optionKey: 'dashscope-asr-fun-async',
+		upstreamModels: { include: FUN_ASR_ASYNC_MODELS },
+		request: { protocol: 'openai', operation: 'audio.transcriptions' },
+		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.async'] },
+		modality: 'audio',
+		modelKind: 'asr',
+		exchange: 'job',
+		billing: 'per_second',
+		requestPayload: 'multipart',
+		responsePayload: 'json',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: '/v1/audio/transcriptions',
+		roles: ['upstream'],
+		protectedUpstreamPaths: ['input.file_urls'],
+	},
+	{
+		id: 'dashscope-asr-paraformer-async',
+		optionKey: 'dashscope-asr-paraformer-async',
+		upstreamModels: { include: PARAFORMER_ASYNC_MODELS },
+		request: { protocol: 'openai', operation: 'audio.transcriptions' },
+		upstream: { protocol: 'dashscope', operations: ['audio.transcriptions.async'] },
+		modality: 'audio',
+		modelKind: 'asr',
+		exchange: 'job',
+		billing: 'per_second',
+		requestPayload: 'multipart',
+		responsePayload: 'json',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: '/v1/audio/transcriptions',
+		roles: ['upstream'],
+		protectedUpstreamPaths: ['input.file_urls'],
+	},
+	{
 		id: 'dashscope-tts-speech',
 		optionKey: 'dashscope-tts-speech',
-		upstreamModels: { include: COSYVOICE_AND_QWEN_AUDIO_TTS_MODELS },
+		upstreamModels: { include: COSYVOICE_TTS_MODELS },
 		request: { protocol: 'openai', operation: 'audio.speech' },
 		upstream: { protocol: 'dashscope', operations: ['audio.speech'] },
 		modality: 'audio',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		exchange: 'unary',
 		billing: 'per_character',
 		requestPayload: 'json',
@@ -247,13 +390,31 @@ const CONVERSION_ADAPTERS = [
 		extraBodyNote: 'dashscope_tts_input',
 	},
 	{
+		id: 'dashscope-tts-qwen-audio',
+		optionKey: 'dashscope-tts-qwen-audio',
+		upstreamModels: { include: QWEN_AUDIO_TTS_MODELS },
+		request: { protocol: 'openai', operation: 'audio.speech' },
+		upstream: { protocol: 'dashscope', operations: ['audio.speech'] },
+		modality: 'audio',
+		modelKind: 'tts',
+		exchange: 'unary',
+		billing: 'per_character',
+		requestPayload: 'json',
+		responsePayload: 'binary',
+		requiredUpstreamCapabilities: ['audio.speech'],
+		publicPath: '/v1/audio/speech',
+		roles: ['upstream'],
+		protectedUpstreamPaths: ['input.format'],
+		extraBodyNote: 'dashscope_tts_input',
+	},
+	{
 		id: 'dashscope-tts-qwen',
 		optionKey: 'dashscope-tts-qwen',
 		upstreamModels: QWEN_TTS_HTTP_MODELS,
 		request: { protocol: 'openai', operation: 'audio.speech' },
 		upstream: { protocol: 'dashscope', operations: ['audio.speech.multimodal'] },
 		modality: 'audio',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		exchange: 'unary',
 		billing: 'per_character',
 		requestPayload: 'json',
@@ -271,7 +432,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.speech' },
 		upstream: { protocol: 'dashscope', operations: ['audio.speech.multimodal'] },
 		modality: 'audio',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		exchange: 'unary',
 		billing: 'per_character',
 		requestPayload: 'json',
@@ -328,7 +489,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.transcriptions' },
 		upstream: { protocol: 'minimax', operations: ['audio.transcriptions'] },
 		modality: 'audio',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		exchange: 'unary',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -347,7 +508,7 @@ const CONVERSION_ADAPTERS = [
 		request: { protocol: 'openai', operation: 'audio.speech' },
 		upstream: { protocol: 'minimax', operations: ['audio.speech'] },
 		modality: 'audio',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		exchange: 'unary',
 		billing: 'per_character',
 		requestPayload: 'json',
@@ -424,6 +585,48 @@ const CONVERSION_ADAPTERS = [
 			generationConfig: { imageConfig: { aspectRatio: '16:9', imageSize: '2K' } },
 		},
 	},
+	{
+		id: 'elevenlabs-tts',
+		optionKey: 'elevenlabs-tts',
+		upstreamModels: ELEVENLABS_TTS_MODELS,
+		request: { protocol: 'openai', operation: 'audio.speech' },
+		upstream: { protocol: 'elevenlabs', operations: ['audio.speech'] },
+		modality: 'audio',
+		modelKind: 'tts',
+		exchange: 'unary',
+		billing: 'per_character',
+		requestPayload: 'json',
+		responsePayload: 'binary',
+		requiredUpstreamCapabilities: ['audio.speech'],
+		publicPath: '/v1/audio/speech',
+		roles: ['upstream'],
+		lossyFeatures: ['response_format_aac', 'response_format_flac', 'openai_speed_range', 'instructions'],
+		protectedUpstreamPaths: ['text', 'model_id', 'output_format'],
+		extraBodyExample: {
+			voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+			language_code: 'en',
+			seed: 42,
+		},
+	},
+	{
+		id: 'elevenlabs-asr-file',
+		optionKey: 'elevenlabs-asr-file',
+		upstreamModels: ELEVENLABS_STT_MODELS,
+		request: { protocol: 'openai', operation: 'audio.transcriptions' },
+		upstream: { protocol: 'elevenlabs', operations: ['audio.transcriptions'] },
+		modality: 'audio',
+		modelKind: 'asr',
+		exchange: 'unary',
+		billing: 'per_second',
+		requestPayload: 'multipart',
+		responsePayload: 'json',
+		requiredUpstreamCapabilities: ['audio.transcriptions'],
+		publicPath: '/v1/audio/transcriptions',
+		roles: ['upstream'],
+		lossyFeatures: ['prompt'],
+		protectedUpstreamPaths: ['model_id', 'timestamps_granularity', 'webhook'],
+		extraBodyExample: { tag_audio_events: false, num_speakers: 2 },
+	},
 ] as const satisfies readonly AdapterDescriptor[];
 
 function passthroughDescriptor(input: {
@@ -445,10 +648,12 @@ function passthroughDescriptor(input: {
 	protectedUpstreamPaths?: readonly string[];
 	extraBodyExample?: { readonly [key: string]: unknown };
 	extraBodyNote?: 'dashscope_tts_input';
+	labelKey?: string;
 }): AdapterDescriptor {
 	return {
 		id: PASSTHROUGH_ROUTE_ADAPTER,
 		optionKey: input.optionKey ?? `${PASSTHROUGH_ROUTE_ADAPTER}:${input.protocol}:${input.operation}`,
+		...(input.labelKey ? { labelKey: input.labelKey } : {}),
 		request: { protocol: input.protocol, operation: input.operation },
 		upstream: { protocol: input.protocol, operations: [input.operation] },
 		modality: input.modality,
@@ -469,6 +674,7 @@ function passthroughDescriptor(input: {
 }
 
 const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
+ passthroughDescriptor({protocol:'openai',operation:'rerank',modelKind:'rerank',modality:'text',exchange:'unary',billing:'tokens',requiredUpstreamCapabilities:['rerank'],publicPath:'/v1/rerank'}),
 	passthroughDescriptor({
 		protocol: 'openai',
 		operation: 'chat',
@@ -523,6 +729,24 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	}),
 	passthroughDescriptor({
 		protocol: 'openai',
+		operation: 'embeddings',
+		modelKind: 'embedding',
+		modality: 'embedding',
+		billing: 'tokens',
+		requiredUpstreamCapabilities: ['embeddings'],
+		publicPath: '/v1/embeddings',
+	}),
+	passthroughDescriptor({
+		protocol: 'gemini',
+		operation: GEMINI_EMBED_OPERATION,
+		modelKind: 'embedding',
+		modality: 'embedding',
+		billing: 'tokens',
+		requiredUpstreamCapabilities: [GEMINI_EMBED_OPERATION],
+		publicPath: `/v1beta/models/${SURFACE_PATH_MODEL_PLACEHOLDER}:{embedContent|batchEmbedContents}`,
+	}),
+	passthroughDescriptor({
+		protocol: 'openai',
 		operation: 'images.generations',
 		modelKind: 'image',
 		modality: 'image',
@@ -546,7 +770,7 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'openai',
 		operation: 'audio.transcriptions',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		modality: 'audio',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -557,7 +781,7 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'openai',
 		operation: 'audio.speech',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		modality: 'audio',
 		billing: 'per_character',
 		responsePayload: 'binary',
@@ -568,7 +792,7 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'minimax',
 		operation: 'audio.transcriptions',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		modality: 'audio',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -578,7 +802,7 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'minimax',
 		operation: 'audio.speech',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		modality: 'audio',
 		exchange: 'sse',
 		billing: 'per_character',
@@ -586,6 +810,53 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 		requiredUpstreamCapabilities: ['audio.speech'],
 		publicPath: MINIMAX_T2A_PATH,
 		upstreamModels: { include: MINIMAX_NATIVE_TTS_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'elevenlabs',
+		operation: 'audio.transcriptions',
+		modelKind: 'asr',
+		modality: 'audio',
+		billing: 'per_second',
+		requestPayload: 'multipart',
+		requiredUpstreamCapabilities: ['audio.transcriptions'],
+		publicPath: ELEVENLABS_SPEECH_TO_TEXT_PATH,
+		upstreamModels: ELEVENLABS_STT_MODELS,
+	}),
+	passthroughDescriptor({
+		protocol: 'elevenlabs',
+		operation: 'audio.speech',
+		modelKind: 'tts',
+		modality: 'audio',
+		exchange: 'sse',
+		billing: 'per_character',
+		responsePayload: 'binary',
+		requiredUpstreamCapabilities: ['audio.speech'],
+		publicPath: ELEVENLABS_TEXT_TO_SPEECH_PATH,
+		upstreamModels: ELEVENLABS_TTS_MODELS,
+	}),
+	passthroughDescriptor({
+		protocol: 'elevenlabs',
+		operation: 'audio.transcriptions.realtime',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'websocket',
+		billing: 'per_second',
+		responsePayload: 'websocket',
+		requiredUpstreamCapabilities: ['audio.transcriptions.realtime'],
+		publicPath: `${ELEVENLABS_SPEECH_TO_TEXT_REALTIME_PATH}?model_id=${SURFACE_PATH_MODEL_PLACEHOLDER}`,
+		upstreamModels: ELEVENLABS_STT_REALTIME_MODELS,
+	}),
+	passthroughDescriptor({
+		protocol: 'elevenlabs',
+		operation: 'audio.speech.realtime',
+		modelKind: 'tts',
+		modality: 'audio',
+		exchange: 'websocket',
+		billing: 'per_character',
+		responsePayload: 'websocket',
+		requiredUpstreamCapabilities: ['audio.speech.realtime'],
+		publicPath: `${ELEVENLABS_TEXT_TO_SPEECH_REALTIME_PATH}?model_id=${SURFACE_PATH_MODEL_PLACEHOLDER}`,
+		upstreamModels: ELEVENLABS_TTS_MODELS,
 	}),
 	passthroughDescriptor({
 		protocol: 'minimax',
@@ -612,78 +883,165 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.transcriptions.multimodal',
-		modelKind: 'audio.transcription',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.multimodal:qwen3',
+		labelKey: 'passthrough-qwen3',
+		modelKind: 'asr',
+		modality: 'audio',
+		billing: 'per_second',
+		requiredUpstreamCapabilities: ['audio.transcriptions.multimodal'],
+		publicPath: DASHSCOPE_MULTIMODAL_GENERATION_PATH,
+		upstreamModels: { include: QWEN3_ASR_SYNC_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.multimodal',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.multimodal:qwen-audio',
+		labelKey: 'passthrough-qwen-audio-asr',
+		modelKind: 'asr',
 		modality: 'audio',
 		billing: 'per_second',
 		requiredUpstreamCapabilities: ['audio.transcriptions.multimodal'],
 		publicPath: DASHSCOPE_MULTIMODAL_GENERATION_PATH,
 		presetIntent: 'dashscope-asr-flash-passthrough',
-		upstreamModels: { include: DASHSCOPE_SYNC_ASR_MODELS },
+		upstreamModels: { include: QWEN_AUDIO_ASR_SYNC_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.multimodal',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.multimodal:fun',
+		labelKey: 'passthrough-fun-asr',
+		modelKind: 'asr',
+		modality: 'audio',
+		billing: 'per_second',
+		requiredUpstreamCapabilities: ['audio.transcriptions.multimodal'],
+		publicPath: DASHSCOPE_MULTIMODAL_GENERATION_PATH,
+		upstreamModels: { include: FUN_ASR_SYNC_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.transcriptions.realtime.inference',
-		modelKind: 'audio.transcription',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.realtime.inference:fun',
+		labelKey: 'passthrough-fun-asr',
+		modelKind: 'asr',
 		modality: 'audio',
 		exchange: 'websocket',
 		billing: 'per_second',
 		responsePayload: 'websocket',
 		requiredUpstreamCapabilities: ['audio.realtime.inference'],
-		publicPath: `/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation={operation}`,
-		upstreamModels: { include: DASHSCOPE_ASR_INFERENCE_MODELS },
+		publicPath: DASHSCOPE_REALTIME_INFERENCE_PATH,
+		upstreamModels: { include: FUN_ASR_INFERENCE_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.realtime.inference',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.realtime.inference:paraformer',
+		labelKey: 'passthrough-paraformer',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'websocket',
+		billing: 'per_second',
+		responsePayload: 'websocket',
+		requiredUpstreamCapabilities: ['audio.realtime.inference'],
+		publicPath: DASHSCOPE_REALTIME_INFERENCE_PATH,
+		upstreamModels: { include: PARAFORMER_INFERENCE_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.realtime.inference',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.realtime.inference:qwen-audio',
+		labelKey: 'passthrough-qwen-audio-asr',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'websocket',
+		billing: 'per_second',
+		responsePayload: 'websocket',
+		requiredUpstreamCapabilities: ['audio.realtime.inference'],
+		publicPath: DASHSCOPE_REALTIME_INFERENCE_PATH,
+		upstreamModels: { include: QWEN_AUDIO_ASR_INFERENCE_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.transcriptions.realtime.session',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		modality: 'audio',
 		exchange: 'websocket',
 		billing: 'per_second',
 		responsePayload: 'websocket',
 		requiredUpstreamCapabilities: ['audio.realtime.session'],
-		publicPath: `/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation={operation}`,
+		publicPath: `${DASHSCOPE_REALTIME_SESSION_PATH}?model=${SURFACE_PATH_MODEL_PLACEHOLDER}`,
 		upstreamModels: { include: DASHSCOPE_ASR_SESSION_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.speech.realtime.inference',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		modality: 'audio',
 		exchange: 'websocket',
 		billing: 'per_character',
 		responsePayload: 'websocket',
 		requiredUpstreamCapabilities: ['audio.realtime.inference'],
-		publicPath: `/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation={operation}`,
+		publicPath: DASHSCOPE_REALTIME_INFERENCE_PATH,
 		presetIntent: 'dashscope-tts-realtime',
 		upstreamModels: { include: COSYVOICE_REALTIME_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.speech',
-		modelKind: 'audio.speech',
+		optionKey: 'passthrough:dashscope:audio.speech:cosyvoice',
+		labelKey: 'passthrough-cosyvoice',
+		modelKind: 'tts',
 		modality: 'audio',
 		billing: 'per_character',
 		responsePayload: 'binary',
 		requiredUpstreamCapabilities: ['audio.speech'],
 		publicPath: DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
-		upstreamModels: { include: COSYVOICE_AND_QWEN_AUDIO_TTS_MODELS },
+		upstreamModels: { include: COSYVOICE_TTS_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.speech',
+		optionKey: 'passthrough:dashscope:audio.speech:qwen-audio',
+		labelKey: 'passthrough-qwen-audio-tts',
+		modelKind: 'tts',
+		modality: 'audio',
+		billing: 'per_character',
+		responsePayload: 'binary',
+		requiredUpstreamCapabilities: ['audio.speech'],
+		publicPath: DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
+		upstreamModels: { include: QWEN_AUDIO_TTS_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.speech.stream',
-		modelKind: 'audio.speech',
+		optionKey: 'passthrough:dashscope:audio.speech.stream:cosyvoice',
+		labelKey: 'passthrough-cosyvoice',
+		modelKind: 'tts',
 		modality: 'audio',
 		exchange: 'sse',
 		billing: 'per_character',
 		responsePayload: 'sse',
 		requiredUpstreamCapabilities: ['audio.speech'],
 		publicPath: DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
-		upstreamModels: { include: COSYVOICE_AND_QWEN_AUDIO_TTS_MODELS },
+		upstreamModels: { include: COSYVOICE_TTS_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.speech.stream',
+		optionKey: 'passthrough:dashscope:audio.speech.stream:qwen-audio',
+		labelKey: 'passthrough-qwen-audio-tts',
+		modelKind: 'tts',
+		modality: 'audio',
+		exchange: 'sse',
+		billing: 'per_character',
+		responsePayload: 'sse',
+		requiredUpstreamCapabilities: ['audio.speech'],
+		publicPath: DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
+		upstreamModels: { include: QWEN_AUDIO_TTS_MODELS },
 	}),
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.speech.multimodal',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		modality: 'audio',
 		billing: 'per_character',
 		requiredUpstreamCapabilities: ['audio.speech.multimodal'],
@@ -693,13 +1051,13 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.speech.realtime.session',
-		modelKind: 'audio.speech',
+		modelKind: 'tts',
 		modality: 'audio',
 		exchange: 'websocket',
 		billing: 'per_character',
 		responsePayload: 'websocket',
 		requiredUpstreamCapabilities: ['audio.realtime.session'],
-		publicPath: `/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation={operation}`,
+		publicPath: `${DASHSCOPE_REALTIME_SESSION_PATH}?model=${SURFACE_PATH_MODEL_PLACEHOLDER}`,
 		upstreamModels: { include: QWEN_TTS_REALTIME_SESSION_MODELS },
 	}),
 	passthroughDescriptor({
@@ -714,13 +1072,54 @@ const PASSTHROUGH_ADAPTERS: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.transcriptions.async',
-		modelKind: 'audio.transcription',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.async:qwen3',
+		labelKey: 'passthrough-qwen3',
+		modelKind: 'asr',
 		modality: 'audio',
 		exchange: 'job',
 		billing: 'per_second',
 		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
 		publicPath: DASHSCOPE_FILE_TRANSCRIPTION_PATH,
-		upstreamModels: { include: DASHSCOPE_ASYNC_ASR_MODELS },
+		upstreamModels: { include: QWEN3_FILETRANS_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.async',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.async:qwen-audio',
+		labelKey: 'passthrough-qwen-audio-asr',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'job',
+		billing: 'per_second',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+		upstreamModels: { include: QWEN_AUDIO_FILETRANS_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.async',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.async:fun',
+		labelKey: 'passthrough-fun-asr',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'job',
+		billing: 'per_second',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+		upstreamModels: { include: FUN_ASR_ASYNC_MODELS },
+	}),
+	passthroughDescriptor({
+		protocol: 'dashscope',
+		operation: 'audio.transcriptions.async',
+		optionKey: 'passthrough:dashscope:audio.transcriptions.async:paraformer',
+		labelKey: 'passthrough-paraformer',
+		modelKind: 'asr',
+		modality: 'audio',
+		exchange: 'job',
+		billing: 'per_second',
+		requiredUpstreamCapabilities: ['audio.transcriptions', 'audio.transcriptions.tasks'],
+		publicPath: DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+		upstreamModels: { include: PARAFORMER_ASYNC_MODELS },
 	}),
 ];
 
@@ -730,7 +1129,7 @@ const DISPLAY_PATH_SURFACES: readonly AdapterDescriptor[] = [
 	passthroughDescriptor({
 		protocol: 'dashscope',
 		operation: 'audio.transcriptions',
-		modelKind: 'audio.transcription',
+		modelKind: 'asr',
 		modality: 'audio',
 		billing: 'per_second',
 		requestPayload: 'multipart',
@@ -782,6 +1181,18 @@ export function isRouteAdapter(raw: string): raw is RouteAdapter {
 
 export function isConversionRouteAdapter(raw: string): raw is ConversionRouteAdapter {
 	return raw !== PASSTHROUGH_ROUTE_ADAPTER && isRouteAdapter(raw);
+}
+
+/** OpenAI 转写 → DashScope 异步 file_urls。系列各自一个 id，提交体目前相同。 */
+export const DASHSCOPE_ASYNC_FILE_ADAPTERS = [
+	'dashscope-asr-qwen-file-async',
+	'dashscope-asr-qwen-audio-file-async',
+	'dashscope-asr-fun-async',
+	'dashscope-asr-paraformer-async',
+] as const satisfies readonly ConversionRouteAdapter[];
+
+export function isDashScopeAsyncFileAdapter(adapter: string): boolean {
+	return (DASHSCOPE_ASYNC_FILE_ADAPTERS as readonly string[]).includes(adapter);
 }
 
 export function listConversionAdapters(): readonly AdapterDescriptor[] {
@@ -885,19 +1296,29 @@ export function requestSurfacePath(
 		if (operation === 'models.generate') {
 			return `/v1beta/models/${modelSegment}:{generateContent|streamGenerateContent}`;
 		}
+		if (operation === GEMINI_EMBED_OPERATION) {
+			return `/v1beta/models/${modelSegment}:{embedContent|batchEmbedContents}`;
+		}
 		return `/v1beta/models/${modelSegment}:${operation}`;
 	}
-	if (protocol === 'minimax' || protocol === 'volcengine') {
+	if (protocol === 'minimax' || protocol === 'volcengine' || protocol === 'elevenlabs') {
 		if (operation === '*') return '/*';
-		return lookupPublicPath(protocol, operation) ?? `/${operation}`;
+		const path = lookupPublicPath(protocol, operation) ?? `/${operation}`;
+		// ElevenLabs 实时入口的 `model_id` query 提示；有具体模型时替换占位符。
+		if (modelId && modelId.length > 0 && path.includes(SURFACE_PATH_MODEL_PLACEHOLDER)) {
+			return path.replace(SURFACE_PATH_MODEL_PLACEHOLDER, encodeURIComponent(modelId));
+		}
+		return path;
 	}
 	if (protocol === 'dashscope') {
 		if (operation.includes('.realtime.')) {
+			// inference（run-task）协议的模型在帧里；session 协议用官方 `?model=`。
+			if (operation.endsWith('.inference')) return DASHSCOPE_REALTIME_INFERENCE_PATH;
 			const modelParam =
 				modelId && modelId.length > 0
 					? encodeURIComponent(modelId)
 					: SURFACE_PATH_MODEL_PLACEHOLDER;
-			return `/v1/dashscope/realtime?model=${modelParam}&operation=${encodeURIComponent(operation)}`;
+			return `${DASHSCOPE_REALTIME_SESSION_PATH}?model=${modelParam}`;
 		}
 		if (operation === '*') return '/*';
 		return lookupPublicPath(protocol, operation) ?? `/${operation}`;

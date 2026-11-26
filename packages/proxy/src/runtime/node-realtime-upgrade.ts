@@ -1,3 +1,5 @@
+import { isRealtimeUpgradePath } from '@octafuse/core/realtime-protocol';
+import {createNodeDashScopeDeferredRuntime,createNodeElevenLabsRealtimeDispatch} from './node-realtime';
 import { STATUS_CODES, type IncomingMessage } from 'node:http';
 import type { Duplex } from 'node:stream';
 import type { Hono } from 'hono';
@@ -117,7 +119,7 @@ export async function handleNodeRealtimeUpgrade(
 		if (socket.destroyed || socket.readableEnded || !socket.writable) { onClose(); return; }
 		if (bufferedBytes > MAX_PRE_UPGRADE_BYTES) { rejectHttp(413, 'Realtime pre-upgrade data limit exceeded'); return; }
 		const path = (request.url ?? '/').split('?', 1)[0]!;
-		if (!isDashScopeRealtimePath(path)) { rejectHttp(404, 'Resource not found'); return; }
+		if (path.endsWith('/') || (!isDashScopeRealtimePath(path) && !isRealtimeUpgradePath(path))) { rejectHttp(404, 'Resource not found'); return; }
 		if (request.method !== 'GET') { rejectHttp(405, 'Expected a GET WebSocket upgrade'); return; }
 		const headers = new Headers();
 		for (const [key, value] of Object.entries(request.headers)) {
@@ -131,16 +133,13 @@ export async function handleNodeRealtimeUpgrade(
 				method: 'GET', headers, signal: controller.signal,
 			});
 		} catch { rejectHttp(400, 'Invalid realtime upgrade request'); return; }
-		const nodeDispatch: DashScopeRealtimeNodeDispatch = async (
-			route, operation, signal, timing, attempt, sessionLimits, beforeDispatch, options,
-		) => {
-			// A busy event loop must not make an already-expired deadline eligible
-			// for a 101 merely because its timer callback has not run yet.
-			if (Date.now() >= connectDeadlineAtMs) expireConnection();
-			controller.signal.throwIfAborted();
-			signal?.throwIfAborted();
-			if (httpEnded) throw new Error('Realtime upgrade is no longer available');
-			dispatchPromise ??= new Promise<DashScopeRealtimeNodeDispatch>((resolve, reject) => {
+
+  let clientPromise: Promise<NodeWebSocket> | undefined;
+  const acceptClient = async (): Promise<NodeWebSocket> => {
+   if(Date.now()>=connectDeadlineAtMs)expireConnection();
+   controller.signal.throwIfAborted();
+   if(httpEnded)throw new Error('Realtime upgrade unavailable');
+			clientPromise ??= new Promise<NodeWebSocket>((resolve, reject) => {
 				const onAbort = () => reject(controller.signal.reason);
 				controller.signal.addEventListener('abort', onAbort, { once: true });
 				// ws installs its frame reader synchronously. Move the bounded raw
@@ -151,7 +150,7 @@ export async function handleNodeRealtimeUpgrade(
 					websocketServer.handleUpgrade(request, socket, prefix, (accepted) => {
 						controller.signal.removeEventListener('abort', onAbort);
 						client = accepted;
-						resolve(createNodeDashScopeRealtimeDispatch(accepted));
+						resolve(accepted);
 					});
 				} catch {
 					controller.signal.removeEventListener('abort', onAbort);
@@ -161,6 +160,19 @@ export async function handleNodeRealtimeUpgrade(
 					reject(new Error('Realtime client upgrade failed'));
 				}
 			});
+ return clientPromise;
+ };
+		const nodeDispatch: DashScopeRealtimeNodeDispatch = async (
+			route, operation, signal, timing, attempt, sessionLimits, beforeDispatch, options,
+		) => {
+			// A busy event loop must not make an already-expired deadline eligible
+			// for a 101 merely because its timer callback has not run yet.
+			if (Date.now() >= connectDeadlineAtMs) expireConnection();
+			controller.signal.throwIfAborted();
+			signal?.throwIfAborted();
+			if (httpEnded) throw new Error('Realtime upgrade is no longer available');
+
+ dispatchPromise ??= acceptClient().then(accepted=>createNodeDashScopeRealtimeDispatch(accepted));
 			const dispatch = await dispatchPromise;
 			controller.signal.throwIfAborted();
 			const requestSignal = signal ? AbortSignal.any([controller.signal, signal]) : controller.signal;
@@ -171,7 +183,10 @@ export async function handleNodeRealtimeUpgrade(
 		// Authentication can contain owned writes (legacy-key migration / lazy
 		// reset). Do not race and abandon app.fetch; signal late work to stop,
 		// close the transport promptly and observe the handler to completion.
-		const response = await app.fetch(fetchRequest, { NODE_REALTIME_DISPATCH: nodeDispatch });
+		const response = await app.fetch(fetchRequest, { NODE_REALTIME_DISPATCH: nodeDispatch,
+ NODE_REALTIME_DEFERRED:async()=>createNodeDashScopeDeferredRuntime(await acceptClient()),
+ NODE_ELEVENLABS_REALTIME_DISPATCH:async(...args)=>createNodeElevenLabsRealtimeDispatch(await acceptClient())(...args)
+ });
 		if (client && response.headers.get('x-octafuse-realtime-upgrade') === '1' && !controller.signal.aborted) {
 			clearTimeout(timer);
 			return; // The bridge and raw-socket close observer now own cancellation.

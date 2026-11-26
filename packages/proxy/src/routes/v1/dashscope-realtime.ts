@@ -1,3 +1,17 @@
+import { resolveModelKind } from '@octafuse/core';
+
+import { resolveRoutesForSurface } from '../../services/model-router';
+import { EMPTY_USAGE, proxyDashScopeRealtimeDeferred } from '../../services/proxy';
+
+import {
+	DashScopeRealtimeClientSession,
+	dashScopeInferenceOperationForTask,
+	type DeferredRealtimeRuntime,
+} from '../../services/egress/dashscope-realtime-session';
+import { createWorkersDeferredRealtime } from '../../services/egress/dashscope-realtime-driver';
+
+import { resolveModelRouting } from '../../services/resolve-model-route-group';
+import { resolveRouteStrategyPlan } from '../../services/route-strategies';
 /**
  * DashScope 原生实时音频入口：
  * `GET /v1/dashscope/realtime?model=<gateway-model>&operation=<native-operation>`
@@ -348,7 +362,7 @@ function recordRealtimeUsage(params: {
 	);
 }
 
-dashScopeRealtimeRoutes.get('/', async (c) => {
+async function handleGuardedRealtime(c: RealtimeContext, input?: {model: string; operation: DashScopeRealtimeOperation; dispatch?: import('../../services/egress/dashscope-realtime-driver').DashScopeRealtimeNodeDispatch}): Promise<Response> {
 	const start = Date.now();
 	if (c.req.header('Upgrade')?.toLowerCase() !== 'websocket') {
 		return gatewayErrorJson(c, {
@@ -357,7 +371,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 			message: 'Expected a WebSocket upgrade request',
 		});
 	}
-	const rawModelId = c.req.query('model')?.trim() ?? '';
+	const rawModelId = input?.model ?? c.req.query('model')?.trim() ?? '';
 	if (!rawModelId) {
 		return gatewayErrorJson(c, {
 			status: 400,
@@ -365,7 +379,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 			message: 'Missing model query parameter',
 		});
 	}
-	const operationRaw = c.req.query('operation')?.trim() ?? '';
+	const operationRaw = input?.operation ?? c.req.query('operation')?.trim() ?? '';
 	if (!isRealtimeOperation(operationRaw)) {
 		return gatewayErrorJson(c, {
 			status: 400,
@@ -501,7 +515,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 	let proxyResult: Awaited<ReturnType<typeof proxyDashScopeRealtime>>;
 	try {
 		proxyResult = await proxyDashScopeRealtime(repos, routes, operationRaw, c.req.raw.signal, {
-			nodeDispatch: c.env.NODE_REALTIME_DISPATCH,
+			nodeDispatch: input?.dispatch ?? c.env.NODE_REALTIME_DISPATCH,
 			inboundHeaders: c.req.raw.headers,
 			responseProtocol: parseDashScopeRealtimeAuthProtocol(c.req.header('Sec-WebSocket-Protocol'))?.protocol,
 			affinityKey: buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'dashscope'),
@@ -526,7 +540,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		true,
 	);
 	const nodeUpgrade =
-		c.env.NODE_REALTIME_DISPATCH != null && proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';
+		(input?.dispatch ?? c.env.NODE_REALTIME_DISPATCH) != null && proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';
 	if (
 		!nodeUpgrade &&
 		(proxyResult.response.status !== 101 || !('webSocket' in proxyResult.response) || !proxyResult.response.webSocket)
@@ -568,4 +582,165 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		ordinaryBudgetLease,
 	});
 	return proxyResult.response;
+}
+
+dashScopeRealtimeRoutes.get('/', c => handleGuardedRealtime(c));
+
+/** 官方 session 协议入口：`/dashscope/api-ws/v1/realtime?model=`。 */
+export const dashScopeRealtimeSessionRoutes = new Hono<RealtimeEnv>();
+
+/** 官方 run-task 协议入口：`/dashscope/api-ws/v1/inference`，延迟连接上游。 */
+export const dashScopeRealtimeInferenceRoutes = new Hono<RealtimeEnv>();
+
+
+function isSpeechOperation(operation: DashScopeRealtimeOperation): boolean {
+	return operation.startsWith('audio.speech.');
+}
+
+
+function requireWebSocketUpgrade(c: RealtimeContext): Response | null {
+	if (c.req.header('Upgrade')?.toLowerCase() === 'websocket') return null;
+	return gatewayErrorJson(c, {
+		status: 426,
+		code: GatewayErrorCode.invalidRequest,
+		message: 'Expected a WebSocket upgrade request',
+	});
+}
+
+
+function failoverOptionsFor(params: {
+	apiKey: ApiKeyContext;
+	baseModelId: string;
+	effectiveRouteGroup: string;
+	strategyPlan: Awaited<ReturnType<typeof resolveRouteStrategyPlan>>;
+	timing: RequestTimingCollector;
+	inboundHeaders: Headers;
+}) {
+	const { apiKey, baseModelId, effectiveRouteGroup, strategyPlan, timing, inboundHeaders } = params;
+	return {
+		affinityKey: buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'dashscope'),
+		tierKeyPrefix: buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'dashscope'),
+		strategy: strategyPlan.base,
+		tierStrategies: strategyPlan.tierOverrides,
+		timing,
+		inboundHeaders,
+	};
+}
+
+
+/**
+ * 升级前选路由并连上游（旧入口与 session 入口共用）。
+ * `pickOperation` 在模型解析之后决定 operation；返回 `Response` 表示直接用它拒绝请求。
+ */
+async function connectUpfront(
+	c: RealtimeContext,
+	start: number,
+	rawModelId: string,
+	pickOperation: (model: ModelRow) => DashScopeRealtimeOperation | Response
+): Promise<Response> {
+ const resolved = await resolveModelRouting(c.get('repositories'), rawModelId);
+ if (!resolved) return gatewayErrorJson(c,{status:404,code:GatewayErrorCode.modelNotFound,message:'Model not found'});
+ const operation = pickOperation(resolved.model);
+ if (operation instanceof Response) return operation;
+ return handleGuardedRealtime(c, {model:rawModelId,operation});
+}
+
+
+/** 上游连不上时从 failover 的最后一个响应里取 `task-failed` 的 code / message。 */
+async function describeFailedResponse(
+	response: Response
+): Promise<{ code: string; message: string }> {
+	const headerCode = response.headers.get('X-OctaFuse-Error-Code');
+	let message = '';
+	let bodyCode = '';
+	try {
+		const body = (await response.clone().json()) as {
+			code?: unknown;
+			error?: unknown;
+			message?: unknown;
+		};
+		if (typeof body.code === 'string') bodyCode = body.code;
+		if (typeof body.error === 'string') message = body.error;
+		else if (body.error && typeof body.error === 'object') {
+			const nested = (body.error as { message?: unknown }).message;
+			if (typeof nested === 'string') message = nested;
+		}
+		if (!message && typeof body.message === 'string') message = body.message;
+	} catch {
+		// 非 JSON 响应体，退回状态码
+	}
+	return {
+		code: headerCode || bodyCode || GatewayErrorCode.upstreamRequestFailed,
+		message: message || `Upstream request failed (HTTP ${response.status})`,
+	};
+}
+
+
+/**
+ * inference 入口的会话：下游升级已完成，等 run-task 之后选路由、连上游、桥接。
+ * 升级之后不能再回 HTTP 错误码，所有失败都按 DashScope 格式回 `task-failed` 再关闭。
+ */
+async function runDeferredInferenceSession(params: {
+	c: RealtimeContext;
+	runtime: DeferredRealtimeRuntime;
+	repos: GatewayRepositories;
+	apiKey: ApiKeyContext;
+	start: number;
+	inboundHeaders: Headers;
+}): Promise<void> {
+	const { c, runtime, repos, apiKey, start, inboundHeaders } = params;
+	const session = new DashScopeRealtimeClientSession(runtime.client);
+	const waited = await session.waitForRunTask();
+	if (!waited.ok) return;
+	const request = waited.request;
+	const fail = (code: string, message: string) => {
+		session.failAndClose(request.taskId, code, message);
+	};
+
+	const operation = dashScopeInferenceOperationForTask(request.task);
+	if (!operation) {
+		return fail(
+			'InvalidParameter',
+			`Unsupported payload.task: ${request.task || '(empty)'}; expected "asr" or "tts"`
+		);
+	}
+	if (!request.model) {
+		return fail('InvalidParameter', 'Missing payload.model in run-task');
+	}
+ const dispatch: import('../../services/egress/dashscope-realtime-driver').DashScopeRealtimeNodeDispatch = async (
+  route, selectedOperation, signal, timing, attempt, limits, beforeDispatch,
+ ) => {
+  await beforeDispatch?.();
+  signal?.throwIfAborted();
+  const opened = await runtime.connectUpstream(route, selectedOperation, signal, timing, attempt);
+  if ('response' in opened) return {response:opened.response,usagePromise:Promise.resolve(EMPTY_USAGE),upstreamRequestId:opened.requestId};
+  if (session.isClientClosed) { opened.socket.close(1000,'Client closed'); return {response:new Response(null,{status:499}),usagePromise:Promise.resolve(EMPTY_USAGE),upstreamRequestId:opened.requestId,meta:{upstreamOutcomeUnknown:true,failoverForbidden:true}}; }
+  return {response:new Response(null,{headers:{'X-Octafuse-Realtime-Upgrade':'1'}}),usagePromise:session.bridge({upstream:opened.socket,route,operation:selectedOperation,model:request.model,timing,sessionLimits:limits}),upstreamRequestId:opened.requestId};
+ };
+ try {
+  const response = await handleGuardedRealtime(c, {model:request.model,operation,dispatch});
+  if (response.headers.get('X-Octafuse-Realtime-Upgrade') !== '1') {
+   const failure = await describeFailedResponse(response);
+   fail(failure.code,failure.message);
+  }
+ } catch { fail(GatewayErrorCode.upstreamRequestFailed,'Realtime session failed'); }
+}
+
+// Both official surfaces retain authentication before accepting a WebSocket.
+dashScopeRealtimeSessionRoutes.use('*', requireApiKey);
+dashScopeRealtimeInferenceRoutes.use('*', requireApiKey);
+dashScopeRealtimeSessionRoutes.get('/', async c => {
+ const invalid = requireWebSocketUpgrade(c); if (invalid) return invalid;
+ const model = c.req.query('model')?.trim() ?? '';
+ if (!model) return gatewayErrorJson(c,{status:400,code:GatewayErrorCode.missingModel,message:'Missing model query parameter'});
+ return connectUpfront(c,Date.now(),model, row => resolveModelKind(row) === 'tts' ? 'audio.speech.realtime.session' : 'audio.transcriptions.realtime.session');
+});
+dashScopeRealtimeInferenceRoutes.get('/', async c => {
+ const invalid = requireWebSocketUpgrade(c); if (invalid) return invalid;
+ const nodeRuntime = await c.env.NODE_REALTIME_DEFERRED?.();
+ const worker = nodeRuntime ? null : createWorkersDeferredRealtime({responseProtocol:parseDashScopeRealtimeAuthProtocol(c.req.header('Sec-WebSocket-Protocol'))?.protocol});
+ const runtime = nodeRuntime ?? worker?.runtime;
+ if (!runtime) return gatewayErrorJson(c,{status:501,code:GatewayErrorCode.invalidRequest,message:'Realtime runtime unavailable'});
+ scheduleBackgroundWork(c,runDeferredInferenceSession({c,runtime,repos:c.get('repositories'),apiKey:c.get('apiKey'),start:Date.now(),inboundHeaders:c.req.raw.headers}));
+ return worker?.response ?? new Response(null,{headers:{'X-Octafuse-Realtime-Upgrade':'1'}});
 });

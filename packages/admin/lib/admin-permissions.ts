@@ -24,6 +24,11 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 	if (/^\/admin\/providers\/[^/]+\/api-key$/.test(pathname) && normalizedMethod === 'GET') {
 		return { kind: 'permission', permission: 'providers.secrets.read' };
 	}
+	// 内置授权服务器：同意页（门户）只需要 `oauth.consent`，应用目录与授权管理用 `oauth.read|write`。
+	if (/^\/admin\/oauth\/authorization-requests(?:\/|$)/.test(pathname)) {
+		return { kind: 'permission', permission: 'oauth.consent' };
+	}
+	if (pathname.startsWith('/admin/oauth/')) return readOrWrite(normalizedMethod, 'oauth');
 	if (pathname.startsWith('/admin/providers')) return readOrWrite(normalizedMethod, 'providers');
 	// 用户共享密钥池治理（挂靠 providers 权限域）
 	if (pathname.startsWith('/admin/shared-keys')) return readOrWrite(normalizedMethod, 'providers');
@@ -51,16 +56,28 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 	if (/^\/admin\/keys\/[^/]+\/logs(?:\/|$)/.test(pathname)) {
 		return { kind: 'permission', permission: 'logs.read' };
 	}
-	if (/^\/admin\/users\/[^/]+\/keys(?:\/|$)/.test(pathname)) return readOrWrite(normalizedMethod, 'user_keys');
+	if (/^\/admin\/users\/[^/]+\/(?:keys|oauth-access-tokens)(?:\/|$)/.test(pathname)) {
+		return readOrWrite(normalizedMethod, 'user_keys');
+	}
 	if (pathname.startsWith('/admin/users')) return readOrWrite(normalizedMethod, 'users');
-	if (pathname.startsWith('/admin/keys')) return readOrWrite(normalizedMethod, 'user_keys');
+	if (pathname.startsWith('/admin/keys') || pathname.startsWith('/admin/oauth-access-tokens')) {
+		return readOrWrite(normalizedMethod, 'user_keys');
+	}
 	const toolsRoot = '/admin/config/tools';
 	if (pathname === toolsRoot || pathname.startsWith(toolsRoot + '/')) {
 		const family = '(?:web-search|web-fetch|web-deep-search|ai-detection)';
-		const provider = '(?:bocha|tavily|cleversee|tencent_wsa|firecrawl|jina|tencent_tms)';
+		const provider = '(?:bocha|tavily|cleversee|tencent_wsa|firecrawl|jina|tencent_tms|deepseek)';
 		if (
 			new RegExp(
-				'^' + toolsRoot + '/(?:overview|' + family + '/audit|' + family + '/providers/' + provider + '/detail)/?$',
+				'^' +
+					toolsRoot +
+					'/(?:overview|' +
+					family +
+					'/audit|' +
+					family +
+					'/providers/' +
+					provider +
+					'/detail)/?$',
 			).test(pathname)
 		)
 			return normalizedMethod === 'GET' || normalizedMethod === 'HEAD'
@@ -69,7 +86,9 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 		if (new RegExp('^' + toolsRoot + '/' + family + '/providers/' + provider + '/save/?$').test(pathname))
 			return normalizedMethod === 'POST' ? { kind: 'permission', permission: 'config.write' } : { kind: 'deny' };
 		if (new RegExp('^' + toolsRoot + '/' + family + '/providers/' + provider + '/reveal/?$').test(pathname))
-			return normalizedMethod === 'POST' ? { kind: 'permission', permission: 'config.secrets.read' } : { kind: 'deny' };
+			return normalizedMethod === 'POST'
+				? { kind: 'permission', permission: 'config.secrets.read' }
+				: { kind: 'deny' };
 		return { kind: 'deny' };
 	}
 	if (pathname === '/admin/config/overview' || pathname === '/admin/config/overview/') {
@@ -99,6 +118,9 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 		return { kind: 'deny' };
 	}
 	if (pathname === '/admin/config' || pathname === '/admin/config/') return readOrWrite(normalizedMethod, 'config');
+	if (pathname === '/admin/maintenance' || pathname === '/admin/maintenance/') {
+		return readOrWrite(normalizedMethod, 'maintenance');
+	}
 	if (pathname.startsWith('/admin/business-timezone')) return { kind: 'permission', permission: 'config.read' };
 	if (pathname.startsWith('/admin/analytics') || pathname.startsWith('/admin/stats')) {
 		return { kind: 'permission', permission: 'analytics.read' };

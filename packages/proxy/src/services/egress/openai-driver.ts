@@ -1,3 +1,9 @@
+
+import { sanitizeRewrappedHeaders } from './response-headers';
+import { peekResponseFirstEvent } from '../stream-first-event-timeout';
+
+import { fetchUntilHeaders, type UpstreamHeadersTimeoutOptions } from './upstream-fetch-timeout';
+import { streamIdleTimeoutErrorFrame } from './stream-idle-timeout';
 import { prepareTextStreamStart, combineTextStreamResources } from './text-stream-start';
 import { applyRouteExtraHeaders } from '@octafuse/core';
 import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
@@ -999,4 +1005,42 @@ export function transformStreamUsageForClient(line: string): string {
 		return line;
 	}
 	return line;
+}
+
+
+/** Client disconnected后继续从上游读取以争取拿到末尾 usage 的最大时长。 */
+const POST_DISCONNECT_DRAIN_MS = 90_000;
+
+
+const decoder = new TextDecoder();
+
+
+function processUsageFromDataLine(line: string, usage: UsageFromStream, timing?: RequestTimingCollector | null): void {
+  if (!line.startsWith('data: ')) return;
+  const data = line.slice(6).trim();
+  if (data === '[DONE]') return;
+  try {
+    const parsed = JSON.parse(data) as { id?: string; usage?: ProviderUsage; choices?: Array<{ delta?: { content?: unknown; tool_calls?: unknown; function_call?: unknown; reasoning_content?: unknown; thinking?: unknown; reasoning?: unknown } }> };
+    timing?.markFirstEvent();
+    if (hasOpenAiReasoningDelta(parsed)) timing?.markFirstReasoningToken();
+    if (hasOpenAiContentDelta(parsed)) timing?.markFirstToken();
+    // message id 为响应对象 id（如 chatcmpl-*）；每个 chunk 都带，取首个。
+    if (!usage.upstreamMessageId) {
+      const msgId = normalizeUpstreamId(parsed.id);
+      if (msgId) usage.upstreamMessageId = msgId;
+    }
+    const u = parsed.usage;
+    if (u) {
+      const next = usageFromProvider(u);
+      usage.input_tokens = next.input_tokens;
+      usage.output_tokens = next.output_tokens;
+      usage.cache_read_tokens = next.cache_read_tokens;
+      usage.cache_write_tokens = next.cache_write_tokens;
+      usage.reasoning_tokens = next.reasoning_tokens;
+      usage.total_tokens = next.total_tokens;
+      usage.raw_usage = next.raw_usage;
+    }
+  } catch {
+    // ignore parse errors
+  }
 }

@@ -233,6 +233,7 @@ export async function handleMcpAggregateRequest(
 		const chargeBase = {
 			repos: undefined as never,
 			apiKeyId: input.apiKey.keyId,
+			oauthAccessTokenId: input.apiKey.oauthAccessTokenId ?? null,
 			workspaceId: input.apiKey.workspaceId,
 			userId: input.apiKey.userId,
 			userEmail: input.apiKey.userEmail,

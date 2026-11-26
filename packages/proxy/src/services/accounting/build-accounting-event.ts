@@ -15,7 +15,10 @@ import { allocateRequestLogId, type AccountingEvent } from './types';
 export type BuildAccountingEventInput = {
 	/** 省略则现生成；阶段二重放时传入 spool 中的稳定 id。 */
 	requestLogId?: string;
-	apiKey: Pick<ApiKeyContext, 'keyId' | 'workspaceId' | 'userId' | 'userEmail' | 'chargedCostFactors' | 'ingressHost'>;
+	apiKey: Pick<
+		ApiKeyContext,
+		'keyId' | 'workspaceId' | 'userId' | 'userEmail' | 'chargedCostFactors' | 'ingressHost'
+	>;
 	described: DescribedOutcome;
 	usage: UsageFromStream;
 	responseOk: boolean;
@@ -29,8 +32,10 @@ export type BuildAccountingEventInput = {
 	requestOperation: string;
 	requestBodyForLog: string | null;
 	upstreamRequestBody: string | null;
+	requestParameterSources?: AccountingEvent['request_parameter_sources'];
 	chosenRoute: Pick<
 		RouteResult,
+		| 'endpoint'
 		| 'providerId'
 		| 'providerModelName'
 		| 'providerName'
@@ -67,7 +72,11 @@ export function resolveAccountingErrorMessage(input: {
 	if (input.status === 'cancelled') return 'Client disconnected (e.g. user cancelled)';
 	if (input.status === 'incomplete') return input.described.incompleteErrorMessage;
 	if (input.errorBodyText != null) {
-		return formatHttpErrorTextForRequestLog(input.responseStatus, input.responseContentType, input.errorBodyText);
+		return formatHttpErrorTextForRequestLog(
+			input.responseStatus,
+			input.responseContentType,
+			input.errorBodyText,
+		);
 	}
 	return input.described.httpErrorFallback;
 }
@@ -101,6 +110,7 @@ export function buildAccountingEvent(input: BuildAccountingEventInput): Accounti
 		provider_name: input.chosenRoute.providerName,
 		request_body: input.requestBodyForLog,
 		upstream_request_body: input.upstreamRequestBody,
+		request_parameter_sources: input.requestParameterSources,
 		request_protocol: input.requestProtocol,
 		request_operation: input.requestOperation,
 		upstream_protocol: input.chosenRoute.upstreamProtocol,
@@ -112,6 +122,7 @@ export function buildAccountingEvent(input: BuildAccountingEventInput): Accounti
 		sticky_trace: input.stickyTrace,
 		usage: input.usage,
 		model_pricing_profile: input.modelPricingProfile,
+		endpoint_pricing_snapshot: input.chosenRoute.endpoint,
 		route_price_override_json: input.chosenRoute.priceOverrideRaw,
 		user_charged_cost_factors_json: input.apiKey.chargedCostFactors,
 		route_metered_profile_json: input.chosenRoute.routeMeteredProfileJson,

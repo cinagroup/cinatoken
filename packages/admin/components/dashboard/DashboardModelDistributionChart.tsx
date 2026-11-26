@@ -1,131 +1,173 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { ArrowUpRightIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
-import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { formatCompactTokens } from '@/lib/format-compact-tokens';
 import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
 import type { DashboardModelDistributionRow, DashboardTopUserRow } from '@/lib/types';
+import type { GatewayTimeRangeValue } from '@/lib/analytics-range';
+import { useDashboardListMotion } from './use-dashboard-list-motion';
+import { DASHBOARD_RANKING_PREVIEW_LIMIT } from '@/lib/dashboard-constants';
+import { dashboardLogsHref } from './dashboard-links';
 
 type ViewMode = 'models' | 'users';
-
 export type DashboardModelDistributionChartProps = {
+	motionScope?: string;
 	modelDistribution: DashboardModelDistributionRow[];
 	topUsers: DashboardTopUserRow[];
 	billingCurrency: string;
+	range: GatewayTimeRangeValue;
+	rangeLabel: string;
 };
 
 export function DashboardModelDistributionChart({
 	modelDistribution,
 	topUsers,
 	billingCurrency,
+	range,
+	rangeLabel,
+	motionScope = '',
 }: DashboardModelDistributionChartProps) {
 	const t = useTranslations('dashboard');
+	const review = useTranslations('dashboard.review');
+	const rowsRef = useRef<HTMLDivElement>(null);
 	const [view, setView] = useState<ViewMode>('models');
-
 	const rows = useMemo(() => {
-		if (view === 'models') {
-			const max = Math.max(...modelDistribution.map((row) => row.request_count), 1);
-			return modelDistribution.slice(0, 8).map((row) => ({
-				key: row.model_id,
-				label: row.model_id,
-				requestCount: row.request_count,
-				tokens: row.total_tokens,
-				cost: row.charged_cost,
-				share: (row.request_count / max) * 100,
-			}));
-		}
-		const max = Math.max(...topUsers.map((row) => row.charged_cost), 0);
-		return topUsers.slice(0, 8).map((row) => ({
-			key: row.user_email,
-			label: row.user_email,
-			requestCount: row.request_count,
-			tokens: row.total_tokens,
-			cost: row.charged_cost,
-			share: max > 0 ? (row.charged_cost / max) * 100 : 0,
-		}));
-	}, [modelDistribution, topUsers, view]);
-
+		const items =
+			view === 'models'
+				? modelDistribution.map((row) => ({
+						key: row.model_id,
+						requests: row.request_count,
+						tokens: row.total_tokens,
+						cost: row.charged_cost,
+						value: row.request_count,
+				  }))
+				: topUsers.map((row) => ({
+						key: row.user_email,
+						requests: row.request_count,
+						tokens: row.total_tokens,
+						cost: row.charged_cost,
+						value: row.charged_cost,
+				  }));
+		const sorted = items.sort((a, b) => b.value - a.value);
+		const max = Math.max(...sorted.map((row) => row.value), 0);
+		return sorted
+			.slice(0, DASHBOARD_RANKING_PREVIEW_LIMIT)
+			.map((row) => ({ ...row, width: max > 0 ? (row.value / max) * 100 : 0 }));
+	}, [view, modelDistribution, topUsers]);
+	useDashboardListMotion(rowsRef, `${motionScope}:${view}`, JSON.stringify(rows.map((row) => row.key)));
+	const analysisHref = `/gateway/analytics/${view === 'models' ? 'models' : 'users'}?${new URLSearchParams({
+		start_date: range.start_date,
+		end_date: range.end_date,
+		range: 'custom',
+	})}`;
 	return (
-		<section className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm sm:p-6">
-			<div className="flex flex-wrap items-start justify-between gap-4">
-				<div>
-					<h2 className="text-base font-semibold text-gray-950">{t('usageBreakdown')}</h2>
-					<p className="mt-1 text-xs text-gray-500">
-						{view === 'models' ? t('modelBreakdownHint') : t('userBreakdownHint')}
-					</p>
-				</div>
-				<div className="inline-flex rounded-xl bg-gray-100 p-1 text-xs">
-					<button
-						type="button"
-						onClick={() => setView('models')}
-						className={`rounded-lg px-3 py-1.5 font-medium transition ${view === 'models' ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-					>
-						{t('modelDistributionTab')}
-					</button>
-					<button
-						type="button"
-						onClick={() => setView('users')}
-						className={`rounded-lg px-3 py-1.5 font-medium transition ${view === 'users' ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-					>
-						{t('userLeaderboardTab')}
-					</button>
+		<section className="admin-content-panel flex min-w-0 flex-col rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<h2
+					title={review(view === 'models' ? 'modelRankingHint' : 'userRankingHint')}
+					className="admin-section-title flex items-center gap-2 text-sm font-medium text-gray-900"
+				>
+					<Squares2X2Icon className="h-4 w-4 text-gray-500" aria-hidden />
+					{review(view === 'models' ? 'modelUsage' : 'userSpend')}
+				</h2>
+				<div className="inline-flex rounded-lg bg-gray-100 p-1" role="group" aria-label={t('usageBreakdown')}>
+					{(['models', 'users'] as const).map((tab) => (
+						<button
+							key={tab}
+							type="button"
+							aria-pressed={view === tab}
+							onClick={() => {
+								setView(tab);
+							}}
+							className={`rounded-md px-3 py-1 text-xs transition-colors ${
+								view === tab ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+							}`}
+						>
+							{t(tab === 'models' ? 'modelDistributionTab' : 'userLeaderboardTab')}
+						</button>
+					))}
 				</div>
 			</div>
-
-			{rows.length === 0 ? (
-				<div className="py-16 text-center text-sm text-gray-500">{t('noChartData')}</div>
-			) : (
-				<div className="mt-5 overflow-x-auto">
-					<div className="min-w-[34rem]">
-						<div className="grid grid-cols-[minmax(12rem,1fr)_5rem_6rem_7rem] gap-3 border-b border-gray-100 pb-2 text-[11px] font-medium uppercase tracking-wide text-gray-400">
-							<span>{view === 'models' ? t('modelColumn') : t('userColumn')}</span>
-							<span className="text-right">{t('requestsColumn')}</span>
-							<span className="text-right">{t('tokensColumn')}</span>
-							<span className="text-right">{t('chargedColumn')}</span>
-						</div>
-						{rows.map((row, index) => (
-							<div
-								key={row.key}
-								className="grid grid-cols-[minmax(12rem,1fr)_5rem_6rem_7rem] items-center gap-3 border-b border-gray-100 py-3 last:border-0"
-							>
-								<div className="min-w-0">
-									<div className="flex items-center gap-2">
-										<span className="w-4 shrink-0 text-[11px] font-medium text-gray-400">{index + 1}</span>
-										<span className="truncate text-sm font-medium text-gray-900" title={row.label}>
-											{row.label}
+			<p className="mt-2 min-h-5 truncate text-xs leading-5 text-gray-500" title={rangeLabel}>
+				{review('selectedPeriod')} · {rangeLabel}
+			</p>
+			{rows.length ? (
+				<div
+					ref={rowsRef}
+					role="region"
+					aria-label={review(view === 'models' ? 'modelUsage' : 'userSpend')}
+					className="mt-3 divide-y divide-gray-100"
+				>
+					{rows.map((row, index) => (
+						<Link
+							key={row.key}
+							data-dashboard-item={row.key}
+							href={dashboardLogsHref(range, {
+								[view === 'models' ? 'model_id' : 'user_email']: row.key,
+							})}
+							className="group -mx-2 flex min-w-0 items-start gap-3 rounded-lg px-2 py-3 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+							aria-label={t('inspectUsage', { name: row.key })}
+						>
+							<span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-gray-100 font-mono text-xs text-gray-500">
+								{index + 1}
+							</span>
+							<div className="min-w-0 flex-1">
+								<div className="flex min-w-0 items-center justify-between gap-3">
+									<span className="truncate text-sm text-gray-900" title={row.key}>
+										{row.key}
+									</span>
+									<span className="shrink-0 font-mono text-sm tabular-nums text-gray-900">
+										{view === 'models'
+											? row.requests.toLocaleString()
+											: formatGatewayMoneyCode(row.cost, billingCurrency, 4)}
+									</span>
+								</div>
+								{(row.tokens > 0 || row.cost > 0 || view === 'users') && (
+									<div className="mt-1 flex justify-between gap-3 text-xs text-gray-500">
+										{row.tokens > 0 && (
+											<span className="whitespace-nowrap">
+												{formatCompactTokens(row.tokens)} Token
+											</span>
+										)}
+										<span className="ml-auto shrink-0 whitespace-nowrap tabular-nums">
+											{view === 'models'
+												? formatGatewayMoneyCode(row.cost, billingCurrency, 4)
+												: t('requestCount', { count: row.requests })}
 										</span>
 									</div>
-									<div className="ml-6 mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
-										<div
-											className={`h-full rounded-full ${view === 'models' ? 'bg-blue-500' : 'bg-violet-500'}`}
-											style={{ width: `${Math.max(row.share, 2)}%` }}
-										/>
-									</div>
+								)}
+								<div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-100" aria-hidden>
+									<div
+										className={`h-full origin-left rounded-full transition-transform duration-500 ease-out motion-reduce:transition-none ${
+											index === 0 ? 'bg-blue-500' : 'bg-gray-300'
+										}`}
+										style={{ transform: `scaleX(${row.width / 100})` }}
+									/>
 								</div>
-								<span className="text-right text-sm tabular-nums text-gray-600">
-									{row.requestCount.toLocaleString()}
-								</span>
-								<span className="text-right text-sm tabular-nums text-gray-600">{formatCompactTokens(row.tokens)}</span>
-								<span className="text-right text-sm tabular-nums text-gray-900">
-									{formatGatewayMoneyCode(row.cost, billingCurrency, 4)}
-								</span>
 							</div>
-						))}
-					</div>
+							<ArrowUpRightIcon
+								className="mt-1 h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-gray-900"
+								aria-hidden
+							/>
+						</Link>
+					))}
 				</div>
+			) : (
+				<p className="py-10 text-center text-sm text-gray-500">{t('noChartData')}</p>
 			)}
-
-			<div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
+			<footer className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-3 text-xs text-gray-500">
+				<span>{review('rankingCount', { count: rows.length })}</span>
 				<Link
-					href={view === 'models' ? '/gateway/analytics/models' : '/gateway/analytics/users'}
-					className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 hover:underline"
+					href={analysisHref}
+					className="inline-flex items-center gap-1 rounded px-1 py-1 hover:text-gray-950"
 				>
-					{view === 'models' ? t('modelUsageLink') : t('userUsageLink')}
-					<ChevronRightIcon className="h-3.5 w-3.5" />
+					{review('usageAnalysis')}
+					<ArrowUpRightIcon className="h-3 w-3" aria-hidden />
 				</Link>
-			</div>
+			</footer>
 		</section>
 	);
 }

@@ -50,6 +50,7 @@ export async function prepareNativeMediaPolicy(
 		protocol: UpstreamProtocol;
 		operation: string;
 		start: number;
+ inputFilterSupport?: 'request_body' | 'unsupported';
 	},
 ) {
 	const repos = c.get('repositories');
@@ -63,6 +64,7 @@ export async function prepareNativeMediaPolicy(
 		body: { model: input.rawModelId, input: { native: input.body }, stream: input.body.stream === true },
 		correlationId: requestId,
 		now: new Date(input.start),
+ inputFilterSupport:input.inputFilterSupport,
 	});
 	if (!guardrail.ok)
 		return gatewayErrorJson(c, {

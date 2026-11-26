@@ -8,34 +8,40 @@
  */
 
 export type AdminAuthEvent =
-	| "admin.auth.login"
-	| "admin.auth.login_failed"
-	| "admin.auth.logout"
-	| "admin.auth.unauthorized";
+	| 'admin.auth.login'
+	| 'admin.auth.login_failed'
+	| 'admin.auth.login_lockout_triggered'
+	| 'admin.auth.login_locked'
+	| 'admin.auth.guard_degraded'
+	| 'admin.auth.logout'
+	| 'admin.auth.unauthorized';
+
+const sampledEvents = new Map<string, number>();
+const SAMPLE_CAP = 512;
 
 function firstForwardedFor(value: string): string | null {
-	const first = value.split(",")[0]?.trim();
+	const first = value.split(',')[0]?.trim();
 	return first || null;
 }
 
 export function getClientIp(request: Request | undefined): string | null {
 	if (!request) return null;
-	const cfIp = request.headers.get("cf-connecting-ip");
+	const cfIp = request.headers.get('cf-connecting-ip');
 	if (cfIp) return cfIp;
-	const forwarded = request.headers.get("x-forwarded-for");
+	const peer = request.headers.get('x-octafuse-peer-ip');
+	if (peer) return peer;
+	const forwarded = request.headers.get('x-forwarded-for');
 	return forwarded ? firstForwardedFor(forwarded) : null;
 }
 
 export function getUserAgent(request: Request | undefined): string | null {
-	return request?.headers.get("user-agent") ?? null;
+	return request?.headers.get('user-agent') ?? null;
 }
 
 /** 与 `access-keys` 创建密钥时的 `secretKey.slice(0, 12)` 保持一致。 */
-export function getBearerKeyPrefix(
-	request: Request | undefined
-): string | null {
-	const authorization = request?.headers.get("authorization");
-	if (!authorization?.startsWith("Bearer ")) return null;
+export function getBearerKeyPrefix(request: Request | undefined): string | null {
+	const authorization = request?.headers.get('authorization');
+	if (!authorization?.startsWith('Bearer ')) return null;
 	const secret = authorization.slice(7).trim();
 	return secret ? secret.slice(0, 12) : null;
 }
@@ -46,7 +52,7 @@ function unauthorizedLogPath(request: Request): string {
 	let candidate = pathname;
 	for (let pass = 0; pass < 4; pass++) {
 		if (/^\/api\/admin\/keys\/[^/]+\/verify-secret\/?$/u.test(candidate))
-			return "/api/admin/keys/:id/verify-secret";
+			return '/api/admin/keys/:id/verify-secret';
 		try {
 			const decoded = decodeURIComponent(candidate);
 			if (decoded === candidate) break;
@@ -60,7 +66,7 @@ function unauthorizedLogPath(request: Request): string {
 
 /** The BFF's unauthenticated branch logs no Key ID, query or request body for binding checks. */
 export function logUnauthorizedAdminRequest(request: Request): void {
-	logAdminAuthEvent("admin.auth.unauthorized", request, {
+	logAdminAuthEvent('admin.auth.unauthorized', request, {
 		keyPrefix: getBearerKeyPrefix(request),
 		method: request.method,
 		path: unauthorizedLogPath(request),
@@ -75,26 +81,55 @@ export function logAdminAuthEvent(
 		keyPrefix?: string | null;
 		method?: string | null;
 		path?: string | null;
-	} = {}
+		guardKey?: string | null;
+	} = {},
 ): void {
-	const payload: Record<string, unknown> = {
-		event,
-		at: new Date().toISOString(),
-		client_ip: getClientIp(request),
-		user_agent: getUserAgent(request),
-	};
-	if (details.username != null) payload.username = details.username;
-	if (details.keyPrefix != null) payload.key_prefix = details.keyPrefix;
-	if (details.method != null) payload.method = details.method;
-	if (details.path != null) payload.path = details.path;
+	try {
+		const payload: Record<string, unknown> = {
+			event,
+			at: new Date().toISOString(),
+			client_ip: getClientIp(request),
+			user_agent: getUserAgent(request)?.slice(0, 256),
+		};
+		if (details.username != null) payload.username = details.username.slice(0, 128);
+		if (details.keyPrefix != null) payload.key_prefix = details.keyPrefix;
+		if (details.method != null) payload.method = details.method;
+		if (details.path != null) payload.path = details.path;
+		if (details.guardKey != null) payload.guard_key = details.guardKey;
+		if (event === 'admin.auth.login_locked' || event === 'admin.auth.guard_degraded') {
+			const now = Date.now();
+			const sampleKey = `${event}:${details.guardKey ?? 'global'}`;
+			if (now - (sampledEvents.get(sampleKey) ?? 0) < 60_000) return;
+			if (sampledEvents.size >= SAMPLE_CAP) sampledEvents.clear();
+			sampledEvents.set(sampleKey, now);
+		}
 
-	const line = JSON.stringify(payload);
-	if (
-		event === "admin.auth.login_failed" ||
-		event === "admin.auth.unauthorized"
-	) {
-		console.warn(line);
-		return;
+		let line: string;
+		try {
+			line = JSON.stringify(payload);
+		} catch {
+			return;
+		}
+		if (
+			event === 'admin.auth.login_failed' ||
+			event === 'admin.auth.unauthorized' ||
+			event === 'admin.auth.login_locked' ||
+			event === 'admin.auth.login_lockout_triggered' ||
+			event === 'admin.auth.guard_degraded'
+		) {
+			try {
+				console.warn(line);
+			} catch {
+				/* Logging cannot change authentication. */
+			}
+			return;
+		}
+		try {
+			console.log(line);
+		} catch {
+			/* Logging cannot change authentication. */
+		}
+	} catch {
+		/* Logging cannot change authentication. */
 	}
-	console.log(line);
 }

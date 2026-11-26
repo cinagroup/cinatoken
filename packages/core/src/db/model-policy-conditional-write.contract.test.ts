@@ -16,7 +16,7 @@ function fixture(driver: 'd1' | 'postgres' | 'mysql') {
 		CREATE TABLE models(id TEXT PRIMARY KEY,route_policy TEXT,display_name TEXT,description TEXT,pricing_profile TEXT,max_tokens INTEGER,metadata TEXT);
 		CREATE TABLE model_tags(model_id TEXT REFERENCES models(id),tag TEXT,PRIMARY KEY(model_id,tag));
 		INSERT INTO models VALUES('Model-A',NULL,'Original','description','price',12,'metadata');
-		INSERT INTO model_tags VALUES('Model-A','old');`);
+		INSERT INTO model_tags VALUES('Model-A','old'); ALTER TABLE models ADD COLUMN note TEXT; UPDATE models SET note=description;`);
 	const queries: { sql: string; params: unknown[] }[] = [];
 	const events: string[] = [];
 	const hooks: { receipt?: unknown; commitError?: boolean } = {};
@@ -118,7 +118,7 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 					id: 'Model-A',
 					route_policy: '{"strategy":"lowest_cost"}',
 					display_name: 'New',
-					description: null,
+					description: null, note: null,
 					pricing_profile: null,
 					max_tokens: 42,
 					metadata: 'metadata',

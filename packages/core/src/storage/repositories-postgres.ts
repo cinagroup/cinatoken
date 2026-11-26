@@ -27,6 +27,8 @@ import {
 	createPostgresSharedKeysRepository,
 } from '../db/postgres/portal-marketplace.impl';
 import { createPostgresMcpServersRepository } from '../db/postgres/mcp-servers.impl';
+import { createPostgresOAuthAccessTokensRepository } from '../db/postgres/oauth-access-tokens.impl';
+import { createPostgresOAuthServerRepository } from '../db/postgres/oauth-server.impl';
 
 export function createPostgresRepositories(client: GatewayDatabaseClient): GatewayRepositories {
 	if (client.driver !== 'postgres') {
@@ -59,5 +61,7 @@ export function createPostgresRepositories(client: GatewayDatabaseClient): Gatew
 		sharedKeys: createPostgresSharedKeysRepository(client),
 		portalLedger: createPostgresPortalLedgerRepository(client),
 		mcpServers: createPostgresMcpServersRepository(client),
+		oauthAccessTokens: createPostgresOAuthAccessTokensRepository(client),
+		oauthServer: createPostgresOAuthServerRepository(client),
 	};
 }

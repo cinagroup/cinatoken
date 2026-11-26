@@ -1,3 +1,6 @@
+import { applyRouteExtraHeaders } from '@octafuse/core';
+
+import { sanitizeRewrappedHeaders } from './response-headers';
 import {
 	applyVertexOpenAiModelPrefix,
 	resolveProviderUpstreamSecret,
@@ -308,4 +311,30 @@ export async function dispatchOpenAiEmbeddingsRoute(
 		);
 		return { ...normalized, upstreamRequestId, resourceCompletion: owned.resourceCompletion };
 	});
+}
+
+
+function finiteCount(value: unknown): number {
+	return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+
+/** 从上游响应体解析 usage；没有可用 usage 时返回 null（记为 incomplete）。 */
+export function parseOpenAiEmbeddingsUsage(text: string): UsageFromStream | null {
+	let parsed: { usage?: EmbeddingsUsage } | null;
+	try {
+		parsed = JSON.parse(text) as { usage?: EmbeddingsUsage };
+	} catch {
+		return null;
+	}
+	const u = parsed?.usage;
+	if (!u || typeof u !== 'object') return null;
+	const inputTokens = finiteCount(u.prompt_tokens) || finiteCount(u.input_tokens) || finiteCount(u.total_tokens);
+	if (inputTokens <= 0) return null;
+	return {
+		...EMPTY_USAGE_LOCAL,
+		input_tokens: inputTokens,
+		total_tokens: finiteCount(u.total_tokens) || inputTokens,
+		raw_usage: JSON.stringify(u),
+	};
 }

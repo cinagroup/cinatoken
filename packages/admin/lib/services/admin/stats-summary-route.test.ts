@@ -58,6 +58,7 @@ function fixture(permissions: AdminPermission[] | null) {
 			},
 		},
 		requestLogs: {
+   getDashboardOverview:async()=>{storageReads++;return {current:{requests:1,success:0,errors:1,charged:0.5,metered:0.4,standard:0.6}};},
 			getRequestStatsByRange: async () => {
 				storageReads++;
 				return {

@@ -10,10 +10,11 @@ import { MAX_AUDIO_DURATION_SECONDS } from '../../services/egress/audio-duration
 import { scheduleResourceCompletion } from '../../runtime/schedule-resource-completion';
 /**
  * DashScope 异步文件转写透传。
- * `POST /v1/dashscope/services/audio/asr/transcription` 提交任务。
- * `GET /v1/dashscope/tasks/:taskId?model=` 查询任务；成功时按结果里的时长计费，响应仍是任务 JSON。
+ * `POST /dashscope/api/v1/services/audio/asr/transcription` 提交任务。
+ * `GET /dashscope/api/v1/tasks/:taskId?model=` 查询任务；成功时按结果里的时长计费，响应仍是任务 JSON。
  */
-import { isAudioTranscriptionModel, type ModelRow } from '@octafuse/core';
+import type { ModelRow } from '@octafuse/core';
+import { audioModelGuardMessage } from './audio-model-guard';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import type { Env } from '../../app';
@@ -97,11 +98,12 @@ async function runAsyncPassthrough(
 			message: `Model not found: ${rawModelId.slice(0, 200)}`,
 		});
 	}
-	if (!isAudioTranscriptionModel(preview.model)) {
+	const guardMessage = audioModelGuardMessage(preview.model, 'asr', 'DashScope file transcription passthrough');
+	if (guardMessage) {
 		return gatewayErrorJson(c, {
 			status: 400,
 			code: GatewayErrorCode.invalidRequest,
-			message: 'DashScope file transcription passthrough requires a transcription model',
+			message: guardMessage,
 		});
 	}
 	const { model, baseModelId, explicitGroup } = preview;
@@ -112,7 +114,7 @@ async function runAsyncPassthrough(
 				c.env.SHARED_KEY_ENCRYPTION_SECRET,
 				apiKey,
 				taskId,
-			)
+		  )
 		: null;
 	if (taskId && (!receipt || receipt.modelId !== baseModelId || receipt.routeGroup !== effectiveRouteGroup))
 		return gatewayErrorJson(c, {
@@ -144,7 +146,7 @@ async function runAsyncPassthrough(
 					route.targetId === receipt.targetId &&
 					route.providerId === receipt.providerId &&
 					(route.providerKeyId ?? null) === receipt.providerKeyId,
-			)
+		  )
 		: policy.selected.routes;
 	if (!routes.length)
 		return gatewayErrorJson(c, {
@@ -231,8 +233,9 @@ async function runAsyncPassthrough(
 				sticky: stickyConfigFromSurface(stickySurface),
 				inboundHeaders: c.req.raw.headers,
 				...(nativeRequest?.options ?? {
-					registerResourceCompletion: (task: import('../../services/resource-completion').ResourceCompletion) =>
-						scheduleResourceCompletion(c, task),
+					registerResourceCompletion: (
+						task: import('../../services/resource-completion').ResourceCompletion,
+					) => scheduleResourceCompletion(c, task),
 				}),
 				dashScopeJson: {
 					taskId,
@@ -258,9 +261,13 @@ async function runAsyncPassthrough(
 					response.status,
 					response.headers.get('content-type'),
 					errorBodyText,
-					formatHttpErrorTextForRequestLog(response.status, response.headers.get('content-type'), errorBodyText),
+					formatHttpErrorTextForRequestLog(
+						response.status,
+						response.headers.get('content-type'),
+						errorBodyText,
+					),
 					{ clientErrorCircuitEnabled: false },
-				)
+			  )
 			: null;
 	const alertCircuitEvents = userModelCircuitEvent
 		? [...proxyResult.circuitEvents, userModelCircuitEvent]
@@ -298,7 +305,11 @@ async function runAsyncPassthrough(
 			errorMessage:
 				status === 'error'
 					? errorBodyText != null
-						? formatHttpErrorTextForRequestLog(response.status, response.headers.get('content-type'), errorBodyText)
+						? formatHttpErrorTextForRequestLog(
+								response.status,
+								response.headers.get('content-type'),
+								errorBodyText,
+						  )
 						: `HTTP ${response.status}`
 					: undefined,
 			billing: {
@@ -357,7 +368,10 @@ async function runAsyncPassthrough(
 			headers.set('X-CinaToken-Settlement-Basis', 'reserved');
 			headers.set('X-CinaToken-Request-Id', policy.requestId);
 			response = new Response(
-				JSON.stringify({ ...(proxyResult.meta?.parsedBody as Record<string, unknown>), gateway_task_receipt: token }),
+				JSON.stringify({
+					...(proxyResult.meta?.parsedBody as Record<string, unknown>),
+					gateway_task_receipt: token,
+				}),
 				{ status: response.status, statusText: response.statusText, headers },
 			);
 		}

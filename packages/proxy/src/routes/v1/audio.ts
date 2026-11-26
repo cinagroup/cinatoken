@@ -5,6 +5,7 @@
  */
 import type { GatewayRepositories, GuardrailPreflightResult } from '@octafuse/core';
 import { getBusinessTimezone } from '@octafuse/core';
+import { audioTokenUsageFromCounts, type ModelRow, type ResolvedModelSurfaceRow } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import type { Env } from '../../app';
@@ -139,7 +140,9 @@ async function blockUnsupportedAudioOutputGuardrails(
 		correlationId,
 	}).catch((error: unknown) => {
 		console.warn(
-			`[Gateway Audio] output guardrail audit failed requestId=${correlationId} error=${error instanceof Error ? error.message : String(error)}`,
+			`[Gateway Audio] output guardrail audit failed requestId=${correlationId} error=${
+				error instanceof Error ? error.message : String(error)
+			}`,
 		);
 	});
 	return gatewayErrorJson(c, {
@@ -184,7 +187,9 @@ async function terminateAudioOrdinaryBudget(
 		await lease.terminateUnknown(reason);
 	} catch (error) {
 		console.error(
-			`[Gateway Audio] ordinary budget cleanup failed requestId=${requestId} state=${lease.state} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+			`[Gateway Audio] ordinary budget cleanup failed requestId=${requestId} state=${
+				lease.state
+			} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
 }
@@ -195,7 +200,9 @@ async function terminateAudioGuardrailBudget(lease: AudioGuardrailBudgetLease, r
 		else await lease.release(reason);
 	} catch (error) {
 		console.error(
-			`[Gateway Audio] guardrail budget cleanup failed requestId=${lease.requestId} reason=${reason} error=${error instanceof Error ? error.message : String(error)}`,
+			`[Gateway Audio] guardrail budget cleanup failed requestId=${lease.requestId} reason=${reason} error=${
+				error instanceof Error ? error.message : String(error)
+			}`,
 		);
 	}
 }
@@ -629,10 +636,17 @@ async function parseMultipartTranscription(request: Request): Promise<ParsedAudi
 	}
 	let extra: Record<string, unknown>;
 	try {
-		extra = { ...pickFormExtraFields(Object.fromEntries(form.entries()), [...AUDIO_TRANSCRIPTION_KNOWN_KEYS, 'provider', 'session_id']),
-			...(timestampsResult.value ? { 'timestamp_granularities[]': timestampsResult.value } : {}) };
+		extra = {
+			...pickFormExtraFields(Object.fromEntries(form.entries()), [
+				...AUDIO_TRANSCRIPTION_KNOWN_KEYS,
+				'provider',
+				'session_id',
+			]),
+			...(timestampsResult.value ? { 'timestamp_granularities[]': timestampsResult.value } : {}),
+		};
 	} catch (error) {
-		if (error instanceof UpstreamExtraFieldsError) return { ok: false, kind: 'invalid_request', error: error.message };
+		if (error instanceof UpstreamExtraFieldsError)
+			return { ok: false, kind: 'invalid_request', error: error.message };
 		throw error;
 	}
 
@@ -791,7 +805,7 @@ export function audioPricingCeilingFailureContract(estimatedChargedCost: number 
 				status: 502,
 				code: GatewayErrorCode.routeResolutionFailed,
 				message: 'Audio pricing cannot prove a finite charged-cost ceiling for every eligible route',
-			}
+		  }
 		: null;
 }
 
@@ -813,7 +827,9 @@ audioRoutes.post('/transcriptions', async (c) => {
 
 	const parsed = await parseAudioTranscriptionRequest(c.req.raw);
 	if (!parsed.ok) {
-		console.warn(`[Gateway Audio] transcriptions parse failed kind=${parsed.kind} requestId=${requestCorrelationId}`);
+		console.warn(
+			`[Gateway Audio] transcriptions parse failed kind=${parsed.kind} requestId=${requestCorrelationId}`,
+		);
 		const failure = audioTranscriptionParseFailureContract(parsed.kind);
 		return gatewayErrorJson(c, {
 			status: failure.status,
@@ -836,7 +852,9 @@ audioRoutes.post('/transcriptions', async (c) => {
 		return gatewayErrorJson(c, {
 			status: guardrail.status,
 			code:
-				guardrail.code === 'guardrail_invalid' ? GatewayErrorCode.guardrailInvalid : GatewayErrorCode.guardrailBlocked,
+				guardrail.code === 'guardrail_invalid'
+					? GatewayErrorCode.guardrailInvalid
+					: GatewayErrorCode.guardrailBlocked,
 			message: guardrail.message,
 		});
 	}
@@ -873,7 +891,9 @@ audioRoutes.post('/transcriptions', async (c) => {
 	if (!fallbackPlan.ok) {
 		if (fallbackPlan.status !== 404) {
 			console.warn(
-				`[Gateway Audio] transcriptions route resolve failed status=${fallbackPlan.status} clientModel=${truncateModelIdForLog(rawModelId)} error=${fallbackPlan.message}`,
+				`[Gateway Audio] transcriptions route resolve failed status=${
+					fallbackPlan.status
+				} clientModel=${truncateModelIdForLog(rawModelId)} error=${fallbackPlan.message}`,
 			);
 		}
 		return gatewayErrorJson(c, {
@@ -990,7 +1010,9 @@ audioRoutes.post('/transcriptions', async (c) => {
 	timing.markGatewayComplete();
 
 	console.log(
-		`[Gateway Audio] transcriptions baseModelId=${baseModelId} keyId=${apiKey.keyId} bytes=${transcription.file?.bytes.byteLength ?? 0}`,
+		`[Gateway Audio] transcriptions baseModelId=${baseModelId} keyId=${apiKey.keyId} bytes=${
+			transcription.file?.bytes.byteLength ?? 0
+		}`,
 	);
 
 	let proxyResult: ProxyResult;
@@ -1163,8 +1185,8 @@ export function parseSpeechRequest(
 		value.response_format === undefined
 			? 'pcm'
 			: typeof value.response_format === 'string'
-				? value.response_format.trim().toLowerCase()
-				: '';
+			? value.response_format.trim().toLowerCase()
+			: '';
 	if (!OPENROUTER_SPEECH_RESPONSE_FORMATS.has(responseFormatRaw as AudioSpeechResponseFormat)) {
 		return { ok: false, error: 'response_format must be "mp3" or "pcm"' };
 	}
@@ -1172,7 +1194,8 @@ export function parseSpeechRequest(
 	if (typeof speed !== 'number' || !Number.isFinite(speed) || speed < 0.25 || speed > 4) {
 		return { ok: false, error: 'speed must be between 0.25 and 4.0' };
 	}
-	const streamFormatRaw = typeof value.stream_format === 'string' ? value.stream_format.trim().toLowerCase() : 'audio';
+	const streamFormatRaw =
+		typeof value.stream_format === 'string' ? value.stream_format.trim().toLowerCase() : 'audio';
 	if (streamFormatRaw !== 'audio' && streamFormatRaw !== 'sse') {
 		return { ok: false, error: 'stream_format must be audio or sse' };
 	}
@@ -1191,7 +1214,12 @@ export function parseSpeechRequest(
 
 	let extraFields: Record<string, unknown> = {};
 	try {
-		extraFields = pickExtraFields(value, [...AUDIO_SPEECH_KNOWN_KEYS, 'provider', 'session_id', 'input_references']);
+		extraFields = pickExtraFields(value, [
+			...AUDIO_SPEECH_KNOWN_KEYS,
+			'provider',
+			'session_id',
+			'input_references',
+		]);
 	} catch (error) {
 		if (error instanceof UpstreamExtraFieldsError) {
 			return { ok: false, error: error.message };
@@ -1356,7 +1384,9 @@ audioRoutes.post('/speech', async (c) => {
 		return gatewayErrorJson(c, {
 			status: guardrail.status,
 			code:
-				guardrail.code === 'guardrail_invalid' ? GatewayErrorCode.guardrailInvalid : GatewayErrorCode.guardrailBlocked,
+				guardrail.code === 'guardrail_invalid'
+					? GatewayErrorCode.guardrailInvalid
+					: GatewayErrorCode.guardrailBlocked,
 			message: guardrail.message,
 		});
 	}
@@ -1612,7 +1642,11 @@ async function finalizeSpeechResponse(params: {
 		if (usage.cancelled) return 'Client disconnected before speech stream completed';
 		if (usage.stream_error) return `Speech stream failed: ${usage.stream_error}`;
 		if (errorBodyText != null) {
-			return formatHttpErrorTextForRequestLog(response.status, response.headers.get('content-type'), errorBodyText);
+			return formatHttpErrorTextForRequestLog(
+				response.status,
+				response.headers.get('content-type'),
+				errorBodyText,
+			);
 		}
 		return `HTTP ${response.status}`;
 	};
@@ -1639,17 +1673,7 @@ async function finalizeSpeechResponse(params: {
 				const ordinaryCostUnknown =
 					proxyResult.meta?.upstreamOutcomeUnknown === true ||
 					(response.ok && (usage.cancelled === true || Boolean(usage.stream_error)));
-				const tokenUsage =
-					usage.input_tokens > 0 || usage.output_tokens > 0 || usage.total_tokens > 0
-						? {
-								input_tokens: usage.input_tokens,
-								output_tokens: usage.output_tokens,
-								total_tokens: usage.total_tokens,
-								audio_tokens: usage.output_tokens,
-								text_tokens: usage.input_tokens,
-								raw_usage: usage.raw_usage,
-							}
-						: null;
+				const tokenUsage = audioTokenUsageFromCounts(usage);
 				const status: 'success' | 'error' =
 					response.ok && !usage.cancelled && !usage.stream_error ? 'success' : 'error';
 				const errorMessage = speechErrorMessage(usage);
@@ -1667,7 +1691,11 @@ async function finalizeSpeechResponse(params: {
 					providerModelName: chosenRoute.providerModelName,
 					modelName: modelNameForLog,
 					providerName: chosenRoute.providerName,
-					requestBody: annotateRequestLogWithExtraFields(requestBodyForLog, undefined, proxyResult.meta?.restoredUpstreamPaths),
+					requestBody: annotateRequestLogWithExtraFields(
+						requestBodyForLog,
+						undefined,
+						proxyResult.meta?.restoredUpstreamPaths,
+					),
 					requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 					requestOrigin: new URL(c.req.url).origin,
 					...generationRequestContext(c.req.raw.headers),
@@ -1714,7 +1742,7 @@ async function finalizeSpeechResponse(params: {
 								requestId: guardrailBudgetLease.requestId,
 								usageUnavailable,
 								...(ordinaryCostUnknown ? { mode: 'reserved' as const } : {}),
-							}
+						  }
 						: undefined,
 					ordinaryBudgetSettlement:
 						ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
@@ -1723,13 +1751,15 @@ async function finalizeSpeechResponse(params: {
 									budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
 									reservedMicros: ordinaryBudgetLease.reservedMicros,
 									unknownCost: ordinaryCostUnknown,
-								}
+							  }
 							: undefined,
 				});
 			})
 			.catch(async (error) => {
 				console.error(
-					`[Gateway Audio] record speech usage failed baseModelId=${baseModelId} error=${error instanceof Error ? error.message : String(error)}`,
+					`[Gateway Audio] record speech usage failed baseModelId=${baseModelId} error=${
+						error instanceof Error ? error.message : String(error)
+					}`,
 				);
 				await guardrailBudgetLease.forfeit('request_usage_settlement_failed');
 				await terminateAudioOrdinaryBudget(
@@ -1801,11 +1831,13 @@ async function finalizeAudioResponse(params: {
 
 	const latencyMs = Date.now() - start;
 	const meta = proxyResult.meta;
-	const durationSeconds = response.ok ? (meta?.audioDurationSeconds ?? 0) : 0;
+	const durationSeconds = response.ok ? meta?.audioDurationSeconds ?? 0 : 0;
 	const durationSource = response.ok && meta?.audioDurationSource ? meta.audioDurationSource : 'estimated';
-	const tokenUsage = response.ok ? (meta?.audioTokenUsage ?? null) : null;
+	const tokenUsage = response.ok ? meta?.audioTokenUsage ?? null : null;
 	const ordinaryCostUnknown =
-		meta?.upstreamOutcomeUnknown === true || meta?.responseBodyTooLarge === true || (response.ok && usageUnavailable);
+		meta?.upstreamOutcomeUnknown === true ||
+		meta?.responseBodyTooLarge === true ||
+		(response.ok && usageUnavailable);
 
 	let userModelCircuitEvent = null;
 	if (response.ok) {
@@ -1852,7 +1884,11 @@ async function finalizeAudioResponse(params: {
 				providerModelName: chosenRoute.providerModelName,
 				modelName: modelNameForLog,
 				providerName: chosenRoute.providerName,
-				requestBody: annotateRequestLogWithExtraFields(requestBodyForLog, undefined, proxyResult.meta?.restoredUpstreamPaths),
+				requestBody: annotateRequestLogWithExtraFields(
+					requestBodyForLog,
+					undefined,
+					proxyResult.meta?.restoredUpstreamPaths,
+				),
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 				requestOrigin: new URL(c.req.url).origin,
 				...generationRequestContext(c.req.raw.headers),
@@ -1898,7 +1934,7 @@ async function finalizeAudioResponse(params: {
 							requestId: guardrailBudgetLease.requestId,
 							usageUnavailable,
 							...(ordinaryCostUnknown ? { mode: 'reserved' as const } : {}),
-						}
+					  }
 					: undefined,
 				ordinaryBudgetSettlement:
 					ordinaryBudgetLease.reserved && ordinaryBudgetLease.state === 'dispatched'
@@ -1907,12 +1943,14 @@ async function finalizeAudioResponse(params: {
 								budgetEpoch: ordinaryBudgetLease.budgetEpoch!,
 								reservedMicros: ordinaryBudgetLease.reservedMicros,
 								unknownCost: ordinaryCostUnknown,
-							}
+						  }
 						: undefined,
 			});
 		})().catch(async (err) => {
 			console.error(
-				`[Gateway Audio] recordAudioUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} error=${err instanceof Error ? err.message : String(err)}`,
+				`[Gateway Audio] recordAudioUsage failed baseModelId=${baseModelId} keyId=${apiKey.keyId} error=${
+					err instanceof Error ? err.message : String(err)
+				}`,
 			);
 			await guardrailBudgetLease.forfeit('request_usage_settlement_failed');
 			await terminateAudioOrdinaryBudget(

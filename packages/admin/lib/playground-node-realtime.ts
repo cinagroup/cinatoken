@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import type { IncomingMessage } from 'node:http';
 import { applyRouteExtraHeaders, resolveProviderUpstreamSecret } from '@octafuse/core';
 import type {
-	PlaygroundDashScopeRealtimeOperation,
+	PlaygroundRealtimeOperation,
 	PlaygroundRealtimeNodeDispatch,
 } from '@/lib/services/admin/playground-realtime-service';
 import { rewritePlaygroundRealtimeClientMessage } from '@/lib/services/admin/playground-realtime-service';
@@ -29,7 +29,10 @@ export interface NodeWebSocket {
 	binaryType: string;
 	on(event: 'open', listener: () => void): this;
 	on(event: 'upgrade', listener: (_response: IncomingMessage) => void): this;
-	on(event: 'unexpected-response', listener: (_request: IncomingMessage, response: IncomingMessage) => void): this;
+	on(
+		event: 'unexpected-response',
+		listener: (_request: IncomingMessage, response: IncomingMessage) => void,
+	): this;
 	on(event: 'message', listener: (data: Buffer, isBinary: boolean) => void): this;
 	on(event: 'close', listener: (code: number, reason: Buffer) => void): this;
 	on(event: 'error', listener: (error: Error) => void): this;
@@ -44,7 +47,7 @@ export interface NodeWebSocket {
 
 export type NodeWebSocketConstructor = new (
 	url: string,
-	options?: { headers?: Record<string, string>; handshakeTimeout?: number }
+	options?: { headers?: Record<string, string>; handshakeTimeout?: number; maxPayload?: number },
 ) => NodeWebSocket;
 
 export interface NodeWebSocketServer {
@@ -52,7 +55,7 @@ export interface NodeWebSocketServer {
 		request: IncomingMessage,
 		socket: NodeJS.ReadWriteStream,
 		head: Buffer,
-		callback: (client: NodeWebSocket) => void
+		callback: (client: NodeWebSocket) => void,
 	): void;
 }
 
@@ -84,18 +87,52 @@ function closeSocket(socket: NodeWebSocket, code = 1000, reason = ''): void {
 	}
 }
 
+/** DashScope 用 Bearer，ElevenLabs 用 `xi-api-key`。 */
+function upstreamAuthHeaders(route: PlaygroundResolvedRoute, secret: string): Record<string, string> {
+	return route.upstreamProtocol === 'elevenlabs'
+		? { 'xi-api-key': secret }
+		: { Authorization: `Bearer ${secret}` };
+}
+
+type EarlyUpstreamMessages = {
+	/** 停止缓冲并返回已缓冲的帧。 */
+	drain(): Array<{ data: Buffer; isBinary: boolean }>;
+};
+
+function createEarlyUpstreamMessages(upstream: NodeWebSocket): EarlyUpstreamMessages {
+	const buffered: Array<{ data: Buffer; isBinary: boolean }> = [];
+	let bytes = 0;
+	const listener = (data: Buffer, isBinary: boolean) => {
+		bytes += data.byteLength;
+		if (bytes > 1024 * 1024 || buffered.length >= 64) {
+			closeSocket(upstream, 1009, 'Realtime early-frame limit');
+			return;
+		}
+		buffered.push({ data, isBinary });
+	};
+	upstream.on('message', listener);
+	return {
+		drain() {
+			upstream.off('message', listener);
+			return buffered.splice(0);
+		},
+	};
+}
+
 async function connectUpstream(
 	upstreamUrl: string,
-	providerApiKey: string,
+	route: PlaygroundResolvedRoute,
 	signal: AbortSignal | undefined,
 	WebSocketCtor: NodeWebSocketConstructor,
 	handshakeTimeoutMs: number,
-	customParams: Record<string, unknown> | null
-): Promise<{ socket: NodeWebSocket } | { response: Response }> {
-	const { secret } = await resolveProviderUpstreamSecret(providerApiKey);
+): Promise<{ socket: NodeWebSocket; early: EarlyUpstreamMessages } | { response: Response }> {
+	signal?.throwIfAborted();
+	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal });
+	signal?.throwIfAborted();
 	const upstream = new WebSocketCtor(upstreamUrl, {
-		headers: applyRouteExtraHeaders({ Authorization: `Bearer ${secret}` }, customParams),
+		headers: applyRouteExtraHeaders(upstreamAuthHeaders(route, secret), route.customParams),
 		handshakeTimeout: handshakeTimeoutMs,
+		maxPayload: 4 * 1024 * 1024,
 	});
 	let settled = false;
 
@@ -124,7 +161,11 @@ async function connectUpstream(
 			if (settled) return;
 			settled = true;
 			cleanup();
-			resolve({ socket: upstream });
+			// 握手响应与上游首帧（如 ElevenLabs 的 session_started）常在同一个 TCP 包里，
+			// `ws` 会在 nextTick 里先把它们发出来，早于 promise 回调里挂的监听器。
+			// 因此在 open 的同一同步段里先挂一个缓冲监听，之后由调用方回放。
+			const early = createEarlyUpstreamMessages(upstream);
+			resolve({ socket: upstream, early });
 		};
 		const onUnexpectedResponse = (_request: IncomingMessage, response: IncomingMessage) => {
 			if (settled) return;
@@ -154,11 +195,11 @@ async function connectUpstream(
 	});
 }
 
-function nodeRealtimeResponse(socket: NodeWebSocket): Response {
+function nodeRealtimeResponse(socket: NodeWebSocket, route: PlaygroundResolvedRoute): Response {
 	const response = new Response(null, {
 		status: 200,
 		headers: {
-			'X-Octafuse-Realtime-Protocol': 'dashscope-playground',
+			'X-Octafuse-Realtime-Protocol': `${route.upstreamProtocol}-playground`,
 			'X-Octafuse-Realtime-Upgrade': '1',
 		},
 	});
@@ -169,21 +210,31 @@ function nodeRealtimeResponse(socket: NodeWebSocket): Response {
 export function createPlaygroundNodeRealtimeDispatch(
 	client: NodeWebSocket,
 	WebSocketCtor: NodeWebSocketConstructor = wsModule.WebSocket,
-	options?: { handshakeTimeoutMs?: number }
+	options?: { handshakeTimeoutMs?: number },
 ): PlaygroundRealtimeNodeDispatch {
 	const handshakeTimeoutMs = options?.handshakeTimeoutMs ?? PLAYGROUND_UPSTREAM_HANDSHAKE_TIMEOUT_MS;
 	return (
 		route: PlaygroundResolvedRoute,
-		operation: PlaygroundDashScopeRealtimeOperation,
+		operation: PlaygroundRealtimeOperation,
 		requestSignal: AbortSignal | undefined,
-		upstreamUrl: string
+		upstreamUrl: string,
 	): Promise<Response> =>
 		new Promise<Response>((resolve, reject) => {
 			const pendingMessages: Array<{ data: Buffer; isBinary: boolean }> = [];
 			let upstream: NodeWebSocket | null = null;
 			let clientClosedBeforeOpen = false;
+			let clientBytes = 0,
+				upstreamBytes = 0,
+				pendingBytes = 0;
+			let sessionTimer: ReturnType<typeof setTimeout> | undefined;
+			const clearSession = () => {
+				if (sessionTimer) clearTimeout(sessionTimer);
+			};
 			const sendToUpstream = (data: Buffer, isBinary: boolean) => {
 				if (!upstream || upstream.readyState !== NODE_WS_OPEN) {
+					pendingBytes += data.byteLength;
+					if (pendingBytes > 1024 * 1024 || pendingMessages.length >= 64)
+						throw new Error('Realtime pending-frame limit');
 					pendingMessages.push({ data, isBinary });
 					return;
 				}
@@ -194,6 +245,13 @@ export function createPlaygroundNodeRealtimeDispatch(
 			};
 			const onClientMessage = (data: Buffer, isBinary: boolean) => {
 				try {
+					clientBytes += data.byteLength;
+					if (
+						data.byteLength > 1024 * 1024 ||
+						clientBytes > 32 * 1024 * 1024 ||
+						(route.upstreamProtocol === 'elevenlabs' && isBinary)
+					)
+						throw new Error('Realtime client-frame limit');
 					sendToUpstream(data, isBinary);
 				} catch {
 					closeSocket(client, 1011, 'Gateway upstream send failed');
@@ -201,15 +259,20 @@ export function createPlaygroundNodeRealtimeDispatch(
 				}
 			};
 			const onClientClose = (code: number, reason: Buffer) => {
+				clearSession();
 				clientClosedBeforeOpen = upstream == null;
 				if (upstream) closeSocket(upstream, code, reason.toString());
 			};
 			const onClientError = () => {
+				clearSession();
 				clientClosedBeforeOpen = upstream == null;
 				if (upstream) closeSocket(upstream, 1011, 'Client WebSocket error');
 			};
 			const onUpstreamMessage = (data: Buffer, isBinary: boolean) => {
 				try {
+					upstreamBytes += data.byteLength;
+					if (data.byteLength > 4 * 1024 * 1024 || upstreamBytes > 32 * 1024 * 1024)
+						throw new Error('Realtime upstream-frame limit');
 					client.send(isBinary ? data : data.toString());
 				} catch {
 					closeSocket(client, 1011, 'Gateway client send failed');
@@ -217,9 +280,11 @@ export function createPlaygroundNodeRealtimeDispatch(
 				}
 			};
 			const onUpstreamClose = (code: number, reason: Buffer) => {
+				clearSession();
 				closeSocket(client, code, reason.toString());
 			};
 			const onUpstreamError = () => {
+				clearSession();
 				closeSocket(client, 1011, 'Upstream WebSocket error');
 			};
 			const onAbort = () => {
@@ -247,14 +312,7 @@ export function createPlaygroundNodeRealtimeDispatch(
 			// 监听器就绪后立刻恢复读，让 pause 窗口内的 run-task 进入 pending 队列。
 			client.resume();
 
-			void connectUpstream(
-				upstreamUrl,
-				route.providerApiKey,
-				requestSignal,
-				WebSocketCtor,
-				handshakeTimeoutMs,
-				route.customParams
-			)
+			void connectUpstream(upstreamUrl, route, requestSignal, WebSocketCtor, handshakeTimeoutMs)
 				.then((opened) => {
 					if ('response' in opened) {
 						cleanupClient();
@@ -269,14 +327,21 @@ export function createPlaygroundNodeRealtimeDispatch(
 					}
 					upstream = opened.socket;
 					upstream.binaryType = 'nodebuffer';
+					sessionTimer = setTimeout(() => {
+						closeSocket(client, 1000, 'Playground session deadline exceeded');
+						if (upstream) closeSocket(upstream, 1000, 'Playground session deadline exceeded');
+						cleanupClient();
+					}, 300_000);
+					sessionTimer.unref();
 					upstream.on('message', onUpstreamMessage);
 					upstream.on('close', onUpstreamClose);
 					upstream.on('error', onUpstreamError);
+					for (const early of opened.early.drain()) onUpstreamMessage(early.data, early.isBinary);
 					requestSignal?.removeEventListener('abort', onAbort);
 					for (const pending of pendingMessages.splice(0)) {
 						sendToUpstream(pending.data, pending.isBinary);
 					}
-					resolve(nodeRealtimeResponse(client));
+					resolve(nodeRealtimeResponse(client, route));
 				})
 				.catch((error) => {
 					cleanupClient();

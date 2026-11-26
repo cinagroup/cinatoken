@@ -33,7 +33,7 @@ curl -sS http://localhost:8787/v1/responses \
 ```bash
 curl -sS http://localhost:8787/v1/models \
   -H "Authorization: Bearer sk-your-api-key"
-# 文生图：?kind=image ；ASR / TTS：?kind=audio ；全部：?kind=all
+# 文生图：?kind=image ；语音识别：?kind=asr ；语音合成：?kind=tts ；（?kind=audio 同时返回两者）；向量：?kind=embedding ；全部：?kind=all
 ```
 
 公开 Catalog（**无需**用户 Key，适合门户 discovery）：
@@ -66,6 +66,17 @@ curl -sS http://localhost:8787/v1/images/generations \
 
 千问 / 万相生成默认返回 `data[].url`；需要 Base64 时可显式传入 `"response_format":"b64_json"`。模型参数限制和按张计费规则见 [DashScope 生图架构](../developers/architecture/dashscope-image.md)。
 
+向量（Embeddings；需用户 Key + 已配置向量模型路由）：
+
+```bash
+curl -sS http://localhost:8787/v1/embeddings \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"text-embedding-3-small","input":["hello"]}'
+```
+
+向量模型默认不出现在 `GET /v1/models`，列表用 `?kind=embedding`。Gemini 原生客户端可调用 `POST /v1beta/models/{model}:embedContent`。
+
 语音转写（Audio；需用户 Key + 已配置 OpenAI 协议 ASR 路由）：
 
 ```bash
@@ -90,7 +101,7 @@ curl -sS http://localhost:8787/v1/audio/speech \
 DashScope 同步多模态 ASR 使用原生 JSON 入口（需配置 `dashscope` + `audio.transcriptions.multimodal` 请求入口与同协议 `passthrough` 上游）：
 
 ```bash
-curl -sS http://localhost:8787/v1/dashscope/services/aigc/multimodal-generation/generation \
+curl -sS http://localhost:8787/dashscope/api/v1/services/aigc/multimodal-generation/generation \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -108,7 +119,7 @@ curl -sS http://localhost:8787/v1/dashscope/services/aigc/multimodal-generation/
   }'
 ```
 
-网关返回 DashScope 原生 JSON，并按上游 `usage.duration` / `usage.seconds` 记录时长和费用。DashScope 原生实时 ASR / TTS 则继续使用 `/v1/dashscope/realtime` WebSocket 入口；连接参数与 operation 见 [DashScope 音频架构](../developers/architecture/dashscope-audio.md)。
+网关返回 DashScope 原生 JSON，并按上游 `usage.duration` / `usage.seconds` 记录时长和费用。DashScope 原生实时 ASR / TTS 使用与百炼官方一致的 WebSocket 路径：Paraformer / Fun-ASR / CosyVoice 走 `/dashscope/api-ws/v1/inference`（模型写在 run-task 帧里），Qwen-Realtime 会话走 `/dashscope/api-ws/v1/realtime?model=`。把官方 SDK 的 base 换成网关域名加 `/dashscope` 即可；详见 [DashScope 音频架构](../developers/architecture/dashscope-audio.md)。
 
 智能体工具（Agent Tools；需用户 Key；管理后台 → REST 服务已为对应工具配置活跃引擎与第三方 API Key）提供 `POST /v1/tools/web-search`、`POST /v1/tools/web-fetch`、`POST /v1/tools/web-deep-search`。示例如下：
 

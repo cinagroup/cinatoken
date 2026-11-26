@@ -1,7 +1,7 @@
 /**
  * Provider 与官方模板同步：生成差异报告、按选中的字段应用官方值。
  *
- * 只写 `description` / `endpoints`；永不触碰 `api_key`、`status`、`name`、`kind`。
+ * 只写 `endpoints`；永不触碰 `note`、`api_key`、`status`、`name`、`kind`。
  * 应用时服务端重新计算差异，不信任前端展示过的内容。
  */
 import type { GatewayRepositories } from '@octafuse/core';
@@ -58,6 +58,8 @@ export async function getProviderSyncReportService(repos: GatewayRepositories): 
 				kind,
 				label_en: presentation.kindLabels?.en ?? kind,
 				label_zh: presentation.kindLabels?.zh ?? kind,
+				label_ja: presentation.kindLabels?.ja ?? presentation.kindLabels?.en ?? kind,
+				label_ko: presentation.kindLabels?.ko ?? presentation.kindLabels?.en ?? kind,
 				vendor_key: presentation.vendorKey,
 				icon_key: presentation.iconKey,
 				providers: [],
@@ -86,6 +88,8 @@ export async function getProviderSyncReportService(repos: GatewayRepositories): 
 			kind: choice.kind,
 			label_en: choice.labels.en,
 			label_zh: choice.labels.zh,
+			label_ja: choice.labels.ja ?? choice.labels.en,
+			label_ko: choice.labels.ko ?? choice.labels.en,
 			vendor_key: choice.vendorKey,
 			icon_key: choice.iconKey,
 		})),
@@ -129,11 +133,7 @@ export async function applyProviderSyncService(
 				skipped += 1;
 				continue;
 			}
-			const patch = buildProviderSyncPatch(
-				row as { description?: string | null; endpoints?: string | null },
-				preset,
-				fields
-			);
+			const patch = buildProviderSyncPatch(row, preset, fields);
 			if (Object.keys(patch).length === 0) {
 				skipped += 1;
 				continue;

@@ -128,6 +128,7 @@ export function rebuildTextJsonResponse(response: Response, value: Record<string
 	headers.delete('Content-Length');
 	headers.delete('Content-Encoding');
 	headers.delete('Transfer-Encoding');
+ headers.delete('Connection');
 	return new Response(JSON.stringify(value), {
 		status: response.status,
 		statusText: response.statusText,

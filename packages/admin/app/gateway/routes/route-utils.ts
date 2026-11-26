@@ -1,3 +1,4 @@
+import { EMPTY_GROUPED_SELECTION, isEmptyGroupedSelection, type GroupedSelection } from '@/lib/grouped-selection';
 import { parsePricingProfile } from '@octafuse/core/db/pricing-profile';
 import {
 	isAudioModel,
@@ -8,6 +9,7 @@ import {
 	isRerankModel,
 	isTextLlmModel,
 } from '@octafuse/core/db/model-modalities';
+import { resolveModelKind } from '@octafuse/core/db/model-kind';
 import {
 	DEFAULT_ROUTE_STRATEGY,
 	isRouteStrategyName,
@@ -23,6 +25,7 @@ import {
 	GEMINI_ENDPOINT_CAPABILITIES,
 	MINIMAX_ENDPOINT_CAPABILITIES,
 	VOLCENGINE_ENDPOINT_CAPABILITIES,
+	ELEVENLABS_ENDPOINT_CAPABILITIES,
 	OPENAI_ENDPOINT_CAPABILITIES,
 	listConfiguredCapabilities,
 	parseProviderEndpoints,
@@ -31,6 +34,7 @@ import {
 import {
 	isDashScopeRealtimeAsrModelOperationCompatible,
 	isRouteAdapterCompatible,
+	GEMINI_EMBED_OPERATION,
 	REQUEST_OPERATIONS_BY_PROTOCOL,
 	ROUTE_ADAPTERS,
 } from '@octafuse/core/route-topology';
@@ -39,6 +43,7 @@ import {
 	adaptersForModelKind,
 	getAdapterByOptionKey,
 	getAdapterByPresetIntent,
+	isDashScopeAsyncFileAdapter,
 	listSelectableAdapters,
 	matchAdapterUpstreamModel,
 	type AdapterModelMatch,
@@ -97,7 +102,9 @@ export function compareRouteProtocolsForDisplay(a: string, b: string): number {
 	const knownA = isUpstreamProtocol(a);
 	const knownB = isUpstreamProtocol(b);
 	if (knownA && knownB) {
-		return (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(a) - (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(b);
+		return (
+			(UPSTREAM_PROTOCOLS as readonly string[]).indexOf(a) - (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(b)
+		);
 	}
 	if (knownA !== knownB) return knownA ? -1 : 1;
 	return a.localeCompare(b, undefined, { sensitivity: 'base' });
@@ -123,7 +130,7 @@ export function requestSurfacePath(protocol: string, operation: string, modelId?
 			'audio.transcriptions': '/v1/audio/transcriptions',
 			'audio.speech': '/v1/audio/speech',
 		};
-		return operation === '*' ? '/v1/*' : (paths[operation] ?? `/v1/${operation}`);
+		return operation === '*' ? '/v1/*' : paths[operation] ?? `/v1/${operation}`;
 	}
 	return requestSurfacePathFromRegistry(protocol, operation, modelId);
 }
@@ -226,7 +233,7 @@ export function protocolBadgeClass(protocol: string): string {
 		return 'bg-orange-50 text-orange-800 ring-orange-200';
 	}
 	if (protocol === 'gemini') {
-		return 'bg-indigo-50 text-indigo-800 ring-indigo-200';
+		return 'bg-gray-50 text-gray-900 ring-gray-200';
 	}
 	return 'bg-amber-50 text-amber-900 ring-amber-200';
 }
@@ -276,14 +283,16 @@ export function splitRoutesByProtocolAndRouteGroup<
 							request_operation: '*',
 							status: 'active',
 						},
-					];
+				  ];
 		for (const surface of entries) {
 			if (surface.status === 'disabled') continue;
 			const protocol = String(surface.request_protocol ?? r.upstream_protocol)
 				.trim()
 				.toLowerCase();
 			const requestOperation = String(surface.request_operation ?? '*');
-			const key = `${r.route_pool_id ?? 'legacy'}\u0000${surface.id ?? `${protocol}:${requestOperation}`}\u0000${g}`;
+			const key = `${r.route_pool_id ?? 'legacy'}\u0000${
+				surface.id ?? `${protocol}:${requestOperation}`
+			}\u0000${g}`;
 			const sticky = parseRoutePoolStickyConfig({
 				stickyEnabled: r.pool_sticky_enabled,
 				stickyIdleTtlSeconds: r.pool_sticky_idle_ttl_seconds,
@@ -505,6 +514,15 @@ export function factorChipClassForValue(n: number, kind: RouteFactorKind): strin
 		: `${FACTOR_CHIP_BASE} bg-emerald-100 text-emerald-900 ring-emerald-300/90`;
 }
 
+/** Provider factor chip: neutral at ×1; otherwise distinguish active and inactive values. */
+export function providerFactorChipClass(n: number, active: boolean): string {
+	if (!Number.isFinite(n) || n < 0) return `${FACTOR_CHIP_BASE} bg-rose-100 text-rose-950 ring-rose-300/90`;
+	if (n === 1) return `${FACTOR_CHIP_BASE} bg-zinc-100 text-zinc-700 ring-zinc-200/90`;
+	return active
+		? `${FACTOR_CHIP_BASE} bg-violet-100 text-violet-900 ring-violet-300/90`
+		: `${FACTOR_CHIP_BASE} bg-zinc-100 text-zinc-500 ring-zinc-200/90 opacity-80`;
+}
+
 /** Base factors only; schedule windows may change the effective relationship. */
 export function hasBasePricingInversion(charged: number, metered: number): boolean {
 	return (
@@ -541,7 +559,11 @@ export function previewRouteBillingFactors(
 		}
 	};
 	const providerInactive = !isProviderFactorActive(resolved, now);
-	const provider = resolved.providerWindowInvalid ? null : providerInactive ? 1 : parse(factors.provider_factor, false);
+	const provider = resolved.providerWindowInvalid
+		? null
+		: providerInactive
+		? 1
+		: parse(factors.provider_factor, false);
 	const combine = (value: string) => {
 		const factor = parse(value, scheduled);
 		if (provider == null || factor == null) return null;
@@ -624,7 +646,7 @@ export function buildRoutePriceOverride(formData: RouteFormData): Record<string,
 							...persistScheduleSideWindow(w, w.provider_factor),
 							...(w.provider_validity !== undefined ? { validity: w.provider_validity } : {}),
 						})),
-					}
+				  }
 				: {}),
 		};
 	}
@@ -700,7 +722,8 @@ function validateSharedScheduleWindows(
 			);
 		}
 		const days = parseFormScheduleDays(w.days, i);
-		const validity = w.provider_validity === undefined ? undefined : coerceProviderFactorValidity(w.provider_validity);
+		const validity =
+			w.provider_validity === undefined ? undefined : coerceProviderFactorValidity(w.provider_validity);
 		if (validity && !validity.ok) throw new Error(`Schedule window ${i + 1}: ${validity.message}`);
 		cleaned.push({
 			start,
@@ -835,6 +858,31 @@ export function composeCustomParamsJson(
 	return envelope ? JSON.stringify(envelope) : null;
 }
 
+/** Configuration availability only; this is not a live upstream health check. */
+export function isRouteConfigurationAvailable(
+	route: Pick<RouteListRow, 'status'>,
+	provider: Pick<GatewayProvider, 'status'> | undefined,
+): boolean {
+	return route.status === 'active' && provider?.status !== 'disabled';
+}
+
+/** Summarize effective custom fields without exposing header or body values. */
+export function summarizeRouteCustomParams(raw: string | null | undefined) {
+	let parsed: Record<string, unknown> | null = null;
+	try {
+		parsed = JSON.parse(raw ?? 'null') as Record<string, unknown> | null;
+	} catch {
+		// Invalid legacy JSON is ignored by the runtime as well.
+	}
+	const split = splitRouteCustomParams(parsed);
+	return {
+		headers: Object.keys(split.extraHeaders).length > 0,
+		body: Object.keys(split.body).length > 0,
+		forceOverrideHeaders: split.forceOverrideHeaders,
+		forceOverrideBody: split.forceOverrideBody,
+	};
+}
+
 export function routeHasCustomParamsForceOverride(raw: string | null | undefined): boolean {
 	const parsed = parseCustomParamsForm(raw);
 	return parsed.custom_params_force_override_headers || parsed.custom_params_force_override_body;
@@ -852,13 +900,13 @@ export function buildFormDataFromRoute(route: GatewayModelRoute, models: Gateway
 		...(w.provider_validity !== undefined
 			? { provider_validity: { ...w.provider_validity } }
 			: factors.providerStartsAt || factors.providerExpiresAt
-				? {
-						provider_validity: {
-							...(factors.providerStartsAt ? { starts_at: factors.providerStartsAt } : {}),
-							...(factors.providerExpiresAt ? { expires_at: factors.providerExpiresAt } : {}),
-						},
-					}
-				: {}),
+			? {
+					provider_validity: {
+						...(factors.providerStartsAt ? { starts_at: factors.providerStartsAt } : {}),
+						...(factors.providerExpiresAt ? { expires_at: factors.providerExpiresAt } : {}),
+					},
+			  }
+			: {}),
 		days: w.days ?? [],
 	}));
 	const catalog = catalogScheduleWindowsFromModel(models.find((m) => m.id === route.model_id));
@@ -880,7 +928,9 @@ export function buildFormDataFromRoute(route: GatewayModelRoute, models: Gateway
 			] as const) {
 				const match = schedule[side].find((w) => scheduleWindowKey(w) === key);
 				if (match)
-					window[`${side}_factor`] = formatScheduleFactorText(match.factor * (schedule.mode === 'multiply' ? base : 1));
+					window[`${side}_factor`] = formatScheduleFactorText(
+						match.factor * (schedule.mode === 'multiply' ? base : 1),
+					);
 			}
 			const provider = schedule.provider.find((w) => scheduleWindowKey(w) === key);
 			if (provider?.validity !== undefined) window.provider_validity = { ...provider.validity };
@@ -895,8 +945,8 @@ export function buildFormDataFromRoute(route: GatewayModelRoute, models: Gateway
 			return typeof surface?.request_protocol === 'string' && isUpstreamProtocol(surface.request_protocol)
 				? surface.request_protocol
 				: isUpstreamProtocol(route.upstream_protocol)
-					? route.upstream_protocol
-					: 'openai';
+				? route.upstream_protocol
+				: 'openai';
 		})(),
 		request_operation: parseRouteSurfaces(route.surfaces)[0]?.request_operation ?? '*',
 		upstream_protocol: (isUpstreamProtocol(route.upstream_protocol)
@@ -956,13 +1006,14 @@ export const CAPABILITIES_BY_PROTOCOL: Record<string, readonly ProviderEndpointC
 	dashscope: DASHSCOPE_ENDPOINT_CAPABILITIES,
 	minimax: MINIMAX_ENDPOINT_CAPABILITIES,
 	volcengine: VOLCENGINE_ENDPOINT_CAPABILITIES,
+	elevenlabs: ELEVENLABS_ENDPOINT_CAPABILITIES,
 };
 
+/** 向量专属 public operation：非向量模型的候选需排除。 */
+const EMBEDDING_REQUEST_OPERATIONS: ReadonlySet<string> = new Set(['embeddings', GEMINI_EMBED_OPERATION]);
+
 export function modelKindForModel(model: GatewayModel | undefined): AdapterModelKind {
-	if (model && isImageGenerationModel(model)) return 'image';
-	if (model && isAudioTranscriptionModel(model)) return 'audio.transcription';
-	if (model && isAudioSpeechModel(model)) return 'audio.speech';
-	return 'llm';
+	return model ? resolveModelKind(model) : 'llm';
 }
 
 function sortOperationsForProtocol(protocol: UpstreamProtocol, operations: readonly string[]): string[] {
@@ -976,7 +1027,9 @@ function sortOperationsForProtocol(protocol: UpstreamProtocol, operations: reado
 
 function filterRealtimeOperations(operations: readonly string[], providerModelName: string): string[] {
 	if (!providerModelName.trim()) return [...operations];
-	return operations.filter((operation) => isDashScopeRealtimeAsrModelOperationCompatible(providerModelName, operation));
+	return operations.filter((operation) =>
+		isDashScopeRealtimeAsrModelOperationCompatible(providerModelName, operation),
+	);
 }
 
 /** Public operations that make sense for the selected model modality. */
@@ -985,23 +1038,17 @@ export function requestOperationsForModel(
 	protocol: UpstreamProtocol,
 	providerModelName = '',
 ): readonly string[] {
-	if (model && isEmbeddingModel(model)) return protocol === 'openai' ? ['embeddings'] : [];
 	if (model && isRerankModel(model)) return protocol === 'openai' ? ['rerank'] : [];
-	if (
-		model &&
-		(isImageGenerationModel(model) ||
-			isAudioTranscriptionModel(model) ||
-			isAudioSpeechModel(model) ||
-			(isTextLlmModel(model) && protocol === 'openai'))
-	) {
-		const kind = modelKindForModel(model);
+	const kind = modelKindForModel(model);
+	if (model && (kind !== 'llm' || protocol === 'openai')) {
 		const operations = requestOperationsFromRegistry(protocol, kind);
-		if (kind === 'audio.transcription' && protocol === 'dashscope') {
+		if (kind === 'asr' && protocol === 'dashscope') {
 			return filterRealtimeOperations(operations, providerModelName);
 		}
 		return operations;
 	}
-	return REQUEST_OPERATIONS_BY_PROTOCOL[protocol];
+	// 非向量模型：向量入口（OpenAI embeddings / Gemini models.embed）不应出现在候选里。
+	return REQUEST_OPERATIONS_BY_PROTOCOL[protocol].filter((operation) => !EMBEDDING_REQUEST_OPERATIONS.has(operation));
 }
 
 export type DashScopeAsrRoutePreset = 'flash-convert' | 'flash-passthrough' | 'filetrans';
@@ -1081,14 +1128,14 @@ export function upstreamOperationsForProviderModel(
 	const providerOperations = listConfiguredCapabilities(map, protocol);
 	const capabilities = new Set(providerOperations);
 
-	if (model && (isImageGenerationModel(model) || isAudioTranscriptionModel(model) || isAudioSpeechModel(model))) {
-		const kind = modelKindForModel(model);
+	const kind = modelKindForModel(model);
+	if (model && kind !== 'llm') {
 		const listed = sortOperationsForProtocol(protocol, upstreamOperationsFromRegistry(protocol, kind));
 		const operations = listed.filter((operation) => {
 			const required = requiredCapabilitiesForUpstreamOperation(protocol, operation);
 			return required.every((capability) => capabilities.has(capability as ProviderEndpointCapability));
 		});
-		if (kind === 'audio.transcription') {
+		if (kind === 'asr') {
 			return filterRealtimeOperations(operations, providerModelName);
 		}
 		return operations;
@@ -1151,6 +1198,7 @@ export function resolveAdapterOptionKey(
 		'adapter' | 'request_protocol' | 'request_operation' | 'upstream_protocol' | 'upstream_operation'
 	>,
 	modelKind?: AdapterModelKind,
+	providerModelName = '',
 ): string | null {
 	const matches = listSelectableAdapters().filter(
 		(descriptor) =>
@@ -1160,6 +1208,11 @@ export function resolveAdapterOptionKey(
 			descriptor.upstream.protocol === formData.upstream_protocol &&
 			descriptor.upstream.operations.includes(formData.upstream_operation),
 	);
+	const named = providerModelName.trim();
+	if (named) {
+		const matched = matches.find((descriptor) => matchAdapterUpstreamModel(descriptor, named) === 'match');
+		if (matched) return matched.optionKey;
+	}
 	const preferred = modelKind ? matches.find((descriptor) => descriptor.modelKind === modelKind) : undefined;
 	return preferred?.optionKey ?? matches[0]?.optionKey ?? null;
 }
@@ -1181,7 +1234,7 @@ export function alignRouteFormAdapter(
 ): RouteFormData {
 	if (!model || !provider) return formData;
 	const { options, modelUnrecognized } = listAdapterOptionsForModel(model, provider, formData.provider_model_name);
-	const currentKey = resolveAdapterOptionKey(formData, modelKindForModel(model));
+	const currentKey = resolveAdapterOptionKey(formData, modelKindForModel(model), formData.provider_model_name);
 	const current = options.find((option) => option.descriptor.optionKey === currentKey);
 	const providerModelNamed = formData.provider_model_name.trim().length > 0;
 	const currentFits =
@@ -1222,7 +1275,7 @@ export function buildOpenAiAdapterCallSample(
 	const model = JSON.stringify(modelId);
 	const extra = descriptor.extraBodyExample ? formatPythonLiteral(descriptor.extraBodyExample) : null;
 	const extraLine = extra ? `,\n    extra_body=${extra}` : '';
-	if (descriptor.id === 'dashscope-asr-file-async') {
+	if (isDashScopeAsyncFileAdapter(descriptor.id)) {
 		return `import os
 import httpx
 
@@ -1242,7 +1295,9 @@ print(response.json())`;
 		return `client.images.generate(\n    model=${model},\n    prompt="a red apple"${extraLine},\n)`;
 	}
 	if (descriptor.request.operation === 'audio.speech') {
-		return `client.audio.speech.create(\n    model=${model},\n    input="Hello",\n    voice="YOUR_VOICE_ID"${descriptor.id === 'dashscope-tts-qwen' ? ',\n    response_format="wav"' : ''}${extraLine},\n)`;
+		return `client.audio.speech.create(\n    model=${model},\n    input="Hello",\n    voice="YOUR_VOICE_ID"${
+			descriptor.id === 'dashscope-tts-qwen' ? ',\n    response_format="wav"' : ''
+		}${extraLine},\n)`;
 	}
 	if (descriptor.request.operation === 'audio.transcriptions') {
 		return `client.audio.transcriptions.create(\n    model=${model},\n    file=open("audio.mp3", "rb")${extraLine},\n)`;
@@ -1380,10 +1435,8 @@ export function modelMatchesKindFilter(meta: GatewayModel | undefined, filterKin
 	if (!meta) {
 		return filterKind === 'llm';
 	}
-	if (filterKind === 'image') return isImageGenerationModel(meta);
 	if (filterKind === 'audio') return isAudioModel(meta);
-	if (filterKind === 'rerank') return isRerankModel(meta);
-	return isTextLlmModel(meta);
+	return resolveModelKind(meta) === filterKind;
 }
 
 /** Normalize API tags (string[] or JSON string) for route card display. */
@@ -1410,9 +1463,8 @@ export function buildRoutesByModel(params: {
 	routes: RouteListRow[];
 	models: GatewayModel[];
 	modelMeta: Map<string, GatewayModel>;
-	filterVendor: string;
-	filterProviderId: string;
-	filterProviderKind?: string;
+	filterModels?: GroupedSelection;
+	filterProviders?: GroupedSelection;
 	providers?: Array<Pick<GatewayProvider, 'id' | 'name' | 'kind' | 'kind_labels'>>;
 	locale?: string;
 	customKindLabel?: string;
@@ -1425,9 +1477,8 @@ export function buildRoutesByModel(params: {
 		routes,
 		models,
 		modelMeta,
-		filterVendor,
-		filterProviderId,
-		filterProviderKind = '',
+		filterModels = EMPTY_GROUPED_SELECTION,
+		filterProviders = EMPTY_GROUPED_SELECTION,
 		providers = [],
 		locale = 'en',
 		customKindLabel = 'Custom',
@@ -1444,22 +1495,27 @@ export function buildRoutesByModel(params: {
 		customKindLabel,
 	};
 
-	const modelMatchesVendor = (modelId: string) => {
-		if (!filterVendor) return true;
-		return normalizeModelVendorInput(modelMeta.get(modelId)?.vendor) === filterVendor;
-	};
+	const modelIds = new Set(filterModels.items);
+	const modelVendors = new Set(filterModels.groups);
+	const providerIds = new Set(filterProviders.items);
+	const providerKinds = new Set(filterProviders.groups);
+	const modelMatchesSelection = (modelId: string) =>
+		isEmptyGroupedSelection(filterModels) ||
+		modelIds.has(modelId) ||
+		modelVendors.has(normalizeModelVendorInput(modelMeta.get(modelId)?.vendor));
+	const providerMatchesSelection = (providerId: string) =>
+		isEmptyGroupedSelection(filterProviders) ||
+		providerIds.has(providerId) ||
+		(providerKindById.has(providerId) &&
+			providerKinds.has(providerKindFilterKey(providerKindById.get(providerId))));
 
 	const modelMatchesKind = (modelId: string) => modelMatchesKindFilter(modelMeta.get(modelId), filterKind);
 
 	const routeByModelId = new Map<string, RouteListRow[]>();
 	for (const r of routes) {
-		if (!modelMatchesVendor(r.model_id)) continue;
+		if (!modelMatchesSelection(r.model_id)) continue;
 		if (!modelMatchesKind(r.model_id)) continue;
-		if (filterProviderId && r.provider_id !== filterProviderId) continue;
-		if (filterProviderKind) {
-			if (!providerKindById.has(r.provider_id)) continue;
-			if (providerKindFilterKey(providerKindById.get(r.provider_id)) !== filterProviderKind) continue;
-		}
+		if (!providerMatchesSelection(r.provider_id)) continue;
 		if (filterStatus && r.status !== filterStatus) continue;
 		if (filterRouteGroup && normalizeRouteGroup(r.route_group) !== filterRouteGroup) continue;
 		const list = routeByModelId.get(r.model_id) ?? [];
@@ -1473,17 +1529,17 @@ export function buildRoutesByModel(params: {
 
 	const candidateModelIds = new Set<string>();
 	for (const model of models) {
-		if (!modelMatchesVendor(model.id)) continue;
+		if (!modelMatchesSelection(model.id)) continue;
 		if (!modelMatchesKind(model.id)) continue;
 		candidateModelIds.add(model.id);
 	}
 	for (const route of routes) {
-		if (!modelMatchesVendor(route.model_id)) continue;
+		if (!modelMatchesSelection(route.model_id)) continue;
 		if (!modelMatchesKind(route.model_id)) continue;
 		candidateModelIds.add(route.model_id);
 	}
 
-	const hasRouteLevelFilter = Boolean(filterProviderId || filterProviderKind || filterStatus || filterRouteGroup);
+	const hasRouteLevelFilter = Boolean(!isEmptyGroupedSelection(filterProviders) || filterStatus || filterRouteGroup);
 	const entries = [...candidateModelIds].sort((idA, idB) => {
 		const nameA = modelMeta.get(idA)?.display_name || idA;
 		const nameB = modelMeta.get(idB)?.display_name || idB;
@@ -1673,14 +1729,17 @@ export function buildActiveFilterSummary(params: {
 
 export function createInitialRouteForm(models: GatewayModel[], presetModelId?: string): RouteFormData {
 	const presetModel = presetModelId ? models.find((model) => model.id === presetModelId) : undefined;
+	const presetKind = presetModel ? resolveModelKind(presetModel) : 'llm';
 	const defaultOperation =
-		presetModel && isImageGenerationModel(presetModel)
+		presetKind === 'embedding'
+			? 'embeddings'
+			: presetKind === 'image'
 			? 'images.generations'
-			: presetModel && isAudioTranscriptionModel(presetModel)
-				? 'audio.transcriptions'
-				: presetModel && isAudioSpeechModel(presetModel)
-					? 'audio.speech'
-					: 'chat';
+			: presetKind === 'asr'
+			? 'audio.transcriptions'
+			: presetKind === 'tts'
+			? 'audio.speech'
+			: 'chat';
 	return {
 		model_id: presetModelId ?? '',
 		provider_id: '',
@@ -1785,7 +1844,7 @@ export function providerFactorTiming(
 					end: window.end,
 					factor: window.provider_factor,
 					...(window.provider_validity !== undefined ? { validity: window.provider_validity } : {}),
-				}
+			  }
 			: null,
 	);
 	const configured =
@@ -1818,7 +1877,9 @@ export function formatSharedScheduleWindowsHint(windows: SharedScheduleWindow[])
 				return `${range} ${formatFactorMultiplier(w.charged_factor)}`;
 			}
 			const provider = w.provider_factor === 1 ? '' : ` · P ${formatFactorMultiplier(w.provider_factor)}`;
-			return `${range} C ${formatFactorMultiplier(w.charged_factor)} · M ${formatFactorMultiplier(w.metered_factor)}${provider}`;
+			return `${range} C ${formatFactorMultiplier(w.charged_factor)} · M ${formatFactorMultiplier(
+				w.metered_factor,
+			)}${provider}`;
 		})
 		.join(' · ');
 }

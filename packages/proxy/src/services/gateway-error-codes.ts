@@ -32,6 +32,8 @@ export const GatewayErrorCode = {
 	capacityUnavailable: 'gateway.capacity_unavailable',
 	routeNotFound: 'gateway.route_not_found',
 	payloadTooLarge: 'gateway.payload_too_large',
+	/** Key 作用域不允许访问该路径（如仅 MCP 的 Key 调模型）；403。 */
+	scopeDenied: 'gateway.scope_denied',
 	noRoute: 'gateway.no_route',
 	routeResolutionFailed: 'gateway.route_resolution_failed',
 	invalidRequest: 'gateway.invalid_request',
@@ -46,12 +48,15 @@ export const GatewayErrorCode = {
 	zdrToolsUnsupported: 'gateway.zdr_tools_unsupported',
 	mcpItemDisabled: 'gateway.mcp_item_disabled',
 	mcpPricingInvalid: 'gateway.mcp_pricing_invalid',
+	mcpSettlementFailed: 'gateway.mcp_settlement_failed',
 	upstreamRequestFailed: 'gateway.upstream_request_failed',
 	dispatchLimitExceeded: 'gateway.dispatch_limit_exceeded',
 	auxiliaryAuthLimitExceeded: 'gateway.auxiliary_auth_limit_exceeded',
 	requestDeadlineExceeded: 'gateway.request_deadline_exceeded',
 	requestCancelled: 'gateway.request_cancelled',
 	upstreamResponseTooLarge: 'gateway.upstream_response_too_large',
+	/** 维护模式开启，推理入口被拒绝；503 + `Retry-After`。 */
+	maintenance: 'gateway.maintenance',
 	responsesStateRouteUnavailable: 'responses.state_route_unavailable',
 	responsesUnsupportedStateOperation: 'responses.unsupported_state_operation',
 

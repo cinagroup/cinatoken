@@ -44,6 +44,7 @@ export async function createImageCapacityFixture(options: {
 		batch: async <T>(statements: D1PreparedStatement[]): Promise<D1Result<T>[]> => {
 			for (const statement of statements) {
 				assert.ok(statement instanceof Statement);
+				if (/^UPDATE api_keys SET last_used_at = \? WHERE id = \?$/.test(statement.sql)) continue;
 				assert.match(statement.sql, /^\s*INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)/i);
 			}
 			stats.batchesStarted++; stats.statements += statements.length;

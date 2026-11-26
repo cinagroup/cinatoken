@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { useAdvancedEditorRequest } from '@/components/routing-workbench/AdvancedEditorGate';
 import { isAudioModel, isImageGenerationModel, isRerankModel } from '@octafuse/core/db/model-modalities';
+import type { RouteListRow } from '../routes/types';
+import { deleteRoute } from '../routes/route-api';
+import { resolveModelKind } from '@octafuse/core/db/model-kind';
 import { readApiJson } from '@/lib/api-json';
 import { normalizeModelVendorInput } from '@/lib/model-vendor';
 import {
@@ -41,15 +44,13 @@ export async function saveModel(
 	catalogScheduleWindows?: CatalogScheduleFormWindow[],
 	request: typeof fetch = fetch,
 ): Promise<{ success: true } | { success: false; message: string }> {
-	const isImage = isImageGenerationModel({
-		output_modalities: formData.output_modalities,
-	});
+	const isImage = resolveModelKind({ output_modalities: formData.output_modalities }) === 'image';
 	const isAudio = !!audioPricingDraft;
 	const tierJson = isAudio
 		? serializeAudioPricingDraft(audioPricingDraft)
 		: isImage && imagePricingDraft
-			? serializeImagePricingDraft(imagePricingDraft)
-			: serializeDraftRowsToProfileJson(pricingTierRows);
+		? serializeImagePricingDraft(imagePricingDraft)
+		: serializeDraftRowsToProfileJson(pricingTierRows);
 	if (!tierJson.ok) {
 		return { success: false, message: tierJson.error };
 	}
@@ -66,29 +67,23 @@ export async function saveModel(
 		return { success: false, message: metaParsed.error };
 	}
 
-	const isImageResolved = isImageGenerationModel({
+	const resolvedKind = resolveModelKind({
+		input_modalities: formData.input_modalities,
 		output_modalities: formData.output_modalities,
 		pricing_profile: withSchedule.json,
 	});
-	const isAudioResolved =
-		isAudio ||
-		isAudioModel({
-			output_modalities: formData.output_modalities,
-			pricing_profile: withSchedule.json,
-		});
-	const isRerankResolved = isRerankModel({
-		output_modalities: formData.output_modalities,
-	});
-	const skipContextWindow = isImageResolved || isAudioResolved;
-	const skipMaxTokens = skipContextWindow || isRerankResolved;
+	const isImageResolved = resolvedKind === 'image';
+	const isAudioResolved = isAudio || resolvedKind === 'asr' || resolvedKind === 'tts';
+	const isEmbeddingResolved = resolvedKind === 'embedding';
+	const skipTokenLimits = isImageResolved || isAudioResolved;
 	const parsedMax = formData.max_tokens.trim() ? parseInt(formData.max_tokens, 10) : NaN;
 	const payload = {
 		...formData,
 		tags: formData.tags,
 		vendor: normalizeModelVendorInput(formData.vendor),
-		// Image / Audio：context/max_tokens 不适用；Rerank 保留 context，仅清空生成 token 上限。
-		context_window: skipContextWindow ? null : formData.context_window ? parseInt(formData.context_window, 10) : null,
-		max_tokens: skipMaxTokens ? null : Number.isFinite(parsedMax) ? parsedMax : 4096,
+		// Image / Audio：chat context / max_tokens 不适用 — 保存时始终清空；Embedding 保留 context_window（输入上限），清空 max_tokens
+		context_window: skipTokenLimits ? null : formData.context_window ? parseInt(formData.context_window, 10) : null,
+		max_tokens: skipTokenLimits || (isEmbeddingResolved || resolvedKind === 'rerank') ? null : Number.isFinite(parsedMax) ? parsedMax : 4096,
 		input_modalities: formData.input_modalities,
 		output_modalities: formData.output_modalities,
 		released_at: formData.released_at.trim() || null,
@@ -203,4 +198,36 @@ export function useModelApi() {
 		}),
 		[request],
 	);
+}
+
+/** Load only the routes belonging to this model; never treat a failed request as an empty list. */
+export async function fetchModelRoutes(modelId: string, signal?: AbortSignal, request: typeof fetch = fetch): Promise<RouteListRow[]> {
+	const query = new URLSearchParams({ model_id: modelId });
+	const response = await request(`/api/admin/routes?${query}`, { signal });
+	const data = await readApiJson<RouteListRow[]>(response);
+	if (data.success && Array.isArray(data.data)) return data.data.filter((route) => route.model_id === modelId);
+	throw new Error(data.message || 'Failed to load routes');
+}
+
+/** Delete only selected routes owned by the current model, preserving per-route failures. */
+export async function deleteModelRoutes(modelId: string, routes: RouteListRow[], ids: string[], request: typeof fetch = fetch) {
+	const selected = new Set(ids);
+	const targets = new Map(
+		routes
+			.filter((route) => route.model_id === modelId && selected.has(route.id))
+			.map((route) => [route.id, route]),
+	);
+	const deletedIds: string[] = [];
+	const failures: Array<{ route: RouteListRow; message: string }> = [];
+	// Sequential requests avoid a burst of concurrent database writes for large selections.
+	for (const route of targets.values()) {
+		try {
+			const result = await deleteRoute(route.id, request);
+			if (result.success) deletedIds.push(route.id);
+			else failures.push({ route, message: result.message });
+		} catch (cause) {
+			failures.push({ route, message: cause instanceof Error ? cause.message : '' });
+		}
+	}
+	return { deletedIds, failures };
 }

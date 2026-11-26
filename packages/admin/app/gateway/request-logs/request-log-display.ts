@@ -5,6 +5,7 @@
 import {
 	isAudioSpeechModel,
 	isAudioTranscriptionModel,
+	isEmbeddingModel,
 	isImageGenerationModel,
 	type ModelKindFields,
 } from '@octafuse/core/db/model-modalities';
@@ -13,7 +14,7 @@ import { MCP_REQUEST_LOG_PROVIDER_ID } from '@/lib/invoke-kind';
 
 export type GeminiWireAction = 'generateContent' | 'streamGenerateContent';
 
-export type RequestLogFeatureKind = 'llm' | 'image' | 'tts' | 'asr' | 'tool' | 'mcp';
+export type RequestLogFeatureKind = 'llm' | 'image' | 'tts' | 'asr' | 'embedding' | 'tool' | 'mcp';
 
 export type RequestLogFeatureTag =
 	| { key: 'kind'; kind: RequestLogFeatureKind }
@@ -104,18 +105,22 @@ export function requestLogFeatureKind(
 	const billing = log.billing_kind?.trim() ?? '';
 	if (billing === 'image_per_image' || billing === 'image_tokens') return 'image';
 	if (billing === 'audio_per_character') return 'tts';
-	if (billing === 'audio_per_second' || billing === 'audio_tokens') return 'asr';
+	if (billing === 'audio_per_second') return 'asr';
 
 	const operation = joinedOperations(log);
 	if (operation.includes('images.')) return 'image';
 	if (operation.includes('audio.speech')) return 'tts';
 	if (operation.includes('audio.transcriptions')) return 'asr';
+	if (/(^|\s|,)(embeddings|models\.embed)(\s|,|$)/.test(operation)) return 'embedding';
 
 	if (catalogModel) {
+		if (isEmbeddingModel(catalogModel)) return 'embedding';
 		if (isImageGenerationModel(catalogModel)) return 'image';
 		if (isAudioSpeechModel(catalogModel)) return 'tts';
 		if (isAudioTranscriptionModel(catalogModel)) return 'asr';
 	}
+	// `audio_tokens` 同时用于 ASR 与 token 计费 TTS，无法单靠计费类型区分，仅作最后兜底。
+	if (billing === 'audio_tokens') return 'asr';
 	return 'llm';
 }
 

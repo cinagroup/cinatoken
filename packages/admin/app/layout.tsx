@@ -27,6 +27,9 @@ const CONSOLE_THEME_BOOTSTRAP = `(() => {
 	document.documentElement.dataset.consoleThemePreference = preference;
 	document.documentElement.dataset.consoleTheme = resolved;
 })();`;
+import { ProxyConnectionProvider } from '@/components/proxy-connection-provider';
+import { normalizeProxyBaseUrl } from '@/lib/proxy-base-url';
+import { getCloudflareEnv } from '@/lib/cloudflare';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations('metadata');
@@ -50,6 +53,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const locale = await getLocale();
 	const messages = await getMessages();
+	// Locale reads request cookies first, so this public value is resolved at runtime, not at image build time.
+	const proxyUrl =
+		normalizeProxyBaseUrl(getCloudflareEnv()?.GATEWAY_PROXY_URL ?? process.env.GATEWAY_PROXY_URL ?? '') ?? '';
 
 	return (
 		<html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
@@ -62,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<ConsoleThemeProvider>
 							<DocumentTitle />
 							<CinaAuthPopupProvider>
-								<AuthWrapper>{children}</AuthWrapper>
+								<ProxyConnectionProvider defaultUrl={proxyUrl}><AuthWrapper>{children}</AuthWrapper></ProxyConnectionProvider>
 							</CinaAuthPopupProvider>
 						</ConsoleThemeProvider>
 					</FeedbackProvider>

@@ -8,7 +8,7 @@
 | [Gemini 原生生图](../architecture/gemini-image.md) | Gemini Nano Banana / Flash Image / Pro Image |
 | [火山方舟 Seedream 生图](../architecture/volcengine-image.md) | Seedream 5.0 lite / pro / flash |
 | [DashScope 原生生图](../architecture/dashscope-image.md) | 千问图像、万相 |
-| [MiniMax 生图](../architecture/minimax-image.md) | `image-01`、`image-01-live` |
+| [MiniMax 生图](../architecture/minimax-image.md) | `image-01`、`image-01-live`；H3 Image 为 `MiniMax-H3-Image`、`MiniMax-H3-Image-Highspeed` |
 
 字段细节见 [用户接口 · Images](../api/user.md#images图片生成--编辑)。
 
@@ -55,12 +55,14 @@
 | 同上 | 同上 | `minimax` / `images.generations` | `minimax-image` | [MiniMax](../architecture/minimax-image.md) |
 | 同上 | 同上 | `gemini` / `models.generate` | `gemini-image` | [Gemini](../architecture/gemini-image.md#openai-入口gemini-image) |
 | `POST /v1/images/edits`（multipart） | `openai` / `images.edits` | `openai` / `images.edits` | `passthrough` | 只有 OpenAI GPT Image 可用 |
-| `POST /v1/volcengine/images/generations` | `volcengine` / `images.generations` | 同左 | `passthrough` | [火山方舟](../architecture/volcengine-image.md) |
-| `POST /v1/dashscope/services/aigc/multimodal-generation/generation` | `dashscope` / `images.generations.multimodal` | 同左 | `passthrough` | [DashScope](../architecture/dashscope-image.md) |
-| `POST /v1/minimax/image_generation` | `minimax` / `images.generations` | 同左 | `passthrough` | [MiniMax](../architecture/minimax-image.md) |
+| `POST /volcengine/api/v3/images/generations` | `volcengine` / `images.generations` | 同左 | `passthrough` | [火山方舟](../architecture/volcengine-image.md) |
+| `POST /dashscope/api/v1/services/aigc/multimodal-generation/generation` | `dashscope` / `images.generations.multimodal` | 同左 | `passthrough` | [DashScope](../architecture/dashscope-image.md) |
+| `POST /minimax/v1/image_generation` | `minimax` / `images.generations` | 同左 | `passthrough` | [MiniMax](../architecture/minimax-image.md) |
 | `POST /v1beta/models/{model}:generateContent`（及 `streamGenerateContent`） | `gemini` / `models.generate` | 同左 | `passthrough` | [Gemini](../architecture/gemini-image.md) |
 
 失败转移复用 `failoverDispatch`。混合协议的路由池会把同一份请求交给每条路由的适配器各自转换。
+
+MiniMax H3 Image 的目录预设走 OpenAI 兼容 Images API，用 `passthrough` 访问 `https://api.minimax.io/v1` 或 `https://api.minimax.cn/v1`，不使用 `minimax-image`。上游模型名、额外字段和 400 见 [MiniMax 生图](../architecture/minimax-image.md#h3-image-目录预设)。本次只增加导入预设，不改变上述路由。
 
 模型的种类按输出模态判定：`output_modalities` 含 `image` 即为生图模型，不能看输入模态（多模态 LLM 也接受图片）。默认的 `/v1/models` 不含纯生图模型，需要 `kind=image` 或 `kind=all`。
 
@@ -79,9 +81,9 @@
 
 ## 模型目录
 
-静态预设放在 `packages/admin/lib/model-presets/`，生图模型一般在 `<vendor>-image.json`（MiniMax 在 `minimax.json`）。在管理后台的模型（Models）页导入预设；同 ID 已存在时不会覆盖，改价需要编辑模型，或对已知型号运行 `node scripts/db/migrate-image-billing-modes.mjs --apply`。
+静态预设放在 `packages/admin/lib/model-presets/`，生图模型在 `<vendor>-image.json`。在管理后台的模型（Models）页导入预设；同 ID 已存在时不会覆盖，改价需要编辑模型，或对已知型号运行 `node scripts/db/migrate-image-billing-modes.mjs --apply`。
 
-目录 ID 一般与上游的供应商模型名一致。例外是 MiniMax：目录 ID 带 `minimax-` 前缀，路由的供应商模型名填 `image-01` / `image-01-live`。火山方舟用推理接入点时，路由填 `ep-…`。预设不写 `suggested_provider_model_name` 或 `suggested_custom_params`，默认参数由客户端或路由 `custom_params` 注入。退役型号不进预设，库里的旧行需要手工清理。
+目录 ID 一般与上游的供应商模型名一致。例外是 MiniMax：`minimax-image-01` / `minimax-image-01-live` 的上游模型名填 `image-01` / `image-01-live`；`minimax-h3-image` / `minimax-h3-image-highspeed` 填 `MiniMax-H3-Image` / `MiniMax-H3-Image-Highspeed`。火山方舟用推理接入点时，路由填 `ep-…`。预设不写 `suggested_provider_model_name` 或 `suggested_custom_params`，默认参数由客户端或路由 `custom_params` 注入。退役型号不进预设，库里的旧行需要手工清理。
 
 下面三张表由 `npm run docs:image-models` 从预设生成，请勿手改。CNY 一般按 USD × 7 换算，以预设为准。
 
@@ -92,6 +94,7 @@
 | 模型 ID | 展示名 | 厂商文档 | 计费模式 | CNY | USD | 分档 | 预设文件 |
 |---|---|---|---|---|---|---|---|
 | `qwen-image-2.1-pro` | Qwen Image 2.1 Pro | [百炼 DashScope](../architecture/dashscope-image.md) | `per_image` | ¥0.25/张 | $0.04/张 | 一口价 | `aliyun-image.json` |
+| `qwen-image-2.1-turbo` | Qwen Image 2.1 Turbo | [百炼 DashScope](../architecture/dashscope-image.md) | `per_image` | ¥0.1/张 | $0.016/张 | 一口价 | `aliyun-image.json` |
 | `qwen-image-3.0` | Qwen Image 3.0 | [百炼 DashScope](../architecture/dashscope-image.md) | `per_image` | ¥0.18/张 | $0.03/张 | 参考图 | `aliyun-image.json` |
 | `qwen-image-3.0-pro` | Qwen Image 3.0 Pro | [百炼 DashScope](../architecture/dashscope-image.md) | `per_image` | ¥0.25/张 | $0.04/张 | `by_size`、参考图 | `aliyun-image.json` |
 | `wan2.7-image` | Wan 2.7 Image | [百炼 DashScope](../architecture/dashscope-image.md) | `per_image` | ¥0.2/张 | $0.03/张 | 一口价 | `aliyun-image.json` |
@@ -99,14 +102,22 @@
 | `doubao-seedream-5-0` | Doubao Seedream 5.0 | [火山方舟 Seedream](../architecture/volcengine-image.md) | `per_image` | ¥0.22/张 | $0.035/张 | 一口价 | `bytedance-image.json` |
 | `doubao-seedream-5-0-flash` | Doubao Seedream 5.0 Flash | [火山方舟 Seedream](../architecture/volcengine-image.md) | `per_image` | ¥0.12/张 | $0.018/张 | 一口价 | `bytedance-image.json` |
 | `doubao-seedream-5-0-pro` | Doubao Seedream 5.0 Pro | [火山方舟 Seedream](../architecture/volcengine-image.md) | `per_image` | ¥0.6/张 | $0.09/张 | `by_size`、参考图 | `bytedance-image.json` |
+| `gemini-3-pro-image` | Gemini 3 Pro Image | [Google Gemini](../architecture/gemini-image.md) | `token` | 图出 ¥840/1M | 图出 $120/1M | 按 usage | `google-image.json` |
 | `gemini-3-pro-image-preview` | Gemini 3 Pro Image Preview | [Google Gemini](../architecture/gemini-image.md) | `token` | 图出 ¥840/1M | 图出 $120/1M | 按 usage | `google-image.json` |
 | `gemini-3.1-flash-image` | Gemini 3.1 Flash Image | [Google Gemini](../architecture/gemini-image.md) | `token` | 图出 ¥420/1M | 图出 $60/1M | 按 usage | `google-image.json` |
+| `gemini-3.1-flash-lite-image` | Gemini 3.1 Flash Lite Image | [Google Gemini](../architecture/gemini-image.md) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `google-image.json` |
 | `gemini-nano-banana-2.1` | Gemini Nano Banana 2.1 | [Google Gemini](../architecture/gemini-image.md) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `google-image.json` |
-| `minimax-image-01` | MiniMax Image 01 | [MiniMax](../architecture/minimax-image.md) | `per_image` | ¥0.025/张 | $0.0035/张 | 一口价 | `minimax.json` |
-| `minimax-image-01-live` | MiniMax Image 01 Live | [MiniMax](../architecture/minimax-image.md) | `per_image` | ¥0.025/张 | $0.0035/张 | 一口价 | `minimax.json` |
+| `minimax-h3-image` | MiniMax H3 Image | [MiniMax](../architecture/minimax-image.md) | `token` | 图出 ¥25/1M | 图出 $3.8/1M | 按 usage | `minimax-image.json` |
+| `minimax-h3-image-highspeed` | MiniMax H3 Image Highspeed | [MiniMax](../architecture/minimax-image.md) | `token` | 图出 ¥50/1M | 图出 $7.6/1M | 按 usage | `minimax-image.json` |
+| `minimax-image-01` | MiniMax Image 01 | [MiniMax](../architecture/minimax-image.md) | `per_image` | ¥0.025/张 | $0.0035/张 | 一口价 | `minimax-image.json` |
+| `minimax-image-01-live` | MiniMax Image 01 Live | [MiniMax](../architecture/minimax-image.md) | `per_image` | ¥0.025/张 | $0.0035/张 | 一口价 | `minimax-image.json` |
+| `gpt-image-1-mini` | GPT Image 1 Mini | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥56/1M | 图出 $8/1M | 按 usage | `openai-image.json` |
+| `gpt-image-1.5` | GPT Image 1.5 | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥224/1M | 图出 $32/1M | 按 usage | `openai-image.json` |
 | `gpt-image-2` | GPT Image 2 | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `openai-image.json` |
 | `gpt-image-2.5-flare` | GPT Image 2.5 Flare | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `openai-image.json` |
 | `gpt-image-2.5-sunburst` | GPT Image 2.5 Sunburst | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `openai-image.json` |
+| `gpt-image-2.6-flare` | GPT Image 2.6 Flare | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `openai-image.json` |
+| `gpt-image-2.6-sunburst` | GPT Image 2.6 Sunburst | [OpenAI GPT Image](../architecture/openai-compatible-image.md#openai-gpt-image) | `token` | 图出 ¥210/1M | 图出 $30/1M | 按 usage | `openai-image.json` |
 | `grok-imagine-image-2.0` | Grok Imagine Image 2.0 | [xAI Grok Imagine](../architecture/openai-compatible-image.md#xai-grok-imagine) | `per_image` | ¥0.28/张 | $0.04/张 | `by_quality_size`、`by_quality`、`by_size`、参考图 | `xai-image.json` |
 | `grok-imagine-image-quality` | Grok Imagine Image Quality | [xAI Grok Imagine](../architecture/openai-compatible-image.md#xai-grok-imagine) | `per_image` | ¥0.35/张 | $0.05/张 | `by_size`、参考图 | `xai-image.json` |
 | `glm-image` | GLM Image | [智谱 GLM Image](../architecture/openai-compatible-image.md#智谱-glm-image) | `per_image` | ¥0.1/张 | $0.014/张 | 一口价 | `zhipu-image.json` |
@@ -138,6 +149,7 @@
 | `grok-imagine-image-2.0` | `by_size` · `2k` | ¥0.42 | $0.06 |
 | `grok-imagine-image-2.0` | 参考图 `input.default` | ¥0.07 | $0.01 |
 | `grok-imagine-image-quality` | `by_size` · `1k` | ¥0.35 | $0.05 |
+| `grok-imagine-image-quality` | `by_size` · `1.5k` | ¥0.42 | $0.06 |
 | `grok-imagine-image-quality` | `by_size` · `2k` | ¥0.49 | $0.07 |
 | `grok-imagine-image-quality` | 参考图 `input.default` | ¥0.07 | $0.01 |
 
@@ -147,18 +159,34 @@
 
 | 模型 ID | 币种 | 文本输入 | 文本缓存 | 文本输出 | 图片输入 | 图片输入缓存 | 图片输出 |
 |---|---|---|---|---|---|---|---|
+| `gemini-3-pro-image` | CNY | ¥14 | — | ¥84 | ¥14 | — | ¥840 |
+| `gemini-3-pro-image` | USD | $2 | — | $12 | $2 | — | $120 |
 | `gemini-3-pro-image-preview` | CNY | ¥14 | — | ¥84 | ¥14 | — | ¥840 |
 | `gemini-3-pro-image-preview` | USD | $2 | — | $12 | $2 | — | $120 |
 | `gemini-3.1-flash-image` | CNY | ¥3.5 | — | ¥21 | ¥3.5 | — | ¥420 |
 | `gemini-3.1-flash-image` | USD | $0.5 | — | $3 | $0.5 | — | $60 |
+| `gemini-3.1-flash-lite-image` | CNY | ¥1.75 | — | ¥10.5 | ¥1.75 | — | ¥210 |
+| `gemini-3.1-flash-lite-image` | USD | $0.25 | — | $1.5 | $0.25 | — | $30 |
 | `gemini-nano-banana-2.1` | CNY | ¥10.5 | — | ¥52.5 | ¥10.5 | — | ¥210 |
 | `gemini-nano-banana-2.1` | USD | $1.5 | — | $7.5 | $1.5 | — | $30 |
+| `minimax-h3-image` | CNY | ¥15 | — | ¥0 | ¥10 | — | ¥25 |
+| `minimax-h3-image` | USD | $2.3 | — | $0 | $1.5 | — | $3.8 |
+| `minimax-h3-image-highspeed` | CNY | ¥15 | — | ¥0 | ¥20 | — | ¥50 |
+| `minimax-h3-image-highspeed` | USD | $2.3 | — | $0 | $3 | — | $7.6 |
+| `gpt-image-1-mini` | CNY | ¥14 | ¥1.4 | ¥0 | ¥17.5 | ¥1.75 | ¥56 |
+| `gpt-image-1-mini` | USD | $2 | $0.2 | $0 | $2.5 | $0.25 | $8 |
+| `gpt-image-1.5` | CNY | ¥35 | ¥8.75 | ¥70 | ¥56 | ¥14 | ¥224 |
+| `gpt-image-1.5` | USD | $5 | $1.25 | $10 | $8 | $2 | $32 |
 | `gpt-image-2` | CNY | ¥35 | ¥8.75 | ¥0 | ¥56 | ¥14 | ¥210 |
 | `gpt-image-2` | USD | $5 | $1.25 | $0 | $8 | $2 | $30 |
 | `gpt-image-2.5-flare` | CNY | ¥35 | ¥8.75 | ¥0 | ¥56 | ¥14 | ¥210 |
 | `gpt-image-2.5-flare` | USD | $5 | $1.25 | $0 | $8 | $2 | $30 |
 | `gpt-image-2.5-sunburst` | CNY | ¥35 | ¥8.75 | ¥0 | ¥56 | ¥14 | ¥210 |
 | `gpt-image-2.5-sunburst` | USD | $5 | $1.25 | $0 | $8 | $2 | $30 |
+| `gpt-image-2.6-flare` | CNY | ¥35 | ¥8.75 | ¥0 | ¥56 | ¥14 | ¥210 |
+| `gpt-image-2.6-flare` | USD | $5 | $1.25 | $0 | $8 | $2 | $30 |
+| `gpt-image-2.6-sunburst` | CNY | ¥35 | ¥8.75 | ¥0 | ¥56 | ¥14 | ¥210 |
+| `gpt-image-2.6-sunburst` | USD | $5 | $1.25 | $0 | $8 | $2 | $30 |
 
 <!-- END GENERATED: image-models -->
 
@@ -234,7 +262,7 @@ charged ≈
 
 1. 模型 ID 选目录里的生图模型。
 2. 按上方“入口与路由”表选请求协议、上游协议与适配器。
-3. 供应商模型名一般与目录 ID 相同；MiniMax 去掉 `minimax-` 前缀，火山方舟可填 `ep-…`。
+3. 供应商模型名一般与目录 ID 相同。MiniMax 的 image-01 系列去掉 `minimax-` 前缀；H3 Image 填 `MiniMax-H3-Image` 或 `MiniMax-H3-Image-Highspeed`。火山方舟可填 `ep-…`。
 4. 供应商配好 Key 与对应协议的端点，见各厂商文档。
 5. 可选 `custom_params`，如默认 `watermark: false`；用户显式传入的值优先。
 6. 按业务设置 `charged_factor` / `metered_factor`。

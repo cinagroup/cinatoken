@@ -11,11 +11,13 @@ import {
 	isImageGenerationModel,
 	isTextLlmModel,
 	lookupUserChargedCostFactor,
+	modelKindMatchesFilter,
 	parseModelModalitiesJson,
 	parsePricingProfile,
+	resolveModelKind,
 	parseUserChargedCostFactors,
 	type DisplayDiscountGroup,
-	type ParsedPricingProfile
+	type ParsedPricingProfile,
 } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
@@ -28,13 +30,13 @@ import {
 	parseModelsOutputModalitiesQuery,
 	parseModelsRouteGroupsQuery,
 	parseRouteGroupsJson,
-	parseTags
+	parseTags,
 } from '../../lib/model-list-parse';
 import { listPublicModelsWithRoutes } from '../../services/public-models';
 import {
 	groupVerifiedEndpointBindingsByModel,
 	parsePublicModelsRegion,
-	summarizePublicEndpointDiscovery
+	summarizePublicEndpointDiscovery,
 } from '../../services/public-endpoint-discovery';
 import { listVerifiedPublicEndpointBindings } from '../../services/public-model-endpoints';
 import { collectInboundSurfaces, type InboundSurface } from '../../services/inbound-surfaces';
@@ -49,7 +51,7 @@ modelsRoutes.use('*', requireApiKey);
 export {
 	DEFAULT_MODELS_ROUTE_GROUPS,
 	parseModelsKindQuery,
-	parseModelsRouteGroupsQuery
+	parseModelsRouteGroupsQuery,
 } from '../../lib/model-list-parse';
 
 /**
@@ -75,7 +77,6 @@ interface ModelInfoResponse {
 	 */
 	input_price: number | null;
 	output_price: number | null;
-	description: string | null;
 	/** Parsed input modality list (e.g. text, image, file). */
 	input_modalities: string[] | null;
 	/** Parsed output modality list (e.g. text). */
@@ -122,11 +123,11 @@ function displayCompatPricesFromProfile(profile: ParsedPricingProfile | null): {
 
 /**
  * `GET /v1/models` — 可选 `route_groups`（CSV）过滤 `model_info.route_groups`；
- * 可选 `kind`：`llm`（默认）| `image` | `audio`（ASR + TTS）| `all`。
+ * 可选 `kind`：`llm`（默认）| `image` | `asr` | `tts` | `audio`（ASR + TTS 兼容别名）| `embedding` | `all`。
  * 未传 `route_groups` 时默认 `default,free`，主要为兼容 agent 默认拉列表方式；
  * 业务需额外分组时可显式传 `route_groups=web` 或 `route_groups=default,free,web`。
  */
-modelsRoutes.get('/', async c => {
+modelsRoutes.get('/', async (c) => {
 	const repos = c.get('repositories');
 	const regionResult = parsePublicModelsRegion(c.req.query('region'));
 	if (!regionResult.ok) {
@@ -136,16 +137,16 @@ modelsRoutes.get('/', async c => {
 					message: regionResult.message,
 					type: 'invalid_request_error',
 					param: 'region',
-					code: 'invalid_region'
-				}
+					code: 'invalid_region',
+				},
 			},
-			400
+			400,
 		);
 	}
 	const region = regionResult.value;
 	const models = await listPublicModelsWithRoutes(repos);
 	const endpointBindingsByModel = groupVerifiedEndpointBindingsByModel(
-		await listVerifiedPublicEndpointBindings(repos, models)
+		await listVerifiedPublicEndpointBindings(repos, models),
 	);
 	const allowedRouteGroups = parseModelsRouteGroupsQuery(c.req.query('route_groups'));
 	const kind = parseModelsKindQuery(c.req.query('kind'));
@@ -160,54 +161,51 @@ modelsRoutes.get('/', async c => {
 		const kindFields = {
 			output_modalities: m.output_modalities,
 			input_modalities: m.input_modalities,
-			pricing_profile: m.pricing_profile
+			pricing_profile: m.pricing_profile,
 		};
-		if (kind === 'llm' && (!isTextLlmModel(kindFields) || isEmbeddingModel(kindFields))) {
-			continue;
-		}
-		if (kind === 'image' && !isImageGenerationModel(kindFields)) {
-			continue;
-		}
-		if (kind === 'audio' && !isAudioModel(kindFields)) {
+		if ((kind === 'llm' && !isTextLlmModel(kindFields)) || !modelKindMatchesFilter(resolveModelKind(kindFields), kind)) {
 			continue;
 		}
 		if (kind === 'embedding' && !isEmbeddingModel(kindFields)) {
 			continue;
 		}
 		const parsedOutputModalities = parseModelModalitiesJson(m.output_modalities) ?? [];
-		if (outputModalities && !outputModalities.some(value => parsedOutputModalities.includes(value))) {
+		if (outputModalities && !outputModalities.some((value) => parsedOutputModalities.includes(value))) {
 			continue;
 		}
 		const pricingProfile = parsePricingProfile(m.pricing_profile);
 		const { input_price, output_price } = displayCompatPricesFromProfile(pricingProfile);
-		let routeGroups = filterRouteGroupsByAllowlist(parseRouteGroupsJson(m.route_groups ?? null), allowedRouteGroups);
+		let routeGroups = filterRouteGroupsByAllowlist(
+			parseRouteGroupsJson(m.route_groups ?? null),
+			allowedRouteGroups,
+		);
 		if (routeGroups.length === 0) {
 			continue;
 		}
 		const endpointDiscovery = summarizePublicEndpointDiscovery(endpointBindingsByModel.get(m.id) ?? [], {
 			routeGroups,
-			region
+			region,
 		});
 		if (!endpointDiscovery.has_matching_route) continue;
 		routeGroups = filterRouteGroupsByAllowlist(routeGroups, endpointDiscovery.route_groups);
 		if (routeGroups.length === 0) continue;
 		const matchingBindings = (endpointBindingsByModel.get(m.id) ?? [])
-			.filter(binding => !region || binding.snapshot.region === region)
-			.flatMap(binding => binding.routes)
-			.filter(route => routeGroups.includes(route.route_group));
+			.filter((binding) => !region || binding.snapshot.region === region)
+			.flatMap((binding) => binding.routes)
+			.filter((route) => routeGroups.includes(route.route_group));
 		const discounts = buildSafeModelDisplayDiscounts({
 			pricingProfileJson: m.pricing_profile,
-			routes: matchingBindings.map(route => ({
+			routes: matchingBindings.map((route) => ({
 				...route,
 				priority: route.priority ?? 0,
-				price_override: route.price_override ?? null
+				price_override: route.price_override ?? null,
 			})),
 			timezone,
 			allowedRouteGroups: routeGroups,
 			resolveUserChargedFactor: userFactors
-				? group => lookupUserChargedCostFactor(userFactors, m.id, group)
+				? (group) => lookupUserChargedCostFactor(userFactors, m.id, group)
 				: undefined,
-			userChargedFactorMode
+			userChargedFactorMode,
 		});
 		const inbound = collectInboundSurfaces(matchingBindings, routeGroups);
 		list.push({
@@ -225,15 +223,14 @@ modelsRoutes.get('/', async c => {
 				pricing_profile: pricingProfile,
 				input_price,
 				output_price,
-				description: m.description,
 				input_modalities: parseModelModalitiesJson(m.input_modalities),
 				output_modalities: parsedOutputModalities.length > 0 ? parsedOutputModalities : null,
 				released_at: m.released_at ?? null,
 				endpoint_slugs: endpointDiscovery.endpoint_slugs,
 				regions: endpointDiscovery.regions,
 				metadata: parseMetadata(m.metadata),
-				inbound
-			}
+				inbound,
+			},
 		});
 	}
 
@@ -245,9 +242,9 @@ modelsRoutes.get('/', async c => {
 					region_filter: {
 						region,
 						scope: 'provider_endpoint_location_discovery',
-						inference_data_residency_guaranteed: false
-					}
-				}
-			: {})
+						inference_data_residency_guaranteed: false,
+					},
+			  }
+			: {}),
 	});
 });

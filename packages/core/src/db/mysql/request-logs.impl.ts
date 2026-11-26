@@ -1,3 +1,4 @@
+import { queryDashboardOverview } from '../dashboard-overview';
 /**
  * MySQL：`api_key_request_logs` 读查询。
  */
@@ -15,7 +16,7 @@ import {
 import type { RequestLogRow } from '../../types';
 import { adminRequestLogDetailSql } from '../admin-request-log-detail';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
-import type { RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
+import type { RequestLogSummaryRow, RequestLogsRepository } from '../../storage/gateway-repository-interfaces';
 import { asMySqlPool, fromMySqlDateTime, toMySqlDateTime } from './mysql2-compat';
 import { filterAllowedRequestLogStatuses } from '../request-log-status-filter';
 import type { GenerationRequestLogRow, RoutePerformanceSample } from '../request-logs-types';
@@ -36,7 +37,16 @@ import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../
 type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> & {
 	created_at: string | Date;
 };
-import { appendModelIdPrefixCondition, appendProviderIdsCondition, normalizeRequestLogIngressHost } from '../request-log-filters';
+import {
+	appendModelIdPrefixCondition,
+	appendProviderIdsCondition,
+	normalizeRequestLogIngressHost,
+	appendAnyOfCondition,
+	appendModelScopeCondition,
+	appendProviderScopeCondition,
+	type RequestLogMatchGroup,
+} from '../request-log-filters';
+import { buildRequestLogSummaryQuery, mapRequestLogSummaryRows } from '../request-log-summary';
 import {
 	businessTimezoneOffsetSeconds,
 	mysqlTimeseriesBucketExpr,
@@ -56,7 +66,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const connection = await pool.getConnection();
 			try {
 				await connection.query("SET time_zone = '+00:00'");
-				const [rows] = await connection.query<(RowDataPacket & Record<string, unknown>)[]>(built.sql, built.values);
+				const [rows] = await connection.query<(RowDataPacket & Record<string, unknown>)[]>(
+					built.sql,
+					built.values,
+				);
 				return mapManagementAnalyticsResult(rows, query);
 			} finally {
 				connection.release();
@@ -143,6 +156,18 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			if (!row) return null;
 			row.created_at = fromMySqlDateTime(row.created_at);
 			return row as GenerationRequestLogRow;
+
+		},
+		async getDashboardOverview(options) {
+			return queryDashboardOverview(async (sql, binds) => {
+				const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(sql, binds);
+				return rows;
+			}, options);
+		},
+		async getRequestLogSummary(options): Promise<RequestLogSummaryRow[]> {
+			const { sql, binds } = buildRequestLogSummaryQuery(options, 'mysql');
+			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(sql, binds);
+			return mapRequestLogSummaryRows(rows, options.groupBy, options.includeLabels);
 		},
 
 		async getRequestLogsByKeyId(
@@ -218,6 +243,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			providerId?: string;
 			providerName?: string;
 			providerIds?: string[];
+			providerKinds?: string[];
+			modelIds?: string[];
+			modelVendors?: string[];
+			anyOf?: RequestLogMatchGroup[];
 			modelIdPrefix?: string;
 			routeGroup?: string;
 			protocol?: string;
@@ -270,7 +299,15 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				conditions.push('rl.provider_name = ?');
 				bindValues.push(options.providerName);
 			}
-			appendProviderIdsCondition(conditions, bindValues, 'rl.provider_id', options.providerIds);
+			appendProviderScopeCondition(conditions, bindValues, 'rl.', {
+				providerIds: options.providerIds,
+				kinds: options.providerKinds,
+			});
+			appendModelScopeCondition(conditions, bindValues, 'rl.', {
+				modelIds: options.modelIds,
+				vendors: options.modelVendors,
+			});
+			appendAnyOfCondition(conditions, bindValues, 'rl.', options.anyOf, 'mysql');
 			appendModelIdPrefixCondition(conditions, bindValues, 'rl.model_id', options.modelIdPrefix, 'mysql');
 			if (options.routeGroup) {
 				conditions.push('rl.route_group = ?');
@@ -383,7 +420,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				values.push(options.status);
 			}
 			const groupColumn =
-				options.dimension === 'model' ? 'model_id' : options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+				options.dimension === 'model'
+					? 'model_id'
+					: options.dimension === 'provider'
+					? 'provider_name'
+					: 'api_key_id';
 			const groupName = options.dimension === 'model' ? "MAX(NULLIF(model_name, ''))" : 'NULL';
 			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
 			const parsedLimit = Number(options.limit);
@@ -421,7 +462,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			status?: string;
 		}) {
 			const bucketExpr = mysqlTimeseriesBucketExpr(options.granularity);
-			const offsetSeconds = businessTimezoneOffsetSeconds(options.timeZone ?? 'UTC', timeseriesOffsetAnchor(options.endDate));
+			const offsetSeconds = businessTimezoneOffsetSeconds(
+				options.timeZone ?? 'UTC',
+				timeseriesOffsetAnchor(options.endDate),
+			);
 			const comparator = options.endExclusive ? '<' : '<=';
 			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
 			const values: unknown[] = [offsetSeconds, options.startDate, options.endDate];

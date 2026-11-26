@@ -86,6 +86,15 @@ import migration0081 from '../../../packages/core/migrations-postgres/0081_tools
 import migration0082 from '../../../packages/core/migrations-postgres/0082_user_wallet_credit.sql';
 import migration0083 from '../../../packages/core/migrations-postgres/0083_key_rate_limit_and_ingress.sql';
 import migration0084 from '../../../packages/core/migrations-postgres/0084_provider_kind.sql';
+import migration0086 from '../../../packages/core/migrations-postgres/0086_catalog_notes.sql';
+import migration0087 from '../../../packages/core/migrations-postgres/0087_split_audio_adapter_families.sql';
+import migration0088 from '../../../packages/core/migrations-postgres/0088_request_log_provider_index.sql';
+import migration0089 from '../../../packages/core/migrations-postgres/0089_sticky_binding_affinity_key.sql';
+import migration0090 from '../../../packages/core/migrations-postgres/0090_oauth_access_tokens.sql';
+import migration0091 from '../../../packages/core/migrations-postgres/0091_oauth_authorization_server.sql';
+import migration0092 from '../../../packages/core/migrations-postgres/0092_oauth_client_credentials.sql';
+import migration0093 from '../../../packages/core/migrations-postgres/0093_provider_custom_params.sql';
+import migration0094 from '../../../packages/core/migrations-postgres/0094_tools_deepseek_audit.sql';
 import migration0085 from '../../../packages/core/migrations-postgres/0085_mcp_servers.sql';
 
 interface MigrationEnv {
@@ -180,6 +189,15 @@ const MIGRATIONS = [
 	['0083_key_rate_limit_and_ingress.sql', migration0083],
 	['0084_provider_kind.sql', migration0084],
 	['0085_mcp_servers.sql', migration0085],
+	['0086_catalog_notes.sql', migration0086],
+	['0087_split_audio_adapter_families.sql', migration0087],
+	['0088_request_log_provider_index.sql', migration0088],
+	['0089_sticky_binding_affinity_key.sql', migration0089],
+	['0090_oauth_access_tokens.sql', migration0090],
+	['0091_oauth_authorization_server.sql', migration0091],
+	['0092_oauth_client_credentials.sql', migration0092],
+	['0093_provider_custom_params.sql', migration0093],
+	['0094_tools_deepseek_audit.sql', migration0094],
 ] as const;
 
 export default {

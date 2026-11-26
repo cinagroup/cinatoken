@@ -2,7 +2,8 @@
  * 可序列化的记账事件：`recordUsage` 入参 + 稳定 `requestLogId`。
  * 纯数据，不含 Promise / 函数；阶段二 spool 将直接缓冲本对象。
  */
-import type { UpstreamProtocol } from '@octafuse/core';
+import type { VerifiedModelEndpointSnapshot, UpstreamProtocol } from '@octafuse/core';
+import type { RequestParameterSources } from '@octafuse/core/request-parameter-sources';
 import type { GatewayCircuitAlertEvent } from '../circuit-alert-types';
 import type { UsageFromStream } from '../proxy';
 import type { RequestTimingSnapshot } from '../request-timing';
@@ -28,7 +29,9 @@ export type RecordUsageParams = {
 	model_name?: string | null;
 	provider_name?: string | null;
 	request_body?: string | null;
+	request_body_logging_mode?: import('../request-body-log-policy').RequestBodyLoggingMode;
 	upstream_request_body?: string | null;
+	request_parameter_sources?: RequestParameterSources;
 	request_protocol: UpstreamProtocol;
 	request_operation?: string | null;
 	upstream_protocol: UpstreamProtocol;
@@ -47,6 +50,8 @@ export type RecordUsageParams = {
 	} | null;
 	usage: UsageFromStream;
 	model_pricing_profile?: string | null;
+	/** Verified tariff selected for this dispatch; retained through settlement. */
+	endpoint_pricing_snapshot?: VerifiedModelEndpointSnapshot | null;
 	route_price_override_json?: string | null;
 	/** `users.charged_cost_factors` JSON；按 `model_id` 精确匹配后与路由 charged 按全局 mode 合成 */
 	user_charged_cost_factors_json?: string | null;

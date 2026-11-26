@@ -66,6 +66,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'Required for the tool to accept traffic. Cleared keys fall back to nothing (no env).',
 			providers: {
+				deepseek: 'DeepSeek',
 				bocha: 'Bocha (博查)',
 				tavily: 'Tavily',
 				cleversee: 'Alibaba CleverSee (开析)',
@@ -141,6 +142,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'Required for the tool to accept traffic. Cleared keys fall back to nothing (no env).',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl',
 				tavily: 'Tavily Extract',
 				jina: 'Jina Reader',
@@ -160,6 +162,7 @@ export const legacyToolMessages = {
 			apiKey: 'Provider API key',
 			apiKeyPlaceholder: 'Paste provider API key',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl Search',
 				jina: 'Jina Search',
 			},
@@ -187,6 +190,7 @@ export const legacyToolMessages = {
 				bizTypeOptional: 'Optional BizType',
 			},
 			providers: {
+				deepseek: 'DeepSeek',
 				tencent_tms: 'Tencent Cloud TMS',
 			},
 		},
@@ -316,6 +320,7 @@ export const legacyToolMessages = {
 			apiKeyPlaceholder: '粘贴引擎 API Key',
 			apiKeyHint: '有流量前必须配置；清除后不会回退到环境变量。',
 			providers: {
+				deepseek: 'DeepSeek',
 				bocha: '博查（Bocha）',
 				tavily: 'Tavily',
 				cleversee: '阿里云 CleverSee（开析）',
@@ -384,6 +389,7 @@ export const legacyToolMessages = {
 			apiKeyPlaceholder: '粘贴引擎 API Key',
 			apiKeyHint: '有流量前必须配置；清除后不会回退到环境变量。',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl',
 				tavily: 'Tavily Extract',
 				jina: 'Jina Reader',
@@ -402,6 +408,7 @@ export const legacyToolMessages = {
 			apiKey: '引擎 API Key',
 			apiKeyPlaceholder: '粘贴引擎 API Key',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl Search',
 				jina: 'Jina Search',
 			},
@@ -428,6 +435,7 @@ export const legacyToolMessages = {
 				bizTypeOptional: '可选 BizType',
 			},
 			providers: {
+				deepseek: 'DeepSeek',
 				tencent_tms: '腾讯云 TMS',
 			},
 		},
@@ -546,6 +554,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'ツールでトラフィックを受け付けるために必須です。削除した Key は環境変数にフォールバックしません。',
 			providers: {
+				deepseek: 'DeepSeek',
 				bocha: 'Bocha（博查）',
 				tavily: 'Tavily',
 				cleversee: 'Alibaba CleverSee（开析）',
@@ -621,6 +630,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'ツールでトラフィックを受け付けるために必須です。削除した Key は環境変数にフォールバックしません。',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl',
 				tavily: 'Tavily Extract',
 				jina: 'Jina Reader',
@@ -640,6 +650,7 @@ export const legacyToolMessages = {
 			apiKey: 'Provider API Key',
 			apiKeyPlaceholder: 'Provider API Key を貼り付け',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl Search',
 				jina: 'Jina Search',
 			},
@@ -667,6 +678,7 @@ export const legacyToolMessages = {
 				bizTypeOptional: '任意の BizType',
 			},
 			providers: {
+				deepseek: 'DeepSeek',
 				tencent_tms: 'Tencent Cloud TMS',
 			},
 		},
@@ -798,6 +810,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'Tool에서 트래픽을 받으려면 필요합니다. 삭제된 Key는 환경 변수로 대체되지 않습니다.',
 			providers: {
+				deepseek: 'DeepSeek',
 				bocha: 'Bocha (博查)',
 				tavily: 'Tavily',
 				cleversee: 'Alibaba CleverSee (开析)',
@@ -872,6 +885,7 @@ export const legacyToolMessages = {
 			apiKeyHint:
 				'Tool에서 트래픽을 받으려면 필요합니다. 삭제된 Key는 환경 변수로 대체되지 않습니다.',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl',
 				tavily: 'Tavily Extract',
 				jina: 'Jina Reader',
@@ -891,6 +905,7 @@ export const legacyToolMessages = {
 			apiKey: 'Provider API Key',
 			apiKeyPlaceholder: 'Provider API Key 붙여넣기',
 			providers: {
+				deepseek: 'DeepSeek',
 				firecrawl: 'Firecrawl Search',
 				jina: 'Jina Search',
 			},
@@ -918,6 +933,7 @@ export const legacyToolMessages = {
 				bizTypeOptional: '선택 BizType',
 			},
 			providers: {
+				deepseek: 'DeepSeek',
 				tencent_tms: 'Tencent Cloud TMS',
 			},
 		},

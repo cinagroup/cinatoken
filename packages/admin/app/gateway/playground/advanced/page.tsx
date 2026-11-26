@@ -1,6 +1,8 @@
 'use client';
-
 import AdvancedEditorGate from '@/components/routing-workbench/AdvancedEditorGate';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
+import { ModelToolModeSwitch } from '@/components/model-tool-mode-switch';
 
 /**
  * Playground：选定单条 model_route，编辑 JSON 请求体，直连上游验证连通性（不计费、不入库）。
@@ -20,7 +22,7 @@ function PlaygroundPageInner() {
 	const tCommon = useTranslations('common');
 	const s = usePlaygroundPageState();
 	const tools = usePlaygroundToolsState(s.initialToolId, s.initialProvider);
-	const llm = s.selected ? !s.selectedIsImage && !s.selectedIsAudio : s.filterKind === 'llm';
+	const llm = s.selected ? !s.selectedIsImage && !s.selectedIsAudio && !s.selectedIsEmbedding : s.filterKind === 'llm';
 
 	if (s.loadingRoutes && s.playgroundMode === 'routes') {
 		return (
@@ -31,45 +33,26 @@ function PlaygroundPageInner() {
 	}
 
 	return (
-		<div className="flex min-h-0 min-w-0 flex-col overflow-x-hidden bg-gray-100/90 p-4 sm:p-6 lg:p-8 xl:h-dvh xl:overflow-hidden">
-			<div className="mb-4 shrink-0 sm:mb-5">
-				<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
-				<p className="mt-1 max-w-3xl text-sm text-gray-500">
-					{s.playgroundMode === 'tools'
-						? t('toolsSubtitle', { product: tBrand('product') })
-						: t('subtitle', { product: tBrand('product') })}
-					<span className="text-gray-400"> · </span>
-					{t('usageNote')} <PricingInfoHint kind="playground" align="start" />
-				</p>
-				<div
-					className="mt-4 inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
-					role="group"
-					aria-label={t('mode')}
-				>
-					{(
-						[
-							{ id: 'routes' as const, label: t('modeRoutes') },
-							{ id: 'tools' as const, label: t('modeTools') },
-						] as const
-					).map((opt) => {
-						const active = s.playgroundMode === opt.id;
-						return (
-							<button
-								key={opt.id}
-								type="button"
-								onClick={() => s.setPlaygroundMode(opt.id)}
-								className={
-									active
-										? 'rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm'
-										: 'rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900'
-								}
-							>
-								{opt.label}
-							</button>
-						);
-					})}
+		<div className="admin-content-workspace content-tone-inference flex min-h-0 min-w-0 flex-col overflow-x-hidden bg-gray-50 p-4 sm:p-6 lg:p-8 xl:h-full xl:overflow-hidden">
+			<div className="mb-6 flex shrink-0 flex-wrap items-start justify-between gap-4">
+				<div className="min-w-0">
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
+					<p className="mt-1 max-w-3xl text-sm text-gray-500">
+						{s.playgroundMode === 'tools'
+							? t('toolsSubtitle', { product: tBrand('product') })
+							: t('subtitle', { product: tBrand('product') })}
+					</p>
 				</div>
+				<ModelToolModeSwitch
+					value={s.playgroundMode === 'tools' ? 'tools' : 'models'}
+					onChange={(mode) => s.setPlaygroundMode(mode === 'tools' ? 'tools' : 'routes')}
+					disabled={s.sending || tools.sending}
+				/>
 			</div>
+			<p className="mb-4 flex shrink-0 items-center gap-1.5 text-xs text-gray-500">
+				{t('usageNote')}
+				<PricingInfoHint kind="playground" align="start" />
+			</p>
 
 			{s.playgroundMode === 'routes' && s.loadError ? (
 				<div className="mb-4 max-w-3xl rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
@@ -77,13 +60,14 @@ function PlaygroundPageInner() {
 				</div>
 			) : null}
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white/70 shadow-sm ring-1 ring-black/[0.02]">
-				<div className="flex min-h-0 min-w-0 flex-1 flex-col xl:flex-row xl:items-stretch">
-					<aside className="flex w-full min-w-0 shrink-0 flex-col border-b border-gray-200/80 bg-slate-50/80 p-4 xl:min-h-0 xl:w-[360px] 2xl:w-[380px] xl:overflow-hidden xl:border-b-0 xl:border-r">
+			<div className="flex min-h-0 flex-1 flex-col">
+				<div className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 xl:flex-row xl:items-stretch">
+					<aside className="flex w-full min-w-0 shrink-0 flex-col xl:min-h-0 xl:w-72 2xl:w-80 xl:overflow-hidden">
 						{s.playgroundMode === 'tools' ? (
 							<PlaygroundToolsSetup state={tools} />
 						) : (
 							<PlaygroundSetupPanel
+								disabled={s.sending}
 								filterKind={s.filterKind}
 								onFilterKindChange={s.onFilterKindChange}
 								kindCounts={s.kindCounts}
@@ -105,20 +89,15 @@ function PlaygroundPageInner() {
 						)}
 					</aside>
 
-					<section className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto bg-slate-100/70 p-4 sm:p-5 xl:overflow-hidden">
+					<section className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 xl:overflow-hidden">
 						{s.playgroundMode === 'tools' ? (
 							<PlaygroundToolsWorkspace state={tools} />
 						) : (
-							<div
-								className={
-									llm
-										? 'grid min-h-0 flex-1 auto-rows-[650px] grid-cols-1 gap-4 xl:grid-cols-2 xl:grid-rows-[minmax(0,1fr)]'
-										: 'flex min-h-0 flex-1 flex-col gap-4'
-								}
-							>
+							<div className="grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-2 xl:grid-rows-[minmax(0,1fr)]">
 								<PlaygroundRequestPanel selectedIsRerank={s.selectedIsRerank}
 									llm={llm}
 									onApplyLlmBody={s.applyLlmBody}
+									onResetTemplate={s.applyCurrentTemplate}
 									bodyText={s.bodyText}
 									onBodyTextChange={s.setBodyText}
 									bodyDirtyHint={s.bodyDirtyHint}
@@ -133,11 +112,14 @@ function PlaygroundPageInner() {
 									requestTargetMissing={s.requestTargetMissing}
 									selected={s.selected}
 									selectedUsesDashScopeRealtime={s.selectedUsesDashScopeRealtime}
+									selectedUsesElevenLabsRealtime={s.selectedUsesElevenLabsRealtime}
+									selectedUsesRealtime={s.selectedUsesRealtime}
 									imageSendBlocked={s.imageSendBlocked}
 									selectedImageUsesDashScope={s.selectedImageUsesDashScope}
 									audioSendBlocked={s.audioSendBlocked}
 									selectedIsImage={s.selectedIsImage}
 									selectedIsAudio={s.selectedIsAudio}
+									selectedIsEmbedding={s.selectedIsEmbedding}
 									selectedIsAudioTranscription={s.selectedIsAudioTranscription}
 									selectedAudioUsesDashScope={s.selectedAudioUsesDashScope}
 									selectedCanUseMicrophone={s.selectedCanUseMicrophone}
@@ -154,6 +136,7 @@ function PlaygroundPageInner() {
 									onGeminiActionChange={s.setGeminiAction}
 									lastSentWireBody={s.lastSentWireBody}
 									lastSentWireHeaders={s.lastSentWireHeaders}
+									lastSentRequestSources={s.lastSentRequestSources}
 								/>
 								<PlaygroundResponsePanel
 									llm={llm}
@@ -199,4 +182,4 @@ function PlaygroundPage() {
 	);
 }
 
-export default function AdvancedPage() { return <AdvancedEditorGate feature="playground"><PlaygroundPage /></AdvancedEditorGate>; }
+export default function AdvancedPage() {return <AdvancedEditorGate feature="playground"><PlaygroundPage/></AdvancedEditorGate>;}

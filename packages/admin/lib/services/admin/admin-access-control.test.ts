@@ -113,6 +113,18 @@ test('permission matrix protects console-only surfaces and defaults to deny', ()
 		kind: 'permission',
 		permission: 'analytics.read',
 	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/oauth-access-tokens'), {
+		kind: 'permission', permission: 'user_keys.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/oauth-access-tokens/t1/revoke'), {
+		kind: 'permission', permission: 'user_keys.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/users/u1/oauth-access-tokens'), {
+		kind: 'permission', permission: 'user_keys.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/users/u1/oauth-access-tokens'), {
+		kind: 'permission', permission: 'user_keys.read',
+	});
 	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/not-registered'), { kind: 'deny' });
 	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/mcp-servers'), {
 		kind: 'permission',
@@ -126,6 +138,47 @@ test('permission matrix protects console-only surfaces and defaults to deny', ()
 		kind: 'permission',
 		permission: 'mcp.secrets.read',
 	});
+});
+
+test('maintenance has its own read/write permission pair', () => {
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/maintenance'), {
+		kind: 'permission', permission: 'maintenance.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PUT', '/admin/maintenance'), {
+		kind: 'permission', permission: 'maintenance.write',
+	});
+	const configWriter: AdminPrincipal = {
+		type: 'api_key', id: 'admin_key:cfg', keyId: 'cfg', permissions: ['config.write'],
+	};
+	assert.equal(hasAdminPermission(configWriter, 'maintenance.write'), false);
+	const operator: AdminPrincipal = {
+		type: 'api_key', id: 'admin_key:ops', keyId: 'ops', permissions: ['maintenance.write'],
+	};
+	assert.equal(hasAdminPermission(operator, 'maintenance.read'), true);
+	assert.equal(hasAdminPermission(operator, 'config.write'), false);
+});
+
+test('oauth consent is separate from oauth management', () => {
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/oauth/authorization-requests/abc'), {
+		kind: 'permission', permission: 'oauth.consent',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/oauth/authorization-requests/abc/accept'), {
+		kind: 'permission', permission: 'oauth.consent',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/oauth/apps'), { kind: 'permission', permission: 'oauth.read' });
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/oauth/apps/x/revoke'), {
+		kind: 'permission', permission: 'oauth.write',
+	});
+	// 旧的访问令牌接口仍归 user_keys
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/oauth-access-tokens'), {
+		kind: 'permission', permission: 'user_keys.read',
+	});
+	const portal: AdminPrincipal = {
+		type: 'api_key', id: 'admin_key:portal', keyId: 'portal', permissions: ['oauth.consent', 'user_keys.write'],
+	};
+	assert.equal(hasAdminPermission(portal, 'oauth.consent'), true);
+	assert.equal(hasAdminPermission(portal, 'oauth.read'), false);
+	assert.equal(hasAdminPermission(portal, 'oauth.write'), false);
 });
 
 test('config masking removes legacy MASTER_KEY and recursively masks catalog credentials', () => {

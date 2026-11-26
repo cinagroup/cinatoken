@@ -5,17 +5,20 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { flushSync } from 'react-dom';
-import { isAudioRouteModel, validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
-import { isAudioTranscriptionModel, isRerankModel } from '@octafuse/core/db/model-modalities';
+import { validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
+import { isAudioTranscriptionModel, isRerankModel, isAudioModel as isAudioRouteModel } from '@octafuse/core/db/model-modalities';
+import { isDashScopeAsyncFileAdapter } from '@octafuse/core/adapters/registry';
+import { resolveModelKind } from '@octafuse/core/db/model-kind';
+import { emptyModelKindCounts } from '@/lib/invoke-kind';
 import {
 	imageRequestMetaFromBody,
-	isImageRouteModel,
 	parseImagesGenerationsResponse,
 	readFileAsDataUrl,
 	validateEditImageFiles,
 	type ImageOperation,
 	type ImagePreviewItem,
 } from '@/lib/image-generations';
+import { joinEmbeddingUsageHint } from '@/lib/embeddings';
 import { inferPlaygroundParseMode, type PlaygroundProtocol } from '@/lib/playground/merge-assistant-text';
 import { describePlaygroundUpstreamUrl } from '@/lib/playground/preview-upstream-url';
 import { observePlaygroundResponse } from '@/lib/playground/response-observations';
@@ -26,16 +29,27 @@ import {
 	defaultAudioInputModeForDashScopeOperation,
 	isDashScopeRealtimeOperation,
 	openDashScopeRealtimeClient,
-	stopDashScopeRealtimeClient,
 } from '@/lib/dashscope-realtime-client';
+import {
+	defaultAudioInputModeForElevenLabsOperation,
+	elevenLabsRealtimeAudioBlob,
+	elevenLabsRealtimeOutputFormat,
+	extractElevenLabsRealtimeTranscript,
+	isElevenLabsRealtimeOperation,
+	openElevenLabsRealtimeClient,
+	prepareElevenLabsRealtimeRequest,
+	stopRealtimeClient,
+} from '@/lib/elevenlabs-realtime-client';
 import { miniMaxSpeechObjectUrl } from '@/lib/minimax-speech-preview';
 import { readApiJson } from '@/lib/api-json';
+import { PLAYGROUND_REQUEST_SOURCES_HEADER } from '@/lib/playground/request-sources';
 import type { AdminModelRow } from '@/lib/services/admin/types';
 import type { ApiResponse, GatewayProvider } from '@/lib/types';
 import { DEFAULT_KIND_FILTER } from '../models/types';
 import {
 	BODY_TEMPLATES,
 	decodeWireRequestBodyHeader,
+	defaultImageOperationForRoute,
 	isPlaygroundBodyDirty,
 	playgroundLlmSampleBody,
 	playgroundModelHintFromRoute,
@@ -119,6 +133,7 @@ export function usePlaygroundPageState() {
 	const [imagePreviews, setImagePreviews] = useState<ImagePreviewItem[]>([]);
 	const [lastSentWireBody, setLastSentWireBody] = useState<string | null>(null);
 	const [lastSentWireHeaders, setLastSentWireHeaders] = useState<Record<string, string> | null>(null);
+	const [lastSentRequestSources, setLastSentRequestSources] = useState<string | null>(null);
 	const [lastSentInputSnapshot, setLastSentInputSnapshot] = useState<string | null>(null);
 	const streamEndRef = useRef<HTMLSpanElement>(null);
 	const mergedStreamEndRef = useRef<HTMLSpanElement>(null);
@@ -129,25 +144,19 @@ export function usePlaygroundPageState() {
 		: BODY_TEMPLATES.openai;
 	const bodyDirty = isPlaygroundBodyDirty(bodyText, templateBody);
 
-	const selectedIsImage = useMemo(() => {
-		if (!selected) return false;
+	const selectedModelKind = useMemo(() => {
+		if (!selected) return null;
 		const m = modelsById.get(selected.model_id);
-		return m ? isImageRouteModel(m) : false;
+		return m ? resolveModelKind(m) : 'llm';
 	}, [selected, modelsById]);
-
-	const selectedIsAudio = useMemo(() => {
-		if (!selected) return false;
-		const m = modelsById.get(selected.model_id);
-		return m ? isAudioRouteModel(m) : false;
-	}, [selected, modelsById]);
+	const selectedIsImage = selectedModelKind === 'image';
+	const selectedIsEmbedding = selectedModelKind === 'embedding';
+	const selectedIsAudio = selectedModelKind === 'asr' || selectedModelKind === 'tts';
 	const selectedIsRerank = useMemo(() => {
 		if (!selected) return false;
 		return isRerankModel(modelsById.get(selected.model_id) ?? {});
 	}, [selected, modelsById]);
-	const selectedIsAudioTranscription = useMemo(
-		() => (selected ? isAudioTranscriptionModel(modelsById.get(selected.model_id) ?? {}) : false),
-		[selected, modelsById],
-	);
+	const selectedIsAudioTranscription = selectedModelKind === 'asr';
 	const selectedDashScopeRealtimeOperation =
 		selectedIsAudio &&
 		selected?.upstream_protocol === 'dashscope' &&
@@ -156,6 +165,13 @@ export function usePlaygroundPageState() {
 					| 'audio.transcriptions.realtime.inference'
 					| 'audio.transcriptions.realtime.session'
 					| 'audio.speech.realtime.inference')
+			: null;
+
+	const selectedElevenLabsRealtimeOperation =
+		selectedIsAudio &&
+		selected?.upstream_protocol === 'elevenlabs' &&
+		isElevenLabsRealtimeOperation(selected?.upstream_operation)
+			? selected.upstream_operation
 			: null;
 
 	const selectedImageUpstreamProtocol = normalizeProtocol(selected?.upstream_protocol ?? 'openai');
@@ -172,15 +188,19 @@ export function usePlaygroundPageState() {
 		selectedIsAudio &&
 		selectedAudioUpstreamProtocol !== 'openai' &&
 		selectedAudioUpstreamProtocol !== 'dashscope' &&
-		selectedAudioUpstreamProtocol !== 'minimax';
+		selectedAudioUpstreamProtocol !== 'minimax' &&
+		selectedAudioUpstreamProtocol !== 'elevenlabs';
 	const rerankSendBlocked = selectedIsRerank && selectedAudioUpstreamProtocol !== 'openai';
 	const selectedAudioUsesDashScope = selectedIsAudio && selectedAudioUpstreamProtocol === 'dashscope';
 	const selectedUsesDashScopeRealtime = selectedDashScopeRealtimeOperation != null;
+	const selectedUsesElevenLabsRealtime = selectedElevenLabsRealtimeOperation != null;
+	const selectedUsesRealtime = selectedUsesDashScopeRealtime || selectedUsesElevenLabsRealtime;
 	const selectedCanUseMicrophone =
-		selectedDashScopeRealtimeOperation?.startsWith('audio.transcriptions.realtime.') ?? false;
+		(selectedDashScopeRealtimeOperation?.startsWith('audio.transcriptions.realtime.') ?? false) ||
+		selectedElevenLabsRealtimeOperation === 'audio.transcriptions.realtime';
 	const selectedNeedsAudioFile =
 		selectedIsAudioTranscription &&
-		selected?.adapter !== 'dashscope-asr-file-async' &&
+		!isDashScopeAsyncFileAdapter(selected?.adapter ?? '') &&
 		!(selected?.adapter === 'passthrough' && selected?.upstream_operation === 'audio.transcriptions.multimodal') &&
 		(!selectedCanUseMicrophone || audioInputMode === 'file');
 
@@ -196,15 +216,16 @@ export function usePlaygroundPageState() {
 			imageOperation: selectedIsImage && !selectedIsAudio ? imageOperation : undefined,
 			isAudioModel: selectedIsAudio,
 			isRerankModel: selectedIsRerank,
+			modelKind: selectedModelKind ?? 'llm',
 			geminiAction,
 		});
-	}, [selected, providersById, selectedIsImage, selectedIsAudio, selectedIsRerank, imageOperation, geminiAction]);
+	}, [selected, providersById, selectedModelKind, selectedIsImage, selectedIsRerank, imageOperation, geminiAction]);
 	const previewUpstreamUrl = previewUpstream.url;
 
 	const requestFingerprint = JSON.stringify([selectedId, bodyText, geminiAction, imageOperation]);
 	const requestTargetUrl =
 		lastSentInputSnapshot === requestFingerprint
-			? (responseMeta?.upstreamUrl ?? previewUpstreamUrl)
+			? responseMeta?.upstreamUrl ?? previewUpstreamUrl
 			: previewUpstreamUrl;
 
 	const mergedAssistantParts = useMemo(
@@ -219,7 +240,7 @@ export function usePlaygroundPageState() {
 	);
 
 	const observationTags = useMemo(() => {
-		if (selectedIsImage || selectedIsAudio || selectedIsRerank) return [];
+		if (selectedIsImage || selectedIsAudio || selectedIsRerank || selectedIsEmbedding) return [];
 		return observePlaygroundResponse({
 			raw: responseText,
 			protocol: responseProtocol,
@@ -230,6 +251,7 @@ export function usePlaygroundPageState() {
 		selectedIsImage,
 		selectedIsAudio,
 		selectedIsRerank,
+		selectedIsEmbedding,
 		responseText,
 		responseProtocol,
 		responseMeta?.contentType,
@@ -239,11 +261,19 @@ export function usePlaygroundPageState() {
 
 	const { mergedReasoningDisplay, mergedBodyDisplay } = useMemo(() => {
 		const hasRaw = responseText.trim().length > 0;
-		if (selectedUsesDashScopeRealtime) {
+		if (selectedUsesRealtime) {
+			// ElevenLabs 实时转写：直接展示还原后的转写文本（已提交句子 + 未提交 partial）。
+			const transcript =
+				selectedElevenLabsRealtimeOperation === 'audio.transcriptions.realtime'
+					? extractElevenLabsRealtimeTranscript(responseText)
+					: '';
 			return {
 				mergedReasoningDisplay: '',
 				mergedBodyDisplay:
-					mergedAssistantParts.body || responseText.trim() || (sending ? t('realtimeWaitingTaskStarted') : ''),
+					transcript ||
+					mergedAssistantParts.body ||
+					responseText.trim() ||
+					(sending ? t('realtimeWaitingTaskStarted') : ''),
 			};
 		}
 		const p = mergedAssistantParts;
@@ -258,10 +288,10 @@ export function usePlaygroundPageState() {
 			mergedReasoningDisplay: reasoningDisplay,
 			mergedBodyDisplay: bodyDisplay,
 		};
-	}, [mergedAssistantParts, responseText, sending, selectedUsesDashScopeRealtime, t]);
+	}, [mergedAssistantParts, responseText, sending, selectedUsesRealtime, selectedElevenLabsRealtimeOperation, t]);
 
 	const kindCounts = useMemo(() => {
-		const counts = { llm: 0, image: 0, audio: 0, rerank: 0 };
+		const counts = emptyModelKindCounts();
 		const seen = new Set<string>();
 		for (const r of routes) {
 			if (seen.has(r.model_id)) continue;
@@ -306,7 +336,10 @@ export function usePlaygroundPageState() {
 			if (filterModel && r.model_id !== filterModel) continue;
 			if (byId.has(r.provider_id)) continue;
 			const provider = providersById.get(r.provider_id);
-			byId.set(r.provider_id, provider ?? { id: r.provider_id, name: (r.provider_name ?? '').trim() || r.provider_id });
+			byId.set(
+				r.provider_id,
+				provider ?? { id: r.provider_id, name: (r.provider_name ?? '').trim() || r.provider_id },
+			);
 		}
 		return sortProvidersByKindThenName([...byId.values()], locale, tKind('custom')).map((provider) => {
 			const label = liveProviderPickerLabel(provider, locale, tKind('custom'), provider.id ?? '');
@@ -449,11 +482,11 @@ export function usePlaygroundPageState() {
 		setSelectionInput({ selectedId, routes, modelsById });
 		const r = routes.find((x) => x.id === selectedId);
 		if (r) {
-			const nextTemplate = templateForRoute(r, modelsById.get(r.model_id), 'generations');
-			setImageOperation('generations');
+			const nextTemplate = templateForRoute(r, modelsById.get(r.model_id), defaultImageOperationForRoute(r));
+			setImageOperation(defaultImageOperationForRoute(r));
 			setEditFiles([]);
 			setAudioFile(null);
-			setAudioInputMode(defaultAudioInputModeForDashScopeOperation(r.upstream_operation));
+			setAudioInputMode(r.upstream_protocol === 'elevenlabs' ? defaultAudioInputModeForElevenLabsOperation(r.upstream_operation) : defaultAudioInputModeForDashScopeOperation(r.upstream_operation));
 			setAudioPreviewUrl(null);
 			if (!bodyDirty) {
 				setBodyTextState(nextTemplate);
@@ -489,7 +522,7 @@ export function usePlaygroundPageState() {
 			abortRef.current?.abort();
 			abortRef.current = null;
 			if (realtimeRef.current) {
-				stopDashScopeRealtimeClient(realtimeRef.current);
+				stopRealtimeClient(realtimeRef.current);
 				realtimeRef.current.close(1000, 'page changed');
 				realtimeRef.current = null;
 			}
@@ -542,7 +575,7 @@ export function usePlaygroundPageState() {
 		abortRef.current?.abort();
 		abortRef.current = null;
 		if (socket) {
-			stopDashScopeRealtimeClient(socket);
+			stopRealtimeClient(socket);
 			realtimeRef.current = null;
 		}
 		if (!abortRef.current) setSending(false);
@@ -551,20 +584,20 @@ export function usePlaygroundPageState() {
 	const sendBlockedHint = !selected
 		? tCommon('selectRouteFirst')
 		: imageSendBlocked
-			? t('imageOpenaiOnly')
-			: audioSendBlocked
-				? t('audioOpenaiOnly')
-				: rerankSendBlocked
-					? t('rerankOpenaiOnly')
-					: selectedNeedsAudioFile && !validateAudioTranscriptionFile(audioFile).ok
-						? t('audioFileRequired')
-						: selectedIsImage &&
-							  !selectedIsAudio &&
-							  selectedImageUpstreamProtocol === 'openai' &&
-							  imageOperation === 'edits' &&
-							  !validateEditImageFiles(editFiles).ok
-							? t('referenceImagesRequired')
-							: null;
+		? t('imageOpenaiOnly')
+		: audioSendBlocked
+		? t('audioOpenaiOnly')
+		: rerankSendBlocked
+		? t('rerankOpenaiOnly')
+		: selectedNeedsAudioFile && !validateAudioTranscriptionFile(audioFile).ok
+		? t('audioFileRequired')
+		: selectedIsImage &&
+		  !selectedIsAudio &&
+		  selectedImageUpstreamProtocol === 'openai' &&
+		  imageOperation === 'edits' &&
+		  !validateEditImageFiles(editFiles).ok
+		? t('referenceImagesRequired')
+		: null;
 
 	const canSend = !sending && sendBlockedHint == null;
 
@@ -605,13 +638,15 @@ export function usePlaygroundPageState() {
 		const isCurrent = () =>
 			lifetimeRef.current === scope && !scope.signal.aborted && abortRef.current === ac && !ac.signal.aborted;
 		const proto = normalizeProtocol(selected.upstream_protocol);
-		const isRealtime = selectedDashScopeRealtimeOperation != null;
+		const realtimeOperation = selectedDashScopeRealtimeOperation ?? selectedElevenLabsRealtimeOperation;
+		const isRealtime = realtimeOperation != null;
 		const useAudio =
 			selectedIsAudio &&
 			!isRealtime &&
 			(selectedAudioUpstreamProtocol === 'openai' ||
 				selectedAudioUpstreamProtocol === 'dashscope' ||
-				selectedAudioUpstreamProtocol === 'minimax');
+				selectedAudioUpstreamProtocol === 'minimax' ||
+				selectedAudioUpstreamProtocol === 'elevenlabs');
 		const useImages =
 			selectedIsImage &&
 			!selectedIsAudio &&
@@ -627,7 +662,7 @@ export function usePlaygroundPageState() {
 			: undefined;
 
 		if (isRealtime) {
-			if (selectedDashScopeRealtimeOperation.startsWith('audio.transcriptions') && selectedNeedsAudioFile) {
+			if (realtimeOperation.startsWith('audio.transcriptions') && selectedNeedsAudioFile) {
 				const validated = validateAudioTranscriptionFile(audioFile);
 				if (!validated.ok) {
 					setBodyError(validated.error);
@@ -673,7 +708,7 @@ export function usePlaygroundPageState() {
 
 		if (!isCurrent()) return;
 		if (realtimeRef.current) {
-			stopDashScopeRealtimeClient(realtimeRef.current);
+			stopRealtimeClient(realtimeRef.current);
 			realtimeRef.current = null;
 		}
 
@@ -688,11 +723,95 @@ export function usePlaygroundPageState() {
 		setResponseMeta(null);
 		setLastSentWireBody(null);
 		setLastSentWireHeaders(null);
+		setLastSentRequestSources(null);
 		setLastSentInputSnapshot(null);
 		setResponseTab('merged');
 
 		setResponseProtocol(proto);
-		if (isRealtime) {
+		if (selectedElevenLabsRealtimeOperation != null) {
+			const startedAt = performance.now();
+			const waitingText = t('realtimeWaitingElevenLabs');
+			try {
+				const prepared = prepareElevenLabsRealtimeRequest(selectedElevenLabsRealtimeOperation, bodyObj);
+				const realtimeUrl = `${window.location.origin}/api/admin/playground/realtime?${new URLSearchParams({
+					routeId: selected.id,
+					operation: selectedElevenLabsRealtimeOperation,
+					...(prepared.voiceId ? { voice_id: prepared.voiceId } : {}),
+					...prepared.query,
+				}).toString()}`;
+				const outputFormat = elevenLabsRealtimeOutputFormat(prepared);
+				// 上游 model_id 由路由的供应商模型名决定，这里展示将要发送的 query 与帧。
+				const realtimePreview = previewPlaygroundMergedBody({
+					bodyText: JSON.stringify(bodyObj),
+					customParams: selected.custom_params,
+					upstreamProtocol: selected.upstream_protocol,
+					upstreamOperation: selected.upstream_operation,
+					providerModelName: selected.provider_model_name,
+				});
+				setLastSentWireBody(
+					realtimePreview.status === 'preview' ? realtimePreview.json : JSON.stringify(bodyObj, null, 2),
+				);
+				setLastSentInputSnapshot(requestFingerprint);
+				setResponseText(waitingText);
+				const socket = openElevenLabsRealtimeClient({
+					url: realtimeUrl,
+					operation: selectedElevenLabsRealtimeOperation,
+					body: bodyObj,
+					audioInput: selectedCanUseMicrophone ? audioInputMode : 'file',
+					audioFile: selectedNeedsAudioFile ? audioFile : undefined,
+					onOpen: () => {
+						setResponseMeta({
+							status: 101,
+							latencyMs: String(Math.round(performance.now() - startedAt)),
+							upstreamUrl: previewUpstreamUrl,
+							contentType: 'application/x-ndjson',
+						});
+						setResponseText(waitingText);
+					},
+					onMessage: (message) =>
+						setResponseText((previous) =>
+							!previous || previous === waitingText ? message : `${previous}\n${message}`,
+						),
+					onAudioChunk: (chunk) => {
+						realtimeAudioChunksRef.current.push(chunk);
+					},
+					onError: (error) =>
+						setBodyError(error instanceof Error ? error.message : t('realtimeTransportError')),
+					onClose: (event) => {
+						if (!selectedIsAudioTranscription && realtimeAudioChunksRef.current.length > 0) {
+							const blob = elevenLabsRealtimeAudioBlob(realtimeAudioChunksRef.current, outputFormat);
+							setAudioPreviewUrl(URL.createObjectURL(blob));
+							realtimeAudioChunksRef.current = [];
+						}
+						setSending(false);
+						realtimeRef.current = null;
+						setResponseMeta(
+							(previous) =>
+								previous ?? {
+									status: 101,
+									latencyMs: String(Math.round(performance.now() - startedAt)),
+									upstreamUrl: previewUpstreamUrl,
+									contentType: 'application/x-ndjson',
+								},
+						);
+						if (event.code !== 1000 || event.reason) {
+							setBodyError(
+								t('realtimeClosed', {
+									code: String(event.code),
+									reason: event.reason ? `: ${event.reason}` : '',
+								}),
+							);
+						}
+					},
+				});
+				realtimeRef.current = socket;
+			} catch (error) {
+				setSending(false);
+				setBodyError(error instanceof Error ? error.message : tCommon('requestFailed'));
+			}
+			return;
+		}
+		if (selectedDashScopeRealtimeOperation != null) {
 			const realtimeUrl = `${window.location.origin}/api/admin/playground/realtime?${new URLSearchParams({
 				routeId: selected.id,
 				operation: selectedDashScopeRealtimeOperation,
@@ -704,6 +823,7 @@ export function usePlaygroundPageState() {
 				bodyText: JSON.stringify(bodyObj),
 				customParams: selected.custom_params,
 				upstreamProtocol: selected.upstream_protocol,
+				upstreamOperation: selected.upstream_operation,
 				providerModelName: selected.provider_model_name,
 			});
 			setLastSentWireBody(
@@ -731,15 +851,19 @@ export function usePlaygroundPageState() {
 					},
 					onMessage: (message) => {
 						if (!isCurrent()) return;
-						const text = typeof message === 'string' ? message : `[binary frame: ${message.byteLength} bytes]`;
-						setResponseText((previous) => (!previous || previous === waitingText ? text : `${previous}\n${text}`));
+						const text =
+							typeof message === 'string' ? message : `[binary frame: ${message.byteLength} bytes]`;
+						setResponseText((previous) =>
+							!previous || previous === waitingText ? text : `${previous}\n${text}`,
+						);
 					},
 					onAudioChunk: (chunk) => {
 						if (!isCurrent()) return;
 						if (!selectedIsAudioTranscription) realtimeAudioChunksRef.current.push(chunk);
 					},
 					onError: (error) => {
-						if (isCurrent()) setBodyError(error instanceof Error ? error.message : t('realtimeTransportError'));
+						if (isCurrent())
+							setBodyError(error instanceof Error ? error.message : t('realtimeTransportError'));
 					},
 					onClose: (event) => {
 						if (!isCurrent()) return;
@@ -785,7 +909,11 @@ export function usePlaygroundPageState() {
 			body: Record<string, unknown>;
 			geminiAction?: GeminiAction;
 			imageOperation?: ImageOperation;
+			includeRequestSources?: boolean;
 		} = { routeId: selected.id, body: bodyObj };
+		if (!selectedIsImage && !selectedIsAudio && !selectedIsEmbedding) {
+			payload.includeRequestSources = true;
+		}
 		if (proto === 'gemini') {
 			payload.geminiAction = geminiAction;
 		}
@@ -808,6 +936,7 @@ export function usePlaygroundPageState() {
 
 			setLastSentWireBody(decodeWireRequestBodyHeader(res, t('decodeWireFailed')));
 			setLastSentWireHeaders(decodePlaygroundRequestHeadersHeader(res));
+			setLastSentRequestSources(res.headers.get(PLAYGROUND_REQUEST_SOURCES_HEADER));
 			setLastSentInputSnapshot(requestFingerprint);
 
 			setResponseMeta({
@@ -852,9 +981,14 @@ export function usePlaygroundPageState() {
 					if (!msg) msg = tCommon('requestFailed');
 					setBodyError(msg);
 				} else if (useImages) {
-					const parsedImg = parseImagesGenerationsResponse(JSON.stringify(j), imageRequestMetaFromBody(bodyObj));
+					const parsedImg = parseImagesGenerationsResponse(
+						JSON.stringify(j),
+						imageRequestMetaFromBody(bodyObj),
+					);
 					setImagePreviews(parsedImg.images);
 					setUsageHint(parsedImg.usageHint);
+				} else if (selectedIsEmbedding) {
+					setUsageHint(joinEmbeddingUsageHint(JSON.stringify(j), proto));
 				} else {
 					const summary = tryParseUsageSummary(JSON.stringify(j), proto);
 					setUsageHint(summary);
@@ -887,6 +1021,8 @@ export function usePlaygroundPageState() {
 				const parsedImg = parseImagesGenerationsResponse(text, imageRequestMetaFromBody(bodyObj));
 				setImagePreviews(parsedImg.images);
 				setUsageHint(parsedImg.usageHint);
+			} else if (selectedIsEmbedding && res.ok) {
+				setUsageHint(joinEmbeddingUsageHint(text, proto));
 			} else {
 				let summary: string | null = null;
 				try {
@@ -942,6 +1078,7 @@ export function usePlaygroundPageState() {
 		setBodyText,
 		bodyDirtyHint,
 		applyLlmSample,
+		applyCurrentTemplate,
 		applyLlmBody: (body: string) => {
 			setBodyTextState(body);
 			setTemplateBody(body);
@@ -972,28 +1109,33 @@ export function usePlaygroundPageState() {
 		responseTab,
 		setResponseTab,
 		usageHint:
-			selectedIsImage || selectedIsAudio
+			selectedIsImage || selectedIsAudio || selectedIsEmbedding
 				? usageHint
-				: (tryParseUsageSummary(
+				: tryParseUsageSummary(
 						JSON.stringify({
 							[responseProtocol === 'gemini' ? 'usageMetadata' : 'usage']: mergedAssistantParts.usage,
 						}),
 						responseProtocol,
-					) ?? usageHint),
+				  ) ?? usageHint,
 		imagePreviews,
 		lastSentWireBody: lastSentWireBody && lastSentInputSnapshot === requestFingerprint ? lastSentWireBody : null,
-		lastSentWireHeaders: lastSentWireBody && lastSentInputSnapshot === requestFingerprint ? lastSentWireHeaders : null,
+		lastSentWireHeaders:
+			lastSentWireBody && lastSentInputSnapshot === requestFingerprint ? lastSentWireHeaders : null,
+		lastSentRequestSources: lastSentInputSnapshot === requestFingerprint ? lastSentRequestSources : null,
 		requestTargetUrl,
 		requestTargetMissing: requestTargetUrl ? null : previewUpstream.target,
 		selectedIsImage,
 		selectedIsAudio,
 		selectedIsRerank,
+		selectedIsEmbedding,
 		selectedIsAudioTranscription,
 		imageSendBlocked,
 		selectedImageUsesDashScope,
 		audioSendBlocked,
 		selectedAudioUsesDashScope,
 		selectedUsesDashScopeRealtime,
+		selectedUsesElevenLabsRealtime,
+		selectedUsesRealtime,
 		selectedCanUseMicrophone,
 		selectedNeedsAudioFile,
 		selectedDashScopeRealtimeOperation,

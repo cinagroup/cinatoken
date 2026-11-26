@@ -26,11 +26,31 @@
 
 需要同一供应商多账号时：创建**多个供应商**（各一把 key），再在模型下挂多条路由——不要期望「一个供应商多把 key」。
 
+供应商弹窗按 **基本信息 / 端点配置 / 关联路由** 分页管理。基本信息填写账号名称、API Key 和备注；端点配置按协议切换，并提供「全能力 / 部分能力」两种模式。
+
+**全能力**模式只填写 **Base URL**，即启用该协议在网关中支持的全部能力，各能力地址按标准路径生成。**部分能力**模式先勾选需要的能力，仅显示所选端点；每行展示能力名称与标准路径，点击或悬浮信息图标可查看详细说明，也支持键盘聚焦。仅启用已勾选且填写了完整 URL 的能力，空白项不启用；保存时不包含 Base URL。
+
+两种模式的输入独立保留：切换模式不会自动生成端点或勾选能力，部分能力仅回显已配置的单项地址。勾选能力后可以手动填写；若已有 Base URL，空白端点下会提供「按 Base URL 填入」，点击后才会生成该项完整地址。取消勾选会收起对应端点并排除其保存，本次编辑中的地址草稿仍会保留，重新勾选即可恢复。
+
+已有 Base URL 与单项覆盖混合的配置会显示兼容提示，并仅回显真实的单项地址；未修改时保持原配置，切换模式或编辑端点后仅按所选模式保存。
+
+Base URL 需包含对应的版本路径前缀，例如 OpenAI 的 `/v1`、Gemini 的 `/v1beta/models`；Anthropic 只填主机地址，端点路径为 `/v1/messages`。WebSocket 自动使用 `ws(s)` 协议，其中 DashScope 使用同一主机根目录下的 `/api-ws/v1/...`，ElevenLabs 保留 Base URL 的路径前缀。
+
+端点配置标签右侧的 **查看 JSON** 提供全部协议的只读预览，展示当前表单保存时提交的 `endpoints` 字段，包含未保存的修改。预览不含供应商密钥字段，支持复制；点击 **返回表单** 可继续编辑。
+
+编辑供应商时，清空 API Key 并保存会移除当前密钥；只修改其他字段不会改动密钥。新建供应商仍需填写上游凭证。
+
+删除供应商前，先在 **关联路由** 中检查使用它的模型、上游模型、协议、分组和启用状态。模型与上游名称合并展示，能力标签与端点配置使用相同名称和说明；完整路由 ID、模型 ID、原始能力标识和分组可通过详情图标查看；操作说明收在工具栏的信息浮层中。可以搜索后单条删除，或勾选路由批量删除；全选只影响当前搜索结果。路由删除经确认后立即生效，不依赖弹窗的保存操作，关闭或取消弹窗也不会撤销。移除全部关联路由后，即可点击「删除供应商」。
+
 供应商导入模板的维护说明见 [developers/reference/provider-import-presets.md](../developers/reference/provider-import-presets.md)。
 
 ![供应商列表：卡片展示密钥状态、协议能力与路由数，可按状态和协议筛选](../assets/screenshots/providers.webp)
 
 ## 3. 配置模型与路由
+
+模型编辑弹窗按 **基本信息**、**定价配置**、**关联路由** 和 **元数据** 分栏。基本信息包含模型 ID、名称、厂商、发布日期、Token 上限、输入输出模态、标签和备注；定价配置包含目录单价与时段倍率，右上角 **JSON** 可核对当前表单（含未保存修改）的 `pricing_profile`；元数据单独编辑附加 JSON。切换页签保留输入，点击「保存」后统一生效。
+
+编辑已有模型时，**关联路由** 从模型视角合并展示供应商与上游模型，并显示协议能力、分组、优先级/权重和状态。可按供应商、上游、协议、能力或分组搜索，单条或批量删除路由；全选仅作用于当前搜索结果。路由删除经确认后立即生效，关闭或取消弹窗不会恢复。删除模型前必须移除全部路由（包括停用路由）；加载失败时不会解锁删除，后台 API 也会拒绝仍有路由引用的模型删除。
 
 Routes 工作台支持**总览（Overview）**与**按模型（By model）**两种视角，并在 **Unrouted models** 区域集中展示尚未启用请求入口的模型。拓扑仍按 **请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）** 组织：请求入口表示客户端协议 / operation，路由池表示一组可故障转移的上游目标，上游目标才是具体供应商与上游模型。完整概念见 [developers/architecture/route-topology.md](../developers/architecture/route-topology.md)。
 
@@ -44,7 +64,7 @@ Routes 工作台支持**总览（Overview）**与**按模型（By model）**两�
 4. 保持路由组为 `default`；只有明确需要免费组、套餐组时再增加其他分组。
 5. 保存后先用调试台验证单条上游路由，再用模拟器验证用户 Key、完整选路、计费和日志。
 
-从模型目录导入 `claude-haiku-5-5`、`gemini-nano-banana-2.1`、`claude-sonnet-5-5`、`hy4-preview`、`qwen3.8-flash`、`glm-5.3-flash`、`glm-5.3-flashx` 等预设时，只会创建模型记录，不会自动维护模型标签。需要按供应商、套餐或用途分类时，请在导入后自行添加标签。
+从模型目录导入 `kimi-k3.1-pro`、`kimi-k3.1-pro-highspeed`、`claude-haiku-5-5`、`gemini-nano-banana-2.1`、`claude-sonnet-5-5`、`claude-fable-5-2`、`gemini-4-neon`、`gemini-4-hydrogen`、`gemini-4-carbon`、`minimax-h3-image`、`minimax-h3-image-highspeed`、`hy4-flash`、`hy4`、`hy4-preview`、`qwen3.8-flash`、`glm-5.3-flash`、`glm-5.3-flashx`、`glm-5v-turbo` 等预设时，只会创建模型记录，不会自动维护模型标签。需要按供应商、套餐或用途分类时，请在导入后自行添加标签。
 
 ### 3.1 选择协议适配器
 
@@ -115,13 +135,13 @@ Routes 工作台支持**总览（Overview）**与**按模型（By model）**两�
 
 - 每种工具以供应商卡片展示各引擎；点击卡片后在右侧抽屉维护凭证与三账本单价：**目录标准价（Standard）/ 用户计费（Charged）/ 供应成本（Metered）**。
 - 当前工具与引擎：
-  - **Web Search**：博查、Tavily、阿里云 CleverSee、腾讯云联网搜索 WSA
-  - **Web Fetch**：Firecrawl、Tavily Extract、Jina Reader
-  - **Web Deep Search**：Firecrawl Search、Jina Search
+  - **Web Search**：博查、Tavily、阿里云 CleverSee、腾讯云联网搜索 WSA、DeepSeek Search
+  - **Web Fetch**：Firecrawl、Tavily Extract、Jina Reader、DeepSeek Fetch
+  - **Web Deep Search**：Firecrawl Search、Jina Search、DeepSeek Search
   - **AI 率检测（AI Detection）**：多引擎 catalog，当前仅腾讯云 TMS 已实现；按 `billingUnitChars` 字符单元计费
 - **仅保存配置**不会切换线上引擎；**保存并启用**会保存当前草稿并把该供应商设为此工具唯一的活跃引擎（Active）。未实现或凭证不完整的引擎不可启用。
 - 卡片会提示活跃、未保存、缺少凭证、暂不可用与亏损定价（`charged < metered`）等状态。清空当前活跃引擎的凭证前，应先切换到另一个凭证完整的引擎。
-- 成功请求分别按三种绝对单价写入 `metered_cost` / `standard_cost` / `charged_cost`，仅 **charged** 累加用户预算；上游失败三列均为 0。智能体工具不应用模型路由倍率或分时时段。币种由 `BILLING_CURRENCY` 决定，调用记录见 **智能体工具 → 工具调用记录（Tools → Invocations）**（与请求日志同源）。
+- 成功请求分别按三种绝对单价写入 `metered_cost` / `standard_cost` / `charged_cost`，仅 **charged** 累加用户预算；上游失败三列均为 0。智能体工具不应用模型路由倍率或分时时段。币种由 `BILLING_CURRENCY` 决定，调用记录在请求日志（Request Logs）中查看：在类型（Type）里勾选 REST 工具（REST tools），或只勾其中某个工具。
 
 字段与引擎白名单见 [developers/api/user.md](../developers/api/user.md) 中各 Tools 章节。
 

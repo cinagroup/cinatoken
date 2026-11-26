@@ -9,17 +9,26 @@ const EXPECTED_IMAGE_IDS = [
 	'doubao-seedream-5-0-flash',
 	'doubao-seedream-5-0-pro',
 	'gemini-3.1-flash-image',
+	'gemini-3.1-flash-lite-image',
+	'gemini-3-pro-image',
 	'gemini-3-pro-image-preview',
 	'gemini-nano-banana-2.1',
 	'glm-image',
+	'gpt-image-1-mini',
+	'gpt-image-1.5',
 	'gpt-image-2',
 	'gpt-image-2.5-flare',
 	'gpt-image-2.5-sunburst',
+	'gpt-image-2.6-flare',
+	'gpt-image-2.6-sunburst',
 	'grok-imagine-image-2.0',
 	'grok-imagine-image-quality',
+	'minimax-h3-image',
+	'minimax-h3-image-highspeed',
 	'minimax-image-01',
 	'minimax-image-01-live',
 	'qwen-image-2.1-pro',
+	'qwen-image-2.1-turbo',
 	'qwen-image-3.0',
 	'qwen-image-3.0-pro',
 	'wan2.7-image',
@@ -105,6 +114,13 @@ describe('static image model presets (*-image.json)', () => {
 		assert.equal(qwen21ProCny.image?.default, 0.25);
 		assert.equal(qwen21ProUsd.image?.default, 0.04);
 
+		const qwen21Turbo = byId.get('qwen-image-2.1-turbo')!;
+		const qwen21TurboCny = asPricing(qwen21Turbo.pricing.cny);
+		const qwen21TurboUsd = asPricing(qwen21Turbo.pricing.usd);
+		assert.equal(qwen21TurboCny.image_billing_mode, 'per_image');
+		assert.equal(qwen21TurboCny.image?.default, 0.1);
+		assert.equal(qwen21TurboUsd.image?.default, 0.016);
+
 		const wanPro = byId.get('wan2.7-image-pro')!;
 		assert.equal(asPricing(wanPro.pricing.cny).image?.default, 0.5);
 		assert.equal(asPricing(wanPro.pricing.usd).image?.default, 0.075);
@@ -132,7 +148,7 @@ describe('static image model presets (*-image.json)', () => {
 		assert.equal(grokUsd.image?.by_size?.['2k'], 0.07);
 		assert.equal(grokUsd.image?.input?.default, 0.01);
 
-		for (const gptId of ['gpt-image-2', 'gpt-image-2.5-flare', 'gpt-image-2.5-sunburst']) {
+		for (const gptId of ['gpt-image-2', 'gpt-image-2.5-flare', 'gpt-image-2.5-sunburst', 'gpt-image-2.6-flare', 'gpt-image-2.6-sunburst']) {
 			const gpt = byId.get(gptId)!;
 			const gptUsd = asPricing(gpt.pricing.usd);
 			const gptTier = gptUsd.tiers?.[0];
@@ -160,6 +176,28 @@ describe('static image model presets (*-image.json)', () => {
 		assert.equal(proTier.input_price, 2);
 		assert.equal(proTier.output_price, 12);
 		assert.equal(proTier.image_output_price, 120);
+
+		const h3 = byId.get('minimax-h3-image')!;
+		const h3Usd = asPricing(h3.pricing.usd).tiers?.[0];
+		const h3Cny = asPricing(h3.pricing.cny).tiers?.[0];
+		assert.equal(asPricing(h3.pricing.usd).image_billing_mode, 'token');
+		assert.equal(h3Usd?.input_price, 2.3);
+		assert.equal(h3Usd?.image_input_price, 1.5);
+		assert.equal(h3Usd?.image_output_price, 3.8);
+		assert.equal(h3Cny?.input_price, 15);
+		assert.equal(h3Cny?.image_input_price, 10);
+		assert.equal(h3Cny?.image_output_price, 25);
+		assert.notEqual(h3Cny?.image_output_price, 3.8 * 7);
+
+		const h3Fast = byId.get('minimax-h3-image-highspeed')!;
+		const h3FastUsd = asPricing(h3Fast.pricing.usd).tiers?.[0];
+		const h3FastCny = asPricing(h3Fast.pricing.cny).tiers?.[0];
+		assert.equal(h3FastUsd?.image_input_price, 3);
+		assert.equal(h3FastUsd?.image_output_price, 7.6);
+		assert.equal(h3FastCny?.input_price, 15);
+		assert.equal(h3FastCny?.image_input_price, 20);
+		assert.equal(h3FastCny?.image_output_price, 50);
+		assert.notEqual(h3FastCny?.image_output_price, 7.6 * 7);
 
 		const nanoBanana21 = byId.get('gemini-nano-banana-2.1')!;
 		const nanoBanana21Tier = asPricing(nanoBanana21.pricing.usd).tiers?.[0];

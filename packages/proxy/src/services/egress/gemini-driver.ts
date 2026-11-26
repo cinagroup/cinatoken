@@ -1,3 +1,11 @@
+
+
+
+import { sanitizeRewrappedHeaders } from './response-headers';
+import { peekResponseFirstEvent } from '../stream-first-event-timeout';
+
+import { fetchUntilHeaders, type UpstreamHeadersTimeoutOptions } from './upstream-fetch-timeout';
+import { streamIdleTimeoutErrorFrame } from './stream-idle-timeout';
 import { prepareTextStreamStart, combineTextStreamResources } from './text-stream-start';
 import { type FirstEventTimeoutOptions } from '../stream-first-event-timeout';
 import {
@@ -339,6 +347,11 @@ async function pumpWithUsageTracking(
 		if (!clientDisconnected)
 			usage.stream_error = usage.stream_error ?? (error instanceof Error ? error.message : String(error));
 		cancelUpstream('gemini_sse_invalid_or_too_large');
+  if(!clientDisconnected){
+   resolveUsage({...usage});
+   const frame=usage.stream_error==='Stream idle timeout' ? streamIdleTimeoutErrorFrame('gemini') : '\ndata: '+JSON.stringify({error:{code:502,status:'UNAVAILABLE',message:'Upstream provider stream interrupted'}})+'\n\n';
+   try{await writer.write(new TextEncoder().encode(frame));}catch{markClientDisconnected();}
+  }
 	} finally {
 		// Usage/financial facts cannot depend on an untrusted cancel ACK.
 		// Keep abandoned reader ownership in the pump until cleanup settles below.
@@ -557,3 +570,17 @@ export async function dispatchGeminiRoute(
 		};
 	});
 }
+
+
+const idleFrameEncoder = new TextEncoder();
+
+
+const POST_DISCONNECT_DRAIN_MS = 90_000;
+
+const decoder = new TextDecoder();
+
+
+/**
+ * 上游 400 且 body 表示签名无效（`Invalid` / `Corrupted thought signature`）时，返回清洗后的重试请求体；否则 `null`。
+ * 用 `clone()` 读 body，不消耗原响应，不满足条件时原响应原样返回给调用方。
+ */

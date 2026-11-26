@@ -1,3 +1,4 @@
+import { catalogNotePatch } from '../catalog-note-compat';
 import {
 	modelPricingScheduleUpdate,
 	modelPricingScheduleChanged,
@@ -32,7 +33,7 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 		SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens,
 			m.pricing_profile,
 			(SELECT COALESCE(json_agg(mt.tag ORDER BY mt.tag)::text, '[]') FROM model_tags mt WHERE mt.model_id = m.id) AS tags,
-			m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at::text,
+			m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at::text,
 			(SELECT COUNT(*)::int FROM model_routes WHERE model_id = m.id) AS routes_count,
 			(SELECT COUNT(*)::int FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 		FROM models m ORDER BY m.id ASC
@@ -45,7 +46,7 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 		SELECT m.id, m.display_name, m.vendor, m.context_window, m.max_tokens,
 			m.pricing_profile,
 			(SELECT COALESCE(json_agg(mt.tag ORDER BY mt.tag)::text, '[]') FROM model_tags mt WHERE mt.model_id = m.id) AS tags,
-			m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at::text,
+			m.note, m.description, m.metadata, m.input_modalities, m.output_modalities, m.released_at, m.route_policy, m.created_at::text,
 			(SELECT COUNT(*)::int FROM model_routes WHERE model_id = m.id) AS routes_count,
 			(SELECT COUNT(*)::int FROM model_routes WHERE model_id = m.id AND status = 'active') AS active_routes_count
 		FROM models m WHERE m.id = ${id}
@@ -60,7 +61,7 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 			contextWindow: unknown;
 			maxTokens: unknown;
 			pricingProfile?: unknown;
-			description: unknown;
+			note: unknown;
 			metadata: unknown;
 			inputModalities?: unknown;
 			outputModalities?: unknown;
@@ -74,7 +75,8 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 				contextWindow: params.contextWindow == null ? null : Number(params.contextWindow),
 				maxTokens: params.maxTokens == null ? null : Number(params.maxTokens),
 				pricingProfile: params.pricingProfile == null ? null : String(params.pricingProfile),
-				description: params.description == null ? null : String(params.description),
+				note: params.note == null ? null : String(params.note),
+ description: params.note == null ? null : String(params.note),
 				metadata: params.metadata == null ? null : String(params.metadata),
 				inputModalities: params.inputModalities == null ? null : String(params.inputModalities),
 				outputModalities: params.outputModalities == null ? null : String(params.outputModalities),
@@ -96,6 +98,7 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 		},
 
 		async updateModelByPatch(id: string, rest: Record<string, unknown>): Promise<number> {
+ rest = catalogNotePatch(rest);
 			const set: Record<string, unknown> = {};
 			for (const [key, value] of Object.entries(rest)) {
 				if (key === 'id' || value === undefined) continue;
@@ -116,6 +119,7 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 		},
 
 		async updateModelWithPolicyPrecondition(id, rest, expectedRoutePolicy, tags): Promise<boolean> {
+ rest = catalogNotePatch(rest);
 			assertModelPolicyExpected(expectedRoutePolicy);
 			const patch = modelPolicyPatch(rest);
 			return pg.begin(async (tx) => {
@@ -138,7 +142,11 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 				const values = patch.map(([, value]) => value);
 				const set = patch.length ? patch.map(([key], index) => `${key} = $${index + 1}`).join(', ') : 'id = id';
 				const rows = await tx.unsafe(
-					`UPDATE cinatoken_gateway.models SET ${set} WHERE id COLLATE "C" = $${values.length + 1} COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $${values.length + 2} COLLATE "C" RETURNING id`,
+					`UPDATE cinatoken_gateway.models SET ${set} WHERE id COLLATE "C" = $${
+						values.length + 1
+					} COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $${
+						values.length + 2
+					} COLLATE "C" RETURNING id`,
 					[...values, id, expectedRoutePolicy] as never[],
 				);
 				if (!modelPolicyWriteMatched(rows, id)) return false;
@@ -166,6 +174,13 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 				n = deleted.length;
 			});
 			return n;
+		},
+
+		async deleteModelIfUnrouted(id: string): Promise<number> {
+			const deleted = await pg<
+				{ id: string }[]
+			>`DELETE FROM models WHERE id = ${id} AND NOT EXISTS (SELECT 1 FROM model_routes WHERE model_id = ${id}) RETURNING id`;
+			return deleted.length;
 		},
 	};
 }

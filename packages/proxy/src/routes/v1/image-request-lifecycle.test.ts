@@ -122,7 +122,7 @@ async function fixture(t: TestContext, operation: Operation, credential = 'synth
 		batch: async <T>(statements: D1PreparedStatement[]): Promise<D1Result<T>[]> => {
 			for (const statement of statements) {
 				assert.ok(statement instanceof Statement);
-				assert.match(statement.sql, /^\s*INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)/i);
+				assert.match(statement.sql, /^\s*(?:INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)|UPDATE\s+api_keys\s+SET\s+last_used_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?\s*$)/i);
 			}
 			batches++; return statements.map(() => result<T>());
 		},
@@ -131,6 +131,7 @@ async function fixture(t: TestContext, operation: Operation, credential = 'synth
 	};
 	const storage = createD1StorageContext(db), repos = storage.repositories;
 	const key: ResolvedGatewayKeyRow = {
+		wallet_granted: 0, wallet_spent: 0, user_rate_limit: null, rate_limit: null,
 		id: 'image-key', key: 'synthetic-client-key', user_id: 'image-user', workspace_id: 'image-workspace', name: 'Synthetic',
 		status: 'active', metadata: null, last_used_at: null, created_at: NOW, updated_at: NOW, user_email: null, user_metadata: null,
 		user_charged_cost_factors: null, budget_max: null, budget_base: 0, budget_spent: 0, budget_period: 'none', budget_reset_at: null,
@@ -1456,7 +1457,7 @@ for (const operation of ['generations', 'edits'] as const) {
 		assert.equal(settlements, 0);
 		assert.equal(f.batches(), 0);
 	});
-	
+
 	it(`Images ${operation}: definitive no-claim releases admission and never fetches`, async t => {
 		let decisions = 0, sends = 0;
 		const recoveryFactory: ImageUsageRecoveryFactory = () => ({

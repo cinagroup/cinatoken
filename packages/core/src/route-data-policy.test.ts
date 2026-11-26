@@ -74,6 +74,16 @@ describe('route data policies', () => {
 		assert.notEqual(await computeRouteDataPolicySubjectFingerprintFromRows({ ...route, custom_params: '{"temperature":1}' }, provider), first);
 	});
 
+	it('keeps legacy empty provider defaults stable and binds selected protocol defaults', async () => {
+		const route = {provider_id:'provider',provider_model_name:'model',upstream_protocol:'openai',upstream_operation:'chat',adapter:'passthrough',custom_params:null};
+		const provider = {id:'provider',api_key:'synthetic-key',shared_channel_type:null,endpoints:'{"openai":{"base":"https://provider.example.invalid/v1"}}'};
+		const legacy = await computeRouteDataPolicySubjectFingerprintFromRows(route, provider);
+		for (const custom_params of [null, '{}', '{"openai":{}}', '{"anthropic":{"body":{"temperature":0}}}']) {
+			assert.equal(await computeRouteDataPolicySubjectFingerprintFromRows(route,{...provider,custom_params}), legacy);
+		}
+		assert.notEqual(await computeRouteDataPolicySubjectFingerprintFromRows(route,{...provider,custom_params:'{"openai":{"body":{"temperature":0}}}'}), legacy);
+	});
+
 	it('treats prototype-named custom parameters as ordinary fingerprinted data', async () => {
 		const route = {
 			provider_id: 'provider-1', provider_model_name: 'model-a', upstream_protocol: 'openai',

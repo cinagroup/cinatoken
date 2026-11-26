@@ -39,7 +39,12 @@ test('both D1-to-Postgres ETL paths include Config audit in preflight, transfer,
 	assert.equal(ETL_TABLE_ORDER[configIndex + 2], 'config_group_audit');
 	assert.deepEqual(TABLE_CONFLICT_KEYS.config_group_audit, ['id']);
 	assert.ok(ETL_TABLES_TO_TRUNCATE.includes('config_group_audit'));
-	assert.deepEqual(ETL_TARGET_ONLY_TABLES, ['system_config_write_mutex']);
+	assert.deepEqual(ETL_TARGET_ONLY_TABLES, ['system_config_write_mutex', 'request_dispatch_intents',
+		'request_usage_settlements', 'request_usage_settlement_outbox', 'request_usage_recovery_jobs', 'request_usage_commit_receipts']);
+	for (const table of ETL_TARGET_ONLY_TABLES) {
+		assert.equal((ETL_TABLE_ORDER as readonly string[]).includes(table), false);
+		assert.equal((ETL_TABLES_TO_TRUNCATE as readonly string[]).includes(table), false);
+	}
 	assert.equal((ETL_TABLE_ORDER as readonly string[]).includes('system_config_write_mutex'), false);
 	assert.equal((ETL_TABLES_TO_TRUNCATE as readonly string[]).includes('system_config_write_mutex'), false);
 	assert.equal(ETL_TABLE_ORDER[ETL_TABLE_ORDER.indexOf('admin_api_keys') + 1], 'admin_access_key_audit');

@@ -50,11 +50,13 @@ export const AUDIO_ENDPOINT_PRICING_OPERATIONS = [
 	"audio.transcriptions.multimodal",
 	"audio.transcriptions.async",
 	"audio.transcriptions.realtime.inference",
+ "audio.transcriptions.realtime",
 	"audio.transcriptions.realtime.session",
 	"audio.speech",
 	"audio.speech.stream",
 	"audio.speech.multimodal",
 	"audio.speech.realtime.inference",
+ "audio.speech.realtime",
 ] as const;
 
 export type AudioEndpointPricingOperation =
@@ -284,11 +286,13 @@ const AUDIO_OPERATION_METER_KINDS = {
 	"audio.transcriptions.multimodal": ["duration"],
 	"audio.transcriptions.async": ["duration"],
 	"audio.transcriptions.realtime.inference": ["duration"],
+ "audio.transcriptions.realtime":["duration"],
 	"audio.transcriptions.realtime.session": ["duration"],
 	"audio.speech": ["characters"],
 	"audio.speech.stream": ["characters"],
 	"audio.speech.multimodal": ["characters"],
 	"audio.speech.realtime.inference": ["characters"],
+ "audio.speech.realtime":["characters"],
 } as const satisfies Record<
 	AudioEndpointPricingOperation,
 	readonly AudioEndpointPricingMeter["kind"][]

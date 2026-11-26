@@ -1,3 +1,4 @@
+import { catalogNotePatch } from '../catalog-note-compat';
 /**
  * D1：`providers` 表。
  */
@@ -14,7 +15,7 @@ export function createD1ProvidersRepository(db: D1DatabaseClient): ProvidersRepo
 		async listProviders(): Promise<ProviderAdminRow[]> {
 			const rows = await raw
 				.prepare(
-					`SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at,
+					`SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at,
 					(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id) AS routes_count,
 					(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 				 FROM providers p ORDER BY p.created_at DESC`,
@@ -31,7 +32,7 @@ export function createD1ProvidersRepository(db: D1DatabaseClient): ProvidersRepo
 			if (uniqueIds.length === 0) return [];
 			const rows = await raw
 				.prepare(
-					`SELECT id, name, kind, endpoints, api_key, status, description,
+					`SELECT id, name, kind, endpoints, api_key, status, description, note, custom_params,
 						shared_channel_type, created_at
 					 FROM providers
 					 WHERE id IN (${uniqueIds.map(() => '?').join(',')})
@@ -52,15 +53,17 @@ export function createD1ProvidersRepository(db: D1DatabaseClient): ProvidersRepo
 			name: string;
 			kind?: string;
 			endpoints: string | null;
-			description: unknown;
+			note?: unknown;
+			description?: unknown;
 			apiKey?: string;
 			status?: string;
 			sharedChannelType?: string | null;
+			customParams?: string | null;
 		}): Promise<void> {
 			await raw
 				.prepare(
-					`INSERT INTO providers (id, name, kind, endpoints, api_key, status, description, shared_channel_type)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+					`INSERT INTO providers (id, name, kind, endpoints, api_key, status, description, note, custom_params, shared_channel_type)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				)
 				.bind(
 					params.id,
@@ -69,13 +72,16 @@ export function createD1ProvidersRepository(db: D1DatabaseClient): ProvidersRepo
 					params.endpoints,
 					params.apiKey ?? '',
 					params.status ?? 'active',
-					params.description ?? null,
+					params.description ?? params.note ?? null,
+					params.note ?? params.description ?? null,
+					params.customParams ?? null,
 					params.sharedChannelType ?? null,
 				)
 				.run();
 		},
 
 		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
+ body = catalogNotePatch(body);
 			const patch: string[] = [];
 			const bindValues: unknown[] = [];
 			for (const [key, value] of Object.entries(body)) {
@@ -104,7 +110,7 @@ export function createD1ProvidersRepository(db: D1DatabaseClient): ProvidersRepo
 		async getProviderRowById(id: string): Promise<ProviderAdminRow | null> {
 			const row = await raw
 				.prepare(
-					`SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at,
+					`SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at,
 					(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id) AS routes_count,
 					(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 				 FROM providers p WHERE p.id = ?`,

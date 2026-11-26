@@ -1,3 +1,4 @@
+import {resolveCustomParamsLayers,type ProviderCustomParamsProtocolConfig} from './provider-custom-params';
 import type { RouteDataPolicyRow, RouteDataPolicyStatus } from './db/route-data-policy-types';
 import { parseProviderEndpoints, type ProviderEndpointsMap } from './provider-endpoints';
 import type { ModelRouteRow, ProviderRow } from './types';
@@ -58,6 +59,7 @@ export type RouteDataPolicySubjectInput = {
 	configuredUpstreamOperation: string;
 	adapter: string;
 	customParams: Record<string, unknown> | null;
+ providerCustomParams?:ProviderCustomParamsProtocolConfig;
 };
 
 /**
@@ -81,6 +83,7 @@ export async function computeRouteDataPolicySubjectFingerprint(
 		configured_upstream_operation: input.configuredUpstreamOperation.trim() || '*',
 		adapter: input.adapter.trim() || 'passthrough',
 		custom_params: input.customParams,
+  ...(input.providerCustomParams && (Object.keys(input.providerCustomParams.headers ?? {}).length > 0 || Object.keys(input.providerCustomParams.body ?? {}).length > 0) ? {provider_custom_params:input.providerCustomParams}:{}),
 	});
 	return sha256Hex(JSON.stringify(subject));
 }
@@ -89,7 +92,7 @@ export async function computeRouteDataPolicySubjectFingerprint(
 export function computeRouteDataPolicySubjectFingerprintFromRows(
 	route: Pick<ModelRouteRow,
 		'provider_id' | 'provider_model_name' | 'custom_params' | 'upstream_protocol' | 'upstream_operation' | 'adapter'>,
-	provider: Pick<ProviderRow, 'id' | 'endpoints' | 'api_key' | 'shared_channel_type'>,
+	provider: Pick<ProviderRow, 'id' | 'endpoints' | 'api_key' | 'shared_channel_type'> & Pick<Partial<ProviderRow>,'custom_params'>,
 ): Promise<string> {
 	if (route.provider_id !== provider.id) {
 		throw new Error('route data-policy subject provider mismatch');
@@ -104,6 +107,7 @@ export function computeRouteDataPolicySubjectFingerprintFromRows(
 		configuredUpstreamOperation: route.upstream_operation ?? '*',
 		adapter: route.adapter ?? 'passthrough',
 		customParams: parseCustomParams(route.custom_params),
+  providerCustomParams:resolveCustomParamsLayers(provider.custom_params,null,route.upstream_protocol as import('./upstream-protocol').UpstreamProtocol).provider,
 	});
 }
 

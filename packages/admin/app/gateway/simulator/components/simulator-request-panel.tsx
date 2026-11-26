@@ -1,23 +1,19 @@
 'use client';
+import { AdminContentMark } from '@/components/admin-content-mark';
 
-import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon, StopIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import { RequestTargetUrl } from '@/components/request-target-url';
 import { validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
 import { IMAGE_MAX_REFERENCE_COUNT, validateEditImageFiles, type ImageOperation } from '@/lib/image-generations';
 import type { OpenaiLlmOperation } from '@/lib/invoke-kind';
 import type { SimulatorGeminiAction, SimulatorProtocol } from '@/lib/simulator/endpoint';
-import {
-	codeBlockClass,
-	inputClass,
-	labelClass,
-	prettyJsonBody,
-	type SimulatorClientSurfaceOptions,
-} from '../simulator-utils';
+import { inputClass, labelClass, type SimulatorClientSurfaceOptions } from '../simulator-utils';
 import type { WirePreview } from '../types';
 
 import { LlmRequestEditor } from '@/components/model-test/llm-request-editor';
 import type { PlaygroundLlmFamily } from '@/lib/playground/samples';
+import { SimulatorActualRequest, SimulatorGatewayHeaders } from './simulator-request-inspection';
 
 type Props = {
 	llmFamily: PlaygroundLlmFamily | null;
@@ -39,8 +35,8 @@ type Props = {
 	infoHint: string | null;
 	bodyError: string | null;
 	displayWire: WirePreview | null;
-	wireOpen: boolean;
-	onWireOpenChange: (open: boolean) => void;
+	requestLogId?: string | null;
+	selectedKeyId: string;
 	sending: boolean;
 	canSend: boolean;
 	sendBlockedHint: string | null;
@@ -85,8 +81,8 @@ export function SimulatorRequestPanel({
 	infoHint,
 	bodyError,
 	displayWire,
-	wireOpen,
-	onWireOpenChange,
+	requestLogId,
+	selectedKeyId,
 	sending,
 	canSend,
 	sendBlockedHint,
@@ -108,6 +104,19 @@ export function SimulatorRequestPanel({
 }: Props) {
 	const t = useTranslations('simulator');
 	const tCommon = useTranslations('common');
+	const requestHeaders = <SimulatorGatewayHeaders wire={displayWire} />;
+	const actualRequest = (
+		<SimulatorActualRequest
+			wire={displayWire}
+			wireSent={wireSent}
+			protocol={protocol}
+			tool={hideProtocolControls}
+			showUpstream={Boolean(llmFamily || requestLogId)}
+			requestLogId={requestLogId}
+			selectedKeyId={selectedKeyId}
+			sending={sending}
+		/>
+	);
 
 	const supportedProtocols = supportedSurfaces.protocols;
 	const supportedOpenaiOps = supportedSurfaces.openaiLlmOperations;
@@ -135,6 +144,7 @@ export function SimulatorRequestPanel({
 							key={p}
 							type="button"
 							disabled={sending}
+							aria-pressed={active}
 							onClick={() => onProtocolChange(p)}
 							className={
 								active
@@ -161,6 +171,7 @@ export function SimulatorRequestPanel({
 								key={op}
 								type="button"
 								disabled={sending}
+								aria-pressed={active}
 								onClick={() => onOpenaiLlmOperationChange(op)}
 								className={
 									active
@@ -187,11 +198,12 @@ export function SimulatorRequestPanel({
 								key={action}
 								type="button"
 								disabled={sending}
+								aria-pressed={active}
 								onClick={() => onGeminiActionChange(action)}
 								className={
 									active
-										? 'rounded px-2.5 py-1 font-mono text-[11px] font-medium bg-white text-gray-900 shadow-sm'
-										: 'rounded px-2.5 py-1 font-mono text-[11px] font-medium text-gray-600 hover:text-gray-900'
+										? 'rounded px-2.5 py-1 font-mono text-xs font-medium bg-white text-gray-900 shadow-sm'
+										: 'rounded px-2.5 py-1 font-mono text-xs font-medium text-gray-600 hover:text-gray-900'
 								}
 							>
 								{action}
@@ -206,13 +218,16 @@ export function SimulatorRequestPanel({
 	if (llmFamily)
 		return (
 			<LlmRequestEditor
+				headingMark={<AdminContentMark icon={ArrowUpTrayIcon} compact />}
 				family={llmFamily}
 				modelHint={modelHint}
 				modelValue="<auto>"
 				bodyText={bodyText}
 				onChange={onBodyTextChange}
 				geminiStreaming={geminiAction === 'streamGenerateContent'}
-				onGeminiStreamingChange={(stream) => onGeminiActionChange(stream ? 'streamGenerateContent' : 'generateContent')}
+				onGeminiStreamingChange={(stream) =>
+					onGeminiActionChange(stream ? 'streamGenerateContent' : 'generateContent')
+				}
 				streamingDisabled={protocol === 'gemini' && supportedGeminiActions.length < 2}
 				controls={protocolControls}
 				sending={sending}
@@ -223,31 +238,18 @@ export function SimulatorRequestPanel({
 				error={bodyError}
 				notice={infoHint}
 				url={displayWire?.url ?? null}
-				actualBody={displayWire ? prettyJsonBody(displayWire.bodyText) : null}
-				sent={wireSent}
-				headers={
-					<pre className="whitespace-pre-wrap break-all font-mono text-xs">
-						{Object.entries(displayWire?.headers ?? {})
-							.map(([k, v]) => `${k}: ${v}`)
-							.join('\n')}
-					</pre>
-				}
+				inlineInspection={{ headers: requestHeaders, body: actualRequest }}
 			/>
 		);
 
 	return (
-		<section className="flex h-full min-h-0 flex-col space-y-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm">
+		<section className="admin-editor-panel admin-content-panel flex h-full min-h-0 flex-col gap-4 overflow-y-auto rounded-xl border border-gray-200 bg-white p-4">
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<h2 className="text-sm font-semibold text-gray-900">{t('requestBody')}</h2>
+				<h2 className="flex items-center gap-2 text-sm font-medium text-gray-900">
+					<AdminContentMark icon={ArrowUpTrayIcon} compact />
+					{t('requestBody')}
+				</h2>
 				<div className="flex flex-wrap items-center gap-2">
-					<button
-						type="button"
-						onClick={onApplyTemplate}
-						disabled={!bodyDirty || sending}
-						className="text-xs px-2.5 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-					>
-						{t('applyTemplate')}
-					</button>
 					{sending ? (
 						<button
 							type="button"
@@ -263,7 +265,7 @@ export function SimulatorRequestPanel({
 							onClick={onSend}
 							disabled={!canSend}
 							title={sendBlockedHint ?? undefined}
-							className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 admin-primary text-sm font-medium rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							<PaperAirplaneIcon className="h-4 w-4" />
 							{tCommon('send')}
@@ -273,13 +275,21 @@ export function SimulatorRequestPanel({
 			</div>
 			{sendBlockedHint && !sending ? <p className="text-xs text-gray-500 -mt-1">{sendBlockedHint}</p> : null}
 			{infoHint ? (
-				<div className="p-2.5 bg-blue-50 border border-blue-200 rounded-md text-blue-900 text-sm">{infoHint}</div>
+				<div className="p-2.5 bg-gray-50 border border-gray-200 rounded-md text-gray-950 text-sm">
+					{infoHint}
+				</div>
 			) : null}
 			{protocolControls}
 			{showAudioTranscriptions ? (
 				<div className="space-y-2">
 					<p className="text-xs text-gray-500">
-						{showAudioRealtimeMicrophone ? t('audioRealtimeDashScopeHint') : t('audioTranscriptionsHint')}
+						{showAudioRealtimeMicrophone
+							? protocol === 'elevenlabs'
+								? t('audioRealtimeElevenLabsAsrHint')
+								: t('audioRealtimeDashScopeHint')
+							: protocol === 'elevenlabs'
+							? t('audioTranscriptionsElevenLabsHint')
+							: t('audioTranscriptionsHint')}
 					</p>
 					{showAudioRealtimeMicrophone ? (
 						<fieldset className="flex flex-wrap items-center gap-4 rounded-md border border-gray-200 px-3 py-2 text-sm">
@@ -289,7 +299,7 @@ export function SimulatorRequestPanel({
 								<input
 									type="radio"
 									name="simulatorAudioInput"
-									className="text-blue-600 focus:ring-blue-500"
+									className="text-gray-800 focus:ring-gray-500"
 									checked={audioInputMode === 'file'}
 									onChange={() => onAudioInputModeChange?.('file')}
 									disabled={sending}
@@ -300,7 +310,7 @@ export function SimulatorRequestPanel({
 								<input
 									type="radio"
 									name="simulatorAudioInput"
-									className="text-blue-600 focus:ring-blue-500"
+									className="text-gray-800 focus:ring-gray-500"
 									checked={audioInputMode === 'microphone'}
 									onChange={() => onAudioInputModeChange?.('microphone')}
 									disabled={sending}
@@ -311,18 +321,25 @@ export function SimulatorRequestPanel({
 					) : null}
 					{!showAudioRealtimeMicrophone || audioInputMode === 'file' ? (
 						<div>
-							<label className={labelClass}>{t('audioFile')}</label>
+							<label className={labelClass} htmlFor="simulator-audio-file">
+								{t('audioFile')}
+							</label>
 							<input
+								id="simulator-audio-file"
 								type="file"
 								accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.pcm"
 								disabled={sending}
-								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-blue-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-blue-700`}
+								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-gray-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-gray-800`}
 								onChange={(e) => {
 									onAudioFileChange?.(e.target.files?.[0] ?? null);
 								}}
 							/>
-							<p className="mt-1 text-[11px] text-gray-400">
-								{showAudioRealtimeMicrophone ? t('audioRealtimeFileDashScopeHint') : t('audioFileHint')}
+							<p className="mt-1 text-xs text-gray-400">
+								{showAudioRealtimeMicrophone
+									? protocol === 'elevenlabs'
+										? t('audioRealtimeFileElevenLabsHint')
+										: t('audioRealtimeFileDashScopeHint')
+									: t('audioFileHint')}
 							</p>
 							{!audioFile ? (
 								<p className="mt-1 text-xs text-amber-700">{t('audioFileRequired')}</p>
@@ -344,12 +361,16 @@ export function SimulatorRequestPanel({
 			{showAudioSpeech ? (
 				<p className="text-xs text-gray-500">
 					{showAudioRealtime
-						? t('audioRealtimeSpeechHint')
+						? protocol === 'elevenlabs'
+							? t('audioRealtimeSpeechElevenLabsHint')
+							: t('audioRealtimeSpeechHint')
 						: protocol === 'dashscope'
-							? t('audioSpeechDashScopeHint')
-							: protocol === 'minimax'
-								? t('audioSpeechMiniMaxHint')
-								: t('audioSpeechHint')}
+						? t('audioSpeechDashScopeHint')
+						: protocol === 'minimax'
+						? t('audioSpeechMiniMaxHint')
+						: protocol === 'elevenlabs'
+						? t('audioSpeechElevenLabsHint')
+						: t('audioSpeechHint')}
 				</p>
 			) : null}
 			{showImageOperation ? (
@@ -363,7 +384,7 @@ export function SimulatorRequestPanel({
 									<input
 										type="radio"
 										name="simulatorImageOperation"
-										className="text-blue-600 focus:ring-blue-500"
+										className="text-gray-800 focus:ring-gray-500"
 										checked={imageOperation === op}
 										onChange={() => onImageOperationChange?.(op)}
 										disabled={sending}
@@ -379,10 +400,10 @@ export function SimulatorRequestPanel({
 								protocol === 'gemini'
 									? 'imageGeminiHint'
 									: protocol === 'volcengine'
-										? 'imageVolcengineHint'
-										: protocol === 'minimax'
-											? 'imageMiniMaxHint'
-											: 'imageGenerationsHint',
+									? 'imageVolcengineHint'
+									: protocol === 'minimax'
+									? 'imageMiniMaxHint'
+									: 'imageGenerationsHint',
 							)}
 						</p>
 					) : (
@@ -390,24 +411,27 @@ export function SimulatorRequestPanel({
 					)}
 					{protocol === 'openai' && imageOperation === 'edits' ? (
 						<div>
-							<label className={labelClass}>{t('referenceImages')}</label>
+							<label className={labelClass} htmlFor="simulator-edit-files">
+								{t('referenceImages')}
+							</label>
 							<input
+								id="simulator-edit-files"
 								type="file"
 								accept="image/png,image/jpeg,image/webp,image/*"
 								multiple
 								disabled={sending}
-								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-blue-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-blue-700`}
+								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-gray-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-gray-800`}
 								onChange={(e) => {
 									const list = e.target.files ? Array.from(e.target.files) : [];
 									onEditFilesChange?.(list.slice(0, IMAGE_MAX_REFERENCE_COUNT));
 								}}
 							/>
-							<p className="mt-1 text-[11px] text-gray-400">
+							<p className="mt-1 text-xs text-gray-400">
 								{t('referenceImagesHint', { max: IMAGE_MAX_REFERENCE_COUNT })}
 								{editFiles.length > 0
 									? ` · ${t('referenceImagesSelected', {
 											count: editFiles.length,
-										})}`
+									  })}`
 									: ''}
 							</p>
 							{editFiles.length === 0 ? (
@@ -432,92 +456,42 @@ export function SimulatorRequestPanel({
 					) : null}
 				</>
 			) : null}
-			<div
-				className={
-					wireOpen
-						? 'flex min-h-0 flex-1 flex-col gap-3 xl:flex-row xl:items-stretch'
-						: 'flex min-h-0 flex-1 flex-col gap-3'
-				}
-			>
-				<div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
-					{wireOpen ? null : (
-						<RequestTargetUrl
-							label={t('requestTargetUrl')}
-							method={showAudioRealtime ? 'WebSocket' : (displayWire?.method ?? 'POST')}
-							url={displayWire?.url}
-							emptyHint={t('requestTargetUrlEmpty')}
-						/>
-					)}
-					<div className="flex min-h-0 flex-1 flex-col">
-						<label className={labelClass}>JSON</label>
-						<textarea
-							value={bodyText}
-							onChange={(e) => onBodyTextChange(e.target.value)}
-							rows={12}
-							className={`${inputClass} min-h-[220px] flex-1 font-mono text-sm xl:min-h-0`}
-							spellCheck={false}
-						/>
-					</div>
-					{bodyError ? (
-						<div className="rounded-md border border-red-200 bg-red-50 p-2.5 text-sm text-red-600">{bodyError}</div>
-					) : null}
-					{wireOpen ? null : (
-						<button
-							type="button"
-							onClick={() => onWireOpenChange(true)}
-							className="flex w-full items-center justify-between border-t border-gray-100 pt-2 text-left text-xs font-medium text-gray-600 hover:text-gray-900"
-							aria-expanded={false}
-						>
-							<span>{t('wirePreview')}</span>
-							<span className="text-gray-400">▸</span>
-						</button>
-					)}
+			<div className="flex min-h-0 flex-1 flex-col gap-3">
+				<RequestTargetUrl
+					label={t('requestTargetUrl')}
+					method={showAudioRealtime ? 'WebSocket' : displayWire?.method ?? 'POST'}
+					url={displayWire?.url}
+					emptyHint={t('requestTargetUrlEmpty')}
+				/>
+				{requestHeaders}
+				<div className="flex items-center justify-between gap-2">
+					<label htmlFor="simulator-json-body" className="text-xs font-medium text-gray-700">
+						{t('inspection.inputBody')}
+					</label>
+					<button
+						type="button"
+						onClick={onApplyTemplate}
+						disabled={!bodyDirty || sending}
+						className="text-xs px-2.5 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+					>
+						{t('applyTemplate')}
+					</button>
 				</div>
-				{wireOpen ? (
-					<div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-slate-50/80 xl:max-w-[50%]">
-						<div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-2">
-							<h3 className="text-xs font-semibold text-gray-800">{t('wirePreview')}</h3>
-							<button
-								type="button"
-								onClick={() => onWireOpenChange(false)}
-								className="text-xs font-medium text-gray-500 hover:text-gray-900"
-								aria-expanded={true}
-							>
-								{tCommon('close')}
-							</button>
-						</div>
-						<div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-3">
-							{displayWire ? (
-								<>
-									<div>
-										<div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-gray-500">
-											{t('requestTargetUrl')}
-										</div>
-										<p className="break-all font-mono text-xs text-gray-800">
-											<span className="font-semibold text-gray-700">{displayWire.method}</span> {displayWire.url}
-										</p>
-									</div>
-									<div>
-										<div className="mb-1 text-[11px] font-medium text-gray-500">{t('wireHeaders')}</div>
-										<pre className={codeBlockClass}>
-											{Object.entries(displayWire.headers)
-												.map(([k, v]) => `${k}: ${v}`)
-												.join('\n')}
-										</pre>
-									</div>
-									<div>
-										<div className="mb-1 text-[11px] font-medium text-gray-500">{t('wireBody')}</div>
-										<pre className={codeBlockClass}>
-											{displayWire.isMultipart ? displayWire.bodyText : prettyJsonBody(displayWire.bodyText)}
-										</pre>
-									</div>
-								</>
-							) : (
-								<p className="text-xs text-gray-500">{t('wirePreviewEmpty')}</p>
-							)}
-						</div>
-					</div>
-				) : null}
+				<textarea
+					id="simulator-json-body"
+					value={bodyText}
+					onChange={(event) => onBodyTextChange(event.target.value)}
+					rows={12}
+					disabled={sending}
+					spellCheck={false}
+					className={`${inputClass} min-h-44 flex-[3] resize-y font-mono text-xs leading-6 xl:resize-none`}
+				/>
+				{bodyError && (
+					<p role="alert" className="max-h-24 shrink-0 overflow-auto text-xs leading-5 text-red-700">
+						{bodyError}
+					</p>
+				)}
+				{actualRequest}
 			</div>
 		</section>
 	);

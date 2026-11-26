@@ -6,9 +6,11 @@ import {
 	buildGeminiUpstreamActionUrl,
 	isGeminiUpstreamAuthScheme,
 	type GeminiContentAction,
+	type GeminiUpstreamAction,
 	type GeminiUpstreamAuthScheme,
 } from './gemini-upstream-url';
 import {
+	GEMINI_EMBED_OPERATION,
 	GEMINI_GENERATE_OPERATION,
 	GEMINI_LEGACY_GENERATE_OPERATIONS,
 	LEGACY_WILDCARD_OPERATION,
@@ -34,13 +36,17 @@ export type ProviderEndpointCapability =
 	| 'audio.transcriptions.multimodal'
 	| 'audio.transcriptions.tasks'
 	| 'audio.speech'
+	| 'embeddings'
 	| 'audio.speech.multimodal'
+	| 'audio.speech.realtime'
+	| 'audio.transcriptions.realtime'
 	| 'audio.realtime.inference'
 	| 'audio.realtime.session'
 	| 'audio.hotwords'
 	| 'audio.voices'
 	| 'messages'
 	| 'models.generate'
+	| 'models.embed'
 	| 'generateContent'
 	| 'streamGenerateContent';
 
@@ -60,6 +66,7 @@ export const ANTHROPIC_ENDPOINT_CAPABILITIES = ['messages'] as const satisfies r
 /** Canonical Gemini capability (drives UI / listConfiguredCapabilities). */
 export const GEMINI_ENDPOINT_CAPABILITIES = [
 	GEMINI_GENERATE_OPERATION,
+	GEMINI_EMBED_OPERATION,
 ] as const satisfies readonly ProviderEndpointCapability[];
 
 /** Legacy per-action Gemini endpoint keys still accepted on read/write. */
@@ -88,6 +95,17 @@ export const MINIMAX_ENDPOINT_CAPABILITIES = [
 	'images.generations',
 ] as const satisfies readonly ProviderEndpointCapability[];
 
+/**
+ * ElevenLabs 原生能力：文件转写、文本转语音（voice_id 在路径里）、
+ * 以及两条 WebSocket：TTS `stream-input`、实时转写。
+ */
+export const ELEVENLABS_ENDPOINT_CAPABILITIES = [
+	'audio.transcriptions',
+	'audio.transcriptions.realtime',
+	'audio.speech',
+	'audio.speech.realtime',
+] as const satisfies readonly ProviderEndpointCapability[];
+
 /** 火山方舟 / BytePlus ModelArk 原生能力。当前只有 Seedream 生图。 */
 export const VOLCENGINE_ENDPOINT_CAPABILITIES = [
 	'images.generations',
@@ -100,6 +118,7 @@ const CAPABILITIES_BY_PROTOCOL: Record<UpstreamProtocol, readonly ProviderEndpoi
 	dashscope: DASHSCOPE_ENDPOINT_CAPABILITIES,
 	minimax: MINIMAX_ENDPOINT_CAPABILITIES,
 	volcengine: VOLCENGINE_ENDPOINT_CAPABILITIES,
+	elevenlabs: ELEVENLABS_ENDPOINT_CAPABILITIES,
 };
 
 /**
@@ -148,6 +167,7 @@ const ENDPOINT_CAPABILITIES_BY_OPERATION: Record<
 	},
 	minimax: { 'audio.transcriptions': ['audio.transcriptions'], 'audio.speech': ['audio.speech'], 'images.generations': ['images.generations'] },
 	volcengine: { 'images.generations': ['images.generations'] },
+	elevenlabs: { 'audio.transcriptions': ['audio.transcriptions'], 'audio.speech': ['audio.speech'], 'audio.transcriptions.realtime': ['audio.transcriptions.realtime'] },
 };
 
 /** Write-side whitelist: gemini accepts canonical + legacy keys. */
@@ -161,6 +181,7 @@ export const WRITABLE_CAPABILITIES_BY_PROTOCOL: Record<
 	dashscope: DASHSCOPE_ENDPOINT_CAPABILITIES,
 	minimax: MINIMAX_ENDPOINT_CAPABILITIES,
 	volcengine: VOLCENGINE_ENDPOINT_CAPABILITIES,
+	elevenlabs: ELEVENLABS_ENDPOINT_CAPABILITIES,
 };
 
 const ALL_CAPABILITIES = new Set<string>([
@@ -171,6 +192,7 @@ const ALL_CAPABILITIES = new Set<string>([
 	...DASHSCOPE_ENDPOINT_CAPABILITIES,
 	...MINIMAX_ENDPOINT_CAPABILITIES,
 	...VOLCENGINE_ENDPOINT_CAPABILITIES,
+	...ELEVENLABS_ENDPOINT_CAPABILITIES,
 ]);
 
 /** 单协议配置：`base` 与/或按 capability 的完整 URL 模板。 */
@@ -328,6 +350,10 @@ function isDashScopeRealtimeCapability(capability: string): boolean {
 	return capability === 'audio.realtime.inference' || capability === 'audio.realtime.session';
 }
 
+function isElevenLabsRealtimeCapability(capability: string): boolean {
+	return capability === 'audio.speech.realtime' || capability === 'audio.transcriptions.realtime';
+}
+
 /**
  * 校验并规范化 admin 写入的 endpoints（对象或 JSON 字符串）。
  * @throws Error 结构 / 协议名 / capability / URL / Gemini `{model}` 不合法
@@ -378,8 +404,12 @@ export function validateAndNormalizeProviderEndpoints(raw: unknown): ProviderEnd
 				const urlForValidation = url
 					.replace(/\{model\}/g, 'm')
 					.replace(/\{action\}/g, 'a')
-					.replace(/\{task_id\}/g, 't');
-				if (protocol === 'dashscope' && isDashScopeRealtimeCapability(cap)) {
+					.replace(/\{task_id\}/g, 't')
+					.replace(/\{voice_id\}/g, 'v');
+				if (
+					(protocol === 'dashscope' && isDashScopeRealtimeCapability(cap)) ||
+					(protocol === 'elevenlabs' && isElevenLabsRealtimeCapability(cap))
+				) {
 					assertWebSocketUrl(urlForValidation, `endpoints.${protocol}.endpoints.${cap}`);
 				} else {
 					assertHttpUrl(urlForValidation, `endpoints.${protocol}.endpoints.${cap}`);
@@ -390,7 +420,10 @@ export function validateAndNormalizeProviderEndpoints(raw: unknown): ProviderEnd
 							`endpoints.${protocol}.endpoints.${cap} must include {model} placeholder`
 						);
 					}
-					if (cap === GEMINI_GENERATE_OPERATION && !url.includes('{action}')) {
+					if (
+						(cap === GEMINI_GENERATE_OPERATION || cap === GEMINI_EMBED_OPERATION) &&
+						!url.includes('{action}')
+					) {
 						throw new Error(
 							`endpoints.${protocol}.endpoints.${cap} must include {action} placeholder`
 						);
@@ -403,6 +436,15 @@ export function validateAndNormalizeProviderEndpoints(raw: unknown): ProviderEnd
 				) {
 					throw new Error(
 						`endpoints.${protocol}.endpoints.${cap} must include {task_id} placeholder`
+					);
+				}
+				if (
+					protocol === 'elevenlabs' &&
+					(cap === 'audio.speech' || cap === 'audio.speech.realtime') &&
+					!url.includes('{voice_id}')
+				) {
+					throw new Error(
+						`endpoints.${protocol}.endpoints.${cap} must include {voice_id} placeholder`
 					);
 				}
 				mapped[cap as ProviderEndpointCapability] = url;
@@ -434,12 +476,13 @@ export function validateAndNormalizeProviderEndpoints(raw: unknown): ProviderEnd
 
 function fillEndpointTemplate(
 	template: string,
-	vars: { model?: string; action?: string; taskId?: string }
+	vars: { model?: string; action?: string; taskId?: string; voiceId?: string }
 ): string {
 	return template
 		.replace(/\{model\}/g, () => encodeURIComponent(vars.model ?? ''))
 		.replace(/\{action\}/g, () => encodeURIComponent(vars.action ?? ''))
-		.replace(/\{task_id\}/g, () => encodeURIComponent(vars.taskId ?? ''));
+		.replace(/\{task_id\}/g, () => encodeURIComponent(vars.taskId ?? ''))
+		.replace(/\{voice_id\}/g, () => encodeURIComponent(vars.voiceId ?? ''));
 }
 
 export type ResolveUpstreamEndpointOptions = {
@@ -449,6 +492,8 @@ export type ResolveUpstreamEndpointOptions = {
 	providerId?: string;
 	/** DashScope 异步文件识别任务查询 ID。 */
 	taskId?: string;
+	/** ElevenLabs 文本转语音的音色 ID（路径参数）。 */
+	voiceId?: string;
 };
 
 function resolveGeminiWireAction(
@@ -467,11 +512,29 @@ function resolveGeminiWireAction(
 	);
 }
 
+function resolveGeminiEmbedAction(options: ResolveUpstreamEndpointOptions): GeminiUpstreamAction {
+	const fromOptions = options.action?.trim();
+	if (fromOptions === 'embedContent' || fromOptions === 'batchEmbedContents') {
+		return fromOptions;
+	}
+	throw new Error('Gemini embed endpoint requires action (embedContent or batchEmbedContents)');
+}
+
 /** DashScope WSS 与 HTTP 共用 host，但协议和固定 API 根不同。 */
 function buildDashScopeWebSocketUrl(base: string, endpoint: 'inference' | 'realtime'): string {
 	const url = new URL(base);
 	url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
 	url.pathname = `/api-ws/v1/${endpoint}`;
+	url.search = '';
+	url.hash = '';
+	return url.toString();
+}
+
+/** ElevenLabs WSS 与 HTTP 共用 base（形如 `https://api.elevenlabs.io/v1`），只换 scheme。 */
+function buildElevenLabsWebSocketUrl(base: string, path: string): string {
+	const url = new URL(base);
+	url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+	url.pathname = `${trimSlash(url.pathname)}${path}`;
 	url.search = '';
 	url.hash = '';
 	return url.toString();
@@ -500,6 +563,28 @@ export function resolveUpstreamEndpoint(
 	}
 
 	const cfg = providerEndpoints[protocol];
+
+	if (protocol === 'gemini' && canonicalCapability === GEMINI_EMBED_OPERATION) {
+		const action = resolveGeminiEmbedAction(options);
+		const model = options.model;
+		const template = cfg?.endpoints?.[GEMINI_EMBED_OPERATION];
+		if (template) {
+			if (!model) throw new Error('Gemini upstream endpoint requires model name');
+			return fillEndpointTemplate(template, { model, action });
+		}
+		const base = cfg?.base;
+		if (base) {
+			if (!model) throw new Error('Gemini upstream endpoint requires model name');
+			return buildGeminiUpstreamActionUrl(trimSlash(base), model, action);
+		}
+		const who =
+			options.providerId != null && options.providerId !== ''
+				? `provider_id=${JSON.stringify(options.providerId)}`
+				: 'provider';
+		throw new Error(
+			`${who}: no upstream endpoint for protocol "gemini" capability "${GEMINI_EMBED_OPERATION}" (configure providers.endpoints.gemini)`
+		);
+	}
 
 	if (protocol === 'gemini') {
 		const action = resolveGeminiWireAction(capability, options);
@@ -541,10 +626,18 @@ export function resolveUpstreamEndpoint(
 		if (resolvedCapability === 'audio.transcriptions.tasks' && !options.taskId) {
 			throw new Error('DashScope task endpoint requires taskId');
 		}
+		if (
+			protocol === 'elevenlabs' &&
+			(resolvedCapability === 'audio.speech' || resolvedCapability === 'audio.speech.realtime') &&
+			!options.voiceId
+		) {
+			throw new Error('ElevenLabs speech endpoint requires voiceId');
+		}
 		return fillEndpointTemplate(template, {
 			model: options.model,
 			action: options.action,
 			taskId: options.taskId,
+			voiceId: options.voiceId,
 		});
 	}
 
@@ -556,8 +649,6 @@ export function resolveUpstreamEndpoint(
 				return `${root}/chat/completions`;
 			case 'responses':
 				return `${root}/responses`;
-			case 'embeddings':
-				return `${root}/embeddings`;
 			case 'rerank':
 				return `${root}/rerank`;
 			case 'images.generations':
@@ -572,6 +663,9 @@ export function resolveUpstreamEndpoint(
 				}
 				if (protocol === 'minimax') {
 					return `${root}/speech_to_text`;
+				}
+				if (protocol === 'elevenlabs') {
+					return `${root}/speech-to-text`;
 				}
 				return `${root}/audio/transcriptions`;
 			case 'audio.transcriptions.multimodal':
@@ -588,9 +682,27 @@ export function resolveUpstreamEndpoint(
 				if (protocol === 'minimax') {
 					return `${root}/t2a_v2`;
 				}
+				if (protocol === 'elevenlabs') {
+					if (!options.voiceId) {
+						throw new Error('ElevenLabs speech endpoint requires voiceId');
+					}
+					return `${root}/text-to-speech/${encodeURIComponent(options.voiceId)}`;
+				}
 				return `${root}/audio/speech`;
 			case 'audio.speech.multimodal':
 				return `${root}/services/aigc/multimodal-generation/generation`;
+			case 'audio.speech.realtime':
+				if (!options.voiceId) {
+					throw new Error('ElevenLabs speech endpoint requires voiceId');
+				}
+				return buildElevenLabsWebSocketUrl(
+					root,
+					`/text-to-speech/${encodeURIComponent(options.voiceId)}/stream-input`
+				);
+			case 'audio.transcriptions.realtime':
+				return buildElevenLabsWebSocketUrl(root, '/speech-to-text/realtime');
+			case 'embeddings':
+				return `${root}/embeddings`;
 			case 'images.generations.multimodal':
 				return `${root}/services/aigc/multimodal-generation/generation`;
 			case 'audio.realtime.inference':
@@ -666,11 +778,14 @@ export function listConfiguredCapabilities(
 	const endpoints = cfg.endpoints;
 	if (!endpoints) return [];
 	if (protocol === 'gemini') {
-		const hasAny =
+		const hasGenerate =
 			Boolean(endpoints[GEMINI_GENERATE_OPERATION]) ||
 			Boolean(endpoints.generateContent) ||
 			Boolean(endpoints.streamGenerateContent);
-		return hasAny ? [GEMINI_GENERATE_OPERATION] : [];
+		const out: ProviderEndpointCapability[] = [];
+		if (hasGenerate) out.push(GEMINI_GENERATE_OPERATION);
+		if (endpoints[GEMINI_EMBED_OPERATION]) out.push(GEMINI_EMBED_OPERATION);
+		return out;
 	}
 	return all.filter((cap) => Boolean(endpoints[cap]));
 }

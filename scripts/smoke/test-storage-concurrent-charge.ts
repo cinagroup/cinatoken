@@ -3,7 +3,7 @@
  * 验证 `users.budget_spent` 与 Proxy `recordUsage` 相同的 SQL 原子累加路径。
  *
  * 依赖：已迁移的库（`npm run db:migrate:pg` / `db:migrate:mysql`）、`DATABASE_URL`。
- * 未设置 `DATABASE_URL` 时退出码 **0**（跳过，便于仅 D1 的 CI）。
+ * 未设置 `DATABASE_URL` 时退出码 **0**（跳过，便于仅 D1 的开发）；严格模式下缺失或配置无效均失败。
  *
  * ```bash
  * npm run test:gateway:sql-storage-smoke
@@ -107,16 +107,17 @@ function buildRequestLog(params: {
 
 export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 	const tag = '[gateway-sql-storage-smoke]';
-	let cfg: ReturnType<typeof resolveNodeDatabaseConfig>;
-	try {
-		cfg = resolveNodeDatabaseConfig({
-			DATABASE_URL: process.env.DATABASE_URL,
-			DATABASE_DRIVER: process.env.DATABASE_DRIVER,
-		});
-	} catch {
-		console.log('%s skip: DATABASE_URL unset or invalid for Node SQL', tag);
+	const strict = ['1', 'true', 'yes'].includes(
+		(process.env.GATEWAY_SMOKE_STRICT ?? '').toLowerCase()
+	);
+	if (!process.env.DATABASE_URL?.trim() && !strict) {
+		console.log('%s skip: DATABASE_URL unset', tag);
 		return;
 	}
+	const cfg = resolveNodeDatabaseConfig({
+		DATABASE_URL: process.env.DATABASE_URL,
+		DATABASE_DRIVER: process.env.DATABASE_DRIVER,
+	});
 	const url = cfg.connectionString;
 	const driver = cfg.driver;
 
@@ -243,8 +244,9 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 	});
 	const crossRow = await repos.users.getById(crossUser.id);
 	if (!crossRow) throw new Error('cross-pool user missing');
-	const k3 = await createKey(repos, { user_id: crossUser.id, name: 'c3', provision_reason: tag });
-	const k4 = await createKey(repos, { user_id: crossUser.id, name: 'c4', provision_reason: tag });
+	const crossWorkspaceId = defaultWorkspaceId('personal', crossUser.id);
+	const k3 = await createKey(repos, { user_id: crossUser.id, workspace_id: crossWorkspaceId, name: 'c3', provision_reason: tag });
+	const k4 = await createKey(repos, { user_id: crossUser.id, workspace_id: crossWorkspaceId, name: 'c4', provision_reason: tag });
 	const periodCharge = 0.1;
 	const walletCharge = 0.08;
 	const log3 = crypto.randomUUID();
@@ -255,6 +257,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 			requestLog: buildRequestLog({
 				id: log3,
 				userId: crossUser.id,
+				workspaceId: crossWorkspaceId,
 				apiKeyId: k3.key_id,
 				charged: periodCharge,
 			}),
@@ -269,6 +272,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 			requestLog: buildRequestLog({
 				id: log4,
 				userId: crossUser.id,
+				workspaceId: crossWorkspaceId,
 				apiKeyId: k4.key_id,
 				charged: walletCharge,
 			}),

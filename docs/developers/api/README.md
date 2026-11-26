@@ -64,8 +64,9 @@
 | `/v1/images/edits` | POST | OpenAI 兼容图片编辑（multipart；Seedream 不适用） |
 | `/v1/audio/transcriptions` | POST | OpenAI 兼容语音转写（multipart；`per_second` / `token` 双模式计费，见 [user.md](./user.md#语音转写audio-transcriptions)） |
 | `/v1/audio/speech` | POST | OpenAI 兼容语音合成（完整音频 / 流式；按字符计费） |
-| `/v1/dashscope/services/aigc/multimodal-generation/generation` | POST | DashScope 同步 ASR HTTP 透传（`audio.transcriptions.multimodal`；见 [dashscope-audio](../architecture/dashscope-audio.md)） |
-| `/v1/dashscope/realtime` | GET / WebSocket | DashScope 原生实时 ASR / TTS（见 [dashscope-audio](../architecture/dashscope-audio.md)） |
+| `/dashscope/api/v1/services/aigc/multimodal-generation/generation` | POST | DashScope 同步 ASR HTTP 透传（`audio.transcriptions.multimodal`；见 [dashscope-audio](../architecture/dashscope-audio.md)） |
+| `/dashscope/api-ws/v1/inference` | GET / WebSocket | DashScope run-task 协议实时 ASR / TTS，模型在 run-task 帧里（见 [dashscope-audio](../architecture/dashscope-audio.md)） |
+| `/dashscope/api-ws/v1/realtime?model=` | GET / WebSocket | DashScope Qwen-Realtime session（见 [dashscope-audio](../architecture/dashscope-audio.md)） |
 | `/v1/tools/web-search` | POST | Agent Tools：联网搜索（按次计费；Admin Tools 配置 Active 引擎） |
 | `/v1/tools/web-fetch` | POST | Agent Tools：网页抓取（按次计费） |
 | `/v1/tools/web-deep-search` | POST | Agent Tools：深度检索（搜+读；按次计费） |
@@ -73,7 +74,7 @@
 | `/v1/tools/pricing` | GET | Agent Tools：只读定价（不含密钥与 Active 引擎名） |
 | `/v1/messages` | POST | Anthropic Messages |
 | `/v1beta/models/:modelAction` | POST | Gemini `generateContent` / `streamGenerateContent`（文本与官方图片模型共用；图片透传见 [gemini-image](../architecture/gemini-image.md)） |
-| `/v1/models` | GET | 模型列表（需用户 Key；OpenAI 兼容形态；默认仅 LLM，排除文生图 / ASR / TTS；`kind=image` 文生图，`kind=audio` 为 ASR + TTS，`kind=all` 不过滤） |
+| `/v1/models` | GET | 模型列表（需用户 Key；OpenAI 兼容形态；默认仅 LLM，排除文生图 / ASR / TTS / 向量；`kind=image` 文生图，`kind=asr` 语音识别，`kind=tts` 语音合成，`kind=audio` 为 ASR + TTS 兼容别名，`kind=embedding` 为向量，`kind=all` 不过滤；规则见 [模型类型](../reference/model-kinds.md)） |
 | `/catalog/models` | GET | 公开模型目录 discovery（无需 Key；含 `protocols_by_group` 与 `inbound`，见 [详细说明](./user.md#公开模型目录catalog-discovery)） |
 | `/v1/me` | GET | 预算与元数据 |
 

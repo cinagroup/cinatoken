@@ -60,6 +60,7 @@ export function RouteAdapterPreview(props: {
 							descriptor.request.operation,
 							props.draft.modelId
 						)}
+						<span className='mt-1 block'>{descriptor.request.operation}</span>
 					</dd>
 				</div>
 				<div>

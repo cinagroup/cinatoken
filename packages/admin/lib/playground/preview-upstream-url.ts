@@ -11,6 +11,7 @@ import {
 } from '@octafuse/core/provider-endpoints';
 import { getAdapterById, isConversionRouteAdapter } from '@octafuse/core/adapters/registry';
 import { normalizeUpstreamProtocol, type UpstreamProtocol } from '@octafuse/core/upstream-protocol';
+import type { ModelKind } from '@octafuse/core/db/model-kind';
 import { modelKindFromFlags, resolveOpenaiUpstreamCapability } from '@/lib/invoke-kind';
 
 export type PlaygroundProviderBaseUrls = ProviderEndpointsSource & {
@@ -45,7 +46,9 @@ export function describePlaygroundUpstreamUrl(input: {
 	/** 转换适配器（如 volcengine-image）决定目标协议；透传沿用 upstreamProtocol。 */
 	adapter?: string | null;
 	providerModelName: string;
-	isImageModel: boolean;
+	/** 目录模型类型（`resolveModelKind`）；缺省按 llm。 */
+	modelKind?: ModelKind;
+	isImageModel?: boolean;
 	/** When image model: generations (default) or edits. */
 	imageOperation?: 'generations' | 'edits';
 	/** Audio transcription (ASR) catalog model. */
@@ -74,7 +77,7 @@ export function describePlaygroundUpstreamUrl(input: {
 			const requested = input.upstreamOperation?.trim() ?? '';
 			upstreamOperation = descriptor.upstream.operations.includes(requested)
 				? requested
-				: (descriptor.upstream.operations[0] ?? '');
+				: descriptor.upstream.operations[0] ?? '';
 		}
 	}
 
@@ -86,20 +89,16 @@ export function describePlaygroundUpstreamUrl(input: {
 			case 'openai': {
 				if (input.isRerankModel) {
 					return {
-						url: resolveUpstreamEndpoint(protocol, 'rerank', providerEndpoints, { providerId: provider.id }),
+						url: resolveUpstreamEndpoint(protocol, 'rerank', providerEndpoints, {
+							providerId: provider.id,
+						}),
 						target: 'openai/rerank',
 					};
 				}
-				const kind = modelKindFromFlags(Boolean(input.isAudioModel), Boolean(input.isImageModel));
+				const kind = input.modelKind ?? modelKindFromFlags(Boolean(input.isAudioModel), Boolean(input.isImageModel));
 				const capability = resolveOpenaiUpstreamCapability({
 					kind,
 					imageOperation: input.imageOperation,
-					audioOperation:
-						kind === 'audio' && upstreamOperation === 'audio.speech'
-							? 'speech'
-							: kind === 'audio'
-								? 'transcriptions'
-								: undefined,
 					llmOperation: upstreamOperation === 'responses' ? 'responses' : 'chat',
 				});
 				target = `${protocol}/${capability}`;
@@ -119,9 +118,27 @@ export function describePlaygroundUpstreamUrl(input: {
 					target,
 				};
 			case 'gemini': {
-				const action: GeminiContentAction = input.isImageModel
-					? 'generateContent'
-					: input.geminiAction === 'streamGenerateContent'
+				if (input.modelKind === 'embedding') {
+					target = `${protocol}/models.embed`;
+					const embedAction = 'embedContent';
+					const resolvedEmbedUrl = resolveUpstreamEndpoint(protocol, 'models.embed', providerEndpoints, {
+						model: input.providerModelName || 'model',
+						action: embedAction,
+						providerId: provider.id,
+					});
+					const prepared = prepareGeminiUpstreamFetch({
+						resolvedUrl: resolvedEmbedUrl,
+						modelName: input.providerModelName || 'model',
+						action: embedAction,
+						apiKey: 'preview',
+						auth: providerEndpoints.gemini?.auth,
+					});
+					return { url: stripApiKeyFromUrl(prepared.url.toString()), target };
+				}
+				const action: GeminiContentAction =
+					input.modelKind === 'image'
+						? 'generateContent'
+						: input.geminiAction === 'streamGenerateContent'
 						? 'streamGenerateContent'
 						: 'generateContent';
 				target = `${protocol}/models.generate`;
@@ -158,10 +175,10 @@ export function describePlaygroundUpstreamUrl(input: {
 					operation === 'audio.speech'
 						? 'audio.speech'
 						: operation === 'images.generations'
-							? 'images.generations'
-							: operation === 'audio.transcriptions' || operation === '*'
-								? 'audio.transcriptions'
-								: null;
+						? 'images.generations'
+						: operation === 'audio.transcriptions' || operation === '*'
+						? 'audio.transcriptions'
+						: null;
 				target = capability ? `${protocol}/${capability}` : null;
 				if (!capability) return { url: null, target };
 				return {
@@ -171,13 +188,34 @@ export function describePlaygroundUpstreamUrl(input: {
 					target,
 				};
 			}
+			case 'elevenlabs': {
+				const operation = upstreamOperation?.trim() || 'audio.transcriptions';
+				const capability =
+					operation === 'audio.speech' || operation === 'audio.speech.realtime'
+						? operation
+						: operation === 'audio.transcriptions.realtime'
+						? 'audio.transcriptions.realtime'
+						: operation === 'audio.transcriptions' || operation === '*'
+						? 'audio.transcriptions'
+						: null;
+				target = capability ? `${protocol}/${capability}` : null;
+				if (!capability) return { url: null, target };
+				return {
+					// 音色是路径参数，预览里保留占位符。
+					url: resolveUpstreamEndpoint(protocol, capability, providerEndpoints, {
+						providerId: provider.id,
+						voiceId: '{voice_id}',
+					}).replace(/%7Bvoice_id%7D/gi, '{voice_id}'),
+					target,
+				};
+			}
 			case 'dashscope': {
 				const rawOperation = upstreamOperation?.trim() ?? '';
 				const operation = rawOperation.endsWith('.realtime.inference')
 					? 'audio.realtime.inference'
 					: rawOperation.endsWith('.realtime.session')
-						? 'audio.realtime.session'
-						: rawOperation;
+					? 'audio.realtime.session'
+					: rawOperation;
 				target = operation ? `${protocol}/${operation}` : null;
 				if (!(DASHSCOPE_ENDPOINT_CAPABILITIES as readonly string[]).includes(operation)) {
 					return { url: null, target };

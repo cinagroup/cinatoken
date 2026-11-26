@@ -16,9 +16,9 @@ describe('resolveMeMetadata', () => {
 		assert.deepEqual(
 			resolveMeMetadata(
 				'{"plan_id":"max","subscription_status":"active"}',
-				'{"plan_id":"free","signup_bonus":10}'
+				'{"plan_id":"free","signup_bonus":10}',
 			),
-			{ plan_id: 'max', subscription_status: 'active', signup_bonus: 10 }
+			{ plan_id: 'max', subscription_status: 'active', signup_bonus: 10 },
 		);
 	});
 

@@ -8,9 +8,9 @@ export const toolFamilies = [
 export type ToolFamily = (typeof toolFamilies)[number]
 export type ToolCredentialField = 'apiKey' | 'secretId' | 'secretKey'
 export const toolProviders = {
-	'web-search': ['bocha', 'tavily', 'cleversee', 'tencent_wsa'],
-	'web-fetch': ['firecrawl', 'tavily', 'jina'],
-	'web-deep-search': ['firecrawl', 'jina'],
+	'web-search': ['bocha', 'tavily', 'cleversee', 'tencent_wsa', 'deepseek'],
+	'web-fetch': ['firecrawl', 'tavily', 'jina', 'deepseek'],
+	'web-deep-search': ['firecrawl', 'jina', 'deepseek'],
 	'ai-detection': ['tencent_tms'],
 } as const
 export type ToolProvider = (typeof toolProviders)[ToolFamily][number]
