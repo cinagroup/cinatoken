@@ -128,7 +128,7 @@ export function ModelSyncReview(props: ReviewProps) {
 							change({ ...filters, kind: event.target.value })
 						}
 					>
-						{['all', 'llm', 'image', 'audio'].map((kind) => (
+						{['all', 'llm', 'image', 'audio', 'rerank'].map((kind) => (
 							<NativeSelectOption key={kind} value={kind}>
 								{t(prefix + kind)}
 							</NativeSelectOption>
