@@ -124,12 +124,21 @@ export const modelCreatedResponseSchema = z.object({
 })
 export const modelSuccessSchema = z.object({ success: z.literal(true) })
 
-/** Static import catalog returns summaries, not full profiles or supplier routes. Backend labels rerank/embedding as llm here. */
+/** Project Gateway's detailed kinds into the existing Web filters. Unknown kinds still fail closed. */
+const catalogModelKindSchema = z
+	.enum(['llm', 'image', 'audio', 'asr', 'tts', 'embedding', 'rerank'])
+	.transform((kind): ModelKind => {
+		if (kind === 'asr' || kind === 'tts') return 'audio'
+		if (kind === 'embedding') return 'llm'
+		return kind
+	})
+
+/** Import catalog returns summaries, not full profiles or supplier routes. */
 export const modelCatalogItemSchema = z.object({
 	id: modelIdentitySchema,
 	display_name: z.string().nullable(),
 	vendor: z.string(),
-	kind: z.enum(['llm', 'image', 'audio']),
+	kind: catalogModelKindSchema,
 	context_window: nullableTokens,
 	max_tokens: nullableTokens,
 	description: z.string().nullable(),
@@ -230,7 +239,7 @@ export const modelSyncEntrySchema = z
 	.object({
 		model_id: modelIdentitySchema,
 		display_name: z.string().max(10_000).nullable(),
-		kind: z.enum(['llm', 'image', 'audio']),
+		kind: catalogModelKindSchema,
 		routes_count: count,
 		active_routes_count: count,
 		fields: z.array(modelSyncFieldSchema).min(1).max(9),

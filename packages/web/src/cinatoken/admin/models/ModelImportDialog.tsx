@@ -30,7 +30,9 @@ export function ModelImportDialog(props: {
 }) {
 	const { t, i18n } = useTranslation()
 	const [search, setSearch] = useState('')
-	const [kind, setKind] = useState<'all' | 'llm' | 'image' | 'audio'>('all')
+	const [kind, setKind] = useState<
+		'all' | 'llm' | 'image' | 'audio' | 'rerank'
+	>('all')
 	const [selected, setSelected] = useState<string[]>([])
 	const query = useQuery({
 		queryKey: [...props.prefix, 'catalog'],
@@ -90,7 +92,7 @@ export function ModelImportDialog(props: {
 						value={kind}
 						onChange={(event) => setKind(event.target.value as typeof kind)}
 					>
-						{['all', 'llm', 'image', 'audio'].map((value) => (
+						{['all', 'llm', 'image', 'audio', 'rerank'].map((value) => (
 							<option key={value} value={value}>
 								{t(prefix + value)}
 							</option>
