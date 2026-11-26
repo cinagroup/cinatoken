@@ -643,6 +643,7 @@
 	"sidebar": {
 		"groups": {
 			"overview": "Overview",
+			"inference": "Inference",
 			"models": "Models",
 			"testing": "Testing",
 			"user": "User",
@@ -668,6 +669,7 @@
 			"requestLogs": "Request Logs",
 			"auditLogs": "Audit Logs",
 			"toolsConfig": "REST Services",
+			"toolInvocations": "Tool Invocations",
 			"modelUsage": "Model Usage",
 			"providerUsage": "Provider Usage",
 			"userUsage": "User Usage",

@@ -643,6 +643,7 @@
 	"sidebar": {
 		"groups": {
 			"overview": "概要",
+			"inference": "推論",
 			"models": "モデル",
 			"testing": "テスト",
 			"user": "ユーザー",
@@ -668,6 +669,7 @@
 			"requestLogs": "リクエストログ",
 			"auditLogs": "監査ログ",
 			"toolsConfig": "REST サービス",
+			"toolInvocations": "ツール呼び出し",
 			"modelUsage": "モデル使用量",
 			"providerUsage": "プロバイダー使用量",
 			"userUsage": "ユーザー使用量",

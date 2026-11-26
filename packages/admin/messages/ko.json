@@ -643,6 +643,7 @@
 	"sidebar": {
 		"groups": {
 			"overview": "개요",
+			"inference": "추론",
 			"models": "모델",
 			"testing": "테스트",
 			"user": "사용자",
@@ -668,6 +669,7 @@
 			"requestLogs": "요청 로그",
 			"auditLogs": "감사 로그",
 			"toolsConfig": "REST 서비스",
+			"toolInvocations": "도구 호출",
 			"modelUsage": "모델 사용량",
 			"providerUsage": "공급자 사용량",
 			"userUsage": "사용자 사용량",
