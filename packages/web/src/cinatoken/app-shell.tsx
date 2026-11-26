@@ -95,9 +95,13 @@ export function ApplicationShell() {
 						>
 							{t('cinatoken.shell.account')}
 						</Link>
-						{session.user?.capabilities.includes('admin.console') ? (
+						{session.user ? (
 							<a
-								href='/admin'
+								href={
+									session.user.capabilities.includes('admin.console')
+										? '/admin'
+										: '/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fadmin'
+								}
 								className='text-muted-foreground hover:text-foreground'
 							>
 								{t('cinatoken.shell.admin')}

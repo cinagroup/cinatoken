@@ -57,7 +57,7 @@ export function ConsoleGate(props: { children: ReactNode }) {
 				{t(prefix + help)}
 			</p>
 			<div className='flex flex-wrap gap-3'>
-				{needsLogin ? (
+				{needsLogin || (!unavailable && console.status === 'forbidden') ? (
 					<Button
 						disabled={portal.isLoginPending}
 						onClick={() =>
