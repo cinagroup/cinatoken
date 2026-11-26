@@ -1,6 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { DASHBOARD_ACTIVITY_LIMIT } from '../../../../../admin/lib/dashboard-constants'
 import { CinaTokenApiError, createCinaTokenCookieTransport } from '../../api'
 import { createAdminDashboardApi } from './dashboard-api'
 import { DashboardCurrencyUnavailableError } from './dashboard-contracts'
@@ -159,6 +160,72 @@ test('dashboard reads only same-origin safe stats and config overview using Cook
 			'X-CinaToken-Workspace',
 		])
 			assert.equal(headers.get(name), null)
+	}
+})
+
+test('both dashboard reads accept additive aggregates without retaining them', async () => {
+	const { api } = fixture((path) =>
+		Response.json({
+			success: true,
+			data: path.includes('/config/')
+				? overview
+				: {
+						...stats,
+						operations: { current: { requests: 80 } },
+						extra: 'PRIVATE',
+					},
+		})
+	)
+	const snapshots = [
+		await api.dashboard({ kind: 'preset', value: '1d' }),
+		await api.dashboardWindow({ kind: 'calendar', preset: 'today' }),
+	]
+	for (const snapshot of snapshots) {
+		assert.deepEqual(snapshot.stats, stats)
+		assert.equal(Object.hasOwn(snapshot.stats, 'operations'), false)
+		assert.equal(JSON.stringify(snapshot).includes('PRIVATE'), false)
+	}
+})
+
+test('recent summaries accept the server activity limit and reject larger or unsafe lists', async () => {
+	for (const field of ['recentLogs', 'recentErrors'] as const) {
+		const rows = Array.from(
+			{ length: DASHBOARD_ACTIVITY_LIMIT },
+			(_, index) => ({
+				...safeLog,
+				id: `request-${index}`,
+			})
+		)
+		const reply = (recent: unknown[]) => (path: string) =>
+			Response.json({
+				success: true,
+				data: path.includes('/config/')
+					? overview
+					: { ...stats, [field]: recent },
+			})
+		const { api } = fixture(reply(rows))
+		assert.equal(
+			(await api.dashboardWindow({ kind: 'rolling', preset: '1h' })).stats[
+				field
+			].length,
+			DASHBOARD_ACTIVITY_LIMIT
+		)
+		for (const invalid of [
+			[...rows, { ...safeLog, id: 'excess' }],
+			rows.map((row, index) =>
+				index === rows.length - 1
+					? { ...row, request_body: 'PRIVATE PROMPT' }
+					: row
+			),
+		]) {
+			const { api: invalidApi } = fixture(reply(invalid))
+			await assert.rejects(
+				invalidApi.dashboardWindow({ kind: 'rolling', preset: '1h' }),
+				(error: unknown) =>
+					error instanceof CinaTokenApiError &&
+					error.code === 'invalid-response'
+			)
+		}
 	}
 })
 
