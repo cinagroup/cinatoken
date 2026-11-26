@@ -89,15 +89,17 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/providers` | GET, POST, GET/PATCH/DELETE `/:id` | `providers`（单键 `api_key` + `status`；列表脱敏） | Admin UI |
 | `/admin/providers/:id/api-key` | GET | `providers.api_key` 明文揭示 | Admin UI |
 | `/admin/providers/:id/quota` | GET | 按 `kind` 实时查询上游余额 / 周期额度；不落库、不回显密钥 | Admin UI |
-| `/admin/providers/import/catalog` | GET | 内置 Provider 模板摘要（无密钥） | Admin UI |
-| `/admin/providers/import` | POST | 请求体 `{"ids":["0","1",…]}`：catalog 键（非 provider id）；普通模板新增 UUID 行、同名自动后缀及待替换 key。受支持托管模板使用固定 Provider id 和 `env:NAME` 引用，固定 id 已存在则进入 `skipped_existing`，不覆盖。返回 `created`、`updated`（恒为 0）、`skipped_existing`、`failed`，允许部分成功 | Admin UI、运维脚本 |
+| `/admin/providers/:id/model-options` | GET | 读取模型发现能力和凭据就绪状态；不调用上游、不返回密钥 | Admin UI |
+| `/admin/providers/:id/model-options/refresh` | POST | 有界查询上游模型候选，支持手工填写；Console 请求必须同源，响应禁止缓存 | Admin UI |
+| `/admin/providers/import/catalog` | GET | 远程供应商目录摘要（无密钥，稳定键为模板英文名） | Admin UI |
+| `/admin/providers/import` | POST | 请求体 `{"ids":["OpenAI","DeepSeek",…]}`：catalog 键（非 provider id）；普通模板新增 UUID 行、同名自动后缀及待替换 key。受支持托管模板使用固定 Provider id 和 `env:NAME` 引用，固定 id 已存在则进入 `skipped_existing`，不覆盖。返回 `created`、`updated`（恒为 0）、`skipped_existing`、`failed`，允许部分成功 | Admin UI、运维脚本 |
 | `/admin/models` | GET, POST, GET/PATCH/DELETE `/:id` | `models`（含可选 `route_policy`），`model_tags`；列表与详情 GET 顶层返回当前 `billing_currency` | Admin UI |
-| `/admin/models/import/catalog` | GET | 内置静态目录可选项摘要（不含完整 `pricing_profile`） | Admin UI |
+| `/admin/models/import/catalog` | GET | 远程模型目录摘要（不含完整 `pricing_profile`）；可用 `?vendor=openai` 等已知厂商键筛选 | Admin UI |
 | `/admin/models/import` | POST | 请求体 `{"ids":["…"]}`：仅导入指定预设 → `models`，`model_tags`（按 `BILLING_CURRENCY` 选用 USD/CNY 价；**同 id 不覆盖**，记入 `skipped_existing`） | Admin UI、运维脚本 |
 
-| `/admin/providers/sync/diff` | GET | 各 Provider 与内置官方模板的差异报告：按 `kind` 分组，逐字段（`description`、`endpoints.<protocol>`）列出新增 / 变更 / 仅本地有；另列出 `kind` 已不在模板中的 provider（`orphans`） | Admin UI |
+| `/admin/providers/sync/diff` | GET | 各 Provider 与远程官方目录的差异报告：按 `kind` 分组，逐字段（`description`、`endpoints.<protocol>`）列出新增 / 变更 / 仅本地有；另列出 `kind` 已不在模板中的 provider（`orphans`） | Admin UI |
 | `/admin/providers/sync/apply` | POST | 请求体 `{"items":[{"provider_id","fields":["description","endpoints.openai",…]}]}`：服务端重算差异，只把选中字段写成官方值；不写 `api_key` / `status` / `name` / `kind` | Admin UI |
-| `/admin/models/sync/diff` | GET | 各 Model 与内置静态目录的差异报告：按厂商分组，逐字段（`display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`released_at`、`input_modalities`、`output_modalities`、`pricing_profile`）列出新增 / 变更；价格按 `BILLING_CURRENCY` 取目录价并逐叶子路径对比。目录里没有的自建模型、目录未给出的字段不参与 | Admin UI |
+| `/admin/models/sync/diff` | GET | 各 Model 与远程模型目录的差异报告：按厂商分组，逐字段（`display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`released_at`、`input_modalities`、`output_modalities`、`pricing_profile`）列出新增 / 变更；价格按 `BILLING_CURRENCY` 取目录价并逐叶子路径对比。目录里没有的自建模型、目录未给出的字段不参与 | Admin UI |
 | `/admin/models/sync/apply` | POST | 请求体 `{"items":[{"model_id","fields":["description","pricing_profile",…]}]}`：服务端重算差异，只把选中字段写成官方值（经 `updateModelService`，路由价格覆盖时段对齐照常执行）；不写 `tags` / `metadata` / `route_policy` | Admin UI |
 | `/admin/routes` | GET（`?model_id=&provider_id=`）, POST, GET/PATCH/DELETE `/:id` | `model_surfaces`、`route_pools`、`model_routes`（Surface → Pool → Target） | Admin UI |
 | `/admin/routes/context` | GET | 仅当前有效全局路由策略、计费币种和业务时区的归一化只读投影；要求 `routes.read` 与 `config.read` | Admin UI |
@@ -168,7 +170,9 @@ Web 支持粘贴远程 HTTP(S) URL 或 MCP 客户端 JSON 配置，不执行 std
 |------|------|------|----------|
 | **`GET /catalog/models`**（Proxy） | `GATEWAY_URL` | 无 | **运行时**可调用模型 + `protocols` / `protocols_by_group` / `inbound`（由 active `model_routes` 聚合） |
 | **`GET /admin/models`** | Admin `/api/admin/*` | Console Session 或 `models.read` | 库内 **全部**模型 CRUD 列表（含 tags、路由计数；**不**含按 route 的协议聚合） |
-| **`GET /admin/models/import/catalog`** | Admin | Console Session 或 `models.read` | 仓库内 **静态 preset** 摘要，供导入 UI 勾选，**非**运行时 route 真相 |
+| **`GET /admin/models/import/catalog`** | Admin | Console Session 或 `models.read` | 当前模型目录的模板摘要，供导入 UI 勾选 |
+
+供应商和模型的导入、同步默认读取官网目录。镜像设置和缓存行为见[目录数据来源](../reference/provider-import-presets.md#数据来源)。
 
 门户 / 公开站应使用 Proxy **`GET /catalog/models`**，详见 [用户接口 · 公开模型目录](./user.md#公开模型目录catalog-discovery)。用户个性化折扣用 **`GET /admin/users/:id/display-discounts`** overlay。门户仍走 Catalog + display-discounts；Agent 拉列表不再计入 RPM。Agent 与兼容客户端默认仍用 **`GET /v1/models`**（需用户 Key，默认 `default,free` route group）。
 
@@ -1099,12 +1103,12 @@ OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`spe
 
 ### `GET /admin/models/import/catalog`
 
-- **行为**：返回 `packages/admin/lib/model-presets/*.json`（合并后）每条预设的摘要（`id`、`display_name`、`vendor`、`kind`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。`kind` 为 `llm` \| `image` \| `asr` \| `tts` \| `embedding`（与管理后台模型列表 Kind 一致，规则见 [模型类型](../reference/model-kinds.md)）；语音识别与语音合成已分开，用户接口 `GET /v1/models?kind=asr` / `kind=tts` 与之对齐（`kind=audio` 为两者的兼容别名）。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
+- **行为**：返回当前模型目录中每条预设的摘要（`id`、`display_name`、`vendor`、`kind`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。`kind` 为 `llm` \| `image` \| `asr` \| `tts` \| `embedding`（与管理后台模型列表 Kind 一致，规则见 [模型类型](../reference/model-kinds.md)）；语音识别与语音合成已分开，用户接口 `GET /v1/models?kind=asr` / `kind=tts` 与之对齐（`kind=audio` 为两者的兼容别名）。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
 
 ### `POST /admin/models/import`
 
-- **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**`ids` 必填**；须为非空字符串数组；重复 id 会去重；顺序保留）。介绍留在静态目录，不写入 `note`。
-- **行为**：仅处理 `ids` 中在静态目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）把该分支**整段**写入 `models.pricing_profile`（含 `tiers` / 图音频单价，以及可选官方时段 `schedule`）；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建。标签由运营在导入后自行维护，导入**不**写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
+- **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**`ids` 必填**；须为非空字符串数组；重复 id 会去重；顺序保留）。介绍留在模型目录，不写入 `note`。
+- **行为**：仅处理 `ids` 中在模型目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）把该分支**整段**写入 `models.pricing_profile`（含 `tiers` / 图音频单价，以及可选官方时段 `schedule`）；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建。标签由运营在导入后自行维护，导入**不**写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
 - **响应** `data`：`{ "billing_currency_used", "created", "updated"（恒为 0）, "skipped_existing": string[], "failed": [{ "id", "message" }] }`。
 
 ### 运维验收：Embedding 模型

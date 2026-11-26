@@ -21,8 +21,8 @@ cinatoken Gateway is designed to serve as a **unified AI capability hub for one-
 
 Its core capabilities include:
 
-1. Provider onboarding: Connect model vendors and aggregation platforms. A large preset catalog, including Coding / Token Plans, lets you import endpoints with one click and then add the corresponding API key. See the repository's [provider import catalog](./packages/admin/lib/provider-import-presets.json); PRs for additional preset Providers are welcome.
-2. AI model onboarding: Import models from built-in catalog data without manually configuring common parameters and pricing. See the repository's [model preset catalog](./packages/admin/lib/model-presets/); PRs for additional models are welcome.
+1. Provider onboarding: Connect model vendors and aggregation platforms. A large preset catalog, including Coding / Token Plans, lets you import endpoints with one click and then add the corresponding API key. See the [Providers Catalog](https://octafuse.dev/en/catalog/providers/); PRs for additional preset Providers are welcome in the website repository, [octafuse-website](https://github.com/OctaFuse/octafuse-website).
+2. AI model onboarding: Provider and model imports and syncs use the OctaFuse website catalog by default. Model templates include common parameters and pricing. See the [Models Catalog](https://octafuse.dev/en/catalog/models/); PRs for additional models are welcome in the website repository, [octafuse-website](https://github.com/OctaFuse/octafuse-website).
 3. Multi-protocol access:
     - OpenAI endpoints:
       - Chat Completions: `POST /v1/chat/completions`

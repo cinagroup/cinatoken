@@ -46,7 +46,7 @@ After changing `@octafuse/core` types used by Admin (adapters, route topology, m
 | `lib/routes/admin/*`                                                 | Admin HTTP handlers                                                                         |
 | `lib/services/admin/*`                                               | Admin services (use `@octafuse/core`)                                                       |
 | `app/gateway/*`                                                      | Admin UI (`fetch('/api/admin/...')`)                                                        |
-| `lib/provider-import-presets.json` + `lib/provider-import-preset.ts` | Providers 静态导入模板（预填 endpoint；占位 API Key）                                       |
+| `lib/catalog/catalog-loader.ts` + `lib/provider-catalog.ts` | 远程模型/供应商目录及稳定模板键（预填 endpoint；占位 API Key）                                       |
 | `lib/routes/admin/playground.ts`                                     | Playground: single-route upstream test (no `api_key_request_logs`, no billing, no failover) |
 
 ## Environment (Wrangler / `.dev.vars`)
@@ -104,10 +104,12 @@ Admin UI uses **[next-intl](https://next-intl.dev)** in **without-i18n-routing**
 - Add strings to all files under `messages/` with identical key structure, using `messages/en.json` as the structural baseline (`sidebar`, `providers`, `config`, `common`, …).
 - Client components: `useTranslations('namespace')`; server layout/metadata: `getTranslations` from `next-intl/server`.
 - Do **not** hardcode user-visible English in JSX or `lib/*` UI helpers — pass `t()` or a labels object (see `lib/pricing-ui.ts` `PricingLabels`, `getBusinessTimezoneOptions`, `getBillingCurrencyOptions`).
-- **Out of scope**: Hono/service error messages (display `data.message` as-is), JSON presets (`provider-import-presets.json`, `model-presets/*`), provider/model IDs.
+- **Out of scope**: Hono/service error messages (display `data.message` as-is), JSON presets and the remote catalog (`provider-import-presets.json`, `model-presets/*`, `octafuse.dev` catalog), provider/model IDs.
 
 ## Docs
 
 - [docs/README.md](../../docs/README.md)
 - [docs/developers/api/admin.md](../../docs/developers/api/admin.md)
 - [docs/developers/architecture/admin-layered.md](../../docs/developers/architecture/admin-layered.md)
+
+**Remote catalogs**: `CATALOG_BASE_URL` defaults to `https://octafuse.dev`; `CATALOG_TIMEOUT_MS` and `CATALOG_TTL_MS` bound requests and cache freshness. Stored lists degrade without remote presentation data; imports and sync writes require a fresh snapshot. Provider import keys are English template names; obsolete numeric keys return 409. `provider-import-preset.ts` remains for CinaToken compatibility and locally trusted managed credential metadata. Remote rows cannot choose environment secrets or managed endpoints.

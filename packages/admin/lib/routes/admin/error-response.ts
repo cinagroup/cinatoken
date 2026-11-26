@@ -1,3 +1,4 @@
+import { CatalogUnavailableError } from '@/lib/catalog/catalog-loader';
 /**
  * 管理路由统一错误响应：将 `AdminServiceError` 映射为 JSON，其余记日志并返回 500。
  */
@@ -28,6 +29,7 @@ export function handleAdminRouteError(
 			{ success: false, code: error.code, message: error.message },
 			error.status
 		);
+	if (error instanceof CatalogUnavailableError) return jsonErr(c, 503, error.message);
 	if (isAdminServiceError(error)) {
 		return jsonErr(c, error.status, error.message);
 	}

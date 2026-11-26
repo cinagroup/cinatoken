@@ -4,7 +4,7 @@ import { useAdvancedEditorRequest } from '@/components/routing-workbench/Advance
 import { useCallback, useEffect, useMemo, useRef, useState, type SetStateAction } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { providerImportCatalogMatchesQuery } from '@/lib/provider-import-preset';
+import { providerImportCatalogMatchesQuery } from '@/lib/provider-catalog-pure';
 import { sortProvidersByKindThenName } from '@/lib/provider-kind';
 import type { ProviderSyncReport } from '@/lib/provider-sync-diff';
 import { useFeedback } from '@/components/feedback';
@@ -351,6 +351,34 @@ export function useProvidersPageState() {
 		[formData.api_key],
 	);
 
+	const loadImportCatalog = useCallback(async () => {
+		const scope = lifetimeRef.current;
+		if (!scope || !isCurrentScope(scope)) return;
+		catalogRequestRef.current?.abort();
+		const request = new AbortController();
+		catalogRequestRef.current = request;
+		setImportCatalogLoading(true);
+		setImportCatalogError('');
+		try {
+			const response = await editorFetch('/api/admin/providers/import/catalog', {
+				signal: request.signal,
+			});
+			const data = await readApiJson<ProviderImportCatalogRow[]>(response);
+			if (!isCurrentScope(scope) || request.signal.aborted || catalogRequestRef.current !== request) return;
+			if (!data.success || !data.data) throw new Error(data.message || 'Failed to load catalog');
+			setImportCatalogRows(data.data);
+			setImportSelected({});
+		} catch (error) {
+			if (!isCurrentScope(scope) || request.signal.aborted) return;
+			console.error('Load provider import catalog error:', error);
+			setImportCatalogError(error instanceof Error ? error.message : 'Failed to load catalog');
+		} finally {
+			if (isCurrentScope(scope) && !request.signal.aborted && catalogRequestRef.current === request)
+				setImportCatalogLoading(false);
+		}
+	}, [isCurrentScope]);
+
+
 	const handleCreate = useCallback(() => {
 		setIsApiKeyLoading(false);
 		apiKeyTouchedRef.current = false;
@@ -366,9 +394,10 @@ export function useProvidersPageState() {
 			anthropic: { ...EMPTY_PROTOCOL_FORM },
 			gemini: { ...EMPTY_PROTOCOL_FORM },
 		});
+		void loadImportCatalog();
 		setShowModal(true);
 		setSaveError('');
-	}, []);
+	}, [loadImportCatalog]);
 
 	const handleEdit = useCallback((provider: GatewayProvider) => {
 		setIsApiKeyLoading(true);
@@ -382,6 +411,7 @@ export function useProvidersPageState() {
 			...providerToFormData(provider),
 			note: provider.note ?? '',
 		});
+		void loadImportCatalog();
 		setShowModal(true);
 		setSaveError('');
 		void fetchProviderApiKeyPlaintext(provider.id)
@@ -399,7 +429,7 @@ export function useProvidersPageState() {
 			.finally(() => {
 				if (apiKeyLoadGenRef.current === loadGen) setIsApiKeyLoading(false);
 			});
-	}, []);
+	}, [loadImportCatalog]);
 
 	const handleDuplicate = useCallback((provider: GatewayProvider) => {
 		setIsApiKeyLoading(false);
@@ -415,9 +445,10 @@ export function useProvidersPageState() {
 			status: 'disabled',
 			note: provider.note ?? '',
 		});
+		void loadImportCatalog();
 		setShowModal(true);
 		setSaveError('');
-	}, []);
+	}, [loadImportCatalog]);
 
 	const handleDelete = useCallback(
 		async (id: string) => {
@@ -453,33 +484,6 @@ export function useProvidersPageState() {
 		[isCurrentScope, refreshProviders, confirm, notify, tCommon, tModal],
 	);
 
-	const loadImportCatalog = useCallback(async () => {
-		const scope = lifetimeRef.current;
-		if (!scope || !isCurrentScope(scope)) return;
-		catalogRequestRef.current?.abort();
-		const request = new AbortController();
-		catalogRequestRef.current = request;
-		setImportCatalogLoading(true);
-		setImportCatalogError('');
-		try {
-			const response = await editorFetch('/api/admin/providers/import/catalog', {
-				signal: request.signal,
-			});
-			const data = await readApiJson<ProviderImportCatalogRow[]>(response);
-			if (!isCurrentScope(scope) || request.signal.aborted || catalogRequestRef.current !== request) return;
-			if (!data.success || !data.data) throw new Error(data.message || 'Failed to load catalog');
-			setImportCatalogRows(data.data);
-			setImportSelected({});
-		} catch (error) {
-			if (!isCurrentScope(scope) || request.signal.aborted) return;
-			console.error('Load provider import catalog error:', error);
-			setImportCatalogError(error instanceof Error ? error.message : 'Failed to load catalog');
-			setImportCatalogRows([]);
-		} finally {
-			if (isCurrentScope(scope) && !request.signal.aborted && catalogRequestRef.current === request)
-				setImportCatalogLoading(false);
-		}
-	}, [isCurrentScope]);
 
 	const openImportModal = useCallback(() => {
 		setShowImportModal(true);

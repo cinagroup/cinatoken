@@ -222,6 +222,9 @@ function ProvidersContent() {
 
 			<ProviderModal
 				open={state.showModal}
+				catalogRows={state.importCatalogRows}
+				catalogLoading={state.importCatalogLoading}
+				catalogError={state.importCatalogError}
 				initialTab={initialTab}
 				editingProvider={state.editingProvider}
 				duplicateSourceId={state.duplicateSourceId}

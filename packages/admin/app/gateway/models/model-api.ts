@@ -125,8 +125,9 @@ export async function deleteModel(
 	return { success: false, message: data.message || 'Delete failed' };
 }
 
-export async function fetchImportCatalog(request: typeof fetch = fetch): Promise<PresetCatalogRow[]> {
-	const response = await request('/api/admin/models/import/catalog');
+export async function fetchImportCatalog(vendor?: string, signal?: AbortSignal, request: typeof fetch = fetch): Promise<PresetCatalogRow[]> {
+	const query = vendor ? `?${new URLSearchParams({ vendor })}` : '';
+	const response = await request(`/api/admin/models/import/catalog${query}`, { cache: 'no-store', signal });
 	const data = await readApiJson<PresetCatalogRow[]>(response);
 	if (data.success && Array.isArray(data.data)) return data.data;
 	throw new Error(data.message || 'Failed to load catalog');
@@ -191,7 +192,7 @@ export function useModelApi() {
 					request,
 				),
 			deleteModel: (id: string) => deleteModel(id, request),
-			fetchImportCatalog: () => fetchImportCatalog(request),
+			fetchImportCatalog: () => fetchImportCatalog(undefined, undefined, request),
 			importModelPresets: (ids: string[]) => importModelPresets(ids, request),
 			fetchModelSyncReport: () => fetchModelSyncReport(request),
 			applyModelSync: (body: ModelSyncApplyBody) => applyModelSync(body, request),

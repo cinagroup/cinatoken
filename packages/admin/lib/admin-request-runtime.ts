@@ -1,8 +1,9 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import type { StorageContext } from "@octafuse/core";
-import type { AdminBindings } from "@/lib/admin-env";
-import { getCloudflareEnv } from "@/lib/cloudflare";
-import { resolveAdminStorageContext } from "@/lib/storage-context";
+import type { CatalogEnv } from '@/lib/catalog/catalog-config';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import type { StorageContext } from '@octafuse/core';
+import type { AdminBindings } from '@/lib/admin-env';
+import { getCloudflareEnv } from '@/lib/cloudflare';
+import { resolveAdminStorageContext } from '@/lib/storage-context';
 
 interface RequestWithCloudflare extends Request {
 	ctx?: { cloudflare?: { env?: CloudflareEnv } };
@@ -39,7 +40,11 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 				requestEnv?.env?.ASSETS
 		);
 
+	const catalogEnv = cloudflareRuntime ? (env as CatalogEnv | undefined) : (process.env as CatalogEnv);
 	const bindings: AdminBindings = {
+		CATALOG_BASE_URL: catalogEnv?.CATALOG_BASE_URL,
+		CATALOG_TIMEOUT_MS: catalogEnv?.CATALOG_TIMEOUT_MS,
+		CATALOG_TTL_MS: catalogEnv?.CATALOG_TTL_MS,
 		DB: env?.DB,
 		HYPERDRIVE: env?.HYPERDRIVE,
 		ASSETS: env?.ASSETS,
@@ -121,6 +126,9 @@ export async function resolveAdminRequestRuntime(request?: Request): Promise<{
 		DATABASE_DRIVER: cloudflareRuntime
 			? (env as { DATABASE_DRIVER?: string } | undefined)?.DATABASE_DRIVER
 			: process.env.DATABASE_DRIVER,
+		PROVIDER_MODEL_DISCOVERY_DISABLED_KINDS: cloudflareRuntime
+			? (env as { PROVIDER_MODEL_DISCOVERY_DISABLED_KINDS?: string } | undefined)?.PROVIDER_MODEL_DISCOVERY_DISABLED_KINDS
+			: process.env.PROVIDER_MODEL_DISCOVERY_DISABLED_KINDS,
 	};
 	const storage = await resolveAdminStorageContext(
 		bindings,
