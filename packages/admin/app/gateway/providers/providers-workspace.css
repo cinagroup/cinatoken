@@ -294,6 +294,21 @@
 .providers-design-workspace .provider-sync-body td {
 	overflow-wrap: anywhere;
 }
+html[data-console-theme='dark'] .providers-design-workspace .provider-dialog-body {
+	border-color: var(--console-border);
+	background: var(--console-bg);
+}
+html[data-console-theme='dark'] .providers-design-workspace .provider-tablist {
+	border-color: var(--console-border);
+	background: var(--console-panel-subtle);
+}
+html[data-console-theme='dark'] .providers-design-workspace .provider-tablist > [role='tab'] {
+	color: var(--console-muted);
+}
+html[data-console-theme='dark'] .providers-design-workspace .provider-tablist > [aria-selected='true'] {
+	background: var(--console-panel);
+	color: var(--console-text);
+}
 @media (max-width: 639px) {
 	.providers-design-workspace .provider-filter-panel {
 		padding: 12px;
