@@ -60,7 +60,9 @@ const timeseriesBucket = z.strictObject({
 	cache_hit_rate: percent,
 })
 
-export const dashboardStatsSchema = z.strictObject({
+// Project only displayed summaries. New top-level aggregates such as `operations`
+// are discarded; the displayed fields and recent-log privacy boundary stay strict.
+export const dashboardStatsSchema = z.object({
 	gateway: z.strictObject({
 		activeKeysCount: count,
 		keysTotal: count,
@@ -98,8 +100,8 @@ export const dashboardStatsSchema = z.strictObject({
 			(rows) => new Set(rows.map((row) => row.bucket)).size === rows.length
 		),
 	granularity: z.enum(['hour', 'day']),
-	recentLogs: z.array(recentSummary).max(5),
-	recentErrors: z.array(recentSummary).max(5),
+	recentLogs: z.array(recentSummary).max(8),
+	recentErrors: z.array(recentSummary).max(8),
 })
 
 export const dashboardStatsResponseSchema = z.strictObject({
