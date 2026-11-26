@@ -582,7 +582,8 @@
 		"confirmLossPricing": "공급자 원가 미만 가격 확인",
 		"kindAsr": "음성 인식",
 		"kindTts": "음성 합성",
-		"kindEmbedding": "임베딩"
+		"kindEmbedding": "임베딩",
+		"kindAudio": "오디오"
 	},
 	"auth": {
 		"cinaAuthDescription": "통합 CinaAuth 계정으로 cinatoken 운영 콘솔에 안전하게 로그인하세요.",
@@ -643,6 +644,7 @@
 	"sidebar": {
 		"groups": {
 			"overview": "개요",
+			"inference": "추론",
 			"models": "모델",
 			"testing": "테스트",
 			"user": "사용자",
@@ -668,6 +670,7 @@
 			"requestLogs": "요청 로그",
 			"auditLogs": "감사 로그",
 			"toolsConfig": "REST 서비스",
+			"toolInvocations": "도구 호출",
 			"modelUsage": "모델 사용량",
 			"providerUsage": "공급자 사용량",
 			"userUsage": "사용자 사용량",
@@ -1010,7 +1013,8 @@
 		"providerTypeAria": "Provider 유형 필터",
 		"kindAsr": "음성 인식",
 		"kindTts": "음성 합성",
-		"kindEmbedding": "임베딩"
+		"kindEmbedding": "임베딩",
+		"kindAudio": "오디오"
 	},
 	"modalities": {
 		"text": "텍스트",
@@ -1126,7 +1130,11 @@
 			"finishedWithFail": "Provider {created}개를 가져왔습니다. {failed}개 실패.",
 			"failed": "가져오기에 실패했습니다",
 			"copyFailed": "API Key 복사에 실패했습니다",
-			"templateDetails": "템플릿 설명"
+			"templateDetails": "템플릿 설명",
+			"protocols": "protocols",
+			"openaiBase": "OpenAI base: {url}",
+			"openaiChat": "OpenAI chat: {url}",
+			"openaiCaps": "· {caps}"
 		},
 		"modal": {
 			"editTitle": "Provider 편집",
@@ -1308,7 +1316,56 @@
 			"jsonCopyFailed": "자동 복사에 실패했습니다. 선택된 내용을 수동으로 복사할 수 있습니다.",
 			"apiKeyRequiredError": "API 키를 입력해 주세요",
 			"credentialsTitle": "계정 및 인증 정보",
-			"duplicateHint": "설정을 복사했습니다. 저장하기 전에 이름, 인증 정보 및 엔드포인트를 확인하세요."
+			"duplicateHint": "설정을 복사했습니다. 저장하기 전에 이름, 인증 정보 및 엔드포인트를 확인하세요.",
+			"endpointsHint": "전체 기능을 사용하려면 프로토콜별로 Base URL 하나를 입력하세요. 표준이 아닌 URL은 재정의를 펼쳐 설정할 수 있습니다. 기능을 제한하려면 Base를 비우고 지원하는 재정의 URL만 입력하세요.",
+			"minimaxHint": "Base만 있으면 음성 인식은 '{base}'/speech_to_text, 음성 합성은 '{base}'/t2a_v2, 이미지 생성은 '{base}'/image_generation 으로 파생됩니다. 국제 호스트는 api.minimax.io 입니다. 동영상과 음악 엔드포인트는 아직 없습니다.",
+			"volcengineHint": "Base만 있으면 Seedream 이미지 생성은 '{base}'/images/generations 이 됩니다. 중국 Ark는 ark.cn-beijing.volces.com, BytePlus ModelArk는 ark.ap-southeast.bytepluses.com 입니다. 채팅은 OpenAI 엔드포인트 설정을 그대로 씁니다.",
+			"advancedToggle": "URL 재정의",
+			"advancedHint": "전체 URL을 입력하세요.",
+			"advancedHintGemini": "전체 URL을 입력하고 '{model}'과 '{action}'을 포함하세요.",
+			"advancedHintDashscope": "전체 URL을 입력하세요. 엔드포인트는 기능별로 나뉘며 한 모델은 그중 하나만 사용합니다. 여러 항목이 같은 업스트림 URL(예: multimodal-generation)을 가리킬 수 있지만 각각 켜고 끌 수 있도록 분리되어 있습니다. Base가 있으면 빈 항목은 생성된 URL을 사용하고, Base가 없으면 빈 항목은 지원하지 않음을 뜻합니다.",
+			"advancedHintMinimax": "전체 URL을 입력합니다. Base가 있는 항목은 비워 두면 게이트웨이가 speech_to_text, t2a_v2, image_generation 을 만듭니다.",
+			"advancedHintVolcengine": "전체 URL을 입력합니다. Base가 있으면 비워 두고, 게이트웨이가 images/generations 를 만듭니다.",
+			"capHintMiniMaxAudioTranscriptions": "MiniMax 파일 전사 POST /v1/speech_to_text. 라우트 어댑터는 MiniMax 파일 전사를 고르세요. language 는 폼이 아니라 요청 헤더로 보냅니다.",
+			"capHintMiniMaxAudioSpeech": "MiniMax 동기 음성 합성 POST /v1/t2a_v2. 어댑터는 MiniMax audio.speech 패스스루입니다. 비스트리밍과 stream:true 가 같은 엔드포인트를 씁니다.",
+			"capHintMiniMaxImagesGenerations": "MiniMax 이미지 생성 POST /v1/image_generation. 어댑터는 MiniMax images.generations 패스스루입니다. 텍스트 생성과 참조 이미지가 같은 엔드포인트입니다.",
+			"capHintVolcengineImagesGenerations": "Volcengine Seedream. 네이티브 패스스루와 OpenAI 변환 어댑터 volcengine-image 가 모두 Ark POST /images/generations 를 호출합니다. 스트리밍은 네이티브 패스스루만 지원합니다.",
+			"capChat": "chat (/v1/chat/completions)",
+			"capResponses": "responses (/v1/responses)",
+			"capImagesGenerations": "images.generations (/v1/images/generations)",
+			"capImagesGenerationsMultimodal": "images.generations.multimodal(Qwen / Wan HTTP)",
+			"capImagesEdits": "images.edits (/v1/images/edits)",
+			"capAudioTranscriptions": "audio.transcriptions (ASR HTTP)",
+			"capAudioTranscriptionsOpenai": "audio.transcriptions (/v1/audio/transcriptions)",
+			"capAudioTranscriptionsMultimodal": "audio.transcriptions.multimodal (Qwen ASR HTTP)",
+			"capAudioTranscriptionsTasks": "audio.transcriptions.tasks ('{task_id}' 포함 비동기 작업 URL)",
+			"capAudioSpeech": "audio.speech (TTS HTTP)",
+			"capAudioSpeechOpenai": "audio.speech (/v1/audio/speech)",
+			"capAudioSpeechMultimodal": "audio.speech.multimodal (Qwen / MiniMax TTS HTTP)",
+			"capAudioRealtimeInference": "audio.realtime.inference (네이티브 작업 WSS)",
+			"capAudioRealtimeSession": "audio.realtime.session (네이티브 세션 WSS)",
+			"capAudioHotwords": "audio.hotwords (사용자 지정 핫워드 HTTP)",
+			"capAudioVoices": "audio.voices (음성 사용자 지정 HTTP)",
+			"capHintImagesGenerationsMultimodal": "Qwen Image와 Wan 동기 이미지 생성. 라우트 어댑터는 Qwen Image 3.0 또는 Wan 2.7 Image.",
+			"capHintAudioTranscriptions": "filetrans 비동기 전사 제출 URL(Fun-ASR, Paraformer, Qwen filetrans). 작업 조회 URL도 함께 설정하세요. 라우트 어댑터는 비동기 파일 음성인식.",
+			"capHintAudioTranscriptionsMultimodal": "Qwen3-ASR, Qwen-Audio-3.0, Fun-ASR 동기 파일 음성인식. 모델에 맞는 파일 음성인식 어댑터 또는 DashScope 패스스루를 선택합니다.",
+			"capHintAudioTranscriptionsTasks": "비동기 작업 결과 조회. 위의 filetrans 제출 URL과 함께 사용합니다.",
+			"capHintAudioSpeech": "CosyVoice와 Qwen-Audio-3.0-TTS용 SpeechSynthesizer API. 라우트 어댑터는 CosyVoice / Qwen-Audio-3.0 TTS.",
+			"capHintAudioSpeechMultimodal": "Qwen-TTS(예: qwen3-tts-flash)와 MiniMax용 multimodal-generation TTS. 위 항목과 다른 API이므로 모델에 맞게 선택합니다. 라우트 어댑터는 Qwen-TTS(멀티모달) 또는 MiniMax TTS.",
+			"capHintAudioRealtimeInference": "WebSocket 작업 프로토콜(run-task / continue-task): CosyVoice·Qwen-Audio-TTS 실시간 합성, Fun-ASR·Paraformer 실시간 인식. 라우트는 DashScope 패스스루를 사용합니다.",
+			"capHintAudioRealtimeSession": "WebSocket 세션 프로토콜(session.update). 현재 게이트웨이는 Qwen3-ASR-Flash-Realtime 인식만 지원합니다.",
+			"capHintAudioHotwords": "ASR 사용자 지정 핫워드 관리. 공급자 계정 리소스이며 모델 라우팅에는 사용하지 않습니다.",
+			"capHintAudioVoices": "TTS 음성 복제 및 디자인(CosyVoice / Qwen). 공급자 계정 리소스이며 모델 라우팅에는 사용하지 않습니다.",
+			"capMessages": "messages (/v1/messages)",
+			"capGenerateContent": "generateContent (/v1beta/models/'{model}':generateContent)",
+			"capStreamGenerateContent": "streamGenerateContent (/v1beta/models/'{model}':streamGenerateContent)",
+			"description": "설명",
+			"descriptionHint": "내부 참고용이며 업스트림으로 전송되지 않습니다.",
+			"descriptionPlaceholder": "선택적 내부 설명",
+			"capModelsGenerate": "models.generate (/v1beta/models/'{model}:{action}') — 스트리밍 + 비스트리밍",
+			"sharedChannel": "공유 키 채널",
+			"sharedChannelNone": "사용 안 함",
+			"sharedChannelHint": "이 공급자가 사용할 공유 키 채널을 선택하세요."
 		},
 		"sharedChannel": "User shared channel",
 		"sharedChannelNone": "Not shared",
@@ -1373,7 +1430,8 @@
 				"removed": "로컬에만 있음"
 			},
 			"field": {
-				"endpoints": "{protocol} 엔드포인트"
+				"endpoints": "{protocol} 엔드포인트",
+				"description": "설명"
 			},
 			"slot": {
 				"title": "항목",
@@ -1478,7 +1536,8 @@
 			"searchPlaceholder": "모델 이름, ID, 공급사 또는 태그 검색",
 			"clearSearch": "검색 지우기",
 			"allVendors": "모든 공급사",
-			"allLifecycles": "모든 상태"
+			"allLifecycles": "모든 상태",
+			"kindAudio": "오디오"
 		},
 		"imagePricing": {
 			"enabled": "레거시 (삭제됨)",
@@ -1681,7 +1740,16 @@
 				"cacheWrite": "캐시 쓰기"
 			},
 			"modelIdRequiredError": "모델 ID를 입력해 주세요",
-			"invalidMetadata": "메타데이터는 유효한 JSON 객체여야 합니다"
+			"invalidMetadata": "메타데이터는 유효한 JSON 객체여야 합니다",
+			"kindAudio": "오디오",
+			"kindHintAudio": "오디오 엔드포인트 모델입니다. 음성 인식(ASR) 또는 음성 합성(TTS)을 선택하면 모달리티와 요금 방식이 함께 설정됩니다.",
+			"audioCapability": "오디오 기능",
+			"audioCapabilityTranscription": "음성 인식(ASR)",
+			"audioCapabilitySpeech": "음성 합성(TTS)",
+			"audioCapabilityHintTranscription": "오디오를 입력하고 텍스트를 반환합니다. 초당 또는 Token 요금을 지원합니다.",
+			"audioCapabilityHintSpeech": "텍스트를 입력하고 오디오를 반환합니다. 문자당 요금을 사용합니다.",
+			"description": "설명",
+			"descriptionPlaceholder": "선택 사항, 내부 메모용"
 		},
 		"metadata": {
 			"title": "메타데이터"
@@ -1713,7 +1781,10 @@
 			"viewRoutes": "{name}의 연결 라우트 보기",
 			"inputOutputPricing": "입력 / 출력 · 백만 토큰",
 			"textImagePricing": "텍스트 입력 / 이미지 출력 · 백만 토큰",
-			"inputOnlyPricing": "입력 전용 · 백만 토큰"
+			"inputOnlyPricing": "입력 전용 · 백만 토큰",
+			"kindAudio": "오디오",
+			"imageHint": "이미지",
+			"audioHint": "오디오"
 		},
 		"sync": {
 			"title": "공식 카탈로그와 동기화",
@@ -1743,7 +1814,8 @@
 				"released_at": "출시일",
 				"input_modalities": "입력 모달리티",
 				"output_modalities": "출력 모달리티",
-				"pricing_profile": "가격"
+				"pricing_profile": "가격",
+				"description": "설명"
 			},
 			"pricingHint": "가격은 과금에 영향을 주므로 기본적으로 현재 값을 유지합니다. 비교 대상은 공식 카탈로그의 {currency} 가격이며, 확인 후 적용하세요.",
 			"pricingPath": "가격 항목",
@@ -1839,7 +1911,14 @@
 			"allProviderKinds": "모든 공급자 유형",
 			"allProviders": "모든 공급자",
 			"allRouteGroups": "모든 라우트 그룹",
-			"displaySettings": "표시 설정"
+			"displaySettings": "표시 설정",
+			"densityCompact": "간략히",
+			"densityDetailed": "자세히",
+			"stickyRefreshOff": "자동 새로고침 끄기",
+			"stickyRefresh1m": "1분마다",
+			"stickyRefresh5m": "5분마다",
+			"stickyRefresh10m": "10분마다",
+			"stickyRefreshUpdatedAgo": "{ago} 전 업데이트"
 		},
 		"flow": {
 			"controls": {
@@ -1942,9 +2021,26 @@
 					"applied": "공급자 배율 반영됨",
 					"notApplied": "공급자 배율 미적용 · ×1로 계산",
 					"standard": "공급자 배율은 ×1",
-					"basis": "해당 시간대 카탈로그 가격 기준이며 사용자별 배율은 포함하지 않습니다. 모든 행은 현재 날짜 기준 미리 보기입니다."
+					"basis": "해당 시간대 카탈로그 가격 기준이며 사용자별 배율은 포함하지 않습니다. 모든 행은 현재 날짜 기준 미리 보기입니다.",
+					"marker": "보라색 점은 ×1이 아닌 공급자 배율이 반영되었음을 나타냅니다. 점이 없으면 ×1로 계산합니다."
 				},
-				"inactiveProvider": "공급자 배율이 현재 적용되지 않아 ×1로 계산합니다."
+				"inactiveProvider": "공급자 배율이 현재 적용되지 않아 ×1로 계산합니다.",
+				"guide": {
+					"title": "시간대와 실효 배율",
+					"periodTitle": "시간대 읽는 방법",
+					"periodBody": "시간과 요일로 일치 여부를 판단합니다. 지정 시간대에 해당하지 않으면 기타 시간대, 시간대 설정이 없으면 전체 시간대를 사용합니다.",
+					"currentBody": "현재 표시는 일치하는 시간대만 나타내며 라우트나 공급자가 활성 상태라는 뜻은 아닙니다.",
+					"timezone": "업무 시간대: {timezone}",
+					"factorTitle": "두 열의 숫자가 뜻하는 것",
+					"factorBody": "공급자 배율을 결합한 결과 배율이며 금액이 아닙니다.",
+					"chargedFormula": "실효 청구 배율 = 적용 중인 공급자 배율 × 청구 배율",
+					"meteredFormula": "실효 원가 배율 = 적용 중인 공급자 배율 × 원가 배율",
+					"validityTitle": "공급자 유효 기간 계산",
+					"validityBody": "모든 행은 현재 날짜 기준 미리 보기입니다. 공급자 배율의 시작 전이나 만료 후에는 ×1로 계산합니다. 시계 아이콘은 현재 적용되지 않는 배율을 나타냅니다.",
+					"scopeTitle": "배율의 기준 가격",
+					"scopeBody": "해당 시간대의 카탈로그 가격이 기준입니다. 이미 카탈로그 시간대 배율이 반영되어 있어 다시 곱하지 않습니다. 사용자별 배율이나 최종 청구 금액은 포함하지 않습니다.",
+					"hint": "배율 위에 마우스를 올리면 계산식과 유효 기간을 볼 수 있습니다."
+				}
 			},
 			"pricingCharged": "청구 배율",
 			"pricingMetered": "원가 배율",
@@ -1979,7 +2075,13 @@
 				"scheduled": "시작 전",
 				"active": "적용 중",
 				"expired": "만료"
-			}
+			},
+			"expandTier": "공급자 펼치기",
+			"collapseTier": "공급자 접기",
+			"expandTierAria": "우선순위 {priority} 공급자 펼치기",
+			"collapseTierAria": "우선순위 {priority} 공급자 접기",
+			"tierPreviewEnabled": "{name} · 활성",
+			"tierPreviewDisabled": "{name} · 비활성"
 		},
 		"vendor": {
 			"label": "Vendor",
@@ -2117,7 +2219,8 @@
 				"elevenlabs-asr-file": "ElevenLabs 파일 전사",
 				"elevenlabs-tts": "ElevenLabs 음성 합성",
 				"volcengine-image": "Volcengine Seedream 이미지 생성",
-				"gemini-image": "Gemini 공식 이미지 생성"
+				"gemini-image": "Gemini 공식 이미지 생성",
+				"dashscope-asr-file-async": "비동기 파일 음성인식"
 			},
 			"noCompatibleAdapter": "호환되는 어댑터 없음",
 			"passthroughHint": "현재 릴리스는 패스스루만 지원하며 공개 및 업스트림 프로토콜이 같아야 합니다.",
@@ -2419,6 +2522,15 @@
 						"WxH 형식의 size는 가장 가까운 imageConfig.aspectRatio로 환산하고 긴 변으로 1K / 2K / 4K를 고릅니다. 512 / 1K / 2K / 4K만 보내거나 auto도 쓸 수 있습니다.",
 						"response_format은 b64_json만 지원합니다. 참조 이미지는 image에 data URL로 넣으며 inlineData로 보냅니다. quality와 background는 전달하지 않습니다.",
 						"그 밖의 Gemini 파라미터는 generationConfig(imageConfig, thinkingConfig 등)에 넣으면 깊게 병합됩니다. 이미지 출력과 텍스트 출력 토큰으로 과금합니다. JSON만 반환하며 스트리밍은 Gemini 네이티브 패스스루를 사용하세요."
+					]
+				},
+				"dashscope-asr-file-async": {
+					"purpose": "filetrans, fun-asr, paraformer 비동기 전사용입니다. 공급자에 제출과 작업 조회 엔드포인트가 모두 필요합니다.",
+					"mapping": [
+						"공개 file_url 폼 필드가 필요합니다(http, https 또는 oss).",
+						"prompt는 input.context에 씁니다.",
+						"language는 parameters.language_hints에 씁니다.",
+						"게이트웨이가 작업을 제출하고 결과를 폴링합니다."
 					]
 				}
 			},
@@ -2748,7 +2860,23 @@
 			"maintenanceHistory": "만료 또는 무효화됨",
 			"resetImpact": "유효 바인딩 {count}개에 영향을 줍니다. 다음 요청은 라우트 전략에 따라 다시 선택합니다.",
 			"resetReselectHint": "같은 Provider가 다시 선택될 수 있습니다. 고정 활성화 여부와 유효 기간은 유지됩니다.",
-			"viewBindings": "바인딩 상세 보기"
+			"viewBindings": "바인딩 상세 보기",
+			"orderPreview": "같은 호출자가 다시 요청하면 마지막으로 성공한 Provider를 먼저 시도합니다.",
+			"tradeoff": "해당 Provider가 계속 성공하는 동안 우선 사용하며, 실패한 뒤에 다른 Provider를 시도합니다.",
+			"distributionTitle": "현재 바인딩",
+			"distributionTotals": "활성 {active} · 오래된 {stale}",
+			"weightShare": "가중치(풀)",
+			"weightShareValue": "W{weight} · {pct}%",
+			"lookupTitle": "사용자 바인딩 조회",
+			"lookupUser": "사용자",
+			"lookupTarget": "고정 대상",
+			"lookupTtl": "{seconds}s 남음",
+			"lookupEpochValid": "epoch 유효",
+			"lookupEpochInvalid": "epoch 무효",
+			"residualTitle": "남은 바인딩",
+			"residualHint": "스티키는 꺼져 있지만 활성 {active} / 오래된 {stale} 바인딩이 남아 있습니다. 꺼진 동안에는 새로 기록되지 않습니다. 필요하면 정리하세요.",
+			"showOps": "상세 보기",
+			"hideOps": "상세 숨기기"
 		},
 		"failover": {
 			"title": "Failover 규칙",
@@ -2763,7 +2891,8 @@
 			"imagesAbort": "이미지 생성: 클라이언트 취소 또는 게이트웨이 타임아웃은 504를 반환하며 다른 Provider로 failover하지 않습니다."
 		},
 		"kindAsr": "음성 인식",
-		"kindTts": "음성 합성"
+		"kindTts": "음성 합성",
+		"kindAudio": "오디오"
 	},
 	"playground": {
 		"title": "플레이그라운드",
@@ -2970,7 +3099,11 @@
 		"audioRealtimeFileElevenLabsHint": "파일은 실제 속도로 재생되며(wav/mp3/ogg는 브라우저에서 16 kHz PCM으로 디코딩하고, 원시 .pcm은 그대로 전송) 끝나면 자동으로 커밋됩니다. 실시간 발화에는 마이크를 사용하세요.",
 		"realtimeWaitingElevenLabs": "WebSocket이 연결되었습니다. 업스트림 응답을 기다리는 중…",
 		"kindEmbedding": "임베딩",
-		"actualRequest": "실제 요청"
+		"actualRequest": "실제 요청",
+		"kindAudio": "오디오",
+		"mode": "모드",
+		"modeRoutes": "Routes",
+		"modeTools": "Tools"
 	},
 	"simulator": {
 		"inspection": {
@@ -3134,7 +3267,9 @@
 		"protocolLockedEmbedding": "임베딩 라우트는 OpenAI POST /v1/embeddings 와 Gemini 네이티브 :embedContent / :batchEmbedContents 를 지원합니다.",
 		"keyFilters": "키 필터",
 		"keyReady": "키 준비 완료",
-		"selectedKeyOutsideFilter": "현재 키 · {id} (필터 결과 외)"
+		"selectedKeyOutsideFilter": "현재 키 · {id} (필터 결과 외)",
+		"kindAudio": "오디오",
+		"openToolsInvocations": "Tools Invocations 열기"
 	},
 	"users": {
 		"title": "사용자",
@@ -4303,6 +4438,44 @@
 				"cleversee": "Alibaba CleverSee (开析)",
 				"tencent_wsa": "Tencent Cloud WSA",
 				"deepseek": "DeepSeek Search"
+			},
+			"providerGuideLink": "엔진 안내",
+			"providerGuide": {
+				"title": "검색 엔진 안내",
+				"subtitle": "엔진별 인덱스 / 소스와 적합한 사용 사례입니다. Baidu 또는 Google API를 직접 호출하지 않습니다.",
+				"disclaimer": "어떤 엔진도 Baidu 또는 Google의 공식 검색 API를 호출하지 않습니다. 각 엔진은 자체 또는 파트너 웹 인덱스를 사용하며 결과 URL은 baidu.com, google.com 등을 가리킬 수 있습니다.",
+				"selected": "현재 선택됨",
+				"docsLink": "Docs 및 API Key →",
+				"labels": {
+					"sources": "소스",
+					"bestFor": "권장 용도"
+				},
+				"items": {
+					"bocha": {
+						"badge": "중국 지역 권장",
+						"summary": "자체 대규모 웹 인덱스를 갖춘 AI 중심 중국어 검색 엔진으로, 중국 내 Bing Search API 대안으로 제공됩니다.",
+						"sources": "수억 개에서 약 100억 개의 웹페이지와 파트너 콘텐츠(뉴스, 백과사전, 숏폼 비디오, 날씨, 학술 등)를 사용합니다. Baidu/Google은 아닙니다.",
+						"bestFor": "중국 지역 사용자, 중국어 검색, 중국 내 규정 준수."
+					},
+					"tavily": {
+						"badge": "글로벌 권장",
+						"summary": "LLM 중심 검색 계층으로 검색 + 추출 + 순위를 한 번의 호출로 제공합니다. 일반 SERP 목록이 아닌 Agent/RAG용으로 설계되었습니다.",
+						"sources": "자체 크롤러와 타사 집계(Brave 같은 독립 인덱스와 연계되는 경우가 많음)를 사용합니다. 공식 Google/Baidu API가 아닙니다.",
+						"bestFor": "글로벌 지역, 영어 자료 조사, Agent 워크플로."
+					},
+					"cleversee": {
+						"badge": "",
+						"summary": "mainland_china / global 지역 모드를 지원하는 Alibaba CleverSee (开析) AI 네이티브 Web Search입니다.",
+						"sources": "Alibaba 자체 AI 검색 인덱스를 사용합니다. 문서에는 Baidu 또는 Google 백엔드를 사용한다고 명시되어 있지 않습니다. Gateway 기본값은 mainland_china이며 도메인 Allowlist를 사용하면 global로 전환됩니다.",
+						"bestFor": "Alibaba Cloud에서 중국 / 글로벌 지역을 명시적으로 전환해야 할 때."
+					},
+					"tencent_wsa": {
+						"badge": "",
+						"summary": "공식적으로 Sogou Search를 기반으로 하는 Tencent Cloud Web Search API (WSA)입니다.",
+						"sources": "Sogou의 공개 웹과 Tencent 생태계(Tencent News, Sogou Baike, Penguin 계정)를 사용합니다. 상위 요금제는 VR/권위 있는 전문 소스를 추가로 제공합니다.",
+						"bestFor": "Bocha를 대체할 중국어 웹 검색이 필요하거나 Sogou/Tencent 콘텐츠 조합이 중요한 경우."
+					}
+				}
 			}
 		},
 		"webFetch": {
@@ -4651,6 +4824,52 @@
 						"note": "SecretId와 SecretKey가 필요합니다. Region 기본값은 ap-guangzhou이며 BizType은 선택입니다. 설정된 문자 과금 단위로 올림합니다."
 					}
 				}
+			}
+		},
+		"invocations": {
+			"title": "호출 내역",
+			"subtitle": "REST 서비스(tool:*)와 MCP 서비스(mcp:*) 호출을 함께 봅니다. 행을 클릭하면 요청과 결과 요약을 확인할 수 있습니다. 요청 로그와 동일한 기본 행을 사용합니다.",
+			"configureTools": "REST 서비스 →",
+			"source": "출처",
+			"allSources": "전체",
+			"sourceRest": "REST",
+			"sourceMcp": "MCP",
+			"serverFilter": "MCP 서버",
+			"allServers": "모든 서버",
+			"openInRequestLogs": "요청 로그에서 열기",
+			"toolFilter": "Tool",
+			"allTools": "모든 Tools",
+			"status": "상태",
+			"empty": "이 기간에는 Tool 호출이 없습니다.",
+			"columns": {
+				"time": "시간",
+				"tool": "Tool",
+				"query": "Query",
+				"user": "사용자",
+				"status": "상태",
+				"results": "결과",
+				"latency": "지연 시간",
+				"provider": "엔진",
+				"profit": "마진 ({currency})",
+				"standard": "표준 ({currency})",
+				"charged": "사용자 과금 ({currency})",
+				"metered": "공급 ({currency})"
+			},
+			"detail": {
+				"request": "요청",
+				"response": "응답",
+				"responseFormat": "응답 형식",
+				"formatList": "목록",
+				"formatJson": "JSON",
+				"noListResults": "목록으로 표시할 항목이 없습니다. 원시 Payload가 있으면 JSON으로 전환하세요.",
+				"noResponseStored": "저장된 응답 요약이 없습니다(이전 행에는 Query만 저장되었거나 결과 반환 전에 호출이 실패함).",
+				"hint": "운영 검토를 위해 응답 요약은 일부만 저장됩니다. 전체 Chat 기록은 클라이언트에 유지됩니다."
+			},
+			"titles": {
+				"profit": "사용자 과금 − 공급 원가(건당)",
+				"standard": "표준(카탈로그)",
+				"charged": "사용자 과금",
+				"metered": "공급 원가"
 			}
 		}
 	},
@@ -6106,7 +6325,8 @@
 			"connectionNotes": "연결 참고 사항",
 			"tokenSummary": "사용자 또는 앱별로 외부 클라이언트 인증을 확인하고 접근 철회",
 			"oauthSaved": "OAuth 검색 설정됨"
-		}
+		},
+		"batchStatusConfirm": "항목 {count}개를 변경합니다. 활성화된 항목은 서버가 활성화되면 공개됩니다."
 	},
 	"toolPricing": {
 		"simpleTitle": "과금 방식",

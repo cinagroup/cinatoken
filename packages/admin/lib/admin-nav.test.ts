@@ -1,6 +1,25 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { ADMIN_NAV_GROUPS, formatAdminDocumentTitle, matchAdminNavRoute } from './admin-nav';
+
+describe('sidebar translations', () => {
+	for (const locale of ['en', 'zh', 'ja', 'ko']) {
+		it(`localizes every live navigation group and item in ${locale}`, () => {
+			const messages = JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), 'utf8')) as {
+				sidebar: { groups: Record<string, unknown>; nav: Record<string, unknown> };
+			};
+			for (const group of ADMIN_NAV_GROUPS) {
+				const title = messages.sidebar.groups[group.groupKey];
+				assert.ok(typeof title === 'string' && title.trim().length > 0, `${locale}: sidebar.groups.${group.groupKey}`);
+				for (const item of group.items) {
+					const label = messages.sidebar.nav[item.nameKey];
+					assert.ok(typeof label === 'string' && label.trim().length > 0, `${locale}: sidebar.nav.${item.nameKey}`);
+				}
+			}
+		});
+	}
+});
 
 describe('matchAdminNavRoute', () => {
 	it('matches exact sidebar paths', () => {
