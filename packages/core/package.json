@@ -40,7 +40,7 @@
 		"test:key-limits": "tsx --test src/gateway-key-limits.test.ts src/workspace-budgets.test.ts",
 		"test:availability": "tsx --test src/db/provider-attempt-availability.test.ts",
 		"test:batches": "tsx --test src/db/batch-types.test.ts src/storage/batches.d1.test.ts src/storage/batches.sql-contract.test.ts",
-		"test:postgres-schema-engine": "tsx --test src/storage/postgres-schema-engine.test.mjs src/storage/postgres-financial-schema-engine.test.mjs src/storage/postgres-auth-schema-engine.test.mjs src/storage/postgres-projection-schema-engine.test.mjs src/storage/postgres-management-schema-engine.test.mjs src/storage/postgres-byok-schema-engine.test.mjs src/storage/byok-slots-engine.test.mjs",
+		"test:postgres-schema-engine": "tsx --test --test-concurrency=1 src/storage/postgres-schema-engine.test.mjs src/storage/postgres-financial-schema-engine.test.mjs src/storage/postgres-auth-schema-engine.test.mjs src/storage/postgres-projection-schema-engine.test.mjs src/storage/postgres-management-schema-engine.test.mjs src/storage/postgres-byok-schema-engine.test.mjs src/storage/byok-slots-engine.test.mjs",
 		"test:byok-slots": "tsx --test src/storage/byok-slots-engine.test.mjs src/storage/byok-slots-mysql-contract.test.mjs src/storage/byok-slots-expiry.test.mjs",
 		"test:postgres-financial-schema": "tsx --test src/storage/postgres-financial-schema-contract.test.mjs",
 		"test:postgres-auth-schema": "tsx --test src/storage/postgres-auth-schema-contract.test.mjs",

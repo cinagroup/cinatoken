@@ -1,0 +1,45 @@
+name: PostgreSQL engine contracts
+
+on:
+  pull_request:
+    paths:
+      - 'packages/core/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.nvmrc'
+      - '.github/workflows/postgres-engine-contracts.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'packages/core/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.nvmrc'
+      - '.github/workflows/postgres-engine-contracts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: postgres-engine-contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sql-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GATEWAY_PGLITE_MODULE: ${{ github.workspace }}/node_modules/@electric-sql/pglite/dist/index.js
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build:node-index -w @octafuse/core
+      # In-memory PostgreSQL parser, migrations, transactions and wallet receipts.
+      # This does not replace native locking, role, wire or Hyperdrive acceptance.
+      - run: npm run test:postgres-schema-engine -w @octafuse/core
+      - run: npm run test:wallet-credit -w @octafuse/core
