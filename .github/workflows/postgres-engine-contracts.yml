@@ -43,3 +43,23 @@ jobs:
       # This does not replace native locking, role, wire or Hyperdrive acceptance.
       - run: npm run test:postgres-schema-engine -w @octafuse/core
       - run: npm run test:wallet-credit -w @octafuse/core
+
+  native-wallet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: postgres:18.6-bookworm
+      options: --user 0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm ci --ignore-scripts
+      - run: npm run build:node-index -w @octafuse/core
+      # A fresh loopback cluster owned by the fixture, never an ambient DSN.
+      - run: |
+          install -d -m 0755 .wrangler .wrangler/staging
+          install -d -o postgres -g postgres -m 0755 .wrangler/staging/pg-native-dispatch-tests
+          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+            node --import tsx --test --test-concurrency=1 packages/core/src/db/wallet-credit.native-postgres.test.mjs
