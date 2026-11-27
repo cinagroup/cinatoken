@@ -247,6 +247,10 @@ test('financial SQL and functions are independent of caller search_path', async 
     },
     async 'shared-key credit uses gateway earnings and ledger'() {
       await charge(f.client,chargeParams());
+      // Credited earnings cannot be truncated after 0078. Roll back this
+      // case's owned fixture transaction; keep the production guards enabled.
+      await f.pg.exec('BEGIN');
+      try {
       await f.pg.exec(`INSERT INTO ${g}.shared_keys (id,seller_user_id,channel_type,api_key,key_fingerprint)
         VALUES ('shared','user','openai','synthetic-not-a-key','synthetic-fingerprint');
         INSERT INTO ${g}.shared_key_earnings (id,request_log_id,shared_key_id,seller_user_id,net_amount)
@@ -254,6 +258,9 @@ test('financial SQL and functions are independent of caller search_path', async 
       assert.equal(await scalar(`SELECT balance_micros FROM ${g}.user_earnings WHERE user_id='user'`),5250000);
       assert.equal(await scalar(`SELECT lifetime_earned_micros FROM ${g}.user_earnings WHERE user_id='user'`),250000);
       assert.equal(await scalar(`SELECT amount_micros FROM ${g}.portal_ledger_entries WHERE id='earning:earning'`),250000);
+      await assert.rejects(f.pg.exec(`TRUNCATE ${g}.shared_key_earnings`),
+        error => error.constraint === 'shared_key_earnings_history_immutable');
+      } finally { await f.pg.exec('ROLLBACK'); }
     },
     async 'retention function retains cutoff and bounded-limit guards'() {
       assert.equal(await scalar(`SELECT ${g}.delete_provider_attempt_availability_before(statement_timestamp()-interval '26 hours',1)`),0);

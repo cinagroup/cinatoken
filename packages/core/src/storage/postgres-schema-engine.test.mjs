@@ -58,9 +58,12 @@ test('PostgreSQL engine: raw user-budget reservation transactions stay in the ga
     for (const schema of [schemaName, 'public']) {
       await pg.exec(`SET search_path TO ${schema};
         CREATE TABLE users (id text PRIMARY KEY, budget_max numeric(18,6), budget_spent numeric(18,6) NOT NULL DEFAULT 0,
+          wallet_granted numeric(18,6) NOT NULL DEFAULT 0, wallet_spent numeric(18,6) NOT NULL DEFAULT 0,
           budget_period text NOT NULL DEFAULT 'none', budget_reset_at timestamptz, updated_at timestamptz NOT NULL);
         CREATE TABLE api_keys (id text PRIMARY KEY, user_id text NOT NULL, status text NOT NULL)`);
       await pg.exec(migration);
+      // Current budget SQL also reads the wallet settlement field added by 0082.
+      await pg.exec('ALTER TABLE user_budget_reservations ADD COLUMN settled_wallet_micros bigint NOT NULL DEFAULT 0');
     }
     const account = async () => (await pg.query(`SELECT budget_epoch, budget_reserved_micros, budget_spent FROM ${schemaName}.users WHERE id = 'user'`)).rows[0];
     const row = async (id = 'request') => (await pg.query(`SELECT * FROM ${schemaName}.user_budget_reservations WHERE request_id = $1`, [id])).rows[0];

@@ -6,9 +6,16 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { getPackages } from "@manypkg/get-packages";
+import { read as readChangesetConfig } from "@changesets/config";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "../..");
+
+// Validate the actual workspace graph used by Changesets. Matching package
+// versions alone cannot catch a fixed-group member omitted from workspaces.
+const packages = await getPackages(root);
+await readChangesetConfig(root, packages);
 
 const paths = [
 	join(root, "package.json"),

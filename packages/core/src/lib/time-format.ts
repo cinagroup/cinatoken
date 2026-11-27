@@ -13,6 +13,7 @@ const API_TIME_KEYS = new Set([
 	'before_budget_reset_at',
 	'after_budget_reset_at',
 	'last_active_at',
+	'last_used_at',
 ]);
 
 /**
@@ -30,7 +31,12 @@ export function normalizeApiTimeString(value: string): string {
 	}
 
 	// PostgreSQL 等：空格日期 + 偏移 / Z / 小数秒等，交给 Date 再统一为 Z
-	const forParse = trimmed.includes('T') ? trimmed : trimmed.replace(' ', 'T');
+	let forParse = trimmed.includes('T') ? trimmed : trimmed.replace(' ', 'T');
+	// PostgreSQL text timestamps use hour-only offsets (for example +00).
+	// JavaScript's ISO parser requires the corresponding minute component.
+	if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?[+-]\d{2}$/.test(forParse)) {
+		forParse += ':00';
+	}
 	const d = new Date(forParse);
 	if (!Number.isNaN(d.getTime())) {
 		return d.toISOString();

@@ -6,6 +6,7 @@ import type { AdminPrincipal } from "@/lib/admin-principal";
 import { createAdminApp } from "@/lib/admin-app";
 import { protectAdminConfigResponse } from "@/lib/admin-config-cache";
 import { getAdminAuthorizationDecision } from "@/lib/admin-permissions";
+import { accessKeyResponseSchema, accessKeysResponseSchema } from "../../../../web/src/cinatoken/admin/access-keys/access-key-contracts";
 
 const SECRET = `sk-admin-${"a".repeat(64)}`;
 const KEY: AdminApiKeyRow = {
@@ -108,6 +109,25 @@ const ROUTES = [
 	{ method: "POST", path: `/admin/access-keys/${KEY.id}/rotate` },
 	{ method: "POST", path: `/admin/access-keys/${KEY.id}/revoke` },
 ] as const;
+
+test("PostgreSQL integration-key list and detail satisfy the masked Web contract", async () => {
+	const subject = fixture(CONSOLE, false, {
+		...KEY,
+		status: "revoked",
+		createdAt: "2026-09-29 00:00:00+00",
+		updatedAt: "2026-09-30 08:00:00.123456+08",
+		lastUsedAt: "2026-09-29 00:01:00.321+00",
+		revokedAt: "2026-09-30 00:00:00.123456+00",
+	});
+	const list = accessKeysResponseSchema.parse(await (await subject.request("/admin/access-keys")).json());
+	const detail = accessKeyResponseSchema.parse(await (await subject.request(`/admin/access-keys/${KEY.id}`)).json());
+	assert.deepEqual(list.data[0], detail.data);
+	assert.equal(detail.data.created_at, "2026-09-29T00:00:00.000Z");
+	assert.equal(detail.data.updated_at, "2026-09-30T00:00:00.123Z");
+	assert.equal(detail.data.last_used_at, "2026-09-29T00:01:00.321Z");
+	assert.equal(detail.data.revoked_at, "2026-09-30T00:00:00.123Z");
+	assert.equal(JSON.stringify(list).includes(SECRET), false);
+});
 
 test("each integration-key route keeps successful console responses private", async () => {
 	for (const route of ROUTES) {
