@@ -83,7 +83,7 @@ function ArrowLink({
 			</a>
 		);
 	}
-	if (href === "/dashboard") {
+	if (href === "/admin") {
 		return (
 			<CinaAuthAccessLink href={href} intent="admin" className={className}>
 				{content}
@@ -125,7 +125,7 @@ export default async function PublicHome() {
 										{t("hero.description")}
 									</p>
 									<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-										<ArrowLink href="/dashboard" primary>
+										<ArrowLink href="/admin" primary>
 											{t("hero.console")}
 										</ArrowLink>
 										<ArrowLink href={CINATOKEN_GITHUB_DOCS_INDEX}>
@@ -314,7 +314,7 @@ export default async function PublicHome() {
 								{t("cta.description")}
 							</p>
 							<div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-								<ArrowLink href="/dashboard" primary>
+								<ArrowLink href="/admin" primary>
 									{t("cta.console")}
 								</ArrowLink>
 								<ArrowLink href={CINATOKEN_GITHUB_DOCS_INDEX}>

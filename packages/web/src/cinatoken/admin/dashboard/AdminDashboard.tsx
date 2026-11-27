@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
 import { ReliabilityRangeControls } from '../reliability/ReliabilityRangeControls'
 import type { ReliabilityRange } from '../reliability/reliability-range'
+import { DashboardOperations } from './DashboardOperations'
 import { DashboardOverview } from './DashboardOverview'
 import { RecentPanel } from './DashboardRecent'
 import { TokenTrend } from './DashboardTrend'
@@ -16,10 +17,18 @@ import {
 } from './dashboard-access-recovery'
 import type { AdminDashboardApi } from './dashboard-api'
 import { DashboardCurrencyUnavailableError } from './dashboard-contracts'
+import {
+	dashboardRefreshIntervals,
+	readDashboardRefresh,
+	writeDashboardRefresh,
+	subscribeDashboardRefresh,
+} from './dashboard-refresh'
 
 const prefix = 'cinatoken.adminDashboard.'
 
 export type AdminDashboardProps = {
+	range: ReliabilityRange
+	onRangeChange: (range: ReliabilityRange) => void
 	api: AdminDashboardApi
 	scopeKey: string
 	reconciliationKey: string
@@ -40,10 +49,13 @@ export function AdminDashboard(props: AdminDashboardProps) {
 	const { t, i18n } = useTranslation()
 	const revalidate = props.revalidate
 	const locale = i18n.resolvedLanguage ?? 'en'
-	const [range, setRange] = useState<ReliabilityRange>({
-		kind: 'calendar',
-		preset: 'today',
-	})
+	const range = props.range
+	const interval = useSyncExternalStore(
+		subscribeDashboardRefresh,
+		readDashboardRefresh,
+		() => 0
+	)
+	const [editingRange, setEditingRange] = useState(false)
 	const [retryVersion, setRetryVersion] = useState(0)
 	const access = dashboardAccessRecovery(props.api)
 	const accessKey = dashboardAccessIdentityKey(props.reconciliationKey)
@@ -68,6 +80,15 @@ export function AdminDashboard(props: AdminDashboardProps) {
 		queryFn: ({ signal }) => props.api.dashboardWindow(range, { signal }),
 		enabled: !accessRevoked,
 		retry: false,
+		refetchInterval: (current) =>
+			!accessRevoked &&
+			!editingRange &&
+			!current.state.error &&
+			range.kind !== 'custom' &&
+			interval > 0
+				? interval
+				: false,
+		refetchIntervalInBackground: false,
 		refetchOnWindowFocus: false,
 		gcTime: 0,
 	})
@@ -119,6 +140,7 @@ export function AdminDashboard(props: AdminDashboardProps) {
 		content = (
 			<>
 				<DashboardOverview snapshot={snapshot} locale={locale} />
+				<DashboardOperations snapshot={snapshot} locale={locale} />
 				<TokenTrend
 					rows={snapshot.stats.timeseries}
 					granularity={snapshot.stats.granularity}
@@ -159,22 +181,65 @@ export function AdminDashboard(props: AdminDashboardProps) {
 						{t(prefix + 'subtitle')}
 					</p>
 				</div>
-				<Button
-					type='button'
-					variant='outline'
-					onClick={retry}
-					disabled={query.isFetching}
-				>
-					{t(prefix + 'refresh')}
-				</Button>
+				<div className='flex flex-wrap items-center gap-3'>
+					<label className='text-muted-foreground flex items-center gap-2 text-sm'>
+						{t(prefix + 'autoRefresh')}
+						<select
+							className='bg-background rounded-md border px-2 py-2'
+							value={interval}
+							onChange={(e) => writeDashboardRefresh(Number(e.target.value))}
+						>
+							{dashboardRefreshIntervals.map((value) => (
+								<option key={value} value={value}>
+									{value === 0
+										? t(prefix + 'refreshOff')
+										: t(prefix + 'refreshSeconds', { seconds: value / 1000 })}
+								</option>
+							))}
+						</select>
+					</label>
+					<Button
+						type='button'
+						variant='outline'
+						onClick={retry}
+						disabled={query.isFetching}
+					>
+						{t(prefix + 'refresh')}
+					</Button>
+				</div>
 			</header>
 			<ReliabilityRangeControls
-				key={`${snapshot?.rangeParams.startUtc ?? ''}/${snapshot?.rangeParams.endUtc ?? ''}/${snapshot?.displayConfig.businessTimezone ?? ''}`}
+				key={`${JSON.stringify(range)}/${query.data?.displayConfig.businessTimezone ?? ''}`}
 				range={range}
-				rangeParams={snapshot?.rangeParams ?? null}
-				timezone={snapshot?.displayConfig.businessTimezone ?? null}
-				onChange={setRange}
+				rangeParams={
+					!accessRevoked && !query.error
+						? (query.data?.rangeParams ?? null)
+						: null
+				}
+				timezone={
+					!accessRevoked && !query.error
+						? (query.data?.displayConfig.businessTimezone ?? null)
+						: null
+				}
+				onEditingChange={setEditingRange}
+				onChange={(next) => {
+					setEditingRange(false)
+					props.onRangeChange(next)
+				}}
 			/>
+			<p className='text-muted-foreground text-xs' role='status'>
+				{(range.kind === 'custom' || editingRange) && interval > 0
+					? t(prefix + 'refreshPaused')
+					: null}
+				{snapshot
+					? t(prefix + 'updatedAt', {
+							time: new Intl.DateTimeFormat(locale, {
+								timeStyle: 'medium',
+								timeZone: snapshot.displayConfig.businessTimezone,
+							}).format(query.dataUpdatedAt),
+						})
+					: null}
+			</p>
 			{content}
 		</main>
 	)

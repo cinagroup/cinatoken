@@ -164,11 +164,11 @@ describe("CinaAuth OIDC transaction", () => {
 		);
 		assert.equal(
 			sanitizeCinaAuthCallbackPath("//attacker.example/path"),
-			"/dashboard"
+			"/admin"
 		);
 		assert.equal(
 			sanitizeCinaAuthCallbackPath("https://attacker.example/path"),
-			"/dashboard"
+			"/admin"
 		);
 		assert.equal(
 			sanitizeCinaAuthCallbackPath("/admin/models"),

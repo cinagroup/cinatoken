@@ -36,7 +36,7 @@ export default function AdminMobileHeader() {
 					<Bars3Icon className="h-5 w-5" />
 				</button>
 				<Link
-					href="/dashboard"
+					href="/admin"
 					className="flex min-w-0 flex-1 items-center gap-2"
 				>
 					<Image

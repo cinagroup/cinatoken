@@ -655,7 +655,7 @@
 			"system": "システム"
 		},
 		"nav": {
-			"dashboard": "ダッシュボード",
+			"dashboard": "概要",
 			"providers": "プロバイダー",
 			"models": "モデル",
 			"endpoints": "エンドポイント",
@@ -786,7 +786,7 @@
 			"points": "{value}pt",
 			"activityReady": "新しいアクティビティ {count} 件 · 更新"
 		},
-		"title": "ダッシュボード",
+		"title": "ゲートウェイ概要",
 		"subtitle": "ゲートウェイのリクエスト、使用量、料金の推移を確認し、運用上の異常を把握します。",
 		"analysisWindow": "分析期間",
 		"loadError": "メトリクスを更新できませんでした。前回の結果が表示されている可能性があります。",

@@ -18,6 +18,7 @@ export function ReliabilityRangeControls(props: {
 	rangeParams: { startUtc: string; endUtc: string } | null
 	timezone: string | null
 	onChange: (range: ReliabilityRange) => void
+	onEditingChange?: (editing: boolean) => void
 }) {
 	const { t } = useTranslation()
 	const [startLocal, setStartLocal] = useState(
@@ -31,6 +32,7 @@ export function ReliabilityRangeControls(props: {
 
 	function select(range: ReliabilityRange): void {
 		setInvalid(false)
+		props.onEditingChange?.(false)
 		props.onChange(range)
 	}
 
@@ -118,7 +120,10 @@ export function ReliabilityRangeControls(props: {
 						<Input
 							type='datetime-local'
 							value={startLocal}
-							onChange={(event) => setStartLocal(event.target.value)}
+							onChange={(event) => {
+								props.onEditingChange?.(true)
+								setStartLocal(event.target.value)
+							}}
 							className='w-52 dark:[color-scheme:dark]'
 						/>
 					</label>
@@ -127,7 +132,10 @@ export function ReliabilityRangeControls(props: {
 						<Input
 							type='datetime-local'
 							value={endLocal}
-							onChange={(event) => setEndLocal(event.target.value)}
+							onChange={(event) => {
+								props.onEditingChange?.(true)
+								setEndLocal(event.target.value)
+							}}
 							className='w-52 dark:[color-scheme:dark]'
 						/>
 					</label>

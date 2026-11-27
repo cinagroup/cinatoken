@@ -655,7 +655,7 @@
 			"system": "System"
 		},
 		"nav": {
-			"dashboard": "Dashboard",
+			"dashboard": "Overview",
 			"providers": "Providers",
 			"models": "Models",
 			"endpoints": "Endpoints",
@@ -786,7 +786,7 @@
 			"points": "{value} pp",
 			"activityReady": "{count} new activities · Update"
 		},
-		"title": "Dashboard",
+		"title": "Gateway overview",
 		"subtitle": "Monitor gateway traffic, usage and spending trends to spot operational issues.",
 		"analysisWindow": "Analysis window",
 		"loadError": "Metrics could not be refreshed. Previous results may still be shown.",

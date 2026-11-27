@@ -46,7 +46,7 @@ export interface AdminNavGroup {
 export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
 	{
 		groupKey: 'overview',
-		items: [{ nameKey: 'dashboard', href: '/dashboard' }],
+		items: [{ nameKey: 'dashboard', href: '/admin' }],
 	},
 	{
 		groupKey: 'inference',
@@ -111,10 +111,11 @@ export const ADMIN_NAV_ROUTES: AdminNavRoute[] = ADMIN_NAV_GROUPS.flatMap((group
 
 /** 最长前缀匹配，避免 `/admin/tools/invocations` 落到 Configuration。 */
 export function matchAdminNavRoute(pathname: string): AdminNavRoute | null {
-	const path = pathname.split('?')[0] || '/';
+	const requestedPath = pathname.split('?')[0] || '/';
+	const path = requestedPath === '/dashboard' ? '/admin' : requestedPath;
 	let best: AdminNavRoute | null = null;
 	for (const item of ADMIN_NAV_ROUTES) {
-		if (path === item.href || path.startsWith(`${item.href}/`)) {
+		if (path === item.href || (item.href !== '/admin' && path.startsWith(`${item.href}/`))) {
 			if (!best || item.href.length > best.href.length) {
 				best = item;
 			}

@@ -25,7 +25,9 @@ describe('matchAdminNavRoute', () => {
 	it('matches exact sidebar paths', () => {
 		assert.equal(matchAdminNavRoute('/admin/simulator')?.nameKey, 'simulator');
 		assert.equal(matchAdminNavRoute('/admin/endpoints')?.nameKey, 'endpoints');
-		assert.equal(matchAdminNavRoute('/dashboard')?.nameKey, 'dashboard');
+		assert.equal(matchAdminNavRoute('/dashboard')?.href, '/admin');
+		assert.equal(matchAdminNavRoute('/admin')?.nameKey, 'dashboard');
+		assert.equal(matchAdminNavRoute('/admin/unknown'), null);
 	});
 
 	it('prefers the longest href so nested tools pages win', () => {

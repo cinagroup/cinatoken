@@ -21,7 +21,7 @@ const accountAccess: LoginOptions = {
 }
 const consoleAccess: LoginOptions = {
 	intent: 'admin',
-	callbackPath: '/dashboard',
+	callbackPath: '/admin',
 }
 
 export function HomePage() {
@@ -55,7 +55,7 @@ export function HomePage() {
 					<div className='text-muted-foreground mt-6 flex flex-wrap gap-6 text-sm'>
 						<PublicAuthAccessLink
 							options={consoleAccess}
-							href='/dashboard'
+							href='/admin'
 							className='hover:text-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
 						>
 							{t('cinatoken.home.hero.console')}
