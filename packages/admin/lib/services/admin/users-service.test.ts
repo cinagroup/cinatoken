@@ -2,11 +2,14 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import type { ApiKeyRow, GatewayRepositories, UserRow } from '@octafuse/core';
 import { UserPlanPatchConflictError } from '@octafuse/core/services/user-plan-patch-service';
+import { normalizeApiTimeFields } from '@octafuse/core/lib/time-format';
+import { adminUserListResponseSchema } from '../../../../web/src/cinatoken/admin/users/users-contracts';
 import { AdminServiceError } from './errors';
 import {
 	applyAdminBudgetTransition,
 	deleteAdminUser,
 	listAdminUserKeys,
+	listAdminUsers,
 	previewAdminBudgetTransition,
 	updateAdminUser,
 } from './users-service';
@@ -431,4 +434,44 @@ test('wallet-only edits use the same audited atomic plan path and preserve budge
 	assert.equal(result?.budget_reserved_micros, 500000);
 	assert.equal(state.profileAudits.length, 0);
 	assert.equal(state.directPlanWrites(), 0);
+});
+
+test("user list projects the full signed wallet ledger from stored grants and spending", async () => {
+	const rows = [
+		user({
+			wallet_granted: 20,
+			wallet_spent: 7.5,
+			created_at: "2026-11-27 12:34:56+00",
+			updated_at: "2026-11-27 12:34:56.123456+00",
+			budget_reset_at: "2026-12-01 00:00:00+00",
+		}),
+		user({
+			id: "00000000-0000-4000-8000-000000000002",
+			wallet_granted: 2,
+			wallet_spent: 3,
+		}),
+	];
+	const repos = {
+		users: { list: async () => ({ users: rows, total: 2 }) },
+		apiKeys: { listKeysByUserId: async () => [] },
+	} as unknown as GatewayRepositories;
+	const result = await listAdminUsers(repos, { page: 1, page_size: 20 });
+	assert.deepEqual(
+		result.data.map((row) => ({
+			granted: row.wallet_granted,
+			spent: row.wallet_spent,
+			balance: row.wallet_balance,
+		})),
+		[
+			{ granted: 20, spent: 7.5, balance: 12.5 },
+			{ granted: 2, spent: 3, balance: -1 },
+		],
+	);
+	assert.equal(result.page_size, 20);
+	assert.equal(result.total, 2);
+	const parsed = adminUserListResponseSchema.parse(
+		normalizeApiTimeFields({ success: true, ...result }),
+	);
+	assert.equal(parsed.data[0].created_at, "2026-11-27T12:34:56.000Z");
+	assert.equal(parsed.data[1].wallet_balance, -1);
 });

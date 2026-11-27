@@ -24,6 +24,8 @@ jobs:
         with:
           node-version-file: ".nvmrc"
 
+      - run: npm ci --ignore-scripts
+
       - name: Assert fixed monorepo versions
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}

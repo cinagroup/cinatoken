@@ -17,6 +17,7 @@ import {
 	getKeyInfo,
 	getOrCreateUser,
 	getUserInfo,
+	computeWalletBalance,
 } from "@octafuse/core/services/user-service";
 import type { ApiKeyRateLimit } from "@octafuse/core";
 import {
@@ -184,6 +185,7 @@ export async function listAdminUsers(
 			const keys = await repos.apiKeys.listKeysByUserId(u.id);
 			return {
 				...u,
+				wallet_balance: computeWalletBalance(u.wallet_granted, u.wallet_spent),
 				charged_cost_factors: parseUserChargedCostFactors(
 					u.charged_cost_factors,
 				),

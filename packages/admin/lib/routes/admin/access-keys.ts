@@ -11,6 +11,7 @@ import {
 	parseAdminPermissions,
 } from "@/lib/admin-principal";
 import { generateAdminApiKey } from "@/lib/auth";
+import { normalizeApiTimeString } from "@octafuse/core/lib/time-format";
 
 export const adminAccessKeysRoutes = new Hono<AdminEnv>();
 
@@ -88,10 +89,10 @@ function publicKey(row: AdminApiKeyRow) {
 		key_prefix: safePrefix,
 		permissions: parseAdminPermissions(row.permissionsJson),
 		status: row.status,
-		last_used_at: row.lastUsedAt,
-		created_at: row.createdAt,
-		updated_at: row.updatedAt,
-		revoked_at: row.revokedAt,
+		last_used_at: row.lastUsedAt === null ? null : normalizeApiTimeString(row.lastUsedAt),
+		created_at: normalizeApiTimeString(row.createdAt),
+		updated_at: normalizeApiTimeString(row.updatedAt),
+		revoked_at: row.revokedAt === null ? null : normalizeApiTimeString(row.revokedAt),
 	};
 }
 

@@ -12,6 +12,7 @@ import { createAdminApp } from "@/lib/admin-app";
 import { protectAdminConfigResponse } from "@/lib/admin-config-cache";
 import { rejectInvalidAdminMutationOrigin } from "@/lib/browser-mutation";
 import { listAdminKeys } from "./keys-service";
+import { gatewayKeysListResponseSchema } from "../../../../web/src/cinatoken/admin/gateway-keys/gateway-key-contracts";
 import {
 	gatewayKeyRevision,
 	keyMetadata,
@@ -59,6 +60,7 @@ function fixture(
 		fail?: boolean;
 		missingAtomic?: boolean;
 		key?: string;
+		postgresTimes?: boolean;
 		race?: boolean;
 	} = {}
 ) {
@@ -71,14 +73,14 @@ function fixture(
 		budget_base: 10,
 		budget_spent: 3,
 		budget_period: "none",
-		budget_reset_at: null,
+		budget_reset_at: options.postgresTimes ? "2026-09-30 00:00:00.123456+00" : null,
 		budget_epoch: 0,
 		budget_reserved_micros: 0,
 		status: "active",
 		metadata: null,
 		charged_cost_factors: null,
-		created_at: "2026-09-30T00:00:00.000Z",
-		updated_at: "2026-09-30T00:00:00.000Z",
+		created_at: options.postgresTimes ? "2026-09-30 00:00:00+00" : "2026-09-30T00:00:00.000Z",
+		updated_at: options.postgresTimes ? "2026-09-30 08:00:00+08" : "2026-09-30T00:00:00.000Z",
 	};
 	let key = {
 		id: KEY,
@@ -93,6 +95,7 @@ function fixture(
 				: options.metadata,
 		created_at: user.created_at,
 		updated_at: user.updated_at,
+		last_used_at: options.postgresTimes ? "2026-09-30 00:00:00.321+00" : null,
 	};
 	const mutations: AdminKeyMutationWithAudit[] = [];
 	let reads = 0;
@@ -246,6 +249,17 @@ function fixture(
 		},
 	};
 }
+
+test("PostgreSQL Key list HTTP responses satisfy the deployed Web contract", async () => {
+	const subject = fixture({ postgresTimes: true });
+	const response = await subject.request();
+	assert.equal(response.status, 200);
+	const body = gatewayKeysListResponseSchema.parse(await response.json());
+	assert.equal(body.data[0].created_at, "2026-09-30T00:00:00.000Z");
+	assert.equal(body.data[0].updated_at, "2026-09-30T00:00:00.000Z");
+	assert.equal(body.data[0].budget_reset_at, "2026-09-30T00:00:00.123Z");
+	assert.equal(body.data[0].last_used_at, "2026-09-30T00:00:00.321Z");
+});
 
 test("global Key list has a strict public projection and verified independent capabilities", async () => {
 	for (const secret of [

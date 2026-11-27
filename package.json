@@ -8,6 +8,7 @@
 	},
 	"type": "module",
 	"workspaces": [
+		".",
 		"packages/core",
 		"packages/tool-engines",
 		"packages/proxy",
@@ -76,8 +77,10 @@
 		"pretest:deploy": "npm run build:node-index -w @octafuse/core"
 	},
 	"devDependencies": {
+		"@changesets/config": "3.1.4",
 		"@changesets/changelog-github": "^0.5.1",
 		"@changesets/cli": "^2.29.8",
+		"@manypkg/get-packages": "1.1.3",
 		"@types/node": "^25.5.0",
 		"dotenv-cli": "^11.0.0",
 		"tsx": "^4.23.15",
