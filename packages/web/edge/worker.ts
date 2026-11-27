@@ -185,6 +185,21 @@ export async function routeWebRequest(
 	const url = new URL(request.url)
 	const isRead = READ_METHODS.has(request.method)
 
+	// Old bookmarks use the same overview, with their filters preserved. The
+	// backend has the same canonical route when the Web feature is rolled back.
+	if (
+		isRead &&
+		(url.pathname === '/dashboard' || url.pathname === '/dashboard/')
+	) {
+		return new Response(null, {
+			status: 307,
+			headers: {
+				location: `/admin${url.search}`,
+				'cache-control': 'private, no-store',
+			},
+		})
+	}
+
 	// Keep assets available after rollback for tabs that still have the Web HTML.
 	// Missing assets remain asset 404s, with no SPA or backend fallback.
 	if (isRead && url.pathname.startsWith(ASSET_PREFIX)) {

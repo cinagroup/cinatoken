@@ -82,6 +82,7 @@ export function createAdminDashboardApi(transport: DashboardTransport) {
 					start_date: rangeParams.startUtc,
 					end_date: rangeParams.endUtc,
 				})
+				if (range.kind === 'calendar') params.set('preset', range.preset)
 				const response = await transport.send(
 					`/api/admin/stats?${params}`,
 					dashboardStatsResponseSchema,

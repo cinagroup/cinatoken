@@ -101,7 +101,7 @@ export default function Sidebar({
 					className="flex h-16 items-center justify-between gap-2 border-b px-4 leading-tight"
 					style={{ borderColor: 'var(--console-border)' }}
 				>
-					<a href="/dashboard" onClick={onNavigate} className="flex min-w-0 items-center gap-2.5 hover:opacity-90">
+					<a href="/admin" onClick={onNavigate} className="flex min-w-0 items-center gap-2.5 hover:opacity-90">
 						<Image
 							src="/brand/logo.png"
 							alt={tBrand('logoAlt')}

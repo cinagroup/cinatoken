@@ -1,10 +1,18 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { createElement } from 'react'
+import { createInstance } from 'i18next'
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { I18nextProvider } from 'react-i18next'
 import { DASHBOARD_ACTIVITY_LIMIT } from '../../../../../admin/lib/dashboard-constants'
 import { CinaTokenApiError, createCinaTokenCookieTransport } from '../../api'
+import { DashboardOperations } from './DashboardOperations'
 import { createAdminDashboardApi } from './dashboard-api'
-import { DashboardCurrencyUnavailableError } from './dashboard-contracts'
+import {
+	DashboardCurrencyUnavailableError,
+	dashboardStatsSchema,
+} from './dashboard-contracts'
 import { dashboardMessages } from './messages'
 
 const safeLog = {
@@ -171,7 +179,7 @@ test('both dashboard reads accept additive aggregates without retaining them', a
 				? overview
 				: {
 						...stats,
-						operations: { current: { requests: 80 } },
+						futureAggregate: { current: { requests: 80 } },
 						extra: 'PRIVATE',
 					},
 		})
@@ -182,7 +190,7 @@ test('both dashboard reads accept additive aggregates without retaining them', a
 	]
 	for (const snapshot of snapshots) {
 		assert.deepEqual(snapshot.stats, stats)
-		assert.equal(Object.hasOwn(snapshot.stats, 'operations'), false)
+		assert.equal(Object.hasOwn(snapshot.stats, 'futureAggregate'), false)
 		assert.equal(JSON.stringify(snapshot).includes('PRIVATE'), false)
 	}
 })
@@ -360,6 +368,7 @@ test('calendar resolves one business-zone window before stats', async () => {
 	assert.equal(params.get('start_date'), result.rangeParams.startUtc)
 	assert.equal(params.get('end_date'), result.rangeParams.endUtc)
 	assert.equal(params.has('range'), false)
+	assert.equal(params.get('preset'), 'today')
 })
 
 test('custom seconds are retained and invalid ranges never request stats', async () => {
@@ -420,4 +429,163 @@ test('invalid and duplicate business buckets are rejected', async () => {
 		)
 		await assert.rejects(api.dashboardWindow({ kind: 'rolling', preset: '1h' }))
 	}
+})
+
+const period = {
+	requests: 80,
+	success: 76,
+	errors: 2,
+	incomplete: 1,
+	cancelled: 1,
+	charged: 4,
+	metered: 2,
+	standard: 1,
+	errorCost: 0.2,
+	failoverRequests: 3,
+	failoverSamples: 60,
+	attemptsSamples: 60,
+	avgAttempts: 1.05,
+	ttftSamples: 30,
+	ttftP50: 12,
+	ttftP95: 50,
+	latencySamples: 76,
+	latencyP50: 200,
+	latencyP95: 1000,
+}
+const operations = {
+	current: period,
+	previous: {
+		...period,
+		requests: 0,
+		ttftSamples: 0,
+		ttftP50: null,
+		ttftP95: null,
+	},
+	window: {
+		startDate: '2026-11-26 00:00:00',
+		endDate: '2026-11-27 00:00:00',
+		previousStart: '2026-11-25 00:00:00',
+		previousEnd: '2026-11-26 00:00:00',
+	},
+	providers: [
+		{ id: '', name: null, requests: 10, errors: 2, affectedUsers: 1 },
+	],
+	errorCategories: [{ category: 'timeout', count: 2 }],
+}
+
+test('overview operations are verified on both reads, including absent samples and unknown providers', async () => {
+	const { api } = fixture((path) =>
+		Response.json({
+			success: true,
+			data: path.includes('/config/') ? overview : { ...stats, operations },
+		})
+	)
+	for (const snapshot of [
+		await api.dashboard({ kind: 'preset', value: '1d' }),
+		await api.dashboardWindow({ kind: 'calendar', preset: 'today' }),
+	]) {
+		assert.deepEqual(snapshot.stats.operations, operations)
+		assert.equal(snapshot.stats.operations?.previous.ttftP95, null)
+	}
+})
+
+test('malformed operation aggregates cannot populate the overview or relax the log privacy boundary', () => {
+	for (const invalid of [
+		{ ...operations, current: { ...period, ttftP95: -1 } },
+		{ ...operations, current: { ...period, avgAttempts: Infinity } },
+		{
+			...operations,
+			providers: [{ ...operations.providers[0], affectedUsers: -1 }],
+		},
+		{
+			...operations,
+			errorCategories: [{ category: 'raw-error-message', count: 1 }],
+		},
+		{
+			...operations,
+			window: { ...operations.window, previousStart: 'invalid' },
+		},
+	])
+		assert.equal(
+			dashboardStatsSchema.safeParse({ ...stats, operations: invalid }).success,
+			false
+		)
+	assert.equal(
+		dashboardStatsSchema.safeParse({
+			...stats,
+			operations,
+			recentLogs: [{ ...safeLog, error_message: 'PRIVATE' }],
+		}).success,
+		false
+	)
+	assert.equal(dashboardStatsSchema.safeParse(stats).success, true)
+})
+
+for (const locale of ['en', 'zh', 'ja', 'ko'] as const) {
+	test(`operations render verified costs, samples and scoped drilldowns in ${locale}`, () => {
+		const i18n = createInstance()
+		void i18n.init({
+			lng: locale,
+			initAsync: false,
+			interpolation: { escapeValue: false },
+			resources: {
+				[locale]: {
+					translation: {
+						cinatoken: { adminDashboard: dashboardMessages[locale] },
+					},
+				},
+			},
+		})
+		const snapshot = {
+			stats: dashboardStatsSchema.parse({ ...stats, operations }),
+			displayConfig: {
+				billingCurrency: 'CNY' as const,
+				currencySource: 'configured' as const,
+				businessTimezone: 'Asia/Shanghai',
+				timezoneSource: 'configured' as const,
+			},
+		}
+		const html = renderToStaticMarkup(
+			createElement(
+				I18nextProvider,
+				{ i18n },
+				createElement(DashboardOperations, { snapshot, locale })
+			)
+		)
+		assert.ok(html.includes(dashboardMessages[locale].periodComparison))
+		assert.ok(html.includes(dashboardMessages[locale].costEfficiency))
+		assert.ok(html.includes('×4.00'))
+		assert.ok(html.includes('50.0%'))
+		assert.ok(html.includes('5.0%'))
+		assert.ok(html.includes('50 ms'))
+		assert.ok(html.includes('—'))
+		assert.ok(html.includes('status=error'))
+		assert.ok(html.includes('end_date=2026-11-26+23%3A59%3A59'))
+		assert.ok(html.includes('start_date=2026-11-26+00%3A00%3A00'))
+		assert.equal(html.includes('cinatoken.adminDashboard.'), false)
+		const without = { ...snapshot, stats: dashboardStatsSchema.parse(stats) }
+		assert.equal(
+			renderToStaticMarkup(
+				createElement(
+					I18nextProvider,
+					{ i18n },
+					createElement(DashboardOperations, { snapshot: without, locale })
+				)
+			),
+			''
+		)
+	})
+}
+
+test('additive operations fields are projected away without rejecting verified summaries', () => {
+	const parsed = dashboardStatsSchema.parse({
+		...stats,
+		operations: {
+			...operations,
+			internal: 'PRIVATE',
+			current: { ...period, internal: 'PRIVATE' },
+		},
+	})
+	assert.equal(JSON.stringify(parsed).includes('PRIVATE'), false)
+	assert.deepEqual(parsed.operations, operations)
 })

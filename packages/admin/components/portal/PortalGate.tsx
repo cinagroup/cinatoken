@@ -372,8 +372,8 @@ export default function PortalGate({ children }: Props) {
 						<a
 							href={
 								me.isAdmin
-									? "/dashboard"
-									: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fdashboard"
+									? "/admin"
+									: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fadmin"
 							}
 							className="console-nav-link mt-3 flex items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium"
 							style={{ borderColor: "var(--console-border)" }}
@@ -457,8 +457,8 @@ export default function PortalGate({ children }: Props) {
 							<a
 								href={
 									me.isAdmin
-										? "/dashboard"
-										: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fdashboard"
+										? "/admin"
+										: "/api/auth/cinaauth/login?intent=admin&callbackURL=%2Fadmin"
 								}
 								className="console-nav-link flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm"
 							>

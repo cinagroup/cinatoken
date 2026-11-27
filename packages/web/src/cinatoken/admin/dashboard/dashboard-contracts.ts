@@ -60,9 +60,78 @@ const timeseriesBucket = z.strictObject({
 	cache_hit_rate: percent,
 })
 
-// Project only displayed summaries. New top-level aggregates such as `operations`
-// are discarded; the displayed fields and recent-log privacy boundary stay strict.
+const timing = z.number().nonnegative().finite().nullable()
+const period = z.object({
+	requests: count,
+	success: count,
+	errors: count,
+	incomplete: count,
+	cancelled: count,
+	charged: amount,
+	metered: amount,
+	standard: amount,
+	errorCost: amount,
+	failoverRequests: count,
+	failoverSamples: count,
+	attemptsSamples: count,
+	avgAttempts: timing,
+	ttftSamples: count,
+	ttftP50: timing,
+	ttftP95: timing,
+	latencySamples: count,
+	latencyP50: timing,
+	latencyP95: timing,
+})
+const sqlUtc = z
+	.string()
+	.regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)
+	.refine((value) => {
+		const date = new Date(value.replace(' ', 'T') + 'Z')
+		return (
+			Number.isFinite(date.getTime()) &&
+			date.toISOString().slice(0, 19).replace('T', ' ') === value
+		)
+	})
+const operations = z.object({
+	current: period,
+	previous: period,
+	window: z.strictObject({
+		startDate: sqlUtc,
+		endDate: sqlUtc,
+		previousStart: sqlUtc,
+		previousEnd: sqlUtc,
+	}),
+	providers: z
+		.array(
+			z.strictObject({
+				id: z.string().max(512),
+				name: nullableText,
+				requests: count,
+				errors: count,
+				affectedUsers: count,
+			})
+		)
+		.max(5),
+	errorCategories: z
+		.array(
+			z.strictObject({
+				category: z.enum([
+					'rate_limit',
+					'timeout',
+					'auth',
+					'upstream',
+					'request',
+					'other',
+				]),
+				count,
+			})
+		)
+		.max(6),
+})
+
+// Project only displayed summaries; keep nested contracts and log privacy strict.
 export const dashboardStatsSchema = z.object({
+	operations: operations.optional(),
 	gateway: z.strictObject({
 		activeKeysCount: count,
 		keysTotal: count,

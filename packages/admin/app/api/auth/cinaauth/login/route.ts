@@ -35,7 +35,7 @@ const unavailable = (request: NextRequest): NextResponse => {
 			appOrigin: getPublicRequestUrl(request).origin,
 			callbackPath: sanitizeCinaAuthCallbackPath(
 				request.nextUrl.searchParams.get("callbackURL"),
-				intent === "portal" ? "/account" : "/dashboard"
+				intent === "portal" ? "/account" : "/admin"
 			),
 			ok: false,
 			error: "oidc_unavailable",
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		}
 		const callbackPath = sanitizeCinaAuthCallbackPath(
 			request.nextUrl.searchParams.get("callbackURL"),
-			intent === "portal" ? "/account" : "/dashboard"
+			intent === "portal" ? "/account" : "/admin"
 		);
 		if (
 			request.nextUrl.searchParams.get("mode") !== "register" &&

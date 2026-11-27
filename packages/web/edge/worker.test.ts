@@ -202,7 +202,7 @@ test('HTML policy leaves backend HTML, API, OAuth and asset responses unchanged'
 	const f = fixture()
 	f.env.CINATOKEN_WEB_PUBLIC_ENABLED = 'true'
 	for (const [path, contentType] of [
-		['/dashboard', 'text/html; charset=utf-8'],
+		['/gateway/legacy', 'text/html; charset=utf-8'],
 		['/api/user/me', 'application/json'],
 		['/api/auth/cinaauth/callback', 'text/html'],
 	] as const) {
@@ -323,7 +323,7 @@ test('Dashboard rollout captures only exact GET/HEAD /admin paths and is indepen
 		}
 	}
 	for (const path of [
-		'/dashboard',
+		'/dashboard/nested',
 		'/admin/providers',
 		'/admin/config',
 		'/admin/detail',
@@ -1276,7 +1276,7 @@ test('all unmigrated public, account, admin and backend routes preserve the orig
 		'/gateway/mcp/',
 		'/admin/mcp',
 		'/api/admin/mcp-servers',
-		'/dashboard',
+		'/dashboard/nested',
 		'/api/user/me',
 		'/api/auth/cinaauth/callback',
 		'/api/unknown',
@@ -1450,4 +1450,43 @@ test('HEAD shell has no response body and missing index fails without a backend 
 	)
 	assert.equal(missing.status, 503)
 	assert.equal(f.admin.length, 0)
+})
+
+test('legacy overview redirects GET and HEAD bookmarks with private query preservation and no loop', async () => {
+	for (const method of ['GET', 'HEAD']) {
+		for (const enabled of ['true', 'false']) {
+			const f = fixture()
+			f.env.CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED = enabled
+			for (const path of ['/dashboard', '/dashboard/']) {
+				const response = await routeWebRequest(
+					new Request(
+						`https://gateway.example.com${path}?range=7d&next=https%3A%2F%2Fexample.org`,
+						{ method }
+					),
+					f.env
+				)
+				assert.equal(response.status, 307)
+				assert.equal(
+					response.headers.get('location'),
+					'/admin?range=7d&next=https%3A%2F%2Fexample.org'
+				)
+				assert.equal(response.headers.get('cache-control'), 'private, no-store')
+				assert.equal(await response.text(), '')
+			}
+			assert.equal(f.admin.length, 0)
+			const canonical = await routeWebRequest(
+				new Request('https://gateway.example.com/admin', { method }),
+				f.env
+			)
+			assert.equal(canonical.status, 200)
+			assert.equal(canonical.headers.get('location'), null)
+		}
+	}
+	const f = fixture()
+	const post = new Request('https://gateway.example.com/dashboard', {
+		method: 'POST',
+		body: 'private',
+	})
+	assert.equal(await routeWebRequest(post, f.env), f.backendResponse)
+	assert.equal(f.admin[0], post)
 })

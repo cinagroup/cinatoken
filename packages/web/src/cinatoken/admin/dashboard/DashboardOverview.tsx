@@ -167,6 +167,10 @@ export function DashboardOverview(props: {
 								props.snapshot.stats.kpi.outputTokens,
 								props.locale
 							),
+							write: formatNumber(
+								props.snapshot.stats.kpi.cacheWriteTokens,
+								props.locale
+							),
 							cache: formatNumber(
 								props.snapshot.stats.kpi.cacheReadTokens,
 								props.locale

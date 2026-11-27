@@ -103,7 +103,7 @@ export default function PublicHeader() {
 						<span className="hidden sm:inline">{t("portal")}</span>
 					</CinaAuthAccessLink>
 					<CinaAuthAccessLink
-						href="/dashboard"
+						href="/admin"
 						intent="admin"
 						className="home-console-button inline-flex h-9 items-center justify-center whitespace-nowrap rounded-lg border px-3 text-xs font-medium transition sm:px-4 sm:text-sm"
 					>

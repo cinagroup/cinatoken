@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-router'
 import { validateAuditLogSearch } from './admin/audit-logs/audit-log-domain'
 import { validateChainOperationsSearch } from './admin/chain-operations/chain-operations-search'
+import { dashboardSearchSchema } from './admin/dashboard/dashboard-search'
 import { validateDataPolicySearch } from './admin/data-policies/data-policy-search'
 import { validateEndpointSearch } from './admin/endpoint-search'
 import { validateGatewayKeyRouteSearch } from './admin/gateway-keys/gateway-key-search'
@@ -207,6 +208,7 @@ const adminRoute = createRoute({
 	),
 })
 const adminDashboardRoute = createRoute({
+	validateSearch: (search) => dashboardSearchSchema.parse(search),
 	getParentRoute: () => adminRoute,
 	path: '/',
 	component: lazyRouteComponent(

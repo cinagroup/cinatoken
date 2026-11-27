@@ -53,7 +53,7 @@ function PrivateAuthWrapper({ children, pathname }: Props & { pathname: string }
 	const t = useTranslations('auth');
 	const tBrand = useTranslations('brand');
 	const tCommon = useTranslations('common');
-	const adminCallbackPath = pathname || '/dashboard';
+	const adminCallbackPath = pathname || '/admin';
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loginErrorCode, setLoginErrorCode] = useState(

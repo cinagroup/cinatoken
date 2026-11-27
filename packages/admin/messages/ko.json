@@ -655,7 +655,7 @@
 			"system": "시스템"
 		},
 		"nav": {
-			"dashboard": "대시보드",
+			"dashboard": "개요",
 			"providers": "공급자",
 			"models": "모델",
 			"endpoints": "엔드포인트",
@@ -786,7 +786,7 @@
 			"points": "{value}pp",
 			"activityReady": "새 활동 {count}개 · 업데이트"
 		},
-		"title": "대시보드",
+		"title": "게이트웨이 개요",
 		"subtitle": "게이트웨이 요청, 사용량, 요금 추이를 확인하고 운영 이상을 파악하세요.",
 		"analysisWindow": "분석 기간",
 		"loadError": "지표를 새로 고치지 못했습니다. 이전 결과가 표시될 수 있습니다.",

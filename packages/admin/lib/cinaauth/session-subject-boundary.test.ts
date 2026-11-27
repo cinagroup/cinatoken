@@ -416,7 +416,7 @@ describe("standard OIDC subject across callback, MySQL session wire and live ver
 			assert.equal(completed.status, 302);
 			assert.equal(
 				completed.headers.get("location"),
-				`${origin}/dashboard`,
+				`${origin}/admin`,
 				JSON.stringify({
 					diagnostics: fixture.diagnostics,
 					upstreamPaths: fixture.upstreamPaths,

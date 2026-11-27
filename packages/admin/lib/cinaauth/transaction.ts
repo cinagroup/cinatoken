@@ -108,7 +108,7 @@ const isTransaction = (value: unknown): value is CinatokenOidcTransaction => {
 
 export const sanitizeCinaAuthCallbackPath = (
 	value: string | null | undefined,
-	fallback = "/dashboard"
+	fallback = "/admin"
 ): string => {
 	if (!value?.startsWith("/") || value.startsWith("//")) return fallback;
 	try {
@@ -160,7 +160,7 @@ export const openCinaAuthTransaction = async (
 			...parsed,
 			callbackPath: sanitizeCinaAuthCallbackPath(
 				parsed.callbackPath,
-				parsed.intent === "portal" ? "/account" : "/dashboard"
+				parsed.intent === "portal" ? "/account" : "/admin"
 			),
 		};
 	} catch {

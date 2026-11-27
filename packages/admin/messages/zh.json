@@ -655,7 +655,7 @@
 			"system": "系统"
 		},
 		"nav": {
-			"dashboard": "仪表盘",
+			"dashboard": "概览",
 			"providers": "供应商",
 			"models": "模型",
 			"endpoints": "端点",
@@ -786,7 +786,7 @@
 			"points": "{value}pp",
 			"activityReady": "{count} 条新活动 · 更新"
 		},
-		"title": "仪表盘",
+		"title": "网关概览",
 		"subtitle": "查看网关请求、用量和费用趋势，及时发现运行异常。",
 		"analysisWindow": "分析时间范围",
 		"loadError": "指标加载失败，当前可能显示上次结果。",

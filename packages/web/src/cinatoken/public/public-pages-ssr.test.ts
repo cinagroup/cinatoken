@@ -195,7 +195,7 @@ for (const locale of PUBLIC_LOCALES) {
 			'/benchmarks',
 		])
 			assert.ok(html.includes(`href="/${locale}${path}"`), path)
-		for (const path of ['/account', '/dashboard']) {
+		for (const path of ['/account', '/admin']) {
 			assert.ok(html.includes(`href="${path}"`))
 			assert.ok(!html.includes(`href="/${locale}${path}"`))
 		}
