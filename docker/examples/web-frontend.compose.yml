@@ -7,6 +7,7 @@ services:
       - "${GATEWAY_WEB_PORT:-18080}:8080"
     environment:
       CINATOKEN_ADMIN_UPSTREAM: http://gateway-admin:8789
+      CINATOKEN_WEB_DOCS_ENABLED: ${CINATOKEN_WEB_DOCS_ENABLED:-false}
       CINATOKEN_WEB_PUBLIC_ENABLED: ${CINATOKEN_WEB_PUBLIC_ENABLED:-false}
       # Private shells are selected by the entry; the SSR sidecar only serves public routes.
       CINATOKEN_WEB_ACCOUNT_ENABLED: ${CINATOKEN_WEB_ACCOUNT_ENABLED:-false}
