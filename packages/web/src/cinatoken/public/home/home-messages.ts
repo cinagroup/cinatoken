@@ -167,12 +167,12 @@ const ja: typeof en = {
 		features: '機能',
 		architecture: '設定',
 		deployment: 'デプロイ',
-		docs: 'ドキュメント',
+		docs: 'ドキュメント（英語）',
 		signIn: 'ログイン',
 	},
 	hero: {
 		console: 'コンソール',
-		docs: '接続ドキュメント',
+		docs: '接続ドキュメント（英語）',
 	},
 	demo: {
 		tabsLabel: 'API の例',
@@ -250,12 +250,12 @@ const ko: typeof en = {
 		features: '기능',
 		architecture: '설정',
 		deployment: '배포',
-		docs: '문서',
+		docs: '문서 (영어)',
 		signIn: '로그인',
 	},
 	hero: {
 		console: '콘솔',
-		docs: '연동 문서',
+		docs: '연동 문서 (영어)',
 	},
 	demo: {
 		tabsLabel: 'API 예제',

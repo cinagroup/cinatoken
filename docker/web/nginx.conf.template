@@ -1,3 +1,9 @@
+# Docs pages have a separate rollout switch; assets survive rollback.
+map "${CINATOKEN_WEB_DOCS_ENABLED}:$request_method" $web_docs_page {
+    default 0;
+    "~^true:(GET|HEAD)$" 1;
+}
+
 # All eight public pages share a single disabled-by-default SSR entry.
 map "${CINATOKEN_WEB_PUBLIC_ENABLED}:$request_method:$request_uri" $web_public_ssr {
     default 0;
@@ -190,7 +196,9 @@ map "$status:$request_uri" $web_asset_cache_control {
     "~*^(200|206|304):/web-assets/.*[.]html?([?].*)?$" no-store;
     "~^(200|206|304):/web-assets/static/[A-Za-z0-9_./-]+[.][a-f0-9]{8,64}[.](?:js|css|woff2?|ttf|otf|png|jpe?g|svg|webp|avif|ico)(?:[.]LICENSE[.]txt)?([?].*)?$" "public, max-age=31536000, immutable";
     "~^(200|206|304):/web-assets/sources/web[.][a-f0-9]{64}[.]tar[.]gz([?].*)?$" "public, max-age=31536000, immutable";
+    "~^(200|206|304):/(?:web-assets/)?docs-assets/static/[A-Za-z0-9_.-]+[.][A-Za-z0-9_-]{5,64}[.](?:js|css|svg|png|woff2?)([?].*)?$" "public, max-age=31536000, immutable";
     "~^(200|206|304):/web-assets/" no-cache;
+    "~^(200|206|304):/docs-assets/" no-cache;
 }
 
 server {
@@ -215,6 +223,29 @@ server {
         add_header Cache-Control $web_asset_cache_control always;
         # The asset namespace remains available when account rollout is off.
         # Missing files use nginx's 404, never an index.html fallback.
+    }
+
+    location ^~ /docs-assets/ {
+        if ($web_asset_read = 0) { return 419; }
+        try_files $uri =404;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Cache-Control $web_asset_cache_control always;
+    }
+
+    location ~ ^/docs/?$ {
+        if ($web_asset_read = 0) { return 419; }
+        return 307 /en/docs/;
+    }
+
+    location ~ ^/(en|zh)/docs(?:/[a-z0-9-]+)*/?$ {
+        if ($web_asset_read = 0) { return 419; }
+        if ($web_docs_page = 0) { return 503; }
+        try_files $uri/index.html =404;
+        add_header Cache-Control "no-cache, no-transform" always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Referrer-Policy strict-origin-when-cross-origin always;
+        add_header X-Frame-Options DENY always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
     }
 
     location / {

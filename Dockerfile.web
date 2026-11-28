@@ -6,7 +6,7 @@ ARG NGINX_IMAGE=nginx:stable-alpine
 
 FROM ${NODE_IMAGE} AS verifier
 WORKDIR /app
-COPY packages/web/scripts/package-release.mjs packages/web/scripts/asset-policy.mjs packages/web/scripts/build-contract.mjs packages/web/scripts/build-inputs.mjs packages/web/scripts/source-archive.mjs packages/web/scripts/source-delivery.mjs packages/web/scripts/historical-source.mjs ./packages/web/scripts/
+COPY packages/web/scripts/package-release.mjs packages/web/scripts/asset-policy.mjs packages/web/scripts/build-contract.mjs packages/web/scripts/docs-site.mjs packages/web/scripts/build-inputs.mjs packages/web/scripts/source-archive.mjs packages/web/scripts/source-delivery.mjs packages/web/scripts/historical-source.mjs ./packages/web/scripts/
 ARG WEB_RELEASE_PATH=.release/web/__required_explicit_id__
 COPY ${WEB_RELEASE_PATH}/ ./.release/web/input/
 # The build context directory is an explicit alias; manifest identity is retained.
@@ -20,6 +20,7 @@ COPY docker/web/nginx.conf.template /etc/nginx/web-entry.conf.template
 COPY docker/web/admin-proxy.conf /etc/nginx/web-admin-proxy.conf
 COPY docker/web/entrypoint.sh /web-entrypoint.sh
 RUN chmod +x /web-entrypoint.sh
+ENV CINATOKEN_WEB_DOCS_ENABLED=false
 ENV CINATOKEN_WEB_PUBLIC_ENABLED=false
 ENV CINATOKEN_WEB_SSR_UPSTREAM=http://gateway-web-ssr:8791
 ENV CINATOKEN_WEB_ACCOUNT_ENABLED=false

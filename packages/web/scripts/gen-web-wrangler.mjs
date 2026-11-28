@@ -77,6 +77,9 @@ export function createWebWranglerConfig(
 		],
 		vars: {
 			CINATOKEN_WEB_PUBLIC_ENABLED: String(publicEnabled),
+			CINATOKEN_WEB_DOCS_ENABLED: String(
+				booleanEnv(env, 'CINATOKEN_WEB_DOCS_ENABLED')
+			),
 			CINATOKEN_WEB_PUBLIC_ORIGIN: publicOrigin,
 			CINATOKEN_WEB_PROXY_ORIGINS: parseWebProxyOrigins(
 				env.CINATOKEN_WEB_PROXY_ORIGINS

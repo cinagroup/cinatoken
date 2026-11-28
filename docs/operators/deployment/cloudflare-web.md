@@ -60,3 +60,18 @@ node scripts/deploy/switch-web-route.mjs --to admin --expected-version <original
 2026-10-06 补验：生产继续保持源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、Web version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、100% 流量及 29 个页面开关 true。经独立审查的 functional v4 唯一运行实际退出 0，45/45 页面完成，37 个私有页面各有精确匿名 GET `/api/user/me` 401，870 个 JS/CSS 请求全部成功，深色→中文→390×844 移动重载三项原交互通过；实际 7 张截图已逐张查看，四个匿名 context、browser 和执行进程均关闭。此方法使用 `DOMContentLoaded` 后的功能就绪检查：保留原页面、元数据、权限与错误断言，等待必需 JS/CSS、精确 401，并以公开页主题控件真实改变样式与偏好后恢复证明交互已就绪。旧 v2/v3 的 networkidle 超时失败原样保留，超时根因未证明；功能补验不追认为原 networkidle 矩阵通过，也不代表 P8-09 正式性能、真实身份或完整 G8 验收。真实登录业务、资金/链、实际回滚与旧 UI 退役继续待验。详见 [2026-10-06 补验记录](releases/2026-10-06-web-cutover-followup.json)。
 
 测试源码提交 `5471899c8fd43daf9df1f15261d75171a6dbb8b8` 尚未部署，生产 Web 仍为上述 c13 提交与 2a0 版本。该测试提交的 Linux Web frontend CI 37 个步骤及 1596 项测试全部通过；Docker 完成 87 项 HTTP 检查及 64 次真实匿名目录读取，4 个容器与 1 个独立网络已清理闭合。Compose 仅覆盖 Admin、Proxy、PostgreSQL，没有 TLS 验证，不能据此宣称完整 Web/TLS 部署通过。原生 PostgreSQL CI 的 step 14、step 17 成功，step 20 因 fixture 的 `81 != 73` 失败，v364 原生验证缺口仍待补齐；这些结果不构成原生三库或完整 G8 通过，具体来源与限制同见上述补验记录。
+
+
+## 同域文档模块
+
+`packages/docs-site` 使用 Astro 与 Starlight，原创用户指南位于 `/{en,zh}/docs/`。
+`npm run build:web` 会先构建文档，检查双语页面、内部链接和规范地址，再把与 Web 同源码摘要的输出复制进 Web 资源目录。
+文档页面、内容摘要资源及其源码随同一冻结产物交付；不需要部署第二个 Worker，也不新增数据库绑定。
+
+设置 `CINATOKEN_WEB_DOCS_ENABLED=true` 开启文档，缺省为关闭。关闭后文档页面返回 `503`；
+`/docs-assets/static/` 下的既有版本资源仍可读取，以供已打开的页面使用。
+内容摘要资源适用现有 14 天保留策略，HTML 每次重验证并禁止边缘改写。
+Docker 的 Nginx 入口使用同名开关，冻结产物包含相同静态文件。
+
+发布必须沿用 Web 的产物校验与切流流程。回滚文档时不要修改账户、管理、认证或 API 路由，
+也不要用静态参考模板替换运行中的公开模型目录。首批只提供中英文，日文和韩文产品入口明确回退到英文文档。

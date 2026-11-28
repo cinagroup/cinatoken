@@ -1,12 +1,12 @@
 // These ASCII paths and extensions deliberately exclude HTML and mutable data.
 export const HASHED_ASSET_PATTERN =
-	'static/[A-Za-z0-9_./-]+[.][a-f0-9]{8,64}[.](?:js|css|woff2?|ttf|otf|png|jpe?g|svg|webp|avif|ico)(?:[.]LICENSE[.]txt)?'
+	'static/[A-Za-z0-9_./-]+[.][a-f0-9]{8,64}[.](?:js|css|woff2?|ttf|otf|png|jpe?g|svg|webp|avif|ico)(?:[.]LICENSE[.]txt)?|docs-assets/static/[A-Za-z0-9_.-]+[.][A-Za-z0-9_-]{5,64}[.](?:js|css|svg|png|woff2?)'
 export const SOURCE_ARCHIVE_PATTERN = 'sources/web[.][a-f0-9]{64}[.]tar[.]gz'
 export const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable'
 export const REVALIDATE_CACHE = 'no-cache'
 export const NO_STORE_CACHE = 'no-store'
 
-const hashedAsset = new RegExp(`^${HASHED_ASSET_PATTERN}$`)
+const hashedAsset = new RegExp(`^(?:${HASHED_ASSET_PATTERN})$`)
 const sourceArchiveAsset = new RegExp(`^${SOURCE_ARCHIVE_PATTERN}$`)
 
 export function isHashedAsset(path) {

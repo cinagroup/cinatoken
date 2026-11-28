@@ -61,3 +61,6 @@ packages/web/dist-server/
 
 # Recover release covers
 docs/assets/release-covers/*
+
+# Generated Astro content types and caches
+packages/docs-site/.astro/

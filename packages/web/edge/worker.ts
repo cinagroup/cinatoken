@@ -1,5 +1,6 @@
 import { assetCacheControl } from '../scripts/asset-policy.mjs'
 import { webProxyConnectSources } from '../scripts/proxy-origin-policy.mjs'
+import { DOCS_PAGE_PATTERN, DOCS_CSP } from './docs-policy'
 import {
 	ADMIN_ACCESS_KEYS_PAGE_PATHS,
 	ADMIN_KEYS_PAGE_PATHS,
@@ -38,6 +39,7 @@ export type FetchBinding = {
 
 export type WebEntryEnv = {
 	CINATOKEN_WEB_PUBLIC_ENABLED?: string
+	CINATOKEN_WEB_DOCS_ENABLED?: string
 	CINATOKEN_WEB_PUBLIC_ORIGIN?: string
 	CINATOKEN_WEB_PROXY_ORIGINS?: string
 	ASSETS: FetchBinding
@@ -211,6 +213,46 @@ export async function routeWebRequest(
 		return new Response(request.method === 'HEAD' ? null : response.body, {
 			status: response.status,
 			statusText: response.statusText,
+			headers,
+		})
+	}
+
+	if (isRead && (url.pathname === '/docs' || url.pathname === '/docs/')) {
+		return new Response(null, {
+			status: 307,
+			headers: { location: '/en/docs/', 'cache-control': 'no-store' },
+		})
+	}
+	if (
+		isRead &&
+		(url.pathname.startsWith('/docs-assets/') ||
+			DOCS_PAGE_PATTERN.test(url.pathname))
+	) {
+		const page = DOCS_PAGE_PATTERN.test(url.pathname)
+		if (page && env.CINATOKEN_WEB_DOCS_ENABLED !== 'true')
+			return new Response('Documentation is unavailable', {
+				status: 503,
+				headers: { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' },
+			})
+		const path = page
+			? `${url.pathname.replace(/\/$/, '')}/index.html`
+			: url.pathname
+		const response = await env.ASSETS.fetch(assetRequest(request, path))
+		const headers = new Headers(response.headers)
+		headers.set(
+			'cache-control',
+			page
+				? 'no-cache, no-transform'
+				: assetCacheControl(path.slice(1), response.status)
+		)
+		headers.set('x-content-type-options', 'nosniff')
+		if (page) {
+			headers.set('content-security-policy', DOCS_CSP)
+			headers.set('referrer-policy', 'strict-origin-when-cross-origin')
+			headers.set('x-frame-options', 'DENY')
+		}
+		return new Response(request.method === 'HEAD' ? null : response.body, {
+			status: response.status,
 			headers,
 		})
 	}

@@ -18,7 +18,7 @@ test('trusted Proxy origins become a validated canonical Worker variable without
 		Object.entries(config.vars).filter(
 			([name, value]) => name.endsWith('_ENABLED') && value === 'false'
 		).length,
-		30
+		31
 	)
 	assert.deepEqual(config.routes, [])
 	assert.deepEqual(config.services, [
@@ -64,7 +64,7 @@ test('Web config defaults to disabled rollout and has no public route assignment
 	const flags = Object.entries(config.vars).filter(([name]) =>
 		name.endsWith('_ENABLED')
 	)
-	assert.equal(flags.length, 30)
+	assert.equal(flags.length, 31)
 	assert.ok(flags.every(([, value]) => value === 'false'))
 	assert.equal(config.vars.CINATOKEN_WEB_PROXY_ORIGINS, '')
 	assert.equal(config.vars.CINATOKEN_WEB_ACCOUNT_ENABLED, 'false')

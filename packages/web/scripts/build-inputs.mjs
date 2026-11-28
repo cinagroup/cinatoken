@@ -59,6 +59,10 @@ export const WEB_BUILD_INPUT_POLICY = freeze({
 		file('.github/workflows/web-frontend.yml', 'ci-config'),
 	],
 	optionalRoots: [
+		directory('packages/docs-site/src', 'docs-source'),
+		directory('packages/docs-site/scripts', 'docs-build-script'),
+		file('packages/docs-site/astro.config.mjs', 'docs-build-config'),
+		file('packages/docs-site/tsconfig.json', 'docs-build-config'),
 		directory('packages/web/public', 'web-source'),
 		directory('packages/core/scripts', 'core-build-script'),
 		file('packages/web/.browserslistrc', 'web-build-config'),

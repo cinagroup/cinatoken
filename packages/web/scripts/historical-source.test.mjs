@@ -65,6 +65,7 @@ function copiedCLI(root) {
 		'package-release.mjs',
 		'asset-policy.mjs',
 		'build-contract.mjs',
+		'docs-site.mjs',
 		'build-inputs.mjs',
 		'source-archive.mjs',
 		'source-delivery.mjs',

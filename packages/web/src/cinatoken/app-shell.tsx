@@ -5,6 +5,7 @@ import { useTheme } from '@/context/theme-provider'
 import { Button } from '@/components/ui/button'
 import { BrandIdentity } from './brand-logo'
 import { FrontendLinks } from './public/FrontendLinks'
+import { publicDocsHref } from './public/home/home-links'
 import { useCinaTokenSession } from './session-context'
 import { SessionGate } from './session-gate'
 
@@ -88,6 +89,12 @@ export function ApplicationShell() {
 							className='text-muted-foreground hover:text-foreground'
 						>
 							{t('cinatoken.shell.models')}
+						</a>
+						<a
+							href={publicDocsHref(i18n.resolvedLanguage)}
+							className='text-muted-foreground hover:text-foreground'
+						>
+							{t('cinatoken.home.nav.docs')}
 						</a>
 						<Link
 							to='/account'

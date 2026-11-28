@@ -9,6 +9,7 @@ import {
 } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { inventoryWebBuildInputs } from './build-inputs.mjs'
+import { copyDocsSite } from './docs-site.mjs'
 
 export const BUILD_CONTRACT_FILE = 'build-contract.json'
 
@@ -159,6 +160,13 @@ export function pluginWebBuildContract(packageRoot) {
 					contract.sourceSha256
 				)
 					throw new Error('Web sources changed during build')
+				// Standalone browser probes do not produce a releasable three-target build.
+				if (environments.web && environments.node && environments.worker)
+					copyDocsSite(
+						packageRoot,
+						resolve(environments.web.distPath),
+						contract.sourceSha256
+					)
 				// Validate Worker output before writing any successful target marker.
 				if (environments.worker)
 					assertWorkerNoNodeImports(resolve(environments.worker.distPath))

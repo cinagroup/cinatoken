@@ -1,6 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
-import { PUBLIC_DOCS_URL } from './home-links'
+import { PUBLIC_ENGINEERING_DOCS_URL } from './home-links'
 
 const capabilities = [
 	'protocols',
@@ -110,7 +110,7 @@ export function HomeProductSections() {
 									{t(`cinatoken.home.deployment.${key}`)}
 								</p>
 								<a
-									href={PUBLIC_DOCS_URL}
+									href={PUBLIC_ENGINEERING_DOCS_URL}
 									target='_blank'
 									rel='noopener noreferrer'
 									className='hover:text-muted-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
