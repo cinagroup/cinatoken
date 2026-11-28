@@ -7,7 +7,7 @@
 	"main": "worker.ts",
 	"name": "cinatoken-admin",
 	"compatibility_date": "2026-08-24",
-	"compatibility_flags": ["nodejs_compat", "enable_request_signal"],
+	"compatibility_flags": ["nodejs_compat", "enable_request_signal", "global_fetch_strictly_public"],
 	// 管理面认证失败限速（每 IP 20 次/分钟）
 	"ratelimits": [
 		{
@@ -68,6 +68,8 @@
 		"CINAAUTH_ISSUER": "https://auth.cinaseek.si",
 		"CINAAUTH_ACCOUNT_ORIGIN": "https://accounts.cinaseek.si",
 		"CINATOKEN_APP_ORIGIN": "https://cinatoken.com",
+		// 先发布并验证 Web 参考接口，再切换生产目录来源；Node 实例仍可用环境变量选择来源。
+		"CATALOG_BASE_URL": "https://cinatoken.com/reference",
 		"CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION": "false",
 		"CINATOKEN_OIDC_CLIENT_ID": "cinatoken-admin",
 		"CINATOKEN_REQUIRED_ROLES": "super_admin,security_admin",

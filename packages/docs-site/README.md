@@ -38,7 +38,7 @@ npm run check:sync -w @cinatoken/docs-site
 
 响应支持 GET/HEAD、ETag/304、公开 CORS 和 OPTIONS；缓存 300 秒，未知资源返回 JSON 404。写请求仍沿用后端路径。该参考接口独立于 `/api/public/catalog/models` 的实时可调用目录，导入预览不会直接修改数据库。
 
-新 feed 完成生产核对后，将 Admin 的 `CATALOG_BASE_URL` 配为 `https://cinatoken.com/reference`；只改变目录来源，不替换实时模型或端点配置。回退可恢复原变量并发布上一 Admin 版本。
+Cloudflare 的 Admin 模板保留 CinaToken 参考地址，避免后续部署丢失来源设置。新 feed 完成生产核对后，将现有 Admin 的 `CATALOG_BASE_URL` 配为 `https://cinatoken.com/reference`；只改变目录来源，不替换实时模型或端点配置。Cloudflare 同区域的公开 Worker 路由需要 `global_fetch_strictly_public`，模板已包含该标志，见 [官方兼容性说明](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public)。部署时与目录变量一起验证；回退可发布上一 Admin 版本，恢复原变量与兼容性标志。
 
 ## 发布与回退
 
