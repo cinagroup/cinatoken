@@ -50,11 +50,19 @@ type DeepSeekEndpointPreset = {
  * claiming that a temporary discount applies at every request time.
  */
 const DEEPSEEK_ENDPOINT_PRESETS: readonly DeepSeekEndpointPreset[] = [
+	// Both legacy Flash IDs remain accepted aliases of the current Flash model.
+	// Source: https://api-docs.deepseek.com/quick_start/pricing/ (2026-11-27).
 	{
 		modelId: "deepseek-v4-flash",
-		promptPrice: "0.00000044",
-		completionPrice: "0.00000132",
-		cacheReadPrice: "0.000000014",
+		promptPrice: "0.0000003",
+		completionPrice: "0.0000012",
+		cacheReadPrice: "0.000000006",
+	},
+	{
+		modelId: "deepseek-v4-flash-vision-exp",
+		promptPrice: "0.0000003",
+		completionPrice: "0.0000012",
+		cacheReadPrice: "0.000000006",
 	},
 	{
 		modelId: "deepseek-v4-pro",
@@ -72,10 +80,7 @@ export type AdminDeepSeekEndpointBootstrapModelResult = {
 	model_id: string;
 	endpoint_id: string | null;
 	status:
-		| "published"
-		| "skipped_missing_model"
-		| "skipped_no_routes"
-		| "failed";
+		"published" | "skipped_missing_model" | "skipped_no_routes" | "failed";
 	linked_routes: number;
 	message: string | null;
 };
@@ -94,7 +99,7 @@ export type AdminDeepSeekEndpointBootstrapOutput = {
 
 function endpointMutation(
 	preset: DeepSeekEndpointPreset,
-	expiresAt: string
+	expiresAt: string,
 ): AdminModelEndpointMutationInput {
 	return {
 		model_id: preset.modelId,
@@ -132,13 +137,13 @@ function endpointMutation(
 
 async function findEndpointByIdentity(
 	repos: GatewayRepositories,
-	modelId: string
+	modelId: string,
 ): Promise<ModelEndpointRow | null> {
 	if (repos.modelEndpoints.getByIdentity) {
 		return repos.modelEndpoints.getByIdentity(
 			modelId,
 			DEEPSEEK_PROVIDER_ID,
-			DEEPSEEK_PROVIDER_SLUG
+			DEEPSEEK_PROVIDER_SLUG,
 		);
 	}
 	const rows = await repos.modelEndpoints.list({
@@ -152,7 +157,7 @@ async function findEndpointByIdentity(
 			(row) =>
 				row.model_id === modelId &&
 				row.provider_id === DEEPSEEK_PROVIDER_ID &&
-				row.tag === DEEPSEEK_PROVIDER_SLUG
+				row.tag === DEEPSEEK_PROVIDER_SLUG,
 		) ?? null
 	);
 }
@@ -183,7 +188,7 @@ export async function bootstrapDeepSeekEndpointsService(
 	repos: GatewayRepositories,
 	input: AdminDeepSeekEndpointBootstrapInput,
 	actorId: string,
-	now = new Date()
+	now = new Date(),
 ): Promise<AdminDeepSeekEndpointBootstrapOutput> {
 	if (input.publish !== true) {
 		throw badRequest("publish must be true for explicit endpoint verification");
@@ -206,7 +211,7 @@ export async function bootstrapDeepSeekEndpointsService(
 	}
 
 	const expiresAt = new Date(
-		now.getTime() + DEEPSEEK_EVIDENCE_TTL_MS
+		now.getTime() + DEEPSEEK_EVIDENCE_TTL_MS,
 	).toISOString();
 	const results: AdminDeepSeekEndpointBootstrapModelResult[] = [];
 
@@ -255,14 +260,14 @@ export async function bootstrapDeepSeekEndpointsService(
 					existing.id,
 					mutation,
 					actorId,
-					now
+					now,
 				);
 			} else {
 				const created = await createModelEndpointService(
 					repos,
 					mutation,
 					actorId,
-					now
+					now,
 				);
 				endpointId = created.id;
 			}
@@ -271,7 +276,7 @@ export async function bootstrapDeepSeekEndpointsService(
 				endpointId,
 			]);
 			const linkedRouteIds = new Set(
-				existingLinks.map((link) => link.route_target_id)
+				existingLinks.map((link) => link.route_target_id),
 			);
 			for (const route of eligibleRoutes) {
 				if (linkedRouteIds.has(route.id)) continue;
@@ -285,7 +290,7 @@ export async function bootstrapDeepSeekEndpointsService(
 				endpointId,
 				{ status: "verified" },
 				actorId,
-				now
+				now,
 			);
 			results.push({
 				model_id: preset.modelId,
@@ -313,7 +318,7 @@ export async function bootstrapDeepSeekEndpointsService(
 		published: results.filter((result) => result.status === "published").length,
 		linked_routes: results.reduce(
 			(total, result) => total + result.linked_routes,
-			0
+			0,
 		),
 		skipped: results.filter((result) => result.status.startsWith("skipped_"))
 			.length,

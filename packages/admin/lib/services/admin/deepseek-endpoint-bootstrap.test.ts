@@ -13,7 +13,7 @@ import type {
 } from "@octafuse/core";
 import { bootstrapDeepSeekEndpointsService } from "./deepseek-endpoint-bootstrap";
 
-const NOW = new Date("2026-09-01T06:00:00.000Z");
+const NOW = new Date("2026-11-27T06:00:00.000Z");
 
 const PROVIDER: ProviderRow = {
 	id: "deepseek-official",
@@ -38,7 +38,7 @@ function route(
 	modelId: string,
 	protocol: "openai" | "anthropic",
 	operation: "chat" | "responses" | "messages",
-	overrides: Partial<ModelRouteJoinRow> = {}
+	overrides: Partial<ModelRouteJoinRow> = {},
 ): ModelRouteJoinRow {
 	return {
 		id: `${modelId}:${protocol}:${operation}`,
@@ -69,7 +69,7 @@ function route(
 }
 
 function rowFromInsert(
-	input: InsertUnpublishedModelEndpointParams
+	input: InsertUnpublishedModelEndpointParams,
 ): ModelEndpointRow {
 	return {
 		id: input.id,
@@ -105,10 +105,14 @@ function repositoryState(
 		models?: string[];
 		routes?: ModelRouteJoinRow[];
 		provider?: ProviderRow | null;
-	} = {}
+	} = {},
 ) {
 	const models = new Set(
-		options.models ?? ["deepseek-v4-flash", "deepseek-v4-pro"]
+		options.models ?? [
+			"deepseek-v4-flash",
+			"deepseek-v4-flash-vision-exp",
+			"deepseek-v4-pro",
+		],
 	);
 	const routes =
 		options.routes ??
@@ -137,7 +141,7 @@ function repositoryState(
 				routes.filter(
 					(item) =>
 						(!filters.modelId || item.model_id === filters.modelId) &&
-						(!filters.providerId || item.provider_id === filters.providerId)
+						(!filters.providerId || item.provider_id === filters.providerId),
 				),
 			getModelRouteRowById: async (id: string) =>
 				routes.find((item) => item.id === id) ?? null,
@@ -153,18 +157,18 @@ function repositoryState(
 					.filter(
 						(item) =>
 							(!filters?.modelId || item.model_id === filters.modelId) &&
-							(!filters?.providerId || item.provider_id === filters.providerId)
+							(!filters?.providerId || item.provider_id === filters.providerId),
 					)
 					.slice(
 						filters?.offset ?? 0,
-						(filters?.offset ?? 0) + (filters?.limit ?? 100)
+						(filters?.offset ?? 0) + (filters?.limit ?? 100),
 					),
 			getByIdentity: async (modelId: string, providerId: string, tag: string) =>
 				endpoints.find(
 					(item) =>
 						item.model_id === modelId &&
 						item.provider_id === providerId &&
-						item.tag === tag
+						item.tag === tag,
 				) ?? null,
 			getById: async (id: string) =>
 				endpoints.find((item) => item.id === id) ?? null,
@@ -173,7 +177,7 @@ function repositoryState(
 			},
 			updateUnpublished: async (
 				id: string,
-				params: UpdateUnpublishedModelEndpointParams
+				params: UpdateUnpublishedModelEndpointParams,
 			) => {
 				const index = endpoints.findIndex((item) => item.id === id);
 				if (index < 0) return 0;
@@ -200,7 +204,7 @@ function repositoryState(
 			},
 			publishVerified: async (params: PublishVerifiedModelEndpointParams) => {
 				const index = endpoints.findIndex(
-					(item) => item.id === params.endpointId
+					(item) => item.id === params.endpointId,
 				);
 				if (index < 0) return false;
 				endpoints[index] = {
@@ -215,7 +219,7 @@ function repositoryState(
 					const link = links.find(
 						(item) =>
 							item.endpoint_id === params.endpointId &&
-							item.route_target_id === subject.routeTargetId
+							item.route_target_id === subject.routeTargetId,
 					);
 					if (link) link.subject_fingerprint = subject.subjectFingerprint;
 				}
@@ -228,44 +232,56 @@ function repositoryState(
 }
 
 describe("official DeepSeek endpoint bootstrap", () => {
-	it("creates drafts, links every eligible route, and explicitly publishes both current text models", async () => {
+	it("publishes both accepted Flash aliases and Pro with current peak prices through verified route links", async () => {
 		const state = repositoryState();
 		const result = await bootstrapDeepSeekEndpointsService(
 			state.repositories,
 			{ publish: true },
 			"console:admin",
-			NOW
+			NOW,
 		);
-		assert.equal(result.published, 2);
-		assert.equal(result.linked_routes, 6);
+		assert.equal(result.published, 3);
+		assert.equal(result.linked_routes, 9);
 		assert.equal(result.failed, 0);
 		assert.equal(result.pricing_basis, "peak");
-		assert.equal(state.endpoints.length, 2);
-		assert.equal(state.links.length, 6);
+		assert.equal(state.endpoints.length, 3);
+		assert.equal(state.links.length, 9);
 		assert.ok(state.endpoints.every((item) => item.status === "verified"));
 		assert.ok(
 			state.links.every((item) =>
-				/^[0-9a-f]{64}$/u.test(item.subject_fingerprint ?? "")
-			)
+				/^[0-9a-f]{64}$/u.test(item.subject_fingerprint ?? ""),
+			),
 		);
+		for (const modelId of [
+			"deepseek-v4-flash",
+			"deepseek-v4-flash-vision-exp",
+		]) {
+			const pricing = JSON.parse(
+				state.endpoints.find((item) => item.model_id === modelId)?.pricing ??
+					"{}",
+			);
+			assert.equal(pricing.prompt, "0.0000003");
+			assert.equal(pricing.completion, "0.0000012");
+			assert.equal(pricing.input_cache_read, "0.000000006");
+		}
 		assert.equal(
 			JSON.parse(
-				state.endpoints.find((item) => item.model_id === "deepseek-v4-flash")
-					?.pricing ?? "{}"
+				state.endpoints.find((item) => item.model_id === "deepseek-v4-pro")
+					?.pricing ?? "{}",
 			).prompt,
-			"0.00000044"
+			"0.00000132",
 		);
 
 		const repeated = await bootstrapDeepSeekEndpointsService(
 			state.repositories,
 			{ publish: true },
 			"console:admin",
-			NOW
+			NOW,
 		);
-		assert.equal(repeated.published, 2);
+		assert.equal(repeated.published, 3);
 		assert.equal(repeated.linked_routes, 0);
-		assert.equal(state.endpoints.length, 2);
-		assert.equal(state.links.length, 6);
+		assert.equal(state.endpoints.length, 3);
+		assert.equal(state.links.length, 9);
 	});
 
 	it("skips missing models and models without eligible active routes without creating drafts", async () => {
@@ -281,13 +297,13 @@ describe("official DeepSeek endpoint bootstrap", () => {
 			state.repositories,
 			{ publish: true },
 			"console:admin",
-			NOW
+			NOW,
 		);
 		assert.equal(result.published, 0);
-		assert.equal(result.skipped, 2);
+		assert.equal(result.skipped, 3);
 		assert.deepEqual(
 			result.models.map((item) => item.status),
-			["skipped_no_routes", "skipped_missing_model"]
+			["skipped_no_routes", "skipped_missing_model", "skipped_missing_model"],
 		);
 		assert.equal(state.endpoints.length, 0);
 	});
@@ -298,9 +314,9 @@ describe("official DeepSeek endpoint bootstrap", () => {
 				repositoryState().repositories,
 				{},
 				"console:admin",
-				NOW
+				NOW,
 			),
-			/publish must be true/
+			/publish must be true/,
 		);
 		await assert.rejects(
 			bootstrapDeepSeekEndpointsService(
@@ -309,9 +325,9 @@ describe("official DeepSeek endpoint bootstrap", () => {
 				}).repositories,
 				{ publish: true },
 				"console:admin",
-				NOW
+				NOW,
 			),
-			/must be active/
+			/must be active/,
 		);
 		await assert.rejects(
 			bootstrapDeepSeekEndpointsService(
@@ -320,9 +336,9 @@ describe("official DeepSeek endpoint bootstrap", () => {
 				}).repositories,
 				{ publish: true },
 				"console:admin",
-				NOW
+				NOW,
 			),
-			/credential is unavailable/
+			/credential is unavailable/,
 		);
 	});
 
@@ -339,7 +355,7 @@ describe("official DeepSeek endpoint bootstrap", () => {
 			state.repositories,
 			{ publish: true },
 			"console:admin",
-			NOW
+			NOW,
 		);
 		assert.equal(result.published, 0);
 		assert.equal(result.failed, 1);
