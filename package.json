@@ -14,7 +14,8 @@
 		"packages/proxy",
 		"packages/admin",
 		"packages/web",
-		"packages/chain-worker"
+		"packages/chain-worker",
+		"packages/docs-site"
 	],
 	"scripts": {
 		"postinstall": "npm run gen:wrangler",
@@ -74,7 +75,10 @@
 		"test:db-scripts": "tsx --test scripts/db/lib/*.test.ts",
 		"typecheck": "npm run typecheck -w @octafuse/core && npm run typecheck -w @octafuse/tool-engines && npm run typecheck -w @octafuse/proxy && npm run typecheck:admin",
 		"test:critical-writes": "tsx --test scripts/smoke/test-critical-write-paths.ts scripts/smoke/*.test.ts",
-		"pretest:deploy": "npm run build:node-index -w @octafuse/core"
+		"pretest:deploy": "npm run build:node-index -w @octafuse/core",
+		"dev:docs": "npm run dev -w @cinatoken/docs-site",
+		"build:docs": "npm run build -w @cinatoken/docs-site",
+		"check:docs-site": "npm run check -w @cinatoken/docs-site"
 	},
 	"devDependencies": {
 		"@changesets/config": "3.1.4",

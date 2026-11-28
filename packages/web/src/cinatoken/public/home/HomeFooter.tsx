@@ -2,10 +2,12 @@
 import { useTranslation } from 'react-i18next'
 import { BrandIdentity } from '../../brand-logo'
 import { FrontendLinks } from '../FrontendLinks'
-import { PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL } from './home-links'
+import { usePublicLocation } from '../ssr/public-location'
+import { publicDocsHref, PUBLIC_GITHUB_URL } from './home-links'
 
 export function HomeFooter() {
 	const { t } = useTranslation()
+	const { locale } = usePublicLocation()
 	return (
 		<footer className='text-muted-foreground flex flex-wrap items-start justify-between gap-6 border-t pt-6 text-xs leading-6'>
 			<div className='flex flex-wrap items-baseline gap-x-4 gap-y-1'>
@@ -26,9 +28,7 @@ export function HomeFooter() {
 						GitHub
 					</a>
 					<a
-						href={PUBLIC_DOCS_URL}
-						target='_blank'
-						rel='noopener noreferrer'
+						href={publicDocsHref(locale)}
 						className='hover:text-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
 					>
 						{t('cinatoken.home.nav.docs')}

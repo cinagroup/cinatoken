@@ -7,6 +7,7 @@ import { BrandIdentity } from '../../brand-logo'
 import { FrontendLinks } from '../FrontendLinks'
 import { PublicAuthAccessLink } from '../auth/PublicAuthAccessLink'
 import { PublicAuthStatus } from '../auth/PublicAuthStatus'
+import { publicDocsHref } from '../home/home-links'
 import { PUBLIC_LOCALES, usePublicLocation } from './public-location'
 
 function PublicThemeControl() {
@@ -75,6 +76,12 @@ export function PublicShell() {
 							className='text-muted-foreground hover:text-foreground'
 						>
 							{t('cinatoken.shell.models')}
+						</a>
+						<a
+							href={publicDocsHref(location.locale)}
+							className='text-muted-foreground hover:text-foreground'
+						>
+							{t('cinatoken.home.nav.docs')}
 						</a>
 						<PublicAuthAccessLink
 							options={accountAccess}

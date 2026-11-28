@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "rsbuild dev --no-env --environment web",
-		"build": "rsbuild build --no-env",
-		"build:check": "npm run typecheck && rsbuild build --no-env",
+		"build": "npm run build -w @cinatoken/docs-site && rsbuild build --no-env",
+		"build:check": "npm run typecheck && npm run build",
 		"typecheck": "tsc -b && tsc -p edge/tsconfig.json",
 		"test:unit": "node scripts/test-unit.mjs",
 		"gen:wrangler": "node scripts/gen-web-wrangler.mjs",

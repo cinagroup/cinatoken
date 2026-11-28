@@ -162,6 +162,10 @@ test('optional public/configuration inputs are bound when present', (t) => {
 	const { root, packageRoot } = fixture(t)
 	const before = inventoryWebBuildInputs(packageRoot)
 	const paths = [
+		'packages/docs-site/src/content/docs/en/docs/index.md',
+		'packages/docs-site/scripts/check-site.mjs',
+		'packages/docs-site/astro.config.mjs',
+		'packages/docs-site/tsconfig.json',
 		'packages/web/public/logo.txt',
 		'packages/web/.babelrc',
 		'packages/web/.prettierrc',

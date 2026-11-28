@@ -5,7 +5,7 @@ import { PublicAuthAccessLink } from './public/auth/PublicAuthAccessLink'
 import { HomeFooter } from './public/home/HomeFooter'
 import { HomeGatewayDemo } from './public/home/HomeGatewayDemo'
 import { HomeProductSections } from './public/home/HomeProductSections'
-import { PUBLIC_DOCS_URL } from './public/home/home-links'
+import { publicDocsHref } from './public/home/home-links'
 import { usePublicLocation } from './public/ssr/public-location'
 
 const publicDestinations = [
@@ -26,7 +26,7 @@ const consoleAccess: LoginOptions = {
 
 export function HomePage() {
 	const { t } = useTranslation()
-	const { href } = usePublicLocation()
+	const { href, locale } = usePublicLocation()
 	return (
 		<div className='mx-auto max-w-6xl pt-6 pb-2 sm:pt-10'>
 			<section className='grid items-start gap-10 pb-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14 lg:pb-16'>
@@ -61,9 +61,7 @@ export function HomePage() {
 							{t('cinatoken.home.hero.console')}
 						</PublicAuthAccessLink>
 						<a
-							href={PUBLIC_DOCS_URL}
-							target='_blank'
-							rel='noopener noreferrer'
+							href={publicDocsHref(locale)}
 							className='hover:text-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
 						>
 							{t('cinatoken.home.hero.docs')}

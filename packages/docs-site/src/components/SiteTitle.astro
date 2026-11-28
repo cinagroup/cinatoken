@@ -1,0 +1,12 @@
+---
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+const locale = Astro.locals.starlightRoute.lang.startsWith('zh') ? 'zh' : 'en'
+---
+<a class="brand" href={`/${locale}/`} aria-label="CinaToken">
+  <img src="/web-assets/cinagroup-logo.31da4b7fb36b.png" alt="" width="32" height="32" />
+  <span>CinaToken</span>
+</a>
+<style>
+.brand { display: inline-flex; align-items: center; gap: .5rem; color: var(--sl-color-text); text-decoration: none; font-size: 1rem; font-weight: 650; letter-spacing: -.025em; white-space: nowrap; }
+.brand img { width: 2rem; height: 2rem; }
+</style>

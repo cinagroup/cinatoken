@@ -1,0 +1,14 @@
+---
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+const zh = Astro.locals.starlightRoute.lang.startsWith('zh')
+const locale = zh ? 'zh' : 'en'
+---
+<nav aria-label={zh ? '产品导航' : 'Product navigation'} class="product-links">
+  <a href={`/${locale}/models`}>{zh ? '模型' : 'Models'}</a>
+  <a href="/account">{zh ? '账户' : 'Account'}</a>
+</nav>
+<style>
+.product-links { display: flex; align-items: center; gap: 1rem; font-size: .875rem; }
+a { color: var(--sl-color-gray-2); text-decoration: none; white-space: nowrap; }
+a:hover { color: var(--sl-color-text); text-decoration: underline; text-underline-offset: .25em; }
+</style>

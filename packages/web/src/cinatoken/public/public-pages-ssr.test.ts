@@ -30,7 +30,7 @@ import {
 	FRONTEND_NOTICE_URL,
 	FRONTEND_SOURCE_DOWNLOAD_URL,
 } from './frontend-attribution'
-import { PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL } from './home/home-links'
+import { publicDocsHref, PUBLIC_GITHUB_URL } from './home/home-links'
 import { publicHomeMessages } from './home/home-messages'
 import { publicMessages } from './messages'
 import { createPublicI18n } from './ssr/public-i18n'
@@ -203,7 +203,7 @@ for (const locale of PUBLIC_LOCALES) {
 			assert.ok(html.includes(`id="${section}"`))
 			assert.ok(html.includes(`href="#${section}"`))
 		}
-		for (const link of [PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL])
+		for (const link of [publicDocsHref(locale), PUBLIC_GITHUB_URL])
 			assert.ok(html.includes(`href="${link}"`))
 		assert.equal((html.match(/role="tab"/g) ?? []).length, 4)
 		assert.ok(html.includes(publicHomeMessages[locale].demo.illustration))

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "packages/web/**"
+      - "packages/docs-site/**"
       - "packages/admin/**"
       - "packages/admin/lib/model-vendors.json"
       - "packages/core/**"
@@ -36,6 +37,7 @@ on:
     branches: [main, develop]
     paths:
       - "packages/web/**"
+      - "packages/docs-site/**"
       - "packages/admin/**"
       - "packages/admin/lib/model-vendors.json"
       - "packages/core/**"
@@ -87,6 +89,7 @@ jobs:
       - run: npm run test:web
       - run: npm run lint -w @cinatoken/web
       - run: bash -n docker/web/entrypoint.sh
+      - run: npm run check:docs-site
       - run: npm run build:web
       - name: Freeze and verify release artifact
         shell: bash

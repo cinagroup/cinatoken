@@ -1,0 +1,29 @@
+{/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */}
+<script is:inline>
+(() => {
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  let preference = 'system';
+  try {
+    const cookies = new Map(document.cookie.split(';').map(part => part.trim().split('=')));
+    const value = cookies.get('cinatoken-theme') || cookies.get('vite-ui-theme');
+    if (value === 'dark' || value === 'light') preference = value;
+  } catch {}
+  const apply = () => {
+    document.documentElement.dataset.theme = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference;
+    document.querySelectorAll('[data-docs-theme]').forEach(select => { select.value = preference; });
+  };
+  apply();
+  media.addEventListener('change', () => { if (preference === 'system') apply(); });
+  document.addEventListener('DOMContentLoaded', apply, { once: true });
+  document.addEventListener('change', event => {
+    if (!(event.target instanceof HTMLSelectElement) || !event.target.hasAttribute('data-docs-theme')) return;
+    const value = event.target.value;
+    if (!['light', 'dark', 'system'].includes(value)) return;
+    preference = value;
+    try {
+      for (const name of ['cinatoken-theme', 'vite-ui-theme']) document.cookie = `${name}=${value}; Path=/; SameSite=Lax; Max-Age=31536000`;
+    } catch {}
+    apply();
+  });
+})();
+</script>

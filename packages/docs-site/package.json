@@ -1,0 +1,19 @@
+{
+	"name": "@cinatoken/docs-site",
+	"version": "2.21.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "astro dev --host 127.0.0.1 --port 8792",
+		"build": "astro build && node scripts/check-site.mjs",
+		"check": "astro check"
+	},
+	"dependencies": {
+		"astro": "7.4.13",
+		"@astrojs/starlight": "0.43.2"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.8",
+		"typescript": "~6.0.3"
+	}
+}

@@ -19,6 +19,11 @@ const release = verifyRelease(process.cwd(), id);
 const hash = release.manifest.files.find(
 	(file) => file.path.endsWith(".js") && file.path.startsWith("static/"),
 )?.path;
+const docsHash = release.manifest.files.find(
+	(file) =>
+		file.path.startsWith("docs-assets/static/") && file.path.endsWith(".css"),
+)?.path;
+assert.ok(docsHash, "A documentation CSS asset is required");
 assert.ok(hash, "A JavaScript hash asset is required for the HTTP cache check");
 const container = docker([
 	"run",
@@ -28,6 +33,8 @@ const container = docker([
 	"127.0.0.1::8080",
 	"--env",
 	"CINATOKEN_WEB_ACCOUNT_ENABLED=true",
+	"--env",
+	"CINATOKEN_WEB_DOCS_ENABLED=true",
 	"--env",
 	"CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED=true",
 	"--env",
@@ -155,6 +162,15 @@ try {
 	for (const method of ["GET", "HEAD"]) {
 		for (const [path, status, cache] of [
 			...accountPagePaths.map((path) => [path, 200, "no-store"]),
+			...[
+				"/en/docs",
+				"/en/docs/",
+				"/zh/docs/quickstart",
+				"/zh/docs/quickstart/",
+			].map((path) => [path, 200, "no-cache, no-transform"]),
+			["/en/docs/missing/", 404, "no-cache, no-transform"],
+			[`/${docsHash}`, 200, IMMUTABLE_CACHE],
+			["/docs-assets/static/missing.12345678.css", 404, "no-store"],
 			[`/web-assets/${hash}?v=1`, 200, IMMUTABLE_CACHE],
 			["/web-assets/index.html", 200, "no-store"],
 			["/web-assets/manifest.json", 404, "no-store"],
@@ -170,6 +186,11 @@ try {
 				cache,
 				`${method} ${path}`,
 			);
+			if (path.includes("/docs") && !path.startsWith("/docs-assets/"))
+				assert.match(
+					response.headers.get("content-security-policy"),
+					/frame-ancestors 'none'/,
+				);
 			if (method === "HEAD") assert.equal(await response.text(), "");
 		}
 	}
