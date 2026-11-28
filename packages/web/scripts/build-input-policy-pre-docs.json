@@ -1,0 +1,324 @@
+{
+	"version": 2,
+	"requiredRoots": [
+		{
+			"path": "packages/web/src",
+			"kind": "directory",
+			"role": "web-source"
+		},
+		{
+			"path": "packages/web/edge",
+			"kind": "directory",
+			"role": "web-source"
+		},
+		{
+			"path": "packages/web/scripts",
+			"kind": "directory",
+			"role": "web-source"
+		},
+		{
+			"path": "packages/core/src",
+			"kind": "directory",
+			"role": "shared-core-source"
+		},
+		{
+			"path": "docker/web",
+			"kind": "directory",
+			"role": "docker-runtime"
+		},
+		{
+			"path": "scripts/web",
+			"kind": "directory",
+			"role": "provenance-tool"
+		},
+		{
+			"path": "package.json",
+			"kind": "file",
+			"role": "root-package-manifest"
+		},
+		{
+			"path": "package-lock.json",
+			"kind": "file",
+			"role": "root-lockfile"
+		},
+		{
+			"path": "LICENSE",
+			"kind": "file",
+			"role": "license-notice"
+		},
+		{
+			"path": "NOTICE.frontend",
+			"kind": "file",
+			"role": "license-notice"
+		},
+		{
+			"path": ".nvmrc",
+			"kind": "file",
+			"role": "root-build-config"
+		},
+		{
+			"path": "packages/web/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/core/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/admin/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/tool-engines/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/proxy/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/chain-worker/package.json",
+			"kind": "file",
+			"role": "workspace-package-manifest"
+		},
+		{
+			"path": "packages/web/index.html",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/rsbuild.config.ts",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/postcss.config.mjs",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/tsconfig.json",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/tsconfig.app.json",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/tsconfig.node.json",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/admin/lib/model-vendors.json",
+			"kind": "file",
+			"role": "admin-shared-data"
+		},
+		{
+			"path": "Dockerfile.web",
+			"kind": "file",
+			"role": "docker-build-config"
+		},
+		{
+			"path": "Dockerfile.web-ssr",
+			"kind": "file",
+			"role": "docker-build-config"
+		},
+		{
+			"path": ".dockerignore",
+			"kind": "file",
+			"role": "docker-build-config"
+		},
+		{
+			"path": "docker/web/public-server.mjs",
+			"kind": "file",
+			"role": "docker-runtime"
+		},
+		{
+			"path": "docker/web/nginx.conf.template",
+			"kind": "file",
+			"role": "docker-runtime"
+		},
+		{
+			"path": "docker/web/admin-proxy.conf",
+			"kind": "file",
+			"role": "docker-runtime"
+		},
+		{
+			"path": "docker/web/entrypoint.sh",
+			"kind": "file",
+			"role": "docker-runtime"
+		},
+		{
+			"path": ".github/workflows/web-frontend.yml",
+			"kind": "file",
+			"role": "ci-config"
+		}
+	],
+	"optionalRoots": [
+		{
+			"path": "packages/web/public",
+			"kind": "directory",
+			"role": "web-source"
+		},
+		{
+			"path": "packages/core/scripts",
+			"kind": "directory",
+			"role": "core-build-script"
+		},
+		{
+			"path": "packages/web/.browserslistrc",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/.babelrc",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/babel.config.js",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/babel.config.mjs",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/.swcrc",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/tsconfig.test.json",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/.prettierrc",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/eslint.config.js",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": "packages/web/.node-version",
+			"kind": "file",
+			"role": "web-build-config"
+		},
+		{
+			"path": ".editorconfig",
+			"kind": "file",
+			"role": "root-build-config"
+		},
+		{
+			"path": ".browserslistrc",
+			"kind": "file",
+			"role": "root-build-config"
+		}
+	],
+	"configurationSelectors": [
+		{
+			"directory": ".",
+			"patterns": ["^tsconfig(?:\\.[^/]+)?\\.json$"],
+			"role": "root-build-config"
+		},
+		{
+			"directory": "packages/core",
+			"patterns": ["^tsconfig(?:\\.[^/]+)?\\.json$"],
+			"role": "core-build-config"
+		},
+		{
+			"directory": "packages/web",
+			"patterns": ["^tsconfig(?:\\.[^/]+)?\\.json$"],
+			"role": "web-build-config"
+		}
+	],
+	"workspaceManifests": {
+		"directory": "packages",
+		"selection": "Every direct package directory containing package.json",
+		"role": "workspace-package-manifest",
+		"interpretation": "Includes all current npm workspaces and conservatively includes other direct package manifests. Nested or external workspace layouts require a policy revision."
+	},
+	"exclusions": {
+		"directories": [
+			"node_modules",
+			".git",
+			"dist",
+			"dist-server",
+			"dist-ssr",
+			"dist-edge",
+			"build",
+			"coverage",
+			"vendor",
+			".cache",
+			".tmp",
+			".rsbuild",
+			".wrangler",
+			".vite",
+			".turbo",
+			".next",
+			".output",
+			".aws",
+			".ssh"
+		],
+		"privateDataRootDirectories": [
+			"keys",
+			"secret",
+			"secrets",
+			"credentials",
+			"private-data"
+		],
+		"privateDirectoryNames": [
+			"keys",
+			"secret",
+			"secrets",
+			"credentials",
+			"private-data"
+		],
+		"filePatterns": [
+			"^\\.env(?:[.-]|rc(?:[.-]|$)|$)",
+			"^\\.dev\\.vars(?:[.-]|$)",
+			"^\\.(?:npmrc|netrc|pypirc|authinfo|gitconfig|git-credentials)$",
+			"\\.(?:pem|key|p8|p12|pfx|jks|keystore)(?:[.-]|$)",
+			"^id_(?:rsa|dsa|ecdsa|ed25519)(?:\\.|$)",
+			"\\.tsbuildinfo$",
+			"^wrangler(?:[.-].*)?\\.jsonc?$"
+		],
+		"sourceExtensionsInPrivateNamedDirectories": [
+			".ts",
+			".tsx",
+			".js",
+			".jsx",
+			".mjs",
+			".cjs",
+			".css",
+			".scss",
+			".html",
+			".sql"
+		]
+	},
+	"limits": {
+		"maxFiles": 10000,
+		"maxFileBytes": 67108864,
+		"maxTotalBytes": 536870912
+	},
+	"digest": {
+		"domain": "cinatoken:web-build-inputs:v2\u0000",
+		"policy": "SHA256 of UTF-8 JSON.stringify of this deeply frozen policy",
+		"input": "Domain + policySha256 + NUL, then UTF-8-byte-sorted repository-relative POSIX path + NUL + decimal raw byte length + NUL + raw bytes for every file. No encoding or newline normalization."
+	},
+	"observation": "Selected source inputs, not an upstream provenance or ownership claim. Excluded data is filtered before opening. Ordinary files and every ancestor must be free of symbolic links and junctions and remain inside the repository. File identity, size, mtime and ctime are checked before/after each read. Two matching observations establish an observed unchanged boundary, not an atomic repository snapshot or protection against concurrently hostile ancestor renames. Dependencies and environment values are not read."
+}

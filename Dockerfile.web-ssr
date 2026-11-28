@@ -2,7 +2,7 @@
 ARG NODE_IMAGE=node:22-alpine3.22@sha256:b77017c37f430e4466ff497058948a2f16e8b59779600d53711eeb7b999b0f4e
 FROM ${NODE_IMAGE} AS runner
 WORKDIR /app
-COPY packages/web/scripts/package-release.mjs packages/web/scripts/asset-policy.mjs packages/web/scripts/build-contract.mjs packages/web/scripts/docs-site.mjs packages/web/scripts/build-inputs.mjs packages/web/scripts/source-archive.mjs packages/web/scripts/source-delivery.mjs packages/web/scripts/historical-source.mjs packages/web/scripts/public-origin-policy.mjs ./packages/web/scripts/
+COPY packages/web/scripts/package-release.mjs packages/web/scripts/asset-policy.mjs packages/web/scripts/build-contract.mjs packages/web/scripts/docs-site.mjs packages/web/scripts/build-inputs.mjs packages/web/scripts/source-archive.mjs packages/web/scripts/build-input-policy-pre-docs.json packages/web/scripts/source-delivery.mjs packages/web/scripts/historical-source.mjs packages/web/scripts/public-origin-policy.mjs ./packages/web/scripts/
 COPY docker/web/public-server.mjs ./docker/web/
 ARG WEB_RELEASE_PATH=.release/web/__required_explicit_id__
 COPY ${WEB_RELEASE_PATH}/ ./.release/web/input/
