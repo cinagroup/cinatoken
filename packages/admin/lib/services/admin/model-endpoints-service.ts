@@ -37,6 +37,7 @@ import {
 	type TextEndpointPricing,
 } from "@octafuse/core/model-endpoint-catalog";
 import { badRequest, conflict, notFound } from "./errors";
+import { normalizeApiTimeString } from "@octafuse/core/lib/time-format";
 
 const ENDPOINT_ID_MAX_LENGTH = 191;
 const FOREIGN_ID_MAX_LENGTH = 512;
@@ -756,6 +757,8 @@ function safeAdminRow(
 	}
 	return {
 		...row,
+		verified_at: row.verified_at == null ? null : normalizeApiTimeString(row.verified_at),
+		expires_at: row.expires_at == null ? null : normalizeApiTimeString(row.expires_at),
 		supported_parameters: canonical?.supportedParameters ?? [],
 		pricing: canonical?.pricing ?? null,
 		supports_implicit_caching: canonical?.supportsImplicitCaching ?? null,

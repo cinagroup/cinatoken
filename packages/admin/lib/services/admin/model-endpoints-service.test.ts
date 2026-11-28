@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { normalizeApiTimeFields } from "@octafuse/core/lib/time-format";
+import { adminEndpointSchema } from "../../../../web/src/cinatoken/admin/endpoint-contracts";
 import {
 	computeRouteDataPolicySubjectFingerprintFromRows,
 	MODEL_ENDPOINT_SUPPORTED_PARAMETERS_LIMIT,
@@ -1214,6 +1216,25 @@ describe("model endpoint admin service", () => {
 		assert.deepEqual(state.events, ["unlink:route-1"]);
 		assert.equal(state.patches.length, 0);
 		assert.equal(state.links.length, 0);
+	});
+
+	it("serializes PostgreSQL evidence dates for the strict Web list and detail contracts", async () => {
+		const stored = row({
+			verified_at: "2026-08-30 12:00:00.123456+00",
+			expires_at: "2026-09-13 12:00:00.654321+00",
+			created_at: "2026-08-30 12:00:00+00",
+			updated_at: "2026-08-30 12:00:00+00",
+		});
+		const state = repositories({rows:[stored]});
+		const listed = await listModelEndpointsService(state.repos, {});
+		const fetched = await getModelEndpointService(state.repos, stored.id);
+		for (const endpoint of [listed[0], fetched]) {
+			const dto = adminEndpointSchema.parse(normalizeApiTimeFields(endpoint));
+			assert.equal(dto.verified_at, "2026-08-30T12:00:00.123Z");
+			assert.equal(dto.expires_at, "2026-09-13T12:00:00.654Z");
+		}
+		assert.equal(stored.verified_at, "2026-08-30 12:00:00.123456+00");
+		assert.equal(stored.expires_at, "2026-09-13 12:00:00.654321+00");
 	});
 
 	it("returns parsed admin rows and route ids without exposing invalid JSON as facts", async () => {
