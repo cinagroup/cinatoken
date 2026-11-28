@@ -28,7 +28,7 @@ npm run sync:routes -w @cinatoken/docs-site -- --write
 npm run check:sync -w @cinatoken/docs-site
 ```
 
-`Review website source drift` 手动 GitHub 工作流只生成补丁与审阅清单，权限为只读。下载后在 `codex/` 分支应用，按 [审阅清单](sync/review-checklist.md) 提交 PR。未知来源变化会使生成失败，不能自动发布价格或导入生产数据。普通 PR 的 Web CI 强制检查已提交快照。
+`Review website source drift` 手动 GitHub 工作流只生成补丁与审阅清单，权限为只读。下载后在 `codex/` 分支应用，按 [审阅清单](sync/review-checklist.md) 提交 PR。未知来源变化会使生成失败，不能自动发布价格或导入生产数据。普通 PR 的 Web CI 强制检查已提交快照，并从固定上游提交核对日期、版本与输入摘要。
 
 ## 同域目录接口
 

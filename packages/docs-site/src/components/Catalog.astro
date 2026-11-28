@@ -87,7 +87,7 @@ const copy = zh
 			all: "All",
 			previous: "Previous",
 			next: "Next",
-			status: "{n} entries · Page {page}/{pages}",
+			status: "Entries: {n} · Page {page}/{pages}",
 			empty: "No matching entries.",
 			details: "Configuration reference",
 			context: "Context",
@@ -182,7 +182,7 @@ function description(row: (typeof rows)[number]) {
 								{row.context_window?.toLocaleString("en-US") || "—"}
 							</p>
 						)}
-						<details>
+						<details data-pagefind-ignore>
 							<>
 								<summary>{copy.details}</summary>
 								<pre>
