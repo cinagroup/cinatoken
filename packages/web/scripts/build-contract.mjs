@@ -160,7 +160,8 @@ export function pluginWebBuildContract(packageRoot) {
 					contract.sourceSha256
 				)
 					throw new Error('Web sources changed during build')
-				if (environments.web)
+				// Standalone browser probes do not produce a releasable three-target build.
+				if (environments.web && environments.node && environments.worker)
 					copyDocsSite(
 						packageRoot,
 						resolve(environments.web.distPath),
