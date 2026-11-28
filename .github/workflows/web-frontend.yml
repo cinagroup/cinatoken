@@ -89,6 +89,16 @@ jobs:
       - run: npm run test:web
       - run: npm run lint -w @cinatoken/web
       - run: bash -n docker/web/entrypoint.sh
+      - run: npm run format:check -w @cinatoken/docs-site
+      - run: npm run check:sync -w @cinatoken/docs-site
+      - name: Verify factual index against the pinned upstream commit
+        shell: bash
+        run: |
+          upstream_ref=$(node -p "require('./packages/docs-site/src/data/updates/upstream-index.json').source.ref")
+          git init "$RUNNER_TEMP/website-index-source"
+          git -C "$RUNNER_TEMP/website-index-source" remote add origin https://github.com/OctaFuse/octafuse-website.git
+          git -C "$RUNNER_TEMP/website-index-source" fetch --depth=1 origin "$upstream_ref"
+          node packages/docs-site/scripts/sync-upstream.mjs --check --upstream-repo "$RUNNER_TEMP/website-index-source" --ref "$upstream_ref"
       - run: npm run check:docs-site
       - run: npm run build:web
       - name: Freeze and verify release artifact
@@ -190,6 +200,7 @@ jobs:
           lib/services/admin/audit-atomicity-probe.test.ts
           lib/cinaauth/*.test.ts
           lib/services/user/*.test.ts
+          lib/catalog/website-catalog.test.ts
           lib/public-catalog.test.ts
           components/catalog/PublicCatalogPricing.test.tsx
           lib/public-catalog-bff.test.ts

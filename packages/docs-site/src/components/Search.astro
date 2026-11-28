@@ -1,0 +1,253 @@
+---
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+const zh = Astro.locals.starlightRoute.lang.startsWith("zh");
+const copy = zh
+	? {
+			open: "搜索文档",
+			label: "搜索关键词",
+			close: "关闭",
+			hint: "输入关键词搜索文档、更新和配置参考。",
+			retry: "重试搜索",
+			loading: "正在搜索…",
+			empty: "未找到结果，试试其他关键词。",
+			error: "搜索暂不可用，请重试。",
+			results: "找到 {n} 个结果，最多显示 12 项。",
+		}
+	: {
+			open: "Search",
+			label: "Search terms",
+			close: "Close",
+			hint: "Search documentation, updates and configuration references.",
+			retry: "Retry search",
+			loading: "Searching…",
+			empty: "No results. Try another search term.",
+			error: "Search is unavailable. Please try again.",
+			results: "{n} results. Showing up to 12.",
+		};
+---
+
+<cina-site-search
+	data-search-base="/docs-assets/search/__SEARCH_VERSION__/"
+	data-copy={JSON.stringify(copy)}
+>
+	<button
+		type="button"
+		data-search-open
+		disabled={import.meta.env.DEV}
+		aria-keyshortcuts="Control+K Meta+K">{copy.open} <kbd>⌘/Ctrl K</kbd></button
+	>
+	<dialog aria-label={copy.open}>
+		<div class="search-header">
+			<label for="docs-search-input">{copy.label}</label><button
+				type="button"
+				data-search-close>{copy.close}</button
+			>
+		</div>
+		<input
+			id="docs-search-input"
+			type="search"
+			autocomplete="off"
+			spellcheck="false"
+		/>
+		<p role="status" aria-live="polite">{copy.hint}</p>
+		<button type="button" data-search-retry hidden>{copy.retry}</button>
+		<ol></ol>
+	</dialog>
+</cina-site-search>
+<script>
+	type SearchHit = { url: string; meta: { title?: string }; excerpt?: string };
+	type SearchAPI = {
+		options: (options: { basePath: string; baseUrl: string }) => Promise<void>;
+		search: (
+			query: string,
+		) => Promise<{ results: Array<{ data: () => Promise<SearchHit> }> }>;
+	};
+	class CinaSiteSearch extends HTMLElement {
+		constructor() {
+			super();
+			const dialog = this.querySelector("dialog")!,
+				input = this.querySelector("input")!,
+				list = this.querySelector("ol")!,
+				status = this.querySelector('[role="status"]')!;
+			const copy = JSON.parse(this.dataset.copy!) as Record<string, string>;
+			const retry = this.querySelector<HTMLButtonElement>(
+				"[data-search-retry]",
+			)!;
+			let attempt = 0;
+			let api: Promise<SearchAPI> | undefined,
+				generation = 0,
+				timer: ReturnType<typeof setTimeout> | undefined;
+			const open = () => {
+				if (!dialog.open) dialog.showModal();
+				input.focus();
+			};
+			this.querySelector("[data-search-open]")!.addEventListener("click", open);
+			this.querySelector("[data-search-close]")!.addEventListener("click", () =>
+				dialog.close(),
+			);
+			dialog.addEventListener("click", (e) => {
+				if (e.target === dialog) dialog.close();
+			});
+			window.addEventListener("keydown", (e) => {
+				if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+					e.preventDefault();
+					if (dialog.open) dialog.close();
+					else open();
+				}
+			});
+			const load = () =>
+				(api ??= (async () => {
+					const base = this.dataset.searchBase!;
+					if (!/^\/docs-assets\/search\/[a-f0-9]{64}\/$/.test(base))
+						throw Error("Invalid search version");
+					const module = (await import(
+						/* @vite-ignore */ `${base}pagefind.js${attempt ? `?retry=${attempt}` : ""}`
+					)) as SearchAPI;
+					await module.options({ basePath: base, baseUrl: "/" });
+					return module;
+				})().catch((error) => {
+					api = undefined;
+					throw error;
+				}));
+			const run = (delay = 160) => {
+				clearTimeout(timer);
+				const current = ++generation,
+					query = input.value.trim();
+				list.replaceChildren();
+				retry.hidden = true;
+				if (!query) {
+					status.textContent = copy.hint;
+					return;
+				}
+				status.textContent = copy.loading;
+				timer = setTimeout(async () => {
+					try {
+						const results = await (await load()).search(query);
+						const hits = await Promise.all(
+							results.results.slice(0, 12).map((hit) => hit.data()),
+						);
+						if (current !== generation) return;
+						status.textContent = hits.length
+							? copy.results!.replace("{n}", String(results.results.length))
+							: copy.empty!;
+						for (const hit of hits) {
+							const url = new URL(hit.url, location.origin);
+							if (
+								url.origin !== location.origin ||
+								!/^\/(en|zh)\/(docs|updates|reference)\//.test(url.pathname)
+							)
+								continue;
+							const item = document.createElement("li"),
+								link = document.createElement("a"),
+								excerpt = document.createElement("p");
+							link.href = url.pathname + url.search + url.hash;
+							link.textContent = hit.meta.title || url.pathname;
+							// Pagefind excerpts contain <mark>. Render their text without accepting HTML.
+							excerpt.textContent = (hit.excerpt || "")
+								.replace(/<[^>]*>/g, "")
+								.replaceAll("&lt;", "<")
+								.replaceAll("&gt;", ">")
+								.replaceAll("&quot;", '"')
+								.replaceAll("&#39;", "'")
+								.replaceAll("&amp;", "&");
+							item.append(link, excerpt);
+							list.append(item);
+						}
+					} catch {
+						if (current === generation) {
+							status.textContent = copy.error!;
+							retry.hidden = false;
+							api = undefined;
+							attempt++;
+						}
+					}
+				}, delay);
+			};
+			input.addEventListener("input", () => run());
+			input.addEventListener("keydown", (event) => {
+				if (event.key === "Enter") {
+					event.preventDefault();
+					run(0);
+				}
+			});
+			retry.addEventListener("click", () => run(0));
+		}
+	}
+	customElements.define("cina-site-search", CinaSiteSearch);
+</script>
+<style>
+	button {
+		color: var(--sl-color-text);
+		background: var(--sl-color-bg);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.375rem;
+		padding: 0.4rem 0.65rem;
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.875rem;
+	}
+	kbd {
+		margin-inline-start: 1rem;
+		color: var(--sl-color-gray-3);
+		font-size: 0.7rem;
+	}
+	dialog {
+		width: min(42rem, calc(100vw - 2rem));
+		max-height: 80vh;
+		padding: 1.25rem;
+		color: var(--sl-color-text);
+		background: var(--sl-color-bg);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+	}
+	dialog::backdrop {
+		background: #0009;
+	}
+	.search-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	input {
+		width: 100%;
+		margin-top: 1rem;
+		padding: 0.75rem;
+		border: 1px solid var(--sl-color-gray-4);
+		border-radius: 0.375rem;
+		color: inherit;
+		background: inherit;
+		font: inherit;
+	}
+	[role="status"] {
+		margin-top: 0.8rem;
+		color: var(--sl-color-gray-2);
+		font-size: 0.875rem;
+	}
+	[hidden] {
+		display: none !important;
+	}
+	ol {
+		padding: 0;
+		list-style: none;
+		overflow-wrap: anywhere;
+	}
+	ol :global(li) {
+		padding: 0.9rem 0;
+		border-top: 1px solid var(--sl-color-gray-5);
+	}
+	ol :global(a) {
+		color: var(--sl-color-text-accent);
+		font-weight: 600;
+	}
+	ol :global(p) {
+		margin: 0.3rem 0;
+		color: var(--sl-color-gray-2);
+		font-size: 0.875rem;
+	}
+	@media (max-width: 50rem) {
+		kbd {
+			display: none;
+		}
+	}
+</style>

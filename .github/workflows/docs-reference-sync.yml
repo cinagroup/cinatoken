@@ -1,0 +1,48 @@
+name: Review website source drift
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: Reviewed full commit from OctaFuse/octafuse-website (metadata only)
+        required: true
+        default: 0d3984bad9b40b7091d9d9f56146df6a85a43ad3
+
+# This workflow produces a review artifact. It cannot publish prices or write a PR.
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Validate the selected source
+        env:
+          UPSTREAM_REF: ${{ inputs.upstream_ref }}
+        run: node -e 'if (!/^[a-f0-9]{40}$/.test(process.env.UPSTREAM_REF)) process.exit(1)'
+      - name: Fetch pinned public metadata
+        env:
+          UPSTREAM_REF: ${{ inputs.upstream_ref }}
+        run: |
+          git init "$RUNNER_TEMP/website-source"
+          git -C "$RUNNER_TEMP/website-source" remote add origin https://github.com/OctaFuse/octafuse-website.git
+          git -C "$RUNNER_TEMP/website-source" fetch --depth=1 origin "$UPSTREAM_REF"
+          node packages/docs-site/scripts/sync-upstream.mjs --write --upstream-repo "$RUNNER_TEMP/website-source" --ref "$UPSTREAM_REF"
+      - name: Prepare an explicit review patch
+        run: |
+          node packages/docs-site/scripts/sync-catalog.mjs --write --ref "$GITHUB_SHA"
+          node packages/docs-site/scripts/content-routes.mjs
+          node packages/docs-site/scripts/sync-upstream.mjs --check
+          mkdir -p "$RUNNER_TEMP/website-review"
+          git diff --binary -- packages/docs-site/src/data > "$RUNNER_TEMP/website-review/source-update.patch"
+          git diff --stat -- packages/docs-site/src/data > "$RUNNER_TEMP/website-review/summary.txt"
+          cat packages/docs-site/sync/review-checklist.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website-source-review
+          path: ${{ runner.temp }}/website-review
+          if-no-files-found: error

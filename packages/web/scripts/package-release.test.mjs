@@ -1126,3 +1126,60 @@ test('source verification rejects modified public index even with an updated out
 	})
 	assert.throws(() => verifyRelease(root, 'source-a'), /source index/)
 })
+
+test('search upgrades retain every old index member with its original source archive', (t) => {
+	const root = fixture(t),
+		oldVersion = 'a'.repeat(64),
+		newVersion = 'b'.repeat(64)
+	const members = [
+		'pagefind.js',
+		'fragment/zh.pf_fragment',
+		'index/en.pf_index',
+		'wasm.unknown.pagefind',
+	]
+	resetBuild(root, 'search-old', OLD)
+	for (const member of members)
+		write(root, `docs-assets/search/${oldVersion}/${member}`, 'old ' + member)
+	write(root, 'zh/docs/index.html', 'old search page')
+	writeServers(root, 'search-old', 2)
+	const first = release(root, 'search-old')
+	for (const member of members)
+		rmSync(
+			join(
+				root,
+				'packages/web/dist',
+				`docs-assets/search/${oldVersion}/${member}`
+			)
+		)
+	resetBuild(root, 'search-new', NEW)
+	for (const member of members)
+		write(root, `docs-assets/search/${newVersion}/${member}`, 'new ' + member)
+	write(root, 'zh/docs/index.html', 'new search page')
+	writeServers(root, 'search-new', 2)
+	const second = release(root, 'search-new', '2026-09-02', {
+		previous: 'search-old',
+	})
+	for (const member of members) {
+		const path = `docs-assets/search/${oldVersion}/${member}`
+		assert.equal(
+			readFileSync(join(second.assets, path), 'utf8'),
+			'old ' + member
+		)
+		assert.equal(
+			second.manifest.files.find((row) => row.path === path).source,
+			'retained'
+		)
+		assert.deepEqual(
+			second.manifest.sourceDelivery.assetSources.find(
+				(row) => row.path === path
+			).archives,
+			[first.manifest.sourceDelivery.currentArchive]
+		)
+	}
+	assert.equal(
+		readFileSync(join(second.assets, 'zh/docs/index.html'), 'utf8'),
+		'new search page'
+	)
+	assert.equal(second.manifest.sourceDelivery.coverageComplete, true)
+	assert.doesNotThrow(() => verifyRelease(root, 'search-new'))
+})

@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repo": "cinagroup/cinatoken",
+    "ref": "8fbaa084eeab5a0506f32f27da383e8f457836d0",
+    "license": "AGPL-3.0-or-later"
+  },
+  "inputs": [
+    {
+      "path": "packages/admin/lib/model-presets/aliyun-audio-asr.json",
+      "sha256": "e8777b1832a16199af3cb020443a15a847ccabcd043f9b9e7ee20204e48190d8"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/aliyun-audio-tts.json",
+      "sha256": "197cba04e38a300900b8b2753db3a4ec2ff2f363a9df34bafed28892e94f5898"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/aliyun-embedding.json",
+      "sha256": "6c36e510f58c020025598daae8083d7cbd0e5c3d9d83c10870a4ca67f29aa9de"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/aliyun-image.json",
+      "sha256": "9d771501057779e0597b68a1e7b78b19243fee49c48825b273f216c74c970c14"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/aliyun.json",
+      "sha256": "cf15c2d1d502367ef08da2398604e852301a7ebad3ff27a0102a8d54141d5e2a"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/anthropic.json",
+      "sha256": "2e0417614bb0a790a34e6aedc5613ef07c058f1b9862bc76b6e7ad98ec6d2237"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/baichuan.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/baidu.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/bytedance-image.json",
+      "sha256": "6f3f960e1d3364a14b5f48e4c6010ddd30d3a35006b64055e506e11ef88a5384"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/bytedance.json",
+      "sha256": "ada5e8261bd71ca3e7f0878762a4bd8ebb5b34464876a950476a030223cc0dcc"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/cohere.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/deepseek.json",
+      "sha256": "47a48bf34e363683634dc8771a1d35e127a589b66697ecb14d9b91baa2b95542"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/elevenlabs-audio-asr.json",
+      "sha256": "ecf7be1aa6487964c018262ae85cb44fb4cbe9fbec6277edbe5c1b3bb8b1060b"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json",
+      "sha256": "102f32e67cf8eb667d9274b36df79342abb99ec4e02c4438604f6a927c3d2e62"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/google-embedding.json",
+      "sha256": "f421f69f4837748633198dc0f321361d009cd21eea19e396052b2758a46d0eb8"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/google-image.json",
+      "sha256": "53ff41823135e96c1c870fc106a38f597a44df17d1f4018304e26a4a36e76f82"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/google.json",
+      "sha256": "096cbf76ab770a12d40e3a72377adbbf745f746fd3012c8348b51a4fb44f0a06"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/meituan.json",
+      "sha256": "ae28af0497edfa21dbf6c594c09906e696a8b3e51bceedc7575abe91f1f1e8b6"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/meta.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/minimax-audio-asr.json",
+      "sha256": "d4c2864c8045615fe21bfb9ffdbe3661d3765d7447a5c088ec39ec659ebcdb47"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/minimax-audio-tts.json",
+      "sha256": "43bdbdf4c9cef1550aa33bfae5762ca0bcbdc93dd9a3b8ed4fe93b02cc71d2f3"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/minimax-image.json",
+      "sha256": "2f4cd1018457566f423b0cf74ab0939db56994c8031cc75d1236d52850756758"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/minimax.json",
+      "sha256": "e2260e26b6962ba6eb7a1efa08680da26d327d2fcb162cd83a4b9b7685ba53cd"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/mistral.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/moonshot.json",
+      "sha256": "9d893318692d4d2afcf2c160ac9de738b39aab730ef00965b856f551ab13b371"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/openai-audio-asr.json",
+      "sha256": "61e1e487c6174d2133ac45c8de05bc7e8a587698f57b17489997fa73dc1da04b"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/openai-audio.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/openai-embedding.json",
+      "sha256": "b16126dec72794864c4190c228206d164e668cc26ccb20d74827d3cb8be7eb27"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/openai-image.json",
+      "sha256": "f1e7c1f8445c04215ec9c33ab7895a9174623c664c2a14fdb7fe6d3f7c8cca60"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/openai.json",
+      "sha256": "0917dcb9fa985a7581e13ca4f4eff8d44adc0af42e08e015b1f782dbd19b1a03"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/perplexity.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/stability.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/stepfun.json",
+      "sha256": "d6cfa42e905b2fa802514a335fb5fd5b7f6518192b72c54620ee36f870ffdf64"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/tencent.json",
+      "sha256": "5a55b21300e81ddf107a70ee0b1919833d21a35a44f53f5edef76ae922288da9"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/xai-image.json",
+      "sha256": "9234097b6183c7ec5cafb3f9f4fba66da38e530d5c0f8d9ce9cfcc1fc3176cf1"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/xai.json",
+      "sha256": "bb5c4da7e772b4440865d03a3d0cb7cc862718ca39a0d17fbf47bbe378851db7"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/xiaomi.json",
+      "sha256": "5496dc8e2901db3567b1050c708452312281a78fdbd177c0db1a77362742166f"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/zhipu-image.json",
+      "sha256": "b85189d04f0838fa53418893d23362ed5b1f4ed599867f26d07451ac088ff2eb"
+    },
+    {
+      "path": "packages/admin/lib/model-presets/zhipu.json",
+      "sha256": "f0c11cce90941edeea473960863ea80f8b1aa58249a72366c0cd8aa361dd8abe"
+    },
+    {
+      "path": "packages/admin/lib/provider-import-presets.json",
+      "sha256": "9f1f684dc92047f1ecd045acc2497ab94000603f0e77ed8ad822e5baf4f932df"
+    }
+  ],
+  "outputs": {
+    "models": 206,
+    "providers": 69
+  }
+}

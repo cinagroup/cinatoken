@@ -1,0 +1,483 @@
+{
+  "source": {
+    "repo": "OctaFuse/octafuse-website",
+    "ref": "0d3984bad9b40b7091d9d9f56146df6a85a43ad3",
+    "fields": [
+      "slug",
+      "publishDate"
+    ],
+    "scope": "Factual version/date index and links only; no article prose or website code."
+  },
+  "inputs": [
+    {
+      "path": "src/content/docs/en/updates/cloudflare-deployment.mdx",
+      "sha256": "b490ee1f216a6d60abec5a4cba0bf6542a4afdc233a60c77e2e18cd00eb409fe"
+    },
+    {
+      "path": "src/content/docs/en/updates/introducing-octafuse.mdx",
+      "sha256": "e2fc5967af444e25b469679021e43900c37dcc95b415f3cfd5901c6712d7ae19"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-0-0-routing.mdx",
+      "sha256": "de4a915b6358736ffe2673b51735300d18036b29afa8a98857aba6a836b8285f"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-1-0-agent-tools.mdx",
+      "sha256": "81125460f1c9f720765591e797f3dba0bf85619eb32481dbc2622a837f9cb5cb"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-1-1-reliability.mdx",
+      "sha256": "3051324d8c528d5763243bb0dcf513762ab61eb3aa90a9e01d669b35f9ac24cf"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-1-2-admin-observability.mdx",
+      "sha256": "33bcf46d812c0ebbe4b12941595f5e573f5f9e3e5a3853ce4746fad4ea24a1f0"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-10-0.mdx",
+      "sha256": "10ebcd1ee407e0d6c6b51e68c0cc3012227f90a0a13d3e157dcce56830c128fc"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-11-0.mdx",
+      "sha256": "2c3cb931ec00a3c3262b4a9bc8eaa0049377b5e5c9aa2b62176988574fe69bff"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-12-0.mdx",
+      "sha256": "e7a327810fcf77976f1ec1825cde925c263022d2e597b275ec9e3b03cb61a381"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-13-0.mdx",
+      "sha256": "5891ebc2b02e118a7703d917f2dd691276922f900839a209d932339838ab6609"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-14-0.mdx",
+      "sha256": "273b1e08a3d0cbebbe117ceebc5eeba277cb60a30113a9a3d15266342a9e03b6"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-15-0.mdx",
+      "sha256": "6ab8ae494ca13b4a760240f68484e079c9249a2f36496db4ef267fe16bcd3e85"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-16-0.mdx",
+      "sha256": "868b3397a542af38a3a8f9cd416c39c9e8bf1425be887a100fbb43601b3bd2e5"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-17-0.mdx",
+      "sha256": "d1c7b8c061147748d3d53a61b5fb7f3d2b22624436abe42c8a063b1ff915a8d9"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-18-0.mdx",
+      "sha256": "6e7da10e20e52718025058f8b076a8888f58b21a56c0953e479b5b00e5bf28b0"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-19-0.mdx",
+      "sha256": "ba91bac03c4bbe92639b6e55159e3bae1e165146bb4b5a1b7c9805f54254d37e"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-2-0.mdx",
+      "sha256": "d20649e5e40c3d4f98ced9fdf62d3166ada2471cbf681b65308787a9a05cff6b"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-20-0.mdx",
+      "sha256": "06cfd0e405532fe73e2009a4043ac58da0d7659cf142f587b71e396d2fd37b92"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-21-0.mdx",
+      "sha256": "50a1ba87700ed27675486e36caa7e0decec1172b29ef1ceb88c1f241a2ab8bba"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-3-0.mdx",
+      "sha256": "0d8a2fad6f35e0adf45f4c8f98ae499d9b707fc70f01b1a904333dfabbb1c522"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-4-0.mdx",
+      "sha256": "27db65aed6b4675b1a221b1682c576df3de6ef83b6a4fd41b6b33d170008a7fe"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-5-0.mdx",
+      "sha256": "f4bb07c71bcb76139e1c4d16584fe54c5757a249137361c3f05ecdfd067f6de2"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-6-0.mdx",
+      "sha256": "3874dd59db8a30884152b426ed165c45271ffe30646e2c32cd45b3148b24e820"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-7-0.mdx",
+      "sha256": "2f916c7a52e4f43b53e1f97c6eff7cb3cdcba88b231784c2083a11075d3ead81"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-8-0.mdx",
+      "sha256": "8a354f32b40d71cb56b1c495dc04440c9d9dab45493d691a320da8f673ae594a"
+    },
+    {
+      "path": "src/content/docs/en/updates/v2-9-0.mdx",
+      "sha256": "cc82b4f1548b11e68c7f8e8ef9b3bee714eb708534830feeb5f82530a1dd897a"
+    }
+  ],
+  "items": [
+    {
+      "id": "cloudflare-deployment",
+      "date": "2026-07-24",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Cloudflare deployment",
+        "zh": "OctaFuse Cloudflare 部署"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/cloudflare-deployment/",
+        "zh": "https://octafuse.dev/zh/updates/cloudflare-deployment/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/cloudflare-deployment.mdx"
+    },
+    {
+      "id": "introducing-octafuse",
+      "date": "2026-07-11",
+      "source": "octafuse",
+      "title": {
+        "en": "Introducing OctaFuse",
+        "zh": "OctaFuse 项目介绍"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/introducing-octafuse/",
+        "zh": "https://octafuse.dev/zh/updates/introducing-octafuse/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/introducing-octafuse.mdx"
+    },
+    {
+      "id": "v2-0-0-routing",
+      "date": "2026-07-31",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.0.0",
+        "zh": "OctaFuse Gateway 2.0.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-0-0-routing/",
+        "zh": "https://octafuse.dev/zh/updates/v2-0-0-routing/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-0-0-routing.mdx"
+    },
+    {
+      "id": "v2-1-0-agent-tools",
+      "date": "2026-08-02",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.1.0",
+        "zh": "OctaFuse Gateway 2.1.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-1-0-agent-tools/",
+        "zh": "https://octafuse.dev/zh/updates/v2-1-0-agent-tools/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-1-0-agent-tools.mdx"
+    },
+    {
+      "id": "v2-1-1-reliability",
+      "date": "2026-08-03",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.1.1",
+        "zh": "OctaFuse Gateway 2.1.1"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-1-1-reliability/",
+        "zh": "https://octafuse.dev/zh/updates/v2-1-1-reliability/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-1-1-reliability.mdx"
+    },
+    {
+      "id": "v2-1-2-admin-observability",
+      "date": "2026-08-05",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.1.2",
+        "zh": "OctaFuse Gateway 2.1.2"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-1-2-admin-observability/",
+        "zh": "https://octafuse.dev/zh/updates/v2-1-2-admin-observability/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-1-2-admin-observability.mdx"
+    },
+    {
+      "id": "v2-10-0",
+      "date": "2026-09-10",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.10.0",
+        "zh": "OctaFuse Gateway 2.10.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-10-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-10-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-10-0.mdx"
+    },
+    {
+      "id": "v2-11-0",
+      "date": "2026-09-20",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.11.0",
+        "zh": "OctaFuse Gateway 2.11.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-11-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-11-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-11-0.mdx"
+    },
+    {
+      "id": "v2-12-0",
+      "date": "2026-09-26",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.12.0",
+        "zh": "OctaFuse Gateway 2.12.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-12-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-12-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-12-0.mdx"
+    },
+    {
+      "id": "v2-13-0",
+      "date": "2026-10-06",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.13.0",
+        "zh": "OctaFuse Gateway 2.13.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-13-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-13-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-13-0.mdx"
+    },
+    {
+      "id": "v2-14-0",
+      "date": "2026-10-09",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.14.0",
+        "zh": "OctaFuse Gateway 2.14.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-14-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-14-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-14-0.mdx"
+    },
+    {
+      "id": "v2-15-0",
+      "date": "2026-10-15",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.15.0",
+        "zh": "OctaFuse Gateway 2.15.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-15-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-15-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-15-0.mdx"
+    },
+    {
+      "id": "v2-16-0",
+      "date": "2026-10-19",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.16.0",
+        "zh": "OctaFuse Gateway 2.16.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-16-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-16-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-16-0.mdx"
+    },
+    {
+      "id": "v2-17-0",
+      "date": "2026-10-26",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.17.0",
+        "zh": "OctaFuse Gateway 2.17.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-17-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-17-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-17-0.mdx"
+    },
+    {
+      "id": "v2-18-0",
+      "date": "2026-11-02",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.18.0",
+        "zh": "OctaFuse Gateway 2.18.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-18-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-18-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-18-0.mdx"
+    },
+    {
+      "id": "v2-19-0",
+      "date": "2026-11-11",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.19.0",
+        "zh": "OctaFuse Gateway 2.19.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-19-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-19-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-19-0.mdx"
+    },
+    {
+      "id": "v2-2-0",
+      "date": "2026-08-06",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.2.0",
+        "zh": "OctaFuse Gateway 2.2.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-2-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-2-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-2-0.mdx"
+    },
+    {
+      "id": "v2-20-0",
+      "date": "2026-11-15",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.20.0",
+        "zh": "OctaFuse Gateway 2.20.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-20-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-20-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-20-0.mdx"
+    },
+    {
+      "id": "v2-21-0",
+      "date": "2026-11-26",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.21.0",
+        "zh": "OctaFuse Gateway 2.21.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-21-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-21-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-21-0.mdx"
+    },
+    {
+      "id": "v2-3-0",
+      "date": "2026-08-08",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.3.0",
+        "zh": "OctaFuse Gateway 2.3.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-3-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-3-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-3-0.mdx"
+    },
+    {
+      "id": "v2-4-0",
+      "date": "2026-08-12",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.4.0",
+        "zh": "OctaFuse Gateway 2.4.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-4-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-4-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-4-0.mdx"
+    },
+    {
+      "id": "v2-5-0",
+      "date": "2026-08-15",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.5.0",
+        "zh": "OctaFuse Gateway 2.5.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-5-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-5-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-5-0.mdx"
+    },
+    {
+      "id": "v2-6-0",
+      "date": "2026-08-19",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.6.0",
+        "zh": "OctaFuse Gateway 2.6.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-6-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-6-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-6-0.mdx"
+    },
+    {
+      "id": "v2-7-0",
+      "date": "2026-08-23",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.7.0",
+        "zh": "OctaFuse Gateway 2.7.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-7-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-7-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-7-0.mdx"
+    },
+    {
+      "id": "v2-8-0",
+      "date": "2026-08-30",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.8.0",
+        "zh": "OctaFuse Gateway 2.8.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-8-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-8-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-8-0.mdx"
+    },
+    {
+      "id": "v2-9-0",
+      "date": "2026-09-05",
+      "source": "octafuse",
+      "title": {
+        "en": "OctaFuse Gateway 2.9.0",
+        "zh": "OctaFuse Gateway 2.9.0"
+      },
+      "href": {
+        "en": "https://octafuse.dev/en/updates/v2-9-0/",
+        "zh": "https://octafuse.dev/zh/updates/v2-9-0/"
+      },
+      "evidence": "https://github.com/OctaFuse/octafuse-website/blob/0d3984bad9b40b7091d9d9f56146df6a85a43ad3/src/content/docs/en/updates/v2-9-0.mdx"
+    }
+  ]
+}

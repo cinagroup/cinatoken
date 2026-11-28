@@ -5,15 +5,22 @@
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev --host 127.0.0.1 --port 8792",
-		"build": "astro build && node scripts/check-site.mjs",
-		"check": "astro check"
+		"build": "node scripts/content-routes.mjs && astro build && node scripts/write-reference.mjs && node scripts/content-routes.mjs --feeds && node scripts/finalize-search.mjs && node scripts/check-site.mjs",
+		"check": "astro check",
+		"sync:catalog": "node scripts/sync-catalog.mjs",
+		"check:catalog": "node scripts/sync-catalog.mjs --check",
+		"sync:routes": "node scripts/content-routes.mjs",
+		"check:sync": "node scripts/sync-catalog.mjs --check && node scripts/content-routes.mjs && node scripts/sync-upstream.mjs --check",
+		"sync:upstream": "node scripts/sync-upstream.mjs",
+		"format:check": "prettier --plugin prettier-plugin-astro --check \"src/**/*.astro\" \"src/**/*.ts\" \"scripts/*.mjs\" astro.config.mjs"
 	},
 	"dependencies": {
-		"astro": "7.4.13",
-		"@astrojs/starlight": "0.43.2"
+		"@astrojs/starlight": "0.43.2",
+		"astro": "7.4.13"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.8",
+		"prettier-plugin-astro": "0.14.1",
 		"typescript": "~6.0.3"
 	}
 }

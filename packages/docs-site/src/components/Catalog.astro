@@ -1,0 +1,296 @@
+---
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import presentation from "../data/catalog/presentation.json";
+import models from "../data/catalog/models.json";
+import providers from "../data/catalog/providers.json";
+interface Props {
+	type: "models" | "providers";
+}
+const zh = Astro.locals.starlightRoute.lang.startsWith("zh"),
+	type = Astro.props.type;
+type Model = {
+	id: string;
+	display_name?: string;
+	vendor: string;
+	description?: string;
+	i18n?: Partial<Record<"en" | "zh", string>>;
+	modalities?: { input: string[]; output: string[] };
+	max_tokens?: number | null;
+	context_window?: number | null;
+	pricing: unknown;
+};
+type Provider = {
+	name: string;
+	vendor_key: string;
+	description?: string;
+	catalog?: {
+		i18n?: Partial<
+			Record<"en" | "zh", { name?: string; description?: string }>
+		>;
+	};
+	endpoints: unknown;
+};
+const kinds = presentation.kindByModelId as Record<string, string>;
+const kindLabels = zh
+	? {
+			llm: "语言模型",
+			image: "图像",
+			asr: "语音转写",
+			tts: "语音合成",
+			audio: "音频",
+			embedding: "向量",
+			rerank: "重排",
+		}
+	: {
+			llm: "Language",
+			image: "Image",
+			asr: "ASR",
+			tts: "TTS",
+			audio: "Audio",
+			embedding: "Embedding",
+			rerank: "Rerank",
+		};
+const rows: Array<Model | Provider> =
+	type === "models"
+		? (models.items as Model[])
+		: (providers.items as Provider[]);
+const source = type === "models" ? models : providers;
+const vendors = [
+	...new Set(
+		rows.map((row) => ("vendor" in row ? row.vendor : row.vendor_key)),
+	),
+].sort();
+const copy = zh
+	? {
+			query: "筛选参考目录",
+			vendor: "厂商",
+			all: "全部",
+			previous: "上一页",
+			next: "下一页",
+			status: "{n} 项 · 第 {page}/{pages} 页",
+			empty: "没有匹配项。",
+			details: "查看配置参考",
+			context: "上下文",
+			output: "最大输出",
+			input: "输入",
+			pricing: "价格预设（USD / CNY）",
+			snapshot: "配置参考快照",
+			notice:
+				"本目录供配置与导入参考，不表示模型已在 CinaToken 上线。实际可调用模型、能力和价格请查看实时模型目录。",
+			live: "实时模型目录",
+			json: "下载 JSON",
+			origin: "固定来源",
+		}
+	: {
+			query: "Filter reference catalog",
+			vendor: "Vendor",
+			all: "All",
+			previous: "Previous",
+			next: "Next",
+			status: "Entries: {n} · Page {page}/{pages}",
+			empty: "No matching entries.",
+			details: "Configuration reference",
+			context: "Context",
+			output: "Maximum output",
+			input: "Input",
+			pricing: "Pricing presets (USD / CNY)",
+			snapshot: "Configuration reference snapshot",
+			notice:
+				"These templates support configuration and import. They do not mean a model is available on CinaToken. Use the live catalog for callable models, capabilities and prices.",
+			live: "Live model catalog",
+			json: "Download JSON",
+			origin: "Pinned source",
+		};
+const locale = zh ? "zh" : "en";
+function description(row: (typeof rows)[number]) {
+	if ("id" in row) return row.i18n?.[locale] || row.description;
+	return row.catalog?.i18n?.[locale]?.description || row.description;
+}
+---
+
+<section
+	class="catalog"
+	data-filter-list
+	data-page-size="20"
+	data-copy={JSON.stringify(copy)}
+>
+	<p class="notice">
+		<strong>{copy.snapshot}</strong> — {copy.notice}{" "}
+		<a href={`/${locale}/models`}>{copy.live}</a>
+	</p>
+	<p class="source">
+		<a
+			href={`https://github.com/${source.source.repo}/tree/${source.source.ref}/${source.source_path}`}
+			>{copy.origin}: {source.source.ref.slice(0, 12)}</a
+		> · <a href={`/reference/catalog/${type}.json`} download>{copy.json}</a>
+	</p>
+	<div class="filters">
+		<label
+			>{copy.query}<input type="search" data-catalog-query disabled /></label
+		><label
+			>{copy.vendor}<select data-catalog-vendor disabled
+				><option value="">{copy.all}</option>{
+					vendors.map((vendor) => <option value={vendor}>{vendor}</option>)
+				}</select
+			></label
+		>{
+			type === "models" && (
+				<label>
+					{zh ? "类型" : "Type"}
+					<select data-catalog-kind disabled>
+						<option value="">{copy.all}</option>
+						{Object.entries(kindLabels).map(([kind, label]) => (
+							<option value={kind}>{label}</option>
+						))}
+					</select>
+				</label>
+			)
+		}
+	</div>
+	<p role="status" aria-live="polite" data-catalog-status>
+		{rows.length}
+		{zh ? "项参考" : "reference entries"}
+	</p>
+	<div class="entries">
+		{
+			rows.map((row) => {
+				const model = "id" in row,
+					name = model
+						? row.display_name || row.id
+						: row.catalog?.i18n?.[locale]?.name || row.name;
+				const vendor = model ? row.vendor : row.vendor_key,
+					text = description(row);
+				return (
+					<article
+						data-catalog-row
+						data-vendor={vendor}
+						data-kind={model ? kinds[row.id] : "provider"}
+						data-search={`${name} ${model ? row.id : row.name} ${vendor} ${text}`.toLowerCase()}
+					>
+						<>
+							<h2>{name}</h2>
+							<p>
+								<code>{model ? row.id : row.name}</code> · {vendor}
+							</p>
+							<p>{text}</p>
+						</>
+						{model && (
+							<p class="specs">
+								{copy.input}: {row.modalities?.input.join(", ") || "—"} ·{" "}
+								{copy.output}: {row.max_tokens?.toLocaleString("en-US") || "—"}{" "}
+								· {copy.context}:{" "}
+								{row.context_window?.toLocaleString("en-US") || "—"}
+							</p>
+						)}
+						<details data-pagefind-ignore>
+							<>
+								<summary>{copy.details}</summary>
+								<pre>
+									<code>
+										{JSON.stringify(
+											model
+												? {
+														id: row.id,
+														modalities: row.modalities,
+														context_window: row.context_window,
+														max_tokens: row.max_tokens,
+														pricing: row.pricing,
+													}
+												: row.endpoints,
+											null,
+											2,
+										)}
+									</code>
+								</pre>
+							</>
+						</details>
+					</article>
+				);
+			})
+		}
+	</div>
+	<nav aria-label={zh ? "目录分页" : "Catalog pagination"} class="pagination">
+		<button type="button" data-catalog-previous disabled>{copy.previous}</button
+		><button type="button" data-catalog-next disabled>{copy.next}</button>
+	</nav>
+</section>
+<script>
+	import "../scripts/filter-list";
+</script>
+<style>
+	.notice {
+		border-inline-start: 3px solid var(--sl-color-accent);
+		padding: 1rem;
+		background: var(--sl-color-accent-low);
+	}
+	.source,
+	.specs {
+		font-size: 0.85rem;
+		color: var(--sl-color-gray-2);
+	}
+	.filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-block: 1.5rem;
+	}
+	.filters label {
+		display: grid;
+		gap: 0.4rem;
+		flex: 1 1 12rem;
+		min-width: 0;
+		margin: 0;
+	}
+	input,
+	select {
+		width: 100%;
+		min-width: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+	input,
+	select,
+	button {
+		border: 1px solid var(--sl-color-gray-4);
+		border-radius: 0.375rem;
+		padding: 0.6rem;
+		color: var(--sl-color-text);
+		background: var(--sl-color-bg);
+		font: inherit;
+	}
+	.entries article {
+		padding: 1.5rem 0;
+		border-top: 1px solid var(--sl-color-gray-5);
+		overflow-wrap: anywhere;
+	}
+	.entries h2 {
+		font-size: 1.25rem;
+		margin: 0;
+	}
+	.entries p {
+		margin: 0.65rem 0;
+	}
+	pre {
+		overflow: auto;
+		max-height: 24rem;
+		padding: 1rem;
+		background: var(--sl-color-bg-sidebar);
+		font-size: 0.8rem;
+	}
+	summary {
+		cursor: pointer;
+		color: var(--sl-color-text-accent);
+	}
+	.pagination {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+	button:disabled {
+		opacity: 0.45;
+	}
+	[hidden] {
+		display: none !important;
+	}
+</style>

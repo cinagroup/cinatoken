@@ -1127,8 +1127,10 @@ test("Docker and Worker use the same status/path cache contract for GET and HEAD
 		),
 		value: m[2] ?? m[3],
 	}));
-	assert.equal(rules.length, 6);
+	assert.equal(rules.length, 7);
 	for (const path of [
+		`docs-assets/search/${"a".repeat(64)}/pagefind.js`,
+		`docs-assets/search/${"b".repeat(64)}/wasm.zh-CN.pagefind`,
 		"docs-assets/static/index.haH-_Vsc.css",
 		"docs-assets/static/page.1c3678235202d08b.js",
 		"static/js/async/account.12345678.js",

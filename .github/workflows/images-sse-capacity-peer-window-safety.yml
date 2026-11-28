@@ -28,4 +28,4 @@ jobs:
       - run: npm run build:node-index -w @octafuse/core
       - run: npm run typecheck:images:staging -w @octafuse/proxy
       # Local modeled API/tail/pool observations and real SQLite only. No cloud credentials.
-      - run: node node_modules/tsx/dist/cli.mjs --test packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs
+      - run: node node_modules/tsx/dist/cli.mjs --test --test-concurrency=1 packages/proxy/scripts/staging/images-sse-capacity-peer-acceptance.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-finalizer.test.mjs packages/proxy/scripts/staging/images-sse-capacity-peer-window.test.mjs scripts/deploy/staging-sse-ingress-confirmation.test.mjs scripts/deploy/staging-sse-recovery-access-v2.test.mjs

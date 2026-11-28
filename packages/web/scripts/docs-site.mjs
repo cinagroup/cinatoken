@@ -1,9 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
-
-const DOCS_ASSET_PATTERN =
-	/^docs-assets\/static\/[A-Za-z0-9_.-]+\.[A-Za-z0-9_-]{5,64}\.(?:js|css|svg|png|woff2?)$/
+import { isHashedAsset } from './asset-policy.mjs'
 
 /** Copy only source-bound documentation output, before stamping the Web build. */
 export function copyDocsSite(packageRoot, destination, sourceSha256) {
@@ -23,8 +21,14 @@ export function copyDocsSite(packageRoot, destination, sourceSha256) {
 		throw new Error('Docs must be built from the same sources as Web')
 	for (const file of manifest.files) {
 		if (
-			!/^(en|zh)\/docs\/(?:[a-z-]+\/)?index\.html$/.test(file) &&
-			!DOCS_ASSET_PATTERN.test(file)
+			!/^(en|zh)\/(?:docs|updates|reference)\/(?:[a-z0-9-]+\/)*index\.html$/.test(
+				file
+			) &&
+			!(file.startsWith('docs-assets/') && isHashedAsset(file)) &&
+			!/^reference\/catalog\/(?:models|providers|models-by-vendor\/[a-z0-9_-]+)\.json$/.test(
+				file
+			) &&
+			!['content-sitemap.xml', 'updates.xml'].includes(file)
 		)
 			throw new Error('Docs output outside the approved static namespaces')
 		const target = join(destination, file)
