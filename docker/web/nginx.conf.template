@@ -260,23 +260,23 @@ server {
         return 307 /en/docs/;
     }
 
-    location ~ ^/(en|zh)/docs/quick-start/?$ {
+    location ~ ^/(?<quickstart_locale>en|zh)/docs/quick-start/?$ {
         if ($web_asset_read = 0) { return 419; }
         if ($web_docs_page = 0) { return 503; }
         add_header Cache-Control no-cache always;
-        return 307 /$1/docs/quickstart/$is_args$args;
+        return 307 /$quickstart_locale/docs/quickstart/$is_args$args;
     }
-    location ~ ^/(en|zh)/docs/guides/api-keys/?$ {
+    location ~ ^/(?<keys_locale>en|zh)/docs/guides/api-keys/?$ {
         if ($web_asset_read = 0) { return 419; }
         if ($web_docs_page = 0) { return 503; }
         add_header Cache-Control no-cache always;
-        return 307 /$1/docs/keys/$is_args$args;
+        return 307 /$keys_locale/docs/keys/$is_args$args;
     }
-    location ~ ^/(en|zh)/docs/guides/models/?$ {
+    location ~ ^/(?<models_locale>en|zh)/docs/guides/models/?$ {
         if ($web_asset_read = 0) { return 419; }
         if ($web_docs_page = 0) { return 503; }
         add_header Cache-Control no-cache always;
-        return 307 /$1/docs/models/$is_args$args;
+        return 307 /$models_locale/docs/models/$is_args$args;
     }
     location ~ ^/(en|zh)/(docs|updates|reference)(?:/[a-z0-9-]+)*/?$ {
         if ($web_asset_read = 0) { return 419; }
@@ -290,11 +290,11 @@ server {
         add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
     }
 
-    location ~ ^/reference/(api/catalog|catalog)/(models|providers)(?:[.]json)?/?$ {
+    location ~ ^/reference/(?:api/catalog|catalog)/(?<reference_catalog_name>models|providers)(?:[.]json)?/?$ {
         if ($web_reference_read = 2) { return 204; }
         if ($web_asset_read = 0) { return 419; }
         error_page 404 = @reference_not_found;
-        alias /usr/share/nginx/html/reference/catalog/$2.json;
+        alias /usr/share/nginx/html/reference/catalog/$reference_catalog_name.json;
         default_type application/json;
         add_header Access-Control-Allow-Origin "*" always;
         add_header Access-Control-Expose-Headers "ETag" always;
@@ -303,11 +303,11 @@ server {
         add_header Access-Control-Allow-Methods "GET, HEAD, OPTIONS" always;
         add_header Access-Control-Allow-Headers "Accept, If-None-Match" always;
     }
-    location ~ ^/reference/(api/catalog|catalog)/models-by-vendor/([a-z0-9_-]+?)(?:[.]json)?/?$ {
+    location ~ ^/reference/(?:api/catalog|catalog)/models-by-vendor/(?<reference_vendor>[a-z0-9_-]+?)(?:[.]json)?/?$ {
         if ($web_reference_read = 2) { return 204; }
         if ($web_asset_read = 0) { return 419; }
         error_page 404 = @reference_not_found;
-        alias /usr/share/nginx/html/reference/catalog/models-by-vendor/$2.json;
+        alias /usr/share/nginx/html/reference/catalog/models-by-vendor/$reference_vendor.json;
         default_type application/json;
         add_header Access-Control-Allow-Origin "*" always;
         add_header Access-Control-Expose-Headers "ETag" always;
