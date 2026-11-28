@@ -11,3 +11,13 @@ export function BrandLogo(props: { className?: string }) {
 		/>
 	)
 }
+
+/** Keep the image asset intact and pair it with a visible, non-translated brand name. */
+export function BrandIdentity(props: { className?: string }) {
+	return (
+		<span className='inline-flex shrink-0 items-center gap-2 font-semibold tracking-tight whitespace-nowrap'>
+			<BrandLogo className={props.className} />
+			<span aria-hidden='true'>CinaToken</span>
+		</span>
+	)
+}

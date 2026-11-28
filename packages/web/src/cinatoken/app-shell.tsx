@@ -3,7 +3,7 @@ import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/context/theme-provider'
 import { Button } from '@/components/ui/button'
-import { BrandLogo } from './brand-logo'
+import { BrandIdentity } from './brand-logo'
 import { FrontendLinks } from './public/FrontendLinks'
 import { useCinaTokenSession } from './session-context'
 import { SessionGate } from './session-gate'
@@ -77,7 +77,7 @@ export function ApplicationShell() {
 						href='/'
 						className='flex items-center gap-2 font-semibold tracking-tight'
 					>
-						<BrandLogo />
+						<BrandIdentity />
 					</a>
 					<nav
 						aria-label={t('cinatoken.shell.primaryNavigation')}

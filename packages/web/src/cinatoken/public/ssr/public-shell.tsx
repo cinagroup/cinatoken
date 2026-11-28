@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Outlet, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import type { LoginOptions } from '../../auth-popup-contract'
-import { BrandLogo } from '../../brand-logo'
+import { BrandIdentity } from '../../brand-logo'
 import { FrontendLinks } from '../FrontendLinks'
 import { PublicAuthAccessLink } from '../auth/PublicAuthAccessLink'
 import { PublicAuthStatus } from '../auth/PublicAuthStatus'
@@ -64,7 +64,7 @@ export function PublicShell() {
 						href={location.href('/')}
 						className='flex items-center gap-2 font-semibold tracking-tight'
 					>
-						<BrandLogo />
+						<BrandIdentity />
 					</a>
 					<nav
 						aria-label={t('cinatoken.shell.primaryNavigation')}

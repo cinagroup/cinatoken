@@ -1,6 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
-import { BrandLogo } from '../../brand-logo'
+import { BrandIdentity } from '../../brand-logo'
 import { FrontendLinks } from '../FrontendLinks'
 import { PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL } from './home-links'
 
@@ -9,7 +9,7 @@ export function HomeFooter() {
 	return (
 		<footer className='text-muted-foreground flex flex-wrap items-start justify-between gap-6 border-t pt-6 text-xs leading-6'>
 			<div className='flex flex-wrap items-baseline gap-x-4 gap-y-1'>
-				<BrandLogo className='size-7 shrink-0' />
+				<BrandIdentity className='size-7 shrink-0' />
 				<p>{t('cinatoken.home.footer.description')}</p>
 			</div>
 			<div className='space-y-3 sm:text-right'>
