@@ -49,7 +49,7 @@ const MODEL: ModelRow = {
 		tiers: [{ upto: null, input_price: 3, output_price: 6 }],
 	}),
 	tags: '["chat","programming"]',
-	description: 'Public model description',
+	description: 'private-legacy-operator-note',
 	metadata: JSON.stringify({
 		private_endpoint: 'https://private.example/v1',
 		upstream_secret: 'must-not-leak',
@@ -302,7 +302,7 @@ describe('OpenRouter public catalog and managed endpoint details', () => {
 				hugging_face_id: null,
 				name: 'Model One',
 				created: 1785542400,
-				description: 'Public model description',
+				description: '',
 				context_length: 128_000,
 				architecture: {
 					modality: 'text->text',

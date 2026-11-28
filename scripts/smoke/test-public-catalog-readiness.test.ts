@@ -46,7 +46,7 @@ const OPENROUTER_PROVIDER = {
 function readyFetch(overrides: Record<string, Response> = {}): typeof fetch {
 	const responses: Record<string, Response> = {
 		'/health': json({ status: 'ok' }),
-		'/catalog/models': json({ data: [{ id: 'vendor/model' }] }),
+		'/catalog/models': json({ data: [{ id: 'vendor/model', description: null, endpoint_slugs: ['provider'] }] }),
 		'/catalog/providers': json({ data: [{ id: 'provider' }] }),
 		'/api/v1/models': json({
 			data: [OPENROUTER_MODEL],
@@ -55,17 +55,8 @@ function readyFetch(overrides: Record<string, Response> = {}): typeof fetch {
 		}),
 		'/api/v1/providers': json({ data: [OPENROUTER_PROVIDER] }),
 		'/v1/providers': json({ data: [OPENROUTER_PROVIDER] }),
-		'/api/v1/models/vendor/model/endpoints': json({
-			data: {
-				id: 'vendor/model',
-				endpoints: [{
-					name: 'Provider: Model',
-					provider_name: 'Provider',
-					model_id: 'vendor/model',
-					status: 0,
-				}],
-			},
-		}),
+		'/api/v1/model/vendor/model': json({ data: OPENROUTER_MODEL }),
+		'/api/v1/models/vendor/model/endpoints': json({ error: 'unauthorized' }, 401),
 		...overrides,
 	};
 	return (async (input) => {
@@ -77,7 +68,7 @@ function readyFetch(overrides: Record<string, Response> = {}): typeof fetch {
 }
 
 describe('public catalog production readiness', () => {
-	it('proves anonymous catalog, compatibility aliases, and a verified endpoint are published', async () => {
+	it('proves public model discovery and the protected management endpoint boundary', async () => {
 		const result = await checkPublicCatalogReadiness({
 			baseUrl: 'https://api.cinatoken.test/',
 			fetchImpl: readyFetch(),
@@ -89,7 +80,8 @@ describe('public catalog production readiness', () => {
 			canonical_model_count: 1,
 			canonical_provider_count: 1,
 			sampled_model_id: 'vendor/model',
-			sampled_endpoint_count: 1,
+			sampled_endpoint_selector_count: 1,
+			management_endpoint_auth: 'required',
 		});
 	});
 
@@ -113,16 +105,29 @@ describe('public catalog production readiness', () => {
 		);
 	});
 
-	it('fails when a published model has no verified endpoint', async () => {
-		await assert.rejects(
-			checkPublicCatalogReadiness({
+	it('fails when a published model has no valid endpoint selectors', async () => {
+		for (const selectors of [[], [''], ['provider', 'provider']]) {
+			await assert.rejects(checkPublicCatalogReadiness({
 				baseUrl: 'https://api.cinatoken.test',
-				fetchImpl: readyFetch({
-					'/api/v1/models/vendor/model/endpoints': json({ data: { id: 'vendor/model', endpoints: [] } }),
-				}),
-			}),
-			/has no published verified endpoints/u,
-		);
+				fetchImpl: readyFetch({ '/catalog/models': json({ data: [{ id: 'vendor/model', description: null, endpoint_slugs: selectors }] }) }),
+			}), /no valid published endpoint selectors/u);
+		}
+	});
+
+	it('fails if protected endpoint details become anonymous or unavailable', async () => {
+		for (const status of [200, 403, 500]) {
+			await assert.rejects(checkPublicCatalogReadiness({
+				baseUrl: 'https://api.cinatoken.test',
+				fetchImpl: readyFetch({ '/api/v1/models/vendor/model/endpoints': json({}, status) }),
+			}), /must reject anonymous access with HTTP 401/u);
+		}
+	});
+
+	it('rejects missing public description rather than hiding a broken Web contract', async () => {
+		await assert.rejects(checkPublicCatalogReadiness({
+			baseUrl: 'https://api.cinatoken.test',
+			fetchImpl: readyFetch({ '/catalog/models': json({ data: [{ id: 'vendor/model', endpoint_slugs: ['provider'] }] }) }),
+		}), /must include description/u);
 	});
 
 	it('fails when legacy and canonical catalogs refer to different models', async () => {
@@ -130,7 +135,7 @@ describe('public catalog production readiness', () => {
 			checkPublicCatalogReadiness({
 				baseUrl: 'https://api.cinatoken.test',
 				fetchImpl: readyFetch({
-					'/catalog/models': json({ data: [{ id: 'internal-model' }] }),
+					'/catalog/models': json({ data: [{ id: 'internal-model', description: null }] }),
 				}),
 			}),
 			/OpenRouter model vendor\/model is missing from GET \/catalog\/models/u,
@@ -151,7 +156,7 @@ describe('public catalog production readiness', () => {
 		);
 	});
 
-	it('fails when model detail links or endpoint identity references are inconsistent', async () => {
+	it('fails when model links or public detail identities are inconsistent', async () => {
 		await assert.rejects(
 			checkPublicCatalogReadiness({
 				baseUrl: 'https://api.cinatoken.test',
@@ -166,32 +171,10 @@ describe('public catalog production readiness', () => {
 			/links\.details must equal/u,
 		);
 
-		for (const endpoint of [
-			{
-				name: 'Provider: Model',
-				provider_name: 'Provider',
-				model_id: 'other/model',
-				status: 0,
-			},
-			{
-				name: 'Provider: Model',
-				provider_name: 'Unpublished Provider',
-				model_id: 'vendor/model',
-				status: 0,
-			},
-		]) {
-			await assert.rejects(
-				checkPublicCatalogReadiness({
-					baseUrl: 'https://api.cinatoken.test',
-					fetchImpl: readyFetch({
-						'/api/v1/models/vendor/model/endpoints': json({
-							data: { id: 'vendor/model', endpoints: [endpoint] },
-						}),
-					}),
-				}),
-				/(model_id is inconsistent|provider_name is not published)/u,
-			);
-		}
+		await assert.rejects(checkPublicCatalogReadiness({
+			baseUrl: 'https://api.cinatoken.test',
+			fetchImpl: readyFetch({ '/api/v1/model/vendor/model': json({ data: { ...OPENROUTER_MODEL, id: 'other/model' } }) }),
+		}), /public detail must equal/u);
 	});
 
 	it('rejects an incomplete OpenRouter model and top-level pagination contract', async () => {
@@ -227,7 +210,7 @@ describe('public catalog production readiness', () => {
 		}
 	});
 
-	it('rejects incomplete Provider DTOs and endpoints without status', async () => {
+	it('rejects incomplete Provider DTOs', async () => {
 		const provider = { ...OPENROUTER_PROVIDER } as Record<string, unknown>;
 		delete provider.datacenters;
 		await assert.rejects(
@@ -238,25 +221,6 @@ describe('public catalog production readiness', () => {
 				}),
 			}),
 			/must include datacenters/u,
-		);
-
-		await assert.rejects(
-			checkPublicCatalogReadiness({
-				baseUrl: 'https://api.cinatoken.test',
-				fetchImpl: readyFetch({
-					'/api/v1/models/vendor/model/endpoints': json({
-						data: {
-							id: 'vendor/model',
-							endpoints: [{
-								name: 'Provider',
-								provider_name: 'Provider',
-								model_id: 'vendor/model',
-							}],
-						},
-					}),
-				}),
-			}),
-			/endpoint\[0\] must include status/u,
 		);
 	});
 

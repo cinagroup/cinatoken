@@ -6,6 +6,7 @@ import { createProxyApp, type Env } from '../app';
 import { listCatalogDiscoveryModels } from '../services/catalog-discovery';
 import { createInMemoryPublicStatsRuntimeGuard } from '../services/public-stats-runtime-guard';
 import { catalogRoutes, createCatalogRoutes } from './catalog';
+import { catalogModelsSchema, catalogDetailSchema } from '../../../web/src/cinatoken/public/catalog-contracts';
 
 function cachedStats(range = '7d') {
 	const end = new Date();
@@ -77,6 +78,7 @@ describe('GET /catalog/models', () => {
 		let publicAnalyticsCalls = 0;
 		let pricingProfile: unknown = { tiers: [{ upto: null, input_price: 1, output_price: 3 }] };
 		let billingCurrency = 'cny';
+		let operatorNotes: { note?: string | null; description?: string | null } = {};
 		let requestCount = 25;
 		const provider = {
 			id: 'provider-1',
@@ -157,7 +159,7 @@ describe('GET /catalog/models', () => {
 						max_tokens: 8_192,
 						pricing_profile: JSON.stringify(pricingProfile),
 						tags: '[]',
-						description: 'Public description',
+						...operatorNotes,
 						input_modalities: JSON.stringify(['text']),
 						output_modalities: JSON.stringify(['text']),
 						released_at: '2026-08-01',
@@ -267,6 +269,27 @@ describe('GET /catalog/models', () => {
 		assert.equal(detailResponse.status, 200);
 		const detail = (await detailResponse.json()) as { data: { id: string } };
 		assert.equal(detail.data.id, 'vendor/model');
+
+		// Actual current note-only rows and overlapping legacy writers must both
+		// satisfy the real Web contract without publishing either operator-only field.
+		for (const fields of [
+			{},
+			{ note: 'private-current-note' },
+			{ description: 'private-legacy-note' },
+			{ note: 'private-current-note', description: 'private-legacy-note' },
+		]) {
+			operatorNotes = fields;
+			for (const resource of ['models', 'model'] as const) {
+				const result = await app.request(resource === 'models' ? '/catalog/models' : '/catalog/models/vendor/~dmVuZG9yL21vZGVs');
+				assert.equal(result.status, 200);
+				const payload = await result.json();
+				const parsed = resource === 'models' ? catalogModelsSchema.parse(payload) : catalogDetailSchema.parse(payload);
+				const row = Array.isArray(parsed.data) ? parsed.data[0]! : parsed.data;
+				assert.equal(row.description, null);
+				assert.equal('note' in row, false);
+				assert.equal(JSON.stringify(payload).includes('private-'), false);
+			}
+		}
 
 		const providersResponse = await app.request('/catalog/providers');
 		assert.equal(providersResponse.status, 200);

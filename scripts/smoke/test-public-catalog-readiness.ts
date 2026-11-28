@@ -1,4 +1,5 @@
 import { pathToFileURL } from 'node:url';
+import { isDeepStrictEqual } from 'node:util';
 
 export type PublicCatalogReadinessOptions = {
 	baseUrl: string;
@@ -15,7 +16,8 @@ export type PublicCatalogReadinessSummary = {
 	canonical_model_count: number;
 	canonical_provider_count: number;
 	sampled_model_id: string;
-	sampled_endpoint_count: number;
+	sampled_endpoint_selector_count: number;
+	management_endpoint_auth: 'required';
 };
 
 type JsonObject = Record<string, unknown>;
@@ -337,6 +339,9 @@ export async function checkPublicCatalogReadiness(
 		);
 	}
 
+	for (const [index, model] of catalogModels.entries()) {
+		nullableString(requireOwn(model, 'description', `GET /catalog/models.data[${index}]`), 'catalog description');
+	}
 	const catalogModelIds = uniqueNonEmptyStrings(catalogModels, 'id', 'GET /catalog/models');
 	const canonicalModelIds = uniqueNonEmptyStrings(canonicalModels, 'id', 'GET /api/v1/models');
 	for (const modelId of canonicalModelIds) {
@@ -374,44 +379,27 @@ export async function checkPublicCatalogReadiness(
 		.split('/')
 		.map((segment) => encodeURIComponent(segment))
 		.join('/');
-	const endpointBody = asObject(
-		await readJson(
-			fetchImpl,
-			`${baseUrl}/api/v1/models/${sampledModelPath}/endpoints`,
-			timeoutMs,
-			'GET /api/v1/models/:author/:model/endpoints',
-		),
-		'GET /api/v1/models/:author/:model/endpoints',
+	const detailBody = asObject(
+		await readJson(fetchImpl, `${baseUrl}/api/v1/model/${sampledModelPath}`, timeoutMs, 'GET /api/v1/model/:author/:model'),
+		'public model detail',
 	);
-	const endpointDocument = asObject(
-		endpointBody.data,
-		'GET /api/v1/models/:author/:model/endpoints.data',
-	);
-	if (endpointDocument.id !== sampledModel.id) {
-		throw new Error(`model ${sampledModelId} endpoint document id must equal ${String(sampledModel.id)}`);
+	if (!isDeepStrictEqual(detailBody.data, sampledModel)) {
+		throw new Error(`model ${sampledModelId} public detail must equal its published model DTO`);
 	}
-	if (!Array.isArray(endpointDocument.endpoints) || endpointDocument.endpoints.length === 0) {
-		throw new Error(`model ${sampledModelId} has no published verified endpoints`);
+	const catalogSample = catalogModels.find((model) => model.id === sampledModel.id)!;
+	const selectors = stringArray(requireOwn(catalogSample, 'endpoint_slugs', 'sampled catalog model'), 'endpoint_slugs');
+	if (selectors.length === 0 || selectors.some((value) => value.trim() === '') || new Set(selectors).size !== selectors.length) {
+		throw new Error(`model ${sampledModelId} has no valid published endpoint selectors`);
 	}
-	endpointDocument.endpoints.forEach((endpoint, index) => {
-		const item = asObject(
-			endpoint,
-			`GET /api/v1/models/:author/:model/endpoints.data.endpoints[${index}]`,
-		);
-		if (requireOwn(item, 'status', `endpoint[${index}]`) !== 0) {
-			throw new Error(`model ${sampledModelId} endpoint[${index}].status must be 0`);
-		}
-		if (requireOwn(item, 'model_id', `endpoint[${index}]`) !== sampledModel.id) {
-			throw new Error(`model ${sampledModelId} endpoint[${index}].model_id is inconsistent`);
-		}
-		const providerName = requireOwn(item, 'provider_name', `endpoint[${index}]`);
-		if (
-			typeof providerName !== 'string' || providerName.trim() === '' ||
-			![...canonicalProviderIdentities.values()].includes(providerName)
-		) {
-			throw new Error(`model ${sampledModelId} endpoint[${index}].provider_name is not published`);
-		}
+	// Endpoint details intentionally require a Management API key. Public readiness
+	// proves the anonymous boundary; authenticated endpoint checks run separately.
+	const managementResponse = await fetchImpl(`${baseUrl}/api/v1/models/${sampledModelPath}/endpoints`, {
+		headers: { Accept: 'application/json' },
+		signal: AbortSignal.timeout(timeoutMs),
 	});
+	if (managementResponse.status !== 401) {
+		throw new Error(`management endpoint details must reject anonymous access with HTTP 401, received ${managementResponse.status}`);
+	}
 
 	return {
 		base_url: baseUrl,
@@ -420,7 +408,8 @@ export async function checkPublicCatalogReadiness(
 		canonical_model_count: canonicalModelList.totalCount,
 		canonical_provider_count: canonicalProviders.length,
 		sampled_model_id: sampledModelId,
-		sampled_endpoint_count: endpointDocument.endpoints.length,
+		sampled_endpoint_selector_count: selectors.length,
+		management_endpoint_auth: 'required',
 	};
 }
 

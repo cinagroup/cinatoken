@@ -1100,7 +1100,8 @@ function toOpenRouterModel(
 		hugging_face_id: null,
 		name: safeText(model.display_name, 160) ?? id,
 		created: releasedEpoch(model.released_at),
-		description: safeText(model.description, 4_000) ?? '',
+		// Legacy description and note columns are private operator notes.
+		description: '',
 		context_length: positiveCapacity(model.context_window) ?? (dedicatedAudioOutput ? 0 : null),
 		architecture: {
 			modality: inputModalities.length > 0 && outputModalities.length > 0
