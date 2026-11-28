@@ -35,6 +35,8 @@ export type CatalogDiscoveryModel = {
 	id: string;
 	slug: string;
 	display_name: string | null;
+	/** Introductions live in static presets; operator notes stay private. */
+	description: null;
 	vendor: string;
 	context_window: number | null;
 	max_tokens: number | null;
@@ -242,6 +244,7 @@ export async function listCatalogDiscoveryModels(
 			id: m.id,
 			slug: toPublicModelSlug(m.id),
 			display_name: m.display_name,
+			description: null,
 			vendor: normalizePublicModelVendor(m.vendor),
 			context_window: m.context_window,
 			max_tokens: m.max_tokens,
