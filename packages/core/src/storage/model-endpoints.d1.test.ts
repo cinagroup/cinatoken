@@ -137,9 +137,8 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 				shared_channel_type TEXT, kind TEXT NOT NULL DEFAULT '',
 				created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);
-			CREATE TABLE model_surfaces (id TEXT PRIMARY KEY, request_protocol TEXT, request_operation TEXT, status TEXT);
+			CREATE TABLE model_surfaces (id TEXT PRIMARY KEY, route_pool_id TEXT, request_protocol TEXT, request_operation TEXT, status TEXT);
 			CREATE TABLE route_pools (
-				model_surface_id TEXT,
 				id TEXT PRIMARY KEY,
 				status TEXT NOT NULL
 			);
@@ -360,10 +359,20 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 					adapter: "passthrough",
 					route_pool_id: "pool-1",
 					pool_status: "active",
-				price_override: null, priority: 0, weight: 1, surfaces: null,
+				price_override: null, priority: 0, weight: 1, surfaces: '[]',
 				},
 			]
 		);
+		database.exec(`INSERT INTO model_surfaces VALUES
+			('surface-chat', 'pool-1', 'openai', 'chat', 'active'),
+			('surface-responses', 'pool-1', 'openai', 'responses', 'disabled'),
+			('surface-other', 'other-pool', 'anthropic', 'messages', 'active')`);
+		const discovery = await repository.listDiscoveryRouteBindings(['endpoint-1']);
+		assert.equal(discovery.length, 1, 'multiple surfaces must not duplicate route bindings');
+		assert.deepEqual(JSON.parse(discovery[0]!.surfaces!), [
+			{request_protocol:'openai',request_operation:'chat',status:'active'},
+			{request_protocol:'openai',request_operation:'responses',status:'disabled'},
+		]);
 		assert.deepEqual(
 			(await repository.listRouteLinks(["endpoint-1"])).map((row) => ({
 				...row,

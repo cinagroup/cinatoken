@@ -6,11 +6,49 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
 import { createBudgetRepository, gatewayTables, identifier, tableQueries } from '../test-support/postgres-schema-contract.mjs';
+import { createPostgresModelEndpointsRepository } from '../db/postgres/model-endpoints.impl.ts';
 
 assert.ok(process.env.GATEWAY_PGLITE_MODULE, 'Set GATEWAY_PGLITE_MODULE to a locally installed PGlite ESM file (not a database URL).');
 assert.doesNotMatch(process.env.GATEWAY_PGLITE_MODULE, /^[a-z]+:\/\//i);
 const { PGlite } = await import(pathToFileURL(resolve(process.env.GATEWAY_PGLITE_MODULE)).href);
 const schemaName = 'cinatoken_gateway';
+
+test('PostgreSQL engine: endpoint discovery follows every surface in its pool without duplicating bindings', async () => {
+  const pg = await PGlite.create();
+  try {
+    await pg.exec(`CREATE SCHEMA ${schemaName}; SET search_path TO ${schemaName}`);
+    // Derive columns from the actual topology schema so nonexistent inverse
+    // foreign keys cannot accidentally be introduced by a synthetic fixture.
+    const names = new Set(['route_pools', 'model_surfaces', 'model_routes', 'model_endpoint_routes']);
+    for (const [, table] of gatewayTables) {
+      const q = tableQueries(table);
+      if (!names.has(q.config.name)) continue;
+      await pg.exec(`CREATE TABLE ${identifier(q.config.name)} (${q.config.columns.map(c => `${identifier(c.name)} ${c.getSQLType()}`).join(', ')})`);
+    }
+    await pg.exec(`INSERT INTO route_pools (id,status) VALUES ('pool','active'),('empty','active'),('other','active');
+      INSERT INTO model_surfaces (id,route_pool_id,request_protocol,request_operation,status) VALUES
+        ('chat','pool','openai','chat','active'),('responses','pool','openai','responses','disabled'),
+        ('foreign','other','anthropic','messages','active');
+      INSERT INTO model_routes (id,model_id,provider_id,provider_model_name,status,route_pool_id) VALUES
+        ('route','model','provider','upstream','active','pool'),
+        ('empty-route','model','provider','upstream','active','empty'),
+        ('legacy-route','model','provider','upstream','active',NULL);
+      INSERT INTO model_endpoint_routes (endpoint_id,route_target_id,subject_fingerprint) VALUES
+        ('endpoint','route','fingerprint'),('endpoint','empty-route','fingerprint'),('endpoint','legacy-route','fingerprint')`);
+    const repository = createPostgresModelEndpointsRepository({driver:'postgres',drizzle:{},raw:{
+      typed: value => value,
+      unsafe: async (sql, params = []) => (await pg.query(sql, params)).rows,
+    }});
+    const rows = await repository.listDiscoveryRouteBindings(['endpoint']);
+    assert.equal(rows.length, 3);
+    assert.deepEqual(JSON.parse(rows.find(r => r.id === 'route').surfaces), [
+      {request_protocol:'openai',request_operation:'chat',status:'active'},
+      {request_protocol:'openai',request_operation:'responses',status:'disabled'},
+    ]);
+    for (const id of ['empty-route','legacy-route']) assert.deepEqual(JSON.parse(rows.find(r => r.id === id).surfaces), []);
+    assert.deepEqual(await repository.listDiscoveryRouteBindings(['missing']), []);
+  } finally { await pg.close(); }
+});
 
 test('PostgreSQL engine: all ORM tables ignore hostile or empty search paths', async t => {
   const pg = await PGlite.create();
