@@ -68,6 +68,7 @@ function copiedCLI(root) {
 		'docs-site.mjs',
 		'build-inputs.mjs',
 		'source-archive.mjs',
+		'build-input-policy-pre-docs.json',
 		'source-delivery.mjs',
 		'historical-source.mjs',
 	])

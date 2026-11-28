@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { deflateRawSync, inflateRawSync } from 'node:zlib'
+import preDocsPolicy from './build-input-policy-pre-docs.json' with { type: 'json' }
 import {
 	WEB_BUILD_INPUT_POLICY,
 	inventoryWebBuildInputs,
@@ -22,9 +23,6 @@ const MAX_ARCHIVE_BYTES = MAX_TAR_BYTES + 1024 * 1024
 const GZIP_HEADER = Buffer.from([0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 2, 255])
 const utf8 = new TextDecoder('utf-8', { fatal: true })
 const policySha256 = hash(Buffer.from(JSON.stringify(WEB_BUILD_INPUT_POLICY)))
-const deniedNames = WEB_BUILD_INPUT_POLICY.exclusions.filePatterns.map(
-	(pattern) => new RegExp(pattern, 'i')
-)
 const BUILDING = Buffer.from(`# Building the declared Web inputs
 
 The source/ directory contains the original bytes of the declared version 2
@@ -275,16 +273,18 @@ function tarMembers(tar) {
 	fail('missing tar end blocks')
 }
 
-function selectedRole(inputPath) {
+function selectedRole(inputPath, policy = WEB_BUILD_INPUT_POLICY) {
 	validPath(inputPath)
 	const parts = inputPath.split('/')
 	const names = parts.map((part) => part.toLowerCase())
-	const exclusions = WEB_BUILD_INPUT_POLICY.exclusions
+	const exclusions = policy.exclusions
 	const rootOffset = names[0] === 'packages' ? 2 : 0
 	if (
 		names.some((name) => exclusions.directories.includes(name)) ||
 		exclusions.privateDataRootDirectories.includes(names[rootOffset]) ||
-		deniedNames.some((pattern) => pattern.test(parts.at(-1)))
+		exclusions.filePatterns.some((pattern) =>
+			new RegExp(pattern, 'i').test(parts.at(-1))
+		)
 	)
 		fail('excluded source input')
 	const extension = path.posix.extname(parts.at(-1)).toLowerCase()
@@ -301,10 +301,7 @@ function selectedRole(inputPath) {
 			))
 	)
 		fail('excluded private source input')
-	for (const root of [
-		...WEB_BUILD_INPUT_POLICY.requiredRoots,
-		...WEB_BUILD_INPUT_POLICY.optionalRoots,
-	]) {
+	for (const root of [...policy.requiredRoots, ...policy.optionalRoots]) {
 		if (
 			root.kind === 'file'
 				? inputPath === root.path
@@ -312,7 +309,7 @@ function selectedRole(inputPath) {
 		)
 			return root.role
 	}
-	for (const selector of WEB_BUILD_INPUT_POLICY.configurationSelectors) {
+	for (const selector of policy.configurationSelectors) {
 		const parent = path.posix.dirname(inputPath)
 		if (
 			parent === selector.directory &&
@@ -323,15 +320,15 @@ function selectedRole(inputPath) {
 			return selector.role
 	}
 	if (/^packages\/[^/]+\/package\.json$/.test(inputPath))
-		return WEB_BUILD_INPUT_POLICY.workspaceManifests.role
+		return policy.workspaceManifests.role
 	fail('source path is outside the declared policy')
 }
 
-function sourceDigest(files, bytesFor) {
+function sourceDigest(files, bytesFor, policy = WEB_BUILD_INPUT_POLICY) {
 	const digest = createHash('sha256')
 	digest
-		.update(WEB_BUILD_INPUT_POLICY.digest.domain)
-		.update(`${policySha256}\0`)
+		.update(policy.digest.domain)
+		.update(`${hash(Buffer.from(JSON.stringify(policy)))}\0`)
 	for (const file of files)
 		digest.update(`${file.path}\0${file.bytes}\0`).update(bytesFor(file))
 	return digest.digest('hex')
@@ -348,6 +345,13 @@ function validateManifest(raw, members) {
 	} catch {
 		fail('invalid source manifest JSON')
 	}
+	// Accept only the current policy and this exact audited historical snapshot.
+	// Embedded policy data alone must never expand the verifier's allowlist.
+	const policy = [WEB_BUILD_INPUT_POLICY, preDocsPolicy].find(
+		(candidate) =>
+			value?.policySha256 === hash(Buffer.from(JSON.stringify(candidate))) &&
+			JSON.stringify(value?.policy) === JSON.stringify(candidate)
+	)
 	if (
 		!exactKeys(value, [
 			'schemaVersion',
@@ -358,10 +362,9 @@ function validateManifest(raw, members) {
 			'totalSourceBytes',
 		]) ||
 		value.schemaVersion !== 1 ||
-		value.policySha256 !== policySha256 ||
-		JSON.stringify(value.policy) !== JSON.stringify(WEB_BUILD_INPUT_POLICY) ||
+		!policy ||
 		!Array.isArray(value.files) ||
-		value.files.length > WEB_BUILD_INPUT_POLICY.limits.maxFiles
+		value.files.length > policy.limits.maxFiles
 	)
 		fail('invalid manifest schema, policy or inventory')
 	const buildContract = contract(value.buildContract)
@@ -373,13 +376,13 @@ function validateManifest(raw, members) {
 		const inputPath = validPath(file.path)
 		if (
 			(previous && byteOrder(previous, inputPath) >= 0) ||
-			file.role !== selectedRole(inputPath)
+			file.role !== selectedRole(inputPath, policy)
 		)
 			fail('inventory order, duplicate or role mismatch')
 		if (
 			!Number.isSafeInteger(file.bytes) ||
 			file.bytes < 0 ||
-			file.bytes > WEB_BUILD_INPUT_POLICY.limits.maxFileBytes ||
+			file.bytes > policy.limits.maxFileBytes ||
 			typeof file.sha256 !== 'string' ||
 			!/^[0-9a-f]{64}$/.test(file.sha256)
 		)
@@ -388,7 +391,7 @@ function validateManifest(raw, members) {
 		if (!bytes || bytes.length !== file.bytes || hash(bytes) !== file.sha256)
 			fail('source member missing, bytes or hash mismatch')
 		totalSourceBytes += file.bytes
-		if (totalSourceBytes > WEB_BUILD_INPUT_POLICY.limits.maxTotalBytes)
+		if (totalSourceBytes > policy.limits.maxTotalBytes)
 			fail('total source byte limit exceeded')
 		previous = inputPath
 		return {
@@ -399,21 +402,24 @@ function validateManifest(raw, members) {
 		}
 	})
 	const paths = new Set(files.map((file) => file.path))
-	for (const root of WEB_BUILD_INPUT_POLICY.requiredRoots)
+	for (const root of policy.requiredRoots)
 		if (root.kind === 'file' && !paths.has(root.path))
 			fail('required source input is missing')
 	if (
 		members.size !== files.length + 2 ||
 		value.totalSourceBytes !== totalSourceBytes ||
-		sourceDigest(files, (file) => members.get(`source/${file.path}`)) !==
-			buildContract.sourceSha256
+		sourceDigest(
+			files,
+			(file) => members.get(`source/${file.path}`),
+			policy
+		) !== buildContract.sourceSha256
 	)
 		fail('inventory member set, total or build fingerprint mismatch')
 	const manifest = {
 		schemaVersion: 1,
 		buildContract,
-		policy: WEB_BUILD_INPUT_POLICY,
-		policySha256,
+		policy,
+		policySha256: value.policySha256,
 		files,
 		totalSourceBytes,
 	}

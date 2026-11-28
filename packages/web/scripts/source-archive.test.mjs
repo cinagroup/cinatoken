@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import test from 'node:test'
 import { gunzipSync, gzipSync } from 'node:zlib'
+import preDocsPolicy from './build-input-policy-pre-docs.json' with { type: 'json' }
 import {
 	WEB_BUILD_INPUT_POLICY,
 	inventoryWebBuildInputs,
@@ -911,6 +912,42 @@ test('a rehashed archive cannot omit a required source configuration', (t) => {
 			(file) => file.path !== '.dockerignore'
 		)
 		rebindManifest(manifest, entries)
+	})
+	assertArchiveError(() => verifySourceArchive(pack(entries)))
+})
+
+test('the exact pre-documentation policy remains verifiable without rewriting retained source bytes', (t) => {
+	assert.equal(
+		sha256(Buffer.from(JSON.stringify(preDocsPolicy))),
+		'c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f'
+	)
+	const result = archive(t)
+	const entries = members(result.bytes)
+	const manifest = editManifest(entries, (value) => {
+		value.policy = structuredClone(preDocsPolicy)
+		value.policySha256 = sha256(Buffer.from(JSON.stringify(value.policy)))
+		rebindManifest(value, entries)
+	})
+	const bytes = pack(entries)
+	const verified = verifySourceArchive(bytes, {
+		expectedBuildContract: manifest.buildContract,
+	})
+	assert.equal(verified.descriptor.sha256, sha256(bytes))
+	assert.deepEqual(verified.manifest.policy, preDocsPolicy)
+	assert.equal(verified.descriptor.inputPolicySha256, manifest.policySha256)
+})
+
+test('a fully rehashed unknown input policy cannot authorize extra source roots', (t) => {
+	const result = archive(t)
+	const entries = members(result.bytes)
+	editManifest(entries, (value) => {
+		value.policy.optionalRoots.push({
+			path: 'private-data',
+			kind: 'directory',
+			role: 'web-source',
+		})
+		value.policySha256 = sha256(Buffer.from(JSON.stringify(value.policy)))
+		rebindManifest(value, entries)
 	})
 	assertArchiveError(() => verifySourceArchive(pack(entries)))
 })
