@@ -186,5 +186,5 @@ export function publicRobotsText(origin: string): string {
 		'/chat',
 		...PUBLIC_HTTP_LOCALES.map((locale) => `/${locale}/chat`),
 	]
-	return `User-agent: *\n${privatePaths.map((path) => `Disallow: ${path}`).join('\n')}\nSitemap: ${origin}/sitemap.xml\n`
+	return `User-agent: *\n${privatePaths.map((path) => `Disallow: ${path}`).join('\n')}\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}/content-sitemap.xml\n`
 }

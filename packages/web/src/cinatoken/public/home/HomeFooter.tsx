@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { BrandIdentity } from '../../brand-logo'
 import { FrontendLinks } from '../FrontendLinks'
 import { usePublicLocation } from '../ssr/public-location'
-import { publicDocsHref, PUBLIC_GITHUB_URL } from './home-links'
+import {
+	publicContentHref,
+	publicDocsHref,
+	PUBLIC_GITHUB_URL,
+} from './home-links'
 
 export function HomeFooter() {
 	const { t } = useTranslation()
@@ -32,6 +36,18 @@ export function HomeFooter() {
 						className='hover:text-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
 					>
 						{t('cinatoken.home.nav.docs')}
+					</a>
+					<a
+						href={publicContentHref('updates', locale)}
+						className='hover:text-foreground rounded-sm underline underline-offset-4'
+					>
+						{t('cinatoken.home.nav.updates')}
+					</a>
+					<a
+						href={publicContentHref('reference/catalog/models', locale)}
+						className='hover:text-foreground rounded-sm underline underline-offset-4'
+					>
+						{t('cinatoken.home.nav.reference')}
 					</a>
 					<FrontendLinks />
 				</nav>

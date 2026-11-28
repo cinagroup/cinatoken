@@ -1,16 +1,32 @@
 ---
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-const zh = Astro.locals.starlightRoute.lang.startsWith('zh')
+const zh = Astro.locals.starlightRoute.lang.startsWith("zh");
 ---
+
 <label>
-  <span class="sr-only">{zh ? '主题' : 'Theme'}</span>
-  <select data-docs-theme>
-    <option value="system">{zh ? '跟随系统' : 'System'}</option>
-    <option value="light">{zh ? '浅色' : 'Light'}</option>
-    <option value="dark">{zh ? '深色' : 'Dark'}</option>
-  </select>
+	<span class="sr-only">{zh ? "主题" : "Theme"}</span>
+	<select data-docs-theme>
+		<option value="system">{zh ? "跟随系统" : "System"}</option>
+		<option value="light">{zh ? "浅色" : "Light"}</option>
+		<option value="dark">{zh ? "深色" : "Dark"}</option>
+	</select>
 </label>
 <style>
-select { color: var(--sl-color-text); background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: .375rem; padding: .35rem .5rem; font: inherit; font-size: .875rem; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+	select {
+		color: var(--sl-color-text);
+		background: var(--sl-color-bg);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.375rem;
+		padding: 0.35rem 0.5rem;
+		font: inherit;
+		font-size: 0.875rem;
+	}
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
 </style>

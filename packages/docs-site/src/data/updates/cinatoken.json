@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "id": "2026-11-28-docs",
+      "date": "2026-11-28",
+      "source": "cinatoken",
+      "title": {
+        "zh": "文档与品牌导航上线",
+        "en": "Documentation and brand navigation"
+      },
+      "href": {
+        "zh": "/zh/updates/2026-11-28-docs/",
+        "en": "/en/updates/2026-11-28-docs/"
+      },
+      "evidence": "https://github.com/cinagroup/cinatoken/commit/8fbaa084eeab5a0506f32f27da383e8f457836d0"
+    },
+    {
+      "id": "2026-11-28-model-catalog",
+      "date": "2026-11-28",
+      "source": "cinatoken",
+      "title": {
+        "zh": "公开模型目录加载修复",
+        "en": "Public model catalog loading fixed"
+      },
+      "href": {
+        "zh": "/zh/updates/2026-11-28-model-catalog/",
+        "en": "/en/updates/2026-11-28-model-catalog/"
+      },
+      "evidence": "https://github.com/cinagroup/cinatoken/commit/8119804c3c91a73080d14637586f6375f0aadf99"
+    },
+    {
+      "id": "2026-11-27-admin-overview",
+      "date": "2026-11-27",
+      "source": "cinatoken",
+      "title": {
+        "zh": "管理概览统一入口",
+        "en": "One administrator overview"
+      },
+      "href": {
+        "zh": "/zh/updates/2026-11-27-admin-overview/",
+        "en": "/en/updates/2026-11-27-admin-overview/"
+      },
+      "evidence": "https://github.com/cinagroup/cinatoken/commit/c280759bfe0bafba01de338e35aa3f40f480d54d"
+    }
+  ]
+}

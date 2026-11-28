@@ -83,3 +83,63 @@ test('only versioned documentation code and style assets join rollback retention
 	])
 		assert.equal(isRetainableAsset(path), false)
 })
+
+test('versioned search assets retain every index member and reject traversal and unversioned paths', () => {
+	const version = 'a'.repeat(64)
+	for (const path of [
+		`docs-assets/search/${version}/pagefind.js`,
+		`docs-assets/search/${version}/fragment/zh-cn_abcd.pf_fragment`,
+		`docs-assets/search/${version}/wasm.unknown.pagefind`,
+	])
+		assert.equal(isRetainableAsset(path), true)
+	for (const path of [
+		'docs-assets/search/pagefind.js',
+		`docs-assets/search/${version}/../index.html`,
+		`docs-assets/search/${version}/.env`,
+	])
+		assert.equal(isRetainableAsset(path), false)
+})
+
+test('content copy includes versioned search members, reference feeds and XML without admitting private paths', (t) => {
+	const extras = [
+		`docs-assets/search/${'a'.repeat(64)}/pagefind.js`,
+		`docs-assets/search/${'a'.repeat(64)}/fragment/zh.pf_fragment`,
+		`docs-assets/search/${'a'.repeat(64)}/wasm.unknown.pagefind`,
+		'reference/catalog/models.json',
+		'reference/catalog/providers.json',
+		'reference/catalog/models-by-vendor/deepseek.json',
+		'content-sitemap.xml',
+		'updates.xml',
+		'zh/updates/index.html',
+		'en/reference/catalog/models/index.html',
+	]
+	const f = fixture(t)
+	const manifest = join(f.root, 'docs-site/dist/docs-build.json')
+	writeFileSync(
+		manifest,
+		JSON.stringify({
+			version: 1,
+			sourceSha256: 'fixture-source',
+			files: [...f.files, ...extras],
+		})
+	)
+	for (const path of extras) {
+		const file = join(f.root, 'docs-site/dist', path)
+		mkdirSync(dirname(file), { recursive: true })
+		writeFileSync(file, 'content fixture')
+	}
+	copyDocsSite(f.packageRoot, f.output, 'fixture-source')
+	for (const path of extras)
+		assert.equal(readFileSync(join(f.output, path), 'utf8'), 'content fixture')
+	for (const path of [
+		'reference/catalog/../../.env',
+		'docs-assets/search/unversioned/pagefind.js',
+		'reference/catalog/private.json',
+	]) {
+		const bad = fixture(t, { files: [...f.files, path] })
+		assert.throws(
+			() => copyDocsSite(bad.packageRoot, bad.output, 'fixture-source'),
+			/approved static namespaces/
+		)
+	}
+})

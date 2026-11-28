@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { IMMUTABLE_CACHE } from "../../packages/web/scripts/asset-policy.mjs";
@@ -193,6 +194,149 @@ try {
 				);
 			if (method === "HEAD") assert.equal(await response.text(), "");
 		}
+	}
+
+	const searchMembers = release.manifest.files.filter((file) =>
+		file.path.startsWith("docs-assets/search/"),
+	);
+	assert.ok(searchMembers.some((file) => file.path.endsWith("/pagefind.js")));
+	assert.ok(searchMembers.some((file) => file.path.includes("/wasm.")));
+	for (const file of searchMembers) {
+		const response = await fetch(`${origin}/${file.path}`, {
+			signal: AbortSignal.timeout(3000),
+		});
+		assert.equal(response.status, 200, file.path);
+		assert.equal(response.headers.get("cache-control"), IMMUTABLE_CACHE);
+		assert.equal(
+			createHash("sha256")
+				.update(Buffer.from(await response.arrayBuffer()))
+				.digest("hex"),
+			file.sha256,
+			file.path,
+		);
+	}
+	for (const prefix of ["/reference/api/catalog", "/reference/catalog"])
+		for (const [name, count] of [
+			["models", 206],
+			["providers", 69],
+			["models-by-vendor/deepseek", 4],
+		])
+			for (const suffix of ["", ".json"]) {
+				const path = `${prefix}/${name}${suffix}`;
+				const response = await fetch(origin + path);
+				assert.equal(response.status, 200, path);
+				assert.match(response.headers.get("content-type"), /application\/json/);
+				assert.equal(response.headers.get("access-control-allow-origin"), "*");
+				assert.equal(
+					response.headers.get("access-control-expose-headers"),
+					"ETag",
+				);
+				assert.match(response.headers.get("cache-control"), /max-age=300/);
+				const body = await response.json();
+				assert.equal(body.count, count, path);
+				assert.equal(body.items.length, count);
+				if (name === "providers")
+					assert.ok(!JSON.stringify(body).includes("managed_environment_key"));
+				const etag = response.headers.get("etag");
+				assert.ok(etag);
+				const cached = await fetch(origin + path, {
+					headers: { "if-none-match": etag },
+				});
+				assert.equal(cached.status, 304, path);
+				assert.equal(await cached.text(), "");
+				for (const method of ["HEAD", "OPTIONS"]) {
+					const read = await fetch(origin + path, { method });
+					assert.equal(read.status, method === "OPTIONS" ? 204 : 200, path);
+					assert.equal(await read.text(), "");
+					assert.equal(read.headers.get("access-control-allow-origin"), "*");
+				}
+			}
+	for (const path of [
+		"/reference/api/catalog/missing",
+		"/reference/catalog/models-by-vendor/missing.json",
+	])
+		for (const method of ["GET", "HEAD"]) {
+			const response = await fetch(origin + path, { method });
+			assert.equal(response.status, 404, path);
+			assert.equal(response.headers.get("cache-control"), "no-store");
+			assert.match(response.headers.get("content-type"), /application\/json/);
+			if (method === "GET")
+				assert.deepEqual(await response.json(), {
+					error: "reference_not_found",
+				});
+			else assert.equal(await response.text(), "");
+		}
+	for (const [oldPath, target] of [
+		["quick-start", "quickstart"],
+		["guides/api-keys", "keys"],
+		["guides/models", "models"],
+	]) {
+		const response = await fetch(`${origin}/zh/docs/${oldPath}?from=bookmark`, {
+			redirect: "manual",
+		});
+		assert.equal(response.status, 307);
+		assert.equal(
+			new URL(response.headers.get("location"), origin).pathname,
+			`/zh/docs/${target}/`,
+		);
+		assert.equal(
+			new URL(response.headers.get("location"), origin).search,
+			"?from=bookmark",
+		);
+	}
+	for (const path of ["/content-sitemap.xml", "/updates.xml"]) {
+		const response = await fetch(origin + path);
+		assert.equal(response.status, 200);
+		assert.match(response.headers.get("content-type"), /application\/xml/);
+		assert.match(response.headers.get("cache-control"), /max-age=300/);
+		const body = await response.text();
+		assert.ok(body.startsWith("<?xml"));
+		if (path.includes("sitemap"))
+			assert.equal([...body.matchAll(/<loc>/g)].length, 82);
+		else {
+			assert.equal([...body.matchAll(/<item>/g)].length, 3);
+			assert.ok(!body.includes("octafuse.dev"));
+		}
+	}
+
+	const disabled = docker([
+		"run",
+		"--detach",
+		"--rm",
+		"--publish",
+		"127.0.0.1::8080",
+		"--env",
+		"CINATOKEN_WEB_DOCS_ENABLED=false",
+		"--env",
+		"CINATOKEN_ADMIN_UPSTREAM=http://127.0.0.1:1",
+		"cinatoken-web:check",
+	]);
+	try {
+		const disabledPort = docker(["port", disabled, "8080/tcp"]).match(
+			/^127\.0\.0\.1:(\d+)$/,
+		)?.[1];
+		assert.ok(disabledPort);
+		const base = `http://127.0.0.1:${disabledPort}`;
+		let response;
+		for (let attempt = 0; attempt < 20; attempt++) {
+			try {
+				response = await fetch(base + "/en/docs/");
+				break;
+			} catch {
+				await new Promise((resolve) => setTimeout(resolve, 250));
+			}
+		}
+		assert.equal(response?.status, 503);
+		assert.equal(response.headers.get("cache-control"), "no-store");
+		assert.equal(response.headers.get("x-robots-tag"), "noindex");
+		for (const path of [
+			"/reference/api/catalog/models",
+			"/content-sitemap.xml",
+			`/${searchMembers[0].path}`,
+		])
+			assert.equal((await fetch(base + path)).status, 200, path);
+	} finally {
+		docker(["stop", "--time", "2", disabled]);
 	}
 	process.stdout.write(
 		"Docker Web account routes, HTTP GET/HEAD, cache, missing-asset and private-manifest checks passed\n",

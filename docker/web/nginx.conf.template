@@ -1,3 +1,24 @@
+map $status $web_docs_cache {
+    default "no-cache, no-transform";
+    503 no-store;
+}
+
+map $status $web_docs_robots {
+    default "";
+    503 noindex;
+}
+
+map $request_method $web_reference_read {
+    default 0;
+    GET 1;
+    HEAD 1;
+    OPTIONS 2;
+}
+map $status $web_reference_cache {
+    default no-store;
+    200 "public, max-age=300, must-revalidate";
+    304 "public, max-age=300, must-revalidate";
+}
 # Docs pages have a separate rollout switch; assets survive rollback.
 map "${CINATOKEN_WEB_DOCS_ENABLED}:$request_method" $web_docs_page {
     default 0;
@@ -196,6 +217,7 @@ map "$status:$request_uri" $web_asset_cache_control {
     "~*^(200|206|304):/web-assets/.*[.]html?([?].*)?$" no-store;
     "~^(200|206|304):/web-assets/static/[A-Za-z0-9_./-]+[.][a-f0-9]{8,64}[.](?:js|css|woff2?|ttf|otf|png|jpe?g|svg|webp|avif|ico)(?:[.]LICENSE[.]txt)?([?].*)?$" "public, max-age=31536000, immutable";
     "~^(200|206|304):/web-assets/sources/web[.][a-f0-9]{64}[.]tar[.]gz([?].*)?$" "public, max-age=31536000, immutable";
+    "~^(200|206|304):/(?:web-assets/)?docs-assets/search/[a-f0-9]{64}/(?:[A-Za-z0-9_-][A-Za-z0-9_.-]*/)*[A-Za-z0-9_-][A-Za-z0-9_.-]*([?].*)?$" "public, max-age=31536000, immutable";
     "~^(200|206|304):/(?:web-assets/)?docs-assets/static/[A-Za-z0-9_.-]+[.][A-Za-z0-9_-]{5,64}[.](?:js|css|svg|png|woff2?)([?].*)?$" "public, max-age=31536000, immutable";
     "~^(200|206|304):/web-assets/" no-cache;
     "~^(200|206|304):/docs-assets/" no-cache;
@@ -234,20 +256,91 @@ server {
 
     location ~ ^/docs/?$ {
         if ($web_asset_read = 0) { return 419; }
+        add_header Cache-Control no-store always;
         return 307 /en/docs/;
     }
 
-    location ~ ^/(en|zh)/docs(?:/[a-z0-9-]+)*/?$ {
+    location ~ ^/(en|zh)/docs/quick-start/?$ {
+        if ($web_asset_read = 0) { return 419; }
+        if ($web_docs_page = 0) { return 503; }
+        add_header Cache-Control no-cache always;
+        return 307 /$1/docs/quickstart/$is_args$args;
+    }
+    location ~ ^/(en|zh)/docs/guides/api-keys/?$ {
+        if ($web_asset_read = 0) { return 419; }
+        if ($web_docs_page = 0) { return 503; }
+        add_header Cache-Control no-cache always;
+        return 307 /$1/docs/keys/$is_args$args;
+    }
+    location ~ ^/(en|zh)/docs/guides/models/?$ {
+        if ($web_asset_read = 0) { return 419; }
+        if ($web_docs_page = 0) { return 503; }
+        add_header Cache-Control no-cache always;
+        return 307 /$1/docs/models/$is_args$args;
+    }
+    location ~ ^/(en|zh)/(docs|updates|reference)(?:/[a-z0-9-]+)*/?$ {
         if ($web_asset_read = 0) { return 419; }
         if ($web_docs_page = 0) { return 503; }
         try_files $uri/index.html =404;
-        add_header Cache-Control "no-cache, no-transform" always;
+        add_header Cache-Control $web_docs_cache always;
+        add_header X-Robots-Tag $web_docs_robots always;
         add_header X-Content-Type-Options nosniff always;
         add_header Referrer-Policy strict-origin-when-cross-origin always;
         add_header X-Frame-Options DENY always;
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
     }
 
+    location ~ ^/reference/(api/catalog|catalog)/(models|providers)(?:[.]json)?/?$ {
+        if ($web_reference_read = 2) { return 204; }
+        if ($web_asset_read = 0) { return 419; }
+        error_page 404 = @reference_not_found;
+        alias /usr/share/nginx/html/reference/catalog/$2.json;
+        default_type application/json;
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Expose-Headers "ETag" always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Cache-Control $web_reference_cache always;
+        add_header Access-Control-Allow-Methods "GET, HEAD, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Accept, If-None-Match" always;
+    }
+    location ~ ^/reference/(api/catalog|catalog)/models-by-vendor/([a-z0-9_-]+?)(?:[.]json)?/?$ {
+        if ($web_reference_read = 2) { return 204; }
+        if ($web_asset_read = 0) { return 419; }
+        error_page 404 = @reference_not_found;
+        alias /usr/share/nginx/html/reference/catalog/models-by-vendor/$2.json;
+        default_type application/json;
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Expose-Headers "ETag" always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Cache-Control $web_reference_cache always;
+        add_header Access-Control-Allow-Methods "GET, HEAD, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Accept, If-None-Match" always;
+    }
+    location /reference/api/catalog/ {
+        if ($web_reference_read = 0) { return 419; }
+        error_page 404 = @reference_not_found;
+        return 404;
+    }
+    location /reference/catalog/ {
+        if ($web_reference_read = 0) { return 419; }
+        error_page 404 = @reference_not_found;
+        return 404;
+    }
+    location @reference_not_found {
+        default_type application/json;
+        add_header Cache-Control no-store always;
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Expose-Headers "ETag" always;
+        add_header X-Content-Type-Options nosniff always;
+        return 404 '{"error":"reference_not_found"}';
+    }
+    location ~ ^/(content-sitemap|updates)[.]xml$ {
+        if ($web_asset_read = 0) { return 419; }
+        try_files $uri =404;
+        default_type application/xml;
+        add_header Cache-Control "public, max-age=300";
+        add_header X-Content-Type-Options nosniff always;
+    }
     location / {
         if ($web_public_ssr = 1) { return 420; }
         if ($web_account_shell = 1) { return 418; }

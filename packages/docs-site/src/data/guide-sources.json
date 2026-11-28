@@ -1,0 +1,144 @@
+{
+  "source": {
+    "repo": "cinagroup/cinatoken",
+    "ref": "8fbaa084eeab5a0506f32f27da383e8f457836d0"
+  },
+  "guides": [
+    {
+      "topic": "capabilities",
+      "source": "docs/users/features.md",
+      "canonical": "/docs/capabilities/"
+    },
+    {
+      "topic": "github-reference",
+      "source": "docs/README.md",
+      "canonical": "/docs/github-reference/"
+    },
+    {
+      "topic": "deploy/overview",
+      "source": "docs/operators/README.md",
+      "canonical": "/docs/deploy/overview/"
+    },
+    {
+      "topic": "deploy/docker",
+      "source": "docs/operators/deployment/docker.md",
+      "canonical": "/docs/deploy/docker/"
+    },
+    {
+      "topic": "deploy/cloudflare",
+      "source": "docs/operators/deployment/cloudflare.md",
+      "canonical": "/docs/deploy/cloudflare/"
+    },
+    {
+      "topic": "deploy/upgrades",
+      "source": "docs/maintainers/release-versioning.md",
+      "canonical": "/docs/deploy/upgrades/"
+    },
+    {
+      "topic": "deploy/maintenance",
+      "source": "docs/operators/maintenance-mode.md",
+      "canonical": "/docs/deploy/maintenance/"
+    },
+    {
+      "topic": "guides/clients",
+      "source": "docs/users/connect-clients.md",
+      "canonical": "/docs/guides/clients/"
+    },
+    {
+      "topic": "guides/integration",
+      "source": "docs/developers/integration.md",
+      "canonical": "/docs/guides/integration/"
+    },
+    {
+      "topic": "guides/providers",
+      "source": "docs/users/configuration.md",
+      "canonical": "/docs/guides/providers/"
+    },
+    {
+      "topic": "guides/routing",
+      "source": "docs/developers/reference/route-strategies.md",
+      "canonical": "/docs/guides/routing/"
+    },
+    {
+      "topic": "guides/billing",
+      "source": "docs/developers/api/user.md",
+      "canonical": "/docs/guides/billing/"
+    },
+    {
+      "topic": "guides/users",
+      "source": "docs/developers/integration.md",
+      "canonical": "/docs/guides/users/"
+    },
+    {
+      "topic": "guides/request-logs",
+      "source": "docs/users/configuration.md",
+      "canonical": "/docs/guides/request-logs/"
+    },
+    {
+      "topic": "guides/audit-logs",
+      "source": "docs/developers/api/admin.md",
+      "canonical": "/docs/guides/audit-logs/"
+    },
+    {
+      "topic": "guides/analytics",
+      "source": "docs/users/features.md",
+      "canonical": "/docs/guides/analytics/"
+    },
+    {
+      "topic": "guides/provider-quotas",
+      "source": "docs/users/configuration.md",
+      "canonical": "/docs/guides/provider-quotas/"
+    },
+    {
+      "topic": "guides/system-config",
+      "source": "docs/users/configuration.md",
+      "canonical": "/docs/guides/system-config/"
+    },
+    {
+      "topic": "guides/tools",
+      "source": "docs/users/features.md",
+      "canonical": "/docs/guides/tools/"
+    },
+    {
+      "topic": "guides/mcp",
+      "source": "docs/developers/api/user.md",
+      "canonical": "/docs/guides/mcp/"
+    },
+    {
+      "topic": "guides/oauth",
+      "source": "docs/operators/migrations/0036-oauth-authorization-server.md",
+      "canonical": "/docs/guides/oauth/"
+    },
+    {
+      "topic": "guides/images",
+      "source": "docs/developers/reference/image-models.md",
+      "canonical": "/docs/guides/images/"
+    },
+    {
+      "topic": "guides/audio",
+      "source": "docs/developers/api/user.md",
+      "canonical": "/docs/guides/audio/"
+    },
+    {
+      "topic": "guides/embeddings",
+      "source": "docs/developers/api/user.md",
+      "canonical": "/docs/guides/embeddings/"
+    },
+    {
+      "topic": "features/playground",
+      "source": "docs/users/features.md",
+      "canonical": "/docs/features/playground/"
+    },
+    {
+      "topic": "features/simulator",
+      "source": "docs/users/features.md",
+      "canonical": "/docs/features/simulator/"
+    }
+  ],
+  "aliases": {
+    "quick-start": "quickstart",
+    "guides/api-keys": "keys",
+    "guides/models": "models"
+  },
+  "topicCoverage": 30
+}

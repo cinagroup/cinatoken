@@ -5,7 +5,7 @@ import { PublicAuthAccessLink } from './public/auth/PublicAuthAccessLink'
 import { HomeFooter } from './public/home/HomeFooter'
 import { HomeGatewayDemo } from './public/home/HomeGatewayDemo'
 import { HomeProductSections } from './public/home/HomeProductSections'
-import { publicDocsHref } from './public/home/home-links'
+import { publicContentHref, publicDocsHref } from './public/home/home-links'
 import { usePublicLocation } from './public/ssr/public-location'
 
 const publicDestinations = [
@@ -88,6 +88,18 @@ export function HomePage() {
 					className='hover:text-foreground focus-visible:outline-ring rounded-sm underline-offset-4 hover:underline'
 				>
 					{t('cinatoken.chat.title')}
+				</a>
+				<a
+					href={publicContentHref('updates', locale)}
+					className='hover:text-foreground rounded-sm underline-offset-4 hover:underline'
+				>
+					{t('cinatoken.home.nav.updates')}
+				</a>
+				<a
+					href={publicContentHref('reference/catalog/models', locale)}
+					className='hover:text-foreground rounded-sm underline-offset-4 hover:underline'
+				>
+					{t('cinatoken.home.nav.reference')}
 				</a>
 			</nav>
 			<HomeProductSections />

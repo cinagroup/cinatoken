@@ -1,6 +1,6 @@
 import { assetCacheControl } from '../scripts/asset-policy.mjs'
 import { webProxyConnectSources } from '../scripts/proxy-origin-policy.mjs'
-import { DOCS_PAGE_PATTERN, DOCS_CSP } from './docs-policy'
+import { DOCS_PAGE_PATTERN, DOCS_CSP, legacyDocsRedirect } from './docs-policy'
 import {
 	ADMIN_ACCESS_KEYS_PAGE_PATHS,
 	ADMIN_KEYS_PAGE_PATHS,
@@ -31,6 +31,7 @@ import {
 	ADMIN_USERS_PAGE_PATHS,
 	isAdminUserDetailPagePath,
 } from './page-paths.ts'
+import { referenceAssetPath, ownsReferencePath } from './reference-policy'
 
 /** Same-origin entry for the first account migration slice. */
 export type FetchBinding = {
@@ -217,6 +218,67 @@ export async function routeWebRequest(
 		})
 	}
 
+	if (
+		(isRead || request.method === 'OPTIONS') &&
+		ownsReferencePath(url.pathname)
+	) {
+		const path = referenceAssetPath(url.pathname)
+		const headers = new Headers({
+			'content-type': 'application/json; charset=utf-8',
+			'access-control-expose-headers': 'ETag',
+			'access-control-allow-origin': '*',
+			'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+			'access-control-allow-headers': 'Accept, If-None-Match',
+			'x-content-type-options': 'nosniff',
+			'cache-control': 'no-store',
+		})
+		if (!path)
+			return new Response(
+				request.method === 'HEAD'
+					? null
+					: JSON.stringify({ error: 'reference_not_found' }),
+				{ status: 404, headers }
+			)
+		if (request.method === 'OPTIONS')
+			return new Response(null, { status: 204, headers })
+		const response = await env.ASSETS.fetch(assetRequest(request, path))
+		headers.set('content-type', 'application/json; charset=utf-8')
+		if (response.status !== 200 && response.status !== 304)
+			return new Response(
+				request.method === 'HEAD'
+					? null
+					: JSON.stringify({ error: 'reference_not_found' }),
+				{ status: 404, headers }
+			)
+		headers.set('cache-control', 'public, max-age=300, must-revalidate')
+		const etag = response.headers.get('etag')
+		if (etag) headers.set('etag', etag)
+		return new Response(
+			request.method === 'HEAD' || response.status === 304
+				? null
+				: response.body,
+			{ status: response.status, headers }
+		)
+	}
+
+	if (
+		isRead &&
+		['/content-sitemap.xml', '/updates.xml'].includes(url.pathname)
+	) {
+		const response = await env.ASSETS.fetch(assetRequest(request, url.pathname))
+		const headers = new Headers(response.headers)
+		headers.set('content-type', 'application/xml; charset=utf-8')
+		headers.set(
+			'cache-control',
+			response.ok ? 'public, max-age=300' : 'no-store'
+		)
+		headers.set('x-content-type-options', 'nosniff')
+		return new Response(request.method === 'HEAD' ? null : response.body, {
+			status: response.status,
+			headers,
+		})
+	}
+
 	if (isRead && (url.pathname === '/docs' || url.pathname === '/docs/')) {
 		return new Response(null, {
 			status: 307,
@@ -233,6 +295,12 @@ export async function routeWebRequest(
 			return new Response('Documentation is unavailable', {
 				status: 503,
 				headers: { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' },
+			})
+		const legacy = page ? legacyDocsRedirect(url.pathname) : null
+		if (legacy)
+			return new Response(null, {
+				status: 307,
+				headers: { location: legacy + url.search, 'cache-control': 'no-cache' },
 			})
 		const path = page
 			? `${url.pathname.replace(/\/$/, '')}/index.html`

@@ -117,3 +117,56 @@ test('docs routing preserves authenticated requests and all mutation methods for
 	assert.equal(missing.status, 404)
 	assert.equal(f.backend.length, 0)
 })
+
+test('content namespaces, legacy bookmarks and XML feeds stay separate from business routes', async () => {
+	for (const path of [
+		'/en/updates/',
+		'/zh/updates/2026-11-28-docs/',
+		'/zh/reference/catalog/models/',
+		'/en/docs/guides/mcp/',
+	]) {
+		const f = fixture('true')
+		const response = await routeWebRequest(
+			new Request('https://test.example' + path),
+			f.env
+		)
+		assert.equal(response.status, 200)
+		assert.equal(f.backend.length, 0)
+		assert.match(
+			response.headers.get('content-security-policy')!,
+			/wasm-unsafe-eval/
+		)
+	}
+	for (const [path, target] of [
+		['quick-start', 'quickstart'],
+		['guides/api-keys', 'keys'],
+		['guides/models', 'models'],
+	]) {
+		const f = fixture('true')
+		const response = await routeWebRequest(
+			new Request('https://test.example/zh/docs/' + path + '?from=bookmark'),
+			f.env
+		)
+		assert.equal(response.status, 307)
+		assert.equal(
+			response.headers.get('location'),
+			'/zh/docs/' + target + '/?from=bookmark'
+		)
+		assert.equal(f.assets.length, 0)
+	}
+	for (const method of ['GET', 'HEAD'])
+		for (const path of ['/content-sitemap.xml', '/updates.xml']) {
+			const f = fixture('false')
+			const response = await routeWebRequest(
+				new Request('https://test.example' + path + '?discarded=true', {
+					method,
+				}),
+				f.env
+			)
+			assert.equal(response.status, 200)
+			assert.match(response.headers.get('content-type')!, /application\/xml/)
+			assert.equal(new URL(f.assets[0]!.url).search, '')
+			assert.equal(f.backend.length, 0)
+			if (method === 'HEAD') assert.equal(await response.text(), '')
+		}
+})

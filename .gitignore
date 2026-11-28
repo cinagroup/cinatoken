@@ -26,6 +26,8 @@ docker/local
 docker/test
 
 data/
+# Reviewed public content snapshots are build inputs, not runtime data.
+!packages/docs-site/src/data/
 .migration-backups/
 
 # Generated Wrangler configs (source: *.base.jsonc + npm run gen:wrangler)

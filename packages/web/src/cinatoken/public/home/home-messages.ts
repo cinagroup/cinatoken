@@ -6,6 +6,8 @@ const en = {
 		architecture: 'Setup',
 		deployment: 'Deployment',
 		docs: 'Docs',
+		updates: 'Updates',
+		reference: 'Configuration reference',
 		signIn: 'Sign in',
 	},
 	hero: {
@@ -88,6 +90,8 @@ const zh: typeof en = {
 		architecture: '架构',
 		deployment: '部署',
 		docs: '文档',
+		updates: '更新',
+		reference: '配置参考',
 		signIn: '登录',
 	},
 	hero: {
@@ -168,6 +172,8 @@ const ja: typeof en = {
 		architecture: '設定',
 		deployment: 'デプロイ',
 		docs: 'ドキュメント（英語）',
+		updates: '更新情報（英語）',
+		reference: '設定リファレンス（英語）',
 		signIn: 'ログイン',
 	},
 	hero: {
@@ -251,6 +257,8 @@ const ko: typeof en = {
 		architecture: '설정',
 		deployment: '배포',
 		docs: '문서 (영어)',
+		updates: '업데이트 (영어)',
+		reference: '설정 참고 (영어)',
 		signIn: '로그인',
 	},
 	hero: {

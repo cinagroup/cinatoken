@@ -1,0 +1,2769 @@
+{
+  "schema_version": 2,
+  "catalog": "providers",
+  "source": {
+    "repo": "cinagroup/cinatoken",
+    "ref": "8fbaa084eeab5a0506f32f27da383e8f457836d0",
+    "license": "AGPL-3.0-or-later"
+  },
+  "source_path": "packages/admin/lib/provider-import-presets.json",
+  "count": 69,
+  "items": [
+    {
+      "name": "DeepSeek",
+      "vendor_key": "deepseek",
+      "description": "DeepSeek’s official platform with OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.deepseek.com/chat/completions",
+            "responses": "https://api.deepseek.com/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.deepseek.com/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "DeepSeek",
+            "description": "DeepSeek 官方开放平台，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "DeepSeek",
+            "description": "DeepSeek’s official platform with OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "DeepSeek",
+            "description": "DeepSeek 公式プラットフォーム。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "DeepSeek",
+            "description": "DeepSeek 공식 플랫폼. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.deepseek.com/",
+          "api_keys": "https://platform.deepseek.com/api_keys"
+        }
+      }
+    },
+    {
+      "name": "Volcengine Ark",
+      "vendor_key": "volcengine",
+      "description": "Standard pay-as-you-go Ark endpoints for OpenAI Chat/Responses, Anthropic Messages, and Seedream image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+            "responses": "https://ark.cn-beijing.volces.com/api/v3/responses",
+            "embeddings": "https://ark.cn-beijing.volces.com/api/v3/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://ark.cn-beijing.volces.com/api/compatible"
+        },
+        "volcengine": {
+          "base": "https://ark.cn-beijing.volces.com/api/v3"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "火山方舟",
+            "description": "火山方舟标准按量端点，提供 OpenAI Chat / Responses、Anthropic Messages，以及 Seedream 图片生成。"
+          },
+          "en": {
+            "name": "Volcengine Ark",
+            "description": "Standard pay-as-you-go Ark endpoints for OpenAI Chat/Responses, Anthropic Messages, and Seedream image generation."
+          },
+          "ja": {
+            "name": "Volcengine Ark（火山方舟）",
+            "description": "Volcengine Ark の標準従量課金エンドポイント。OpenAI Chat / Responses、Anthropic Messages、Seedream の画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "Volcengine Ark",
+            "description": "Volcengine Ark 표준 종량제 엔드포인트. OpenAI Chat / Responses, Anthropic Messages, Seedream 이미지 생성을 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.volcengine.com/ark/",
+          "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
+        }
+      }
+    },
+    {
+      "name": "Volcengine Ark (Coding Plan)",
+      "vendor_key": "volcengine",
+      "description": "Coding Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions",
+            "responses": "https://ark.cn-beijing.volces.com/api/coding/v3/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://ark.cn-beijing.volces.com/api/coding"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "火山方舟（Coding Plan）",
+            "description": "火山方舟 Coding Plan 专用端点，支持 OpenAI Chat、Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Volcengine Ark (Coding Plan)",
+            "description": "Coding Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Volcengine Ark（Coding Plan）",
+            "description": "Volcengine Ark の Coding Plan 専用エンドポイント。OpenAI Chat、Responses、Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Volcengine Ark (Coding Plan)",
+            "description": "Volcengine Ark Coding Plan 전용 엔드포인트. OpenAI Chat, Responses, Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.volcengine.com/ark/",
+          "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
+        }
+      }
+    },
+    {
+      "name": "Volcengine Ark (Agent Plan)",
+      "vendor_key": "volcengine",
+      "description": "Agent Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+            "responses": "https://ark.cn-beijing.volces.com/api/plan/v3/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://ark.cn-beijing.volces.com/api/plan"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "火山方舟（Agent Plan）",
+            "description": "火山方舟 Agent Plan 专用端点，支持 OpenAI Chat、Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Volcengine Ark (Agent Plan)",
+            "description": "Agent Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Volcengine Ark（Agent Plan）",
+            "description": "Volcengine Ark の Agent Plan 専用エンドポイント。OpenAI Chat、Responses、Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Volcengine Ark (Agent Plan)",
+            "description": "Volcengine Ark Agent Plan 전용 엔드포인트. OpenAI Chat, Responses, Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.volcengine.com/ark/",
+          "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
+        }
+      }
+    },
+    {
+      "name": "BytePlus ModelArk",
+      "vendor_key": "volcengine",
+      "description": "International Volcengine ModelArk endpoints for OpenAI Chat/Responses, Anthropic Messages, and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.ap-southeast.bytepluses.com/api/v3/chat/completions",
+            "responses": "https://ark.ap-southeast.bytepluses.com/api/v3/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://ark.ap-southeast.bytepluses.com/api/compatible"
+        },
+        "volcengine": {
+          "base": "https://ark.ap-southeast.bytepluses.com/api/v3"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "BytePlus ModelArk",
+            "description": "火山方舟国际站（BytePlus）按量端点，提供 OpenAI Chat / Responses、Anthropic Messages，以及图片生成。"
+          },
+          "en": {
+            "name": "BytePlus ModelArk",
+            "description": "International Volcengine ModelArk endpoints for OpenAI Chat/Responses, Anthropic Messages, and image generation."
+          },
+          "ja": {
+            "name": "BytePlus ModelArk",
+            "description": "Volcengine 国際版（BytePlus）の従量課金エンドポイント。OpenAI Chat / Responses、Anthropic Messages、画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "BytePlus ModelArk",
+            "description": "Volcengine 국제 사이트(BytePlus) 종량제 엔드포인트. OpenAI Chat / Responses, Anthropic Messages, 이미지 생성을 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.byteplus.com/ark/",
+          "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
+        }
+      }
+    },
+    {
+      "name": "BytePlus ModelArk (Coding Plan)",
+      "vendor_key": "volcengine",
+      "description": "Coding Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.ap-southeast.bytepluses.com/api/coding/v3/chat/completions",
+            "responses": "https://ark.ap-southeast.bytepluses.com/api/coding/v3/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://ark.ap-southeast.bytepluses.com/api/coding"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "BytePlus ModelArk（Coding Plan）",
+            "description": "BytePlus ModelArk Coding Plan 专用端点，支持 OpenAI Chat、Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "BytePlus ModelArk (Coding Plan)",
+            "description": "Coding Plan endpoints for OpenAI Chat, Responses, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "BytePlus ModelArk（Coding Plan）",
+            "description": "BytePlus ModelArk の Coding Plan 専用エンドポイント。OpenAI Chat、Responses、Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "BytePlus ModelArk (Coding Plan)",
+            "description": "BytePlus ModelArk Coding Plan 전용 엔드포인트. OpenAI Chat, Responses, Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.byteplus.com/ark/",
+          "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
+        }
+      }
+    },
+    {
+      "name": "Alibaba Cloud Bailian",
+      "vendor_key": "aliyun",
+      "icon_key": "bailian",
+      "description": "China-region pay-as-you-go endpoints for OpenAI Chat/Responses, Anthropic Messages, and native DashScope audio and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+            "responses": "https://dashscope.aliyuncs.com/compatible-mode/v1/responses",
+            "embeddings": "https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings"
+          }
+        },
+        "dashscope": {
+          "base": "https://dashscope.aliyuncs.com/api/v1"
+        },
+        "anthropic": {
+          "base": "https://dashscope.aliyuncs.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "阿里云百炼",
+            "description": "阿里云百炼按量端点，提供 OpenAI Chat / Responses、Anthropic Messages，以及 DashScope 原生语音与生图。"
+          },
+          "en": {
+            "name": "Alibaba Cloud Model Studio",
+            "description": "China-region pay-as-you-go endpoints for OpenAI Chat/Responses, Anthropic Messages, and native DashScope audio and image generation."
+          },
+          "ja": {
+            "name": "Alibaba Cloud Model Studio",
+            "description": "Alibaba Cloud Model Studio の中国リージョン従量課金エンドポイント。OpenAI Chat / Responses、Anthropic Messages、DashScope ネイティブの音声と画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "Alibaba Cloud Model Studio",
+            "description": "Alibaba Cloud Model Studio 중국 리전 종량제 엔드포인트. OpenAI Chat / Responses, Anthropic Messages, DashScope 네이티브 음성과 이미지 생성을 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://bailian.console.aliyun.com/",
+          "api_keys": "https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key"
+        }
+      }
+    },
+    {
+      "name": "Alibaba Cloud Bailian (Coding Plan)",
+      "vendor_key": "aliyun",
+      "icon_key": "bailian",
+      "description": "Coding Plan endpoints that use plan-specific keys and quota.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://coding.dashscope.aliyuncs.com/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://coding.dashscope.aliyuncs.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "阿里云百炼（Coding Plan）",
+            "description": "阿里云百炼 Coding Plan 专用端点，使用独立的套餐 Key 与额度。"
+          },
+          "en": {
+            "name": "Alibaba Cloud Model Studio (Coding Plan)",
+            "description": "Coding Plan endpoints that use plan-specific keys and quota."
+          },
+          "ja": {
+            "name": "Alibaba Cloud Model Studio（Coding Plan）",
+            "description": "Alibaba Cloud Model Studio の Coding Plan 専用エンドポイント。プラン専用のキーと利用枠を使います。"
+          },
+          "ko": {
+            "name": "Alibaba Cloud Model Studio (Coding Plan)",
+            "description": "Alibaba Cloud Model Studio Coding Plan 전용 엔드포인트. 플랜 전용 키와 한도를 사용합니다."
+          }
+        },
+        "links": {
+          "platform": "https://bailian.console.aliyun.com/",
+          "api_keys": "https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key"
+        }
+      }
+    },
+    {
+      "name": "Alibaba Cloud Bailian (International)",
+      "vendor_key": "aliyun",
+      "icon_key": "bailian",
+      "description": "International pay-as-you-go endpoints for OpenAI Chat/Responses, Anthropic Messages, and native DashScope audio and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
+            "responses": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/responses",
+            "embeddings": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/embeddings"
+          }
+        },
+        "dashscope": {
+          "base": "https://dashscope-intl.aliyuncs.com/api/v1"
+        },
+        "anthropic": {
+          "base": "https://dashscope-intl.aliyuncs.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "阿里云百炼（国际站）",
+            "description": "阿里云百炼国际站按量端点，提供 OpenAI Chat / Responses、Anthropic Messages，以及 DashScope 原生语音与生图。"
+          },
+          "en": {
+            "name": "Alibaba Cloud Model Studio (International)",
+            "description": "International pay-as-you-go endpoints for OpenAI Chat/Responses, Anthropic Messages, and native DashScope audio and image generation."
+          },
+          "ja": {
+            "name": "Alibaba Cloud Model Studio（国際）",
+            "description": "Alibaba Cloud Model Studio 国際サイトの従量課金エンドポイント。OpenAI Chat / Responses、Anthropic Messages、DashScope ネイティブの音声と画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "Alibaba Cloud Model Studio (국제)",
+            "description": "Alibaba Cloud Model Studio 국제 사이트 종량제 엔드포인트. OpenAI Chat / Responses, Anthropic Messages, DashScope 네이티브 음성과 이미지 생성을 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://modelstudio.console.alibabacloud.com/"
+        }
+      }
+    },
+    {
+      "name": "Alibaba Cloud Bailian (Coding Plan International)",
+      "vendor_key": "aliyun",
+      "icon_key": "bailian",
+      "description": "International Coding Plan endpoints that use plan-specific keys and quota.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "阿里云百炼（Coding Plan 国际站）",
+            "description": "阿里云百炼国际站 Coding Plan 专用端点，使用独立的套餐 Key 与额度。"
+          },
+          "en": {
+            "name": "Alibaba Cloud Model Studio (Coding Plan International)",
+            "description": "International Coding Plan endpoints that use plan-specific keys and quota."
+          },
+          "ja": {
+            "name": "Alibaba Cloud Model Studio（Coding Plan 国際）",
+            "description": "Alibaba Cloud Model Studio 国際サイトの Coding Plan 専用エンドポイント。プラン専用のキーと利用枠を使います。"
+          },
+          "ko": {
+            "name": "Alibaba Cloud Model Studio (Coding Plan 국제)",
+            "description": "Alibaba Cloud Model Studio 국제 사이트 Coding Plan 전용 엔드포인트. 플랜 전용 키와 한도를 사용합니다."
+          }
+        },
+        "links": {
+          "platform": "https://modelstudio.console.alibabacloud.com/"
+        }
+      }
+    },
+    {
+      "name": "Qwen AI Platform (Token Plan)",
+      "vendor_key": "aliyun",
+      "icon_key": "qwen",
+      "description": "Personal and team Token Plan endpoints on token-plan.maas.qianwenaiapi.com for OpenAI Chat/Responses, Anthropic, and DashScope TTS/realtime/image. Includes qwen-audio-3.0-asr-flash sync HTTP. Does not include filetrans or video synthesis.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1/chat/completions",
+            "responses": "https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1/responses"
+          }
+        },
+        "dashscope": {
+          "endpoints": {
+            "audio.transcriptions.multimodal": "https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation",
+            "images.generations.multimodal": "https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation",
+            "audio.speech": "https://token-plan.maas.qianwenaiapi.com/api/v1/services/audio/tts/SpeechSynthesizer",
+            "audio.realtime.inference": "wss://token-plan.maas.qianwenaiapi.com/api-ws/v1/inference",
+            "audio.realtime.session": "wss://token-plan.maas.qianwenaiapi.com/api-ws/v1/realtime"
+          }
+        },
+        "anthropic": {
+          "base": "https://token-plan.maas.qianwenaiapi.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "千问 AI 平台（Token Plan）",
+            "description": "千问 Token Plan 个人版与团队版端点（token-plan.maas.qianwenaiapi.com），支持 OpenAI Chat / Responses、Anthropic，以及 DashScope TTS / 实时语音 / 生图与 qwen-audio-3.0-asr-flash 同步 HTTP；不含 filetrans 异步转写与视频生成。"
+          },
+          "en": {
+            "name": "Qwen AI Platform (Token Plan)",
+            "description": "Personal and team Token Plan endpoints on token-plan.maas.qianwenaiapi.com for OpenAI Chat/Responses, Anthropic, and DashScope TTS/realtime/image. Includes qwen-audio-3.0-asr-flash sync HTTP. Does not include filetrans or video synthesis."
+          },
+          "ja": {
+            "name": "Qwen AI プラットフォーム（Token Plan）",
+            "description": "Qwen Token Plan の個人版・チーム版エンドポイント（token-plan.maas.qianwenaiapi.com）。OpenAI Chat / Responses、Anthropic、DashScope の TTS / リアルタイム音声 / 画像生成、および qwen-audio-3.0-asr-flash の同期 HTTP に対応しています。filetrans の非同期文字起こしと動画生成は含みません。"
+          },
+          "ko": {
+            "name": "Qwen AI 플랫폼 (Token Plan)",
+            "description": "Qwen Token Plan 개인·팀 엔드포인트(token-plan.maas.qianwenaiapi.com). OpenAI Chat / Responses, Anthropic, DashScope TTS / 실시간 음성 / 이미지 생성과 qwen-audio-3.0-asr-flash 동기 HTTP를 지원합니다. filetrans 비동기 전사와 동영상 생성은 포함하지 않습니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.qianwenai.com/"
+        }
+      }
+    },
+    {
+      "name": "Tencent Hunyuan",
+      "vendor_key": "tencent",
+      "icon_key": "hunyuan",
+      "description": "TokenHub Guangzhou pay-as-you-go endpoints for OpenAI Chat, Responses, Embeddings, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://tokenhub.tencentmaas.com/v1/chat/completions",
+            "responses": "https://tokenhub.tencentmaas.com/v1/responses",
+            "embeddings": "https://tokenhub.tencentmaas.com/v1/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://tokenhub.tencentmaas.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "腾讯云 TokenHub",
+            "description": "腾讯云 TokenHub 广州按量入口，支持 OpenAI Chat、Responses、Embeddings 与 Anthropic Messages。不要和 Token Plan 的 sk-tp- Key 或 /plan 地址混用。"
+          },
+          "en": {
+            "name": "Tencent Cloud TokenHub",
+            "description": "TokenHub Guangzhou pay-as-you-go endpoints for OpenAI Chat, Responses, Embeddings, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Tencent Cloud TokenHub",
+            "description": "Tencent Cloud TokenHub の広州リージョン従量課金エンドポイント。OpenAI Chat、Responses、Embeddings、Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Tencent Cloud TokenHub",
+            "description": "Tencent Cloud TokenHub 광저우 종량제 엔드포인트. OpenAI Chat, Responses, Embeddings, Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.cloud.tencent.com/tokenhub",
+          "api_keys": "https://console.cloud.tencent.com/tokenhub/apikey"
+        }
+      }
+    },
+    {
+      "name": "Tencent TokenHub (Hy Token Plan)",
+      "vendor_key": "tencent",
+      "icon_key": "hunyuan",
+      "description": "TokenHub personal Token Plan. The general plan and Hy plan share the /plan endpoints and one sk-tp-* key.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://tokenhub.tencentmaas.com/plan/v3/chat/completions",
+            "responses": "https://tokenhub.tencentmaas.com/plan/v3/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://tokenhub.tencentmaas.com/plan/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "腾讯云 TokenHub（Token Plan）",
+            "description": "腾讯云 TokenHub 个人版 Token Plan。通用套餐与 Hy 套餐共用 /plan 地址和一把 sk-tp- Key，支持 OpenAI Chat、Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Tencent Cloud TokenHub (Token Plan)",
+            "description": "TokenHub personal Token Plan. The general plan and Hy plan share the /plan endpoints and one sk-tp-* key."
+          },
+          "ja": {
+            "name": "Tencent Cloud TokenHub（Token Plan）",
+            "description": "Tencent Cloud TokenHub の個人版 Token Plan。一般プランと Hy プランは /plan のアドレスと一つの sk-tp- キーを共有し、OpenAI Chat、Responses、Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Tencent Cloud TokenHub (Token Plan)",
+            "description": "Tencent Cloud TokenHub 개인 Token Plan. 일반 플랜과 Hy 플랜이 /plan 주소와 sk-tp- 키 하나를 공유하며 OpenAI Chat, Responses, Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.cloud.tencent.com/tokenhub"
+        }
+      }
+    },
+    {
+      "name": "Baidu Qianfan",
+      "vendor_key": "baidu",
+      "description": "Qianfan V2 endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://qianfan.baidubce.com/v2/chat/completions",
+            "responses": "https://qianfan.baidubce.com/v2/responses",
+            "embeddings": "https://qianfan.baidubce.com/v2/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://qianfan.baidubce.com/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百度千帆",
+            "description": "百度千帆 V2，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Baidu Qianfan",
+            "description": "Qianfan V2 endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "バイドゥ Qianfan",
+            "description": "バイドゥ Qianfan V2。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "바이두 Qianfan",
+            "description": "바이두 Qianfan V2. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.bce.baidu.com/qianfan/"
+        }
+      }
+    },
+    {
+      "name": "Zhipu GLM",
+      "vendor_key": "zhipu",
+      "description": "China-region API for OpenAI Chat, Responses, Anthropic Messages, and GLM image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+            "responses": "https://open.bigmodel.cn/api/v1/responses",
+            "images.generations": "https://open.bigmodel.cn/api/paas/v4/images/generations",
+            "embeddings": "https://open.bigmodel.cn/api/paas/v4/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://open.bigmodel.cn/api/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "智谱 GLM",
+            "description": "智谱中国区标准 API，支持 OpenAI Chat、Responses、Anthropic Messages，以及 GLM 图片生成。"
+          },
+          "en": {
+            "name": "Zhipu GLM",
+            "description": "China-region API for OpenAI Chat, Responses, Anthropic Messages, and GLM image generation."
+          },
+          "ja": {
+            "name": "智譜AI GLM",
+            "description": "智譜AIの中国リージョン標準 API。OpenAI Chat、Responses、Anthropic Messages、GLM の画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "즈푸 AI GLM",
+            "description": "즈푸 AI 중국 리전 표준 API. OpenAI Chat, Responses, Anthropic Messages, GLM 이미지 생성을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://open.bigmodel.cn/",
+          "api_keys": "https://open.bigmodel.cn/usercenter/apikeys"
+        }
+      }
+    },
+    {
+      "name": "Zhipu GLM (Coding Plan)",
+      "vendor_key": "zhipu",
+      "description": "Coding Plan endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions",
+            "responses": "https://open.bigmodel.cn/api/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://open.bigmodel.cn/api/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "智谱 GLM（Coding Plan）",
+            "description": "智谱 Coding Plan 专用端点，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Zhipu GLM (Coding Plan)",
+            "description": "Coding Plan endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "智譜AI GLM（Coding Plan）",
+            "description": "智譜AIの Coding Plan 専用エンドポイント。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "즈푸 AI GLM (Coding Plan)",
+            "description": "즈푸 AI Coding Plan 전용 엔드포인트. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://open.bigmodel.cn/",
+          "api_keys": "https://open.bigmodel.cn/usercenter/apikeys"
+        }
+      }
+    },
+    {
+      "name": "Z.AI GLM (International)",
+      "vendor_key": "zhipu",
+      "icon_key": "zai",
+      "description": "International standard API for chat and GLM image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.z.ai/api/paas/v4/chat/completions",
+            "images.generations": "https://api.z.ai/api/paas/v4/images/generations"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Z.AI GLM（国际站）",
+            "description": "Z.AI 国际站标准 API，支持对话与 GLM 图片生成。"
+          },
+          "en": {
+            "name": "Z.AI GLM (International)",
+            "description": "International standard API for chat and GLM image generation."
+          },
+          "ja": {
+            "name": "Z.AI GLM（国際）",
+            "description": "Z.AI 国際サイトの標準 API。対話と GLM の画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "Z.AI GLM (국제)",
+            "description": "Z.AI 국제 사이트 표준 API. 대화와 GLM 이미지 생성을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://z.ai/"
+        }
+      }
+    },
+    {
+      "name": "Z.AI GLM (Coding Plan)",
+      "vendor_key": "zhipu",
+      "icon_key": "zai",
+      "description": "International Coding Plan endpoints for supported coding tools.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.z.ai/api/coding/paas/v4/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.z.ai/api/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Z.AI GLM（Coding Plan）",
+            "description": "Z.AI 国际站 Coding Plan 专用对话端点。"
+          },
+          "en": {
+            "name": "Z.AI GLM (Coding Plan)",
+            "description": "International Coding Plan endpoints for supported coding tools."
+          },
+          "ja": {
+            "name": "Z.AI GLM（Coding Plan）",
+            "description": "Z.AI 国際サイトの Coding Plan 専用対話エンドポイント。対応するコーディングツール向けです。"
+          },
+          "ko": {
+            "name": "Z.AI GLM (Coding Plan)",
+            "description": "Z.AI 국제 사이트 Coding Plan 전용 대화 엔드포인트. 지원하는 코딩 도구용입니다."
+          }
+        },
+        "links": {
+          "platform": "https://z.ai/"
+        }
+      }
+    },
+    {
+      "name": "Meituan LongCat",
+      "vendor_key": "meituan",
+      "icon_key": "longcat",
+      "description": "LongCat endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.longcat.chat/openai/v1/chat/completions",
+            "responses": "https://api.longcat.chat/openai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.longcat.chat/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "美团 LongCat",
+            "description": "LongCat 开放平台，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Meituan LongCat",
+            "description": "LongCat endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "美団 LongCat",
+            "description": "LongCat オープンプラットフォーム。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "메이투안 LongCat",
+            "description": "LongCat 오픈 플랫폼. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://longcat.chat/"
+        }
+      }
+    },
+    {
+      "name": "Moonshot AI",
+      "vendor_key": "moonshot",
+      "description": "China-region pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.moonshot.cn/v1/chat/completions",
+            "responses": "https://api.moonshot.cn/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.moonshot.cn/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "月之暗面 Moonshot",
+            "description": "月之暗面中国区按量端点，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Moonshot AI",
+            "description": "China-region pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Moonshot AI",
+            "description": "Moonshot AI の中国リージョン従量課金エンドポイント。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "문샷 AI (Moonshot AI)",
+            "description": "문샷 AI(Moonshot AI) 중국 리전 종량제 엔드포인트. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.moonshot.cn/",
+          "api_keys": "https://platform.moonshot.cn/console/api-keys"
+        }
+      }
+    },
+    {
+      "name": "Kimi Code (Coding API)",
+      "vendor_key": "moonshot",
+      "icon_key": "kimi",
+      "description": "Kimi Code endpoints for OpenAI Chat and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.kimi.com/coding/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.kimi.com/coding"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Kimi Code（Coding API）",
+            "description": "Kimi Code 与 Coding Plan 专用端点，支持 OpenAI Chat 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Kimi Code (Coding API)",
+            "description": "Kimi Code endpoints for OpenAI Chat and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Kimi Code（Coding API）",
+            "description": "Kimi Code と Coding Plan の専用エンドポイント。OpenAI Chat と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Kimi Code (Coding API)",
+            "description": "Kimi Code와 Coding Plan 전용 엔드포인트. OpenAI Chat과 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://www.kimi.com/code"
+        }
+      }
+    },
+    {
+      "name": "MiniMax",
+      "vendor_key": "minimax",
+      "description": "China-region MiniMax endpoints for OpenAI Chat/Responses, Anthropic Messages, and native file transcription, speech synthesis, and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.minimaxi.com/v1/chat/completions",
+            "responses": "https://api.minimaxi.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.minimaxi.com/anthropic"
+        },
+        "minimax": {
+          "base": "https://api.minimaxi.com/v1"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "MiniMax",
+            "description": "MiniMax 国内开放平台，支持 OpenAI Chat / Responses、Anthropic Messages，以及原生文件转写、同步语音合成与生图。"
+          },
+          "en": {
+            "name": "MiniMax",
+            "description": "China-region MiniMax endpoints for OpenAI Chat/Responses, Anthropic Messages, and native file transcription, speech synthesis, and image generation."
+          },
+          "ja": {
+            "name": "MiniMax",
+            "description": "MiniMax 中国リージョン。OpenAI Chat / Responses、Anthropic Messages、ネイティブのファイル文字起こし、同期音声合成、画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "MiniMax",
+            "description": "MiniMax 중국 리전. OpenAI Chat / Responses, Anthropic Messages, 네이티브 파일 전사, 동기 음성 합성과 이미지 생성을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.minimaxi.com/"
+        }
+      }
+    },
+    {
+      "name": "OpenAI",
+      "vendor_key": "openai",
+      "description": "OpenAI’s official API root for chat, images, and other supported capabilities.",
+      "endpoints": {
+        "openai": {
+          "base": "https://api.openai.com/v1"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "OpenAI",
+            "description": "OpenAI 官方 API 根地址，覆盖对话、图片等开放能力。"
+          },
+          "en": {
+            "name": "OpenAI",
+            "description": "OpenAI’s official API root for chat, images, and other supported capabilities."
+          },
+          "ja": {
+            "name": "OpenAI",
+            "description": "OpenAI 公式 API のルート。対話、画像などの公開機能に対応しています。"
+          },
+          "ko": {
+            "name": "OpenAI",
+            "description": "OpenAI 공식 API 루트. 대화, 이미지 등 공개 기능을 다룹니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.openai.com/",
+          "api_keys": "https://platform.openai.com/api-keys"
+        }
+      }
+    },
+    {
+      "name": "Anthropic",
+      "vendor_key": "anthropic",
+      "description": "Anthropic’s official Messages API root.",
+      "endpoints": {
+        "anthropic": {
+          "base": "https://api.anthropic.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Anthropic",
+            "description": "Anthropic 官方 Messages API 根地址。"
+          },
+          "en": {
+            "name": "Anthropic",
+            "description": "Anthropic’s official Messages API root."
+          },
+          "ja": {
+            "name": "Anthropic",
+            "description": "Anthropic 公式 Messages API のルート。"
+          },
+          "ko": {
+            "name": "Anthropic",
+            "description": "Anthropic 공식 Messages API 루트."
+          }
+        },
+        "links": {
+          "platform": "https://console.anthropic.com/",
+          "api_keys": "https://console.anthropic.com/settings/keys"
+        }
+      }
+    },
+    {
+      "name": "Meta Model API",
+      "vendor_key": "meta",
+      "description": "Meta’s official Model API for Muse Spark, with OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.meta.ai/v1/chat/completions",
+            "responses": "https://api.meta.ai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.meta.ai"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Meta Model API",
+            "description": "Meta 官方 Model API（Muse Spark），支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Meta Model API",
+            "description": "Meta’s official Model API for Muse Spark, with OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Meta Model API",
+            "description": "Meta 公式 Model API（Muse Spark）。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Meta Model API",
+            "description": "Meta 공식 Model API(Muse Spark). OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://llama.developer.meta.com/docs"
+        }
+      }
+    },
+    {
+      "name": "Google Gemini (Generative Language API)",
+      "vendor_key": "google",
+      "description": "Gemini Developer API with native Gemini and OpenAI-compatible access.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+            "images.generations": "https://generativelanguage.googleapis.com/v1beta/openai/images/generations",
+            "embeddings": "https://generativelanguage.googleapis.com/v1beta/openai/embeddings"
+          }
+        },
+        "gemini": {
+          "base": "https://generativelanguage.googleapis.com/v1beta/models"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Google Gemini（Generative Language API）",
+            "description": "Gemini Developer API，支持原生 Gemini 与 OpenAI 兼容协议。"
+          },
+          "en": {
+            "name": "Google Gemini (Generative Language API)",
+            "description": "Gemini Developer API with native Gemini and OpenAI-compatible access."
+          },
+          "ja": {
+            "name": "Google Gemini（Generative Language API）",
+            "description": "Gemini Developer API。ネイティブ Gemini と OpenAI 互換プロトコルに対応しています。"
+          },
+          "ko": {
+            "name": "Google Gemini (Generative Language API)",
+            "description": "Gemini Developer API. 네이티브 Gemini와 OpenAI 호환 프로토콜을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://aistudio.google.com/",
+          "api_keys": "https://aistudio.google.com/app/apikey"
+        }
+      }
+    },
+    {
+      "name": "Google Vertex AI (Express Mode · API Key)",
+      "vendor_key": "google",
+      "icon_key": "vertexai",
+      "description": "Native Gemini endpoint for Vertex AI Express mode with API key authentication.",
+      "endpoints": {
+        "gemini": {
+          "base": "https://aiplatform.googleapis.com/v1/publishers/google/models"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Google Vertex AI（Express Mode · API Key）",
+            "description": "Vertex AI Express 模式的原生 Gemini 端点，使用 API Key 鉴权。"
+          },
+          "en": {
+            "name": "Google Vertex AI (Express Mode · API Key)",
+            "description": "Native Gemini endpoint for Vertex AI Express mode with API key authentication."
+          },
+          "ja": {
+            "name": "Google Vertex AI（Express Mode · API Key）",
+            "description": "Vertex AI Express モードのネイティブ Gemini エンドポイント。API キーで認証します。"
+          },
+          "ko": {
+            "name": "Google Vertex AI (Express Mode · API Key)",
+            "description": "Vertex AI Express 모드의 네이티브 Gemini 엔드포인트. API 키로 인증합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.cloud.google.com/vertex-ai"
+        }
+      }
+    },
+    {
+      "name": "Mistral AI",
+      "vendor_key": "mistral",
+      "description": "Mistral’s official OpenAI-compatible chat API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.mistral.ai/v1/chat/completions",
+            "embeddings": "https://api.mistral.ai/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Mistral AI",
+            "description": "Mistral 官方 OpenAI 兼容对话 API。"
+          },
+          "en": {
+            "name": "Mistral AI",
+            "description": "Mistral’s official OpenAI-compatible chat API."
+          },
+          "ja": {
+            "name": "Mistral AI",
+            "description": "Mistral 公式の OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "Mistral AI",
+            "description": "Mistral 공식 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://console.mistral.ai/",
+          "api_keys": "https://console.mistral.ai/api-keys"
+        }
+      }
+    },
+    {
+      "name": "Groq (OpenAI Compatible)",
+      "vendor_key": "groq",
+      "description": "GroqCloud’s high-speed OpenAI-compatible inference API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.groq.com/openai/v1/chat/completions"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Groq（OpenAI 兼容）",
+            "description": "GroqCloud 的 OpenAI 兼容高速推理 API。"
+          },
+          "en": {
+            "name": "Groq (OpenAI Compatible)",
+            "description": "GroqCloud’s high-speed OpenAI-compatible inference API."
+          },
+          "ja": {
+            "name": "Groq（OpenAI 互換）",
+            "description": "GroqCloud の高速 OpenAI 互換推論 API。"
+          },
+          "ko": {
+            "name": "Groq (OpenAI 호환)",
+            "description": "GroqCloud의 고속 OpenAI 호환 추론 API."
+          }
+        },
+        "links": {
+          "platform": "https://console.groq.com/",
+          "api_keys": "https://console.groq.com/keys"
+        }
+      }
+    },
+    {
+      "name": "Cerebras",
+      "vendor_key": "cerebras",
+      "description": "Cerebras Inference’s high-speed OpenAI-compatible chat API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.cerebras.ai/v1/chat/completions"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Cerebras",
+            "description": "Cerebras Inference 的 OpenAI 兼容高速对话 API。"
+          },
+          "en": {
+            "name": "Cerebras",
+            "description": "Cerebras Inference’s high-speed OpenAI-compatible chat API."
+          },
+          "ja": {
+            "name": "Cerebras",
+            "description": "Cerebras Inference の高速 OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "Cerebras",
+            "description": "Cerebras Inference의 고속 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://cloud.cerebras.ai/",
+          "api_keys": "https://cloud.cerebras.ai/"
+        }
+      }
+    },
+    {
+      "name": "SambaNova Cloud",
+      "vendor_key": "sambanova",
+      "description": "SambaNova Cloud inference API with OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.sambanova.ai/v1/chat/completions",
+            "responses": "https://api.sambanova.ai/v1/responses",
+            "embeddings": "https://api.sambanova.ai/v1/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.sambanova.ai"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "SambaNova Cloud",
+            "description": "SambaNova Cloud 推理 API，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "SambaNova Cloud",
+            "description": "SambaNova Cloud inference API with OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "SambaNova Cloud",
+            "description": "SambaNova Cloud 推論 API。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "SambaNova Cloud",
+            "description": "SambaNova Cloud 추론 API. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://cloud.sambanova.ai/",
+          "api_keys": "https://cloud.sambanova.ai/apis"
+        }
+      }
+    },
+    {
+      "name": "xAI (Grok)",
+      "vendor_key": "xai",
+      "description": "xAI’s OpenAI-compatible API for Grok chat, Responses, and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.x.ai/v1/chat/completions",
+            "responses": "https://api.x.ai/v1/responses",
+            "images.generations": "https://api.x.ai/v1/images/generations"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "xAI（Grok）",
+            "description": "xAI 官方 OpenAI 兼容 API，支持 Grok 对话、Responses 与图片生成。"
+          },
+          "en": {
+            "name": "xAI (Grok)",
+            "description": "xAI’s OpenAI-compatible API for Grok chat, Responses, and image generation."
+          },
+          "ja": {
+            "name": "xAI（Grok）",
+            "description": "xAI 公式の OpenAI 互換 API。Grok の対話、Responses、画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "xAI (Grok)",
+            "description": "xAI 공식 OpenAI 호환 API. Grok 대화, Responses, 이미지 생성을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.x.ai/"
+        }
+      }
+    },
+    {
+      "name": "Together AI",
+      "vendor_key": "together",
+      "description": "Together AI’s OpenAI-compatible API for chat, images, speech transcription, and speech synthesis.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.together.xyz/v1/chat/completions",
+            "images.generations": "https://api.together.xyz/v1/images/generations",
+            "audio.transcriptions": "https://api.together.ai/v1/audio/transcriptions",
+            "audio.speech": "https://api.together.ai/v1/audio/speech",
+            "embeddings": "https://api.together.xyz/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Together AI",
+            "description": "Together AI 的 OpenAI 兼容 API，覆盖对话、图片、语音转写与语音合成模型。"
+          },
+          "en": {
+            "name": "Together AI",
+            "description": "Together AI’s OpenAI-compatible API for chat, images, speech transcription, and speech synthesis."
+          },
+          "ja": {
+            "name": "Together AI",
+            "description": "Together AI の OpenAI 互換 API。対話、画像、音声文字起こし、音声合成モデルに対応しています。"
+          },
+          "ko": {
+            "name": "Together AI",
+            "description": "Together AI의 OpenAI 호환 API. 대화, 이미지, 음성 전사, 음성 합성 모델을 다룹니다."
+          }
+        },
+        "links": {
+          "platform": "https://api.together.ai/"
+        }
+      }
+    },
+    {
+      "name": "Fireworks AI",
+      "vendor_key": "fireworks",
+      "description": "Fireworks AI’s OpenAI-compatible inference API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.fireworks.ai/inference/v1/chat/completions",
+            "embeddings": "https://api.fireworks.ai/inference/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Fireworks AI",
+            "description": "Fireworks AI 的 OpenAI 兼容推理 API。"
+          },
+          "en": {
+            "name": "Fireworks AI",
+            "description": "Fireworks AI’s OpenAI-compatible inference API."
+          },
+          "ja": {
+            "name": "Fireworks AI",
+            "description": "Fireworks AI の OpenAI 互換推論 API。"
+          },
+          "ko": {
+            "name": "Fireworks AI",
+            "description": "Fireworks AI의 OpenAI 호환 추론 API."
+          }
+        },
+        "links": {
+          "platform": "https://app.fireworks.ai/"
+        }
+      }
+    },
+    {
+      "name": "DeepInfra",
+      "vendor_key": "deepinfra",
+      "description": "DeepInfra’s OpenAI-compatible chat API for hosted open-source models.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.deepinfra.com/v1/openai/chat/completions",
+            "embeddings": "https://api.deepinfra.com/v1/openai/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "DeepInfra",
+            "description": "DeepInfra 开源模型推理的 OpenAI 兼容对话 API。"
+          },
+          "en": {
+            "name": "DeepInfra",
+            "description": "DeepInfra’s OpenAI-compatible chat API for hosted open-source models."
+          },
+          "ja": {
+            "name": "DeepInfra",
+            "description": "DeepInfra がホストするオープンモデル向け OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "DeepInfra",
+            "description": "DeepInfra가 호스팅하는 오픈소스 모델용 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://deepinfra.com/",
+          "api_keys": "https://deepinfra.com/dash/api_keys"
+        }
+      }
+    },
+    {
+      "name": "Novita AI",
+      "vendor_key": "novita",
+      "description": "Novita’s OpenAI-compatible chat API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.novita.ai/openai/v1/chat/completions",
+            "embeddings": "https://api.novita.ai/openai/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Novita AI",
+            "description": "Novita 模型云的 OpenAI 兼容对话 API。"
+          },
+          "en": {
+            "name": "Novita AI",
+            "description": "Novita’s OpenAI-compatible chat API."
+          },
+          "ja": {
+            "name": "Novita AI",
+            "description": "Novita モデルクラウドの OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "Novita AI",
+            "description": "Novita 모델 클라우드의 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://novita.ai/",
+          "api_keys": "https://novita.ai/settings"
+        }
+      }
+    },
+    {
+      "name": "Perplexity",
+      "vendor_key": "perplexity",
+      "description": "OpenAI-compatible chat API for Perplexity’s web-connected Sonar models.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.perplexity.ai/chat/completions"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Perplexity",
+            "description": "Perplexity Sonar 系列联网模型的 OpenAI 兼容对话 API。"
+          },
+          "en": {
+            "name": "Perplexity",
+            "description": "OpenAI-compatible chat API for Perplexity’s web-connected Sonar models."
+          },
+          "ja": {
+            "name": "Perplexity",
+            "description": "Perplexity のウェブ接続 Sonar モデル向け OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "Perplexity",
+            "description": "Perplexity의 웹 연결 Sonar 모델용 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://www.perplexity.ai/settings/api"
+        }
+      }
+    },
+    {
+      "name": "Cohere (OpenAI Compatibility)",
+      "vendor_key": "cohere",
+      "description": "Cohere’s Compatibility API for integrations using the OpenAI SDK.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.cohere.ai/compatibility/v1/chat/completions",
+            "embeddings": "https://api.cohere.ai/compatibility/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Cohere（OpenAI 兼容）",
+            "description": "Cohere Compatibility API，可沿用 OpenAI SDK 接入。"
+          },
+          "en": {
+            "name": "Cohere (OpenAI Compatibility)",
+            "description": "Cohere’s Compatibility API for integrations using the OpenAI SDK."
+          },
+          "ja": {
+            "name": "Cohere（OpenAI 互換）",
+            "description": "Cohere Compatibility API。OpenAI SDK のまま接続できます。"
+          },
+          "ko": {
+            "name": "Cohere (OpenAI 호환)",
+            "description": "Cohere Compatibility API. OpenAI SDK로 그대로 연결할 수 있습니다."
+          }
+        },
+        "links": {
+          "platform": "https://dashboard.cohere.com/"
+        }
+      }
+    },
+    {
+      "name": "NVIDIA NIM (integrate.api)",
+      "vendor_key": "nvidia",
+      "description": "NVIDIA Build’s OpenAI-compatible NIM inference endpoint.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://integrate.api.nvidia.com/v1/chat/completions",
+            "embeddings": "https://integrate.api.nvidia.com/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "NVIDIA NIM（integrate.api）",
+            "description": "NVIDIA Build 提供的 NIM OpenAI 兼容推理入口。"
+          },
+          "en": {
+            "name": "NVIDIA NIM (integrate.api)",
+            "description": "NVIDIA Build’s OpenAI-compatible NIM inference endpoint."
+          },
+          "ja": {
+            "name": "NVIDIA NIM（integrate.api）",
+            "description": "NVIDIA Build が提供する NIM の OpenAI 互換推論エンドポイント。"
+          },
+          "ko": {
+            "name": "NVIDIA NIM (integrate.api)",
+            "description": "NVIDIA Build가 제공하는 NIM OpenAI 호환 추론 엔드포인트."
+          }
+        },
+        "links": {
+          "platform": "https://build.nvidia.com/"
+        }
+      }
+    },
+    {
+      "name": "StepFun",
+      "vendor_key": "stepfun",
+      "description": "StepFun pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.stepfun.com/v1/chat/completions",
+            "responses": "https://api.stepfun.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.stepfun.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "阶跃星辰 StepFun",
+            "description": "阶跃星辰按量端点，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "StepFun",
+            "description": "StepFun pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "StepFun（階躍星辰）",
+            "description": "階躍星辰の従量課金エンドポイント。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "스텝펀 (StepFun)",
+            "description": "스텝펀(StepFun) 종량제 엔드포인트. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.stepfun.com/"
+        }
+      }
+    },
+    {
+      "name": "Baichuan AI",
+      "vendor_key": "baichuan",
+      "description": "Baichuan AI’s OpenAI-compatible chat API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.baichuan-ai.com/v1/chat/completions"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百川智能",
+            "description": "百川智能开放平台的 OpenAI 兼容对话 API。"
+          },
+          "en": {
+            "name": "Baichuan AI",
+            "description": "Baichuan AI’s OpenAI-compatible chat API."
+          },
+          "ja": {
+            "name": "Baichuan AI",
+            "description": "Baichuan AI オープンプラットフォームの OpenAI 互換チャット API。"
+          },
+          "ko": {
+            "name": "Baichuan AI",
+            "description": "Baichuan AI 오픈 플랫폼의 OpenAI 호환 대화 API."
+          }
+        },
+        "links": {
+          "platform": "https://platform.baichuan-ai.com/"
+        }
+      }
+    },
+    {
+      "name": "Xiaomi MiMo",
+      "vendor_key": "xiaomi",
+      "icon_key": "xiaomimimo",
+      "description": "Xiaomi MiMo pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.xiaomimimo.com/v1/chat/completions",
+            "responses": "https://api.xiaomimimo.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.xiaomimimo.com/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "小米 MiMo",
+            "description": "小米 MiMo 按量开放平台，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Xiaomi MiMo",
+            "description": "Xiaomi MiMo pay-as-you-go endpoints for OpenAI Chat/Responses and Anthropic Messages."
+          },
+          "ja": {
+            "name": "シャオミ MiMo",
+            "description": "シャオミ MiMo の従量課金オープンプラットフォーム。OpenAI Chat / Responses と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "샤오미 MiMo",
+            "description": "샤오미 MiMo 종량제 오픈 플랫폼. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.xiaomimimo.com/"
+        }
+      }
+    },
+    {
+      "name": "Xiaomi MiMo (Token Plan)",
+      "vendor_key": "xiaomi",
+      "icon_key": "xiaomimimo",
+      "description": "China-region Token Plan endpoints for OpenAI Chat/Responses and Anthropic.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://token-plan-cn.xiaomimimo.com/v1/chat/completions",
+            "responses": "https://token-plan-cn.xiaomimimo.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://token-plan-cn.xiaomimimo.com/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "小米 MiMo（Token Plan）",
+            "description": "小米 MiMo Token Plan 中国区端点，支持 OpenAI Chat / Responses 与 Anthropic。"
+          },
+          "en": {
+            "name": "Xiaomi MiMo (Token Plan)",
+            "description": "China-region Token Plan endpoints for OpenAI Chat/Responses and Anthropic."
+          },
+          "ja": {
+            "name": "シャオミ MiMo（Token Plan）",
+            "description": "シャオミ MiMo Token Plan の中国リージョンエンドポイント。OpenAI Chat / Responses と Anthropic に対応しています。"
+          },
+          "ko": {
+            "name": "샤오미 MiMo (Token Plan)",
+            "description": "샤오미 MiMo Token Plan 중국 리전 엔드포인트. OpenAI Chat / Responses와 Anthropic을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.xiaomimimo.com/"
+        }
+      }
+    },
+    {
+      "name": "Qiniu AI",
+      "vendor_key": "qiniu",
+      "description": "Qiniu AI Token API with OpenAI Chat, a GPT Responses bypass, Anthropic, and Gemini (Vertex-compatible, Bearer).",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.qnaigc.com/v1/chat/completions",
+            "responses": "https://api.qnaigc.com/bypass/openai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.qnaigc.com"
+        },
+        "gemini": {
+          "base": "https://api.qnaigc.com/bypass/vertex/v1/models",
+          "auth": "bearer"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "七牛云 AI",
+            "description": "七牛云 AI 大模型推理（Token API），支持 OpenAI Chat、Responses 直通、Anthropic 与 Gemini（Vertex 兼容 + Bearer）。"
+          },
+          "en": {
+            "name": "Qiniu AI",
+            "description": "Qiniu AI Token API with OpenAI Chat, a GPT Responses bypass, Anthropic, and Gemini (Vertex-compatible, Bearer)."
+          },
+          "ja": {
+            "name": "Qiniu AI",
+            "description": "Qiniu AI（七牛）の大規模モデル推論（Token API）。OpenAI Chat、Responses パススルー、Anthropic、Gemini（Vertex 互換 + Bearer）に対応しています。"
+          },
+          "ko": {
+            "name": "Qiniu AI",
+            "description": "Qiniu AI(七牛) 대규모 모델 추론(Token API). OpenAI Chat, Responses 패스스루, Anthropic, Gemini(Vertex 호환 + Bearer)를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://www.qiniu.com/products/ai-token-api",
+          "api_keys": "https://portal.qiniu.com/ai-inference"
+        }
+      }
+    },
+    {
+      "name": "OpenRouter",
+      "vendor_key": "openrouter",
+      "description": "A unified aggregation platform for chat and image models from many vendors.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://openrouter.ai/api/v1/chat/completions",
+            "responses": "https://openrouter.ai/api/v1/responses",
+            "images.generations": "https://openrouter.ai/api/v1/images",
+            "embeddings": "https://openrouter.ai/api/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "OpenRouter",
+            "description": "OpenRouter 聚合平台，统一访问多家对话与图片模型。"
+          },
+          "en": {
+            "name": "OpenRouter",
+            "description": "A unified aggregation platform for chat and image models from many vendors."
+          },
+          "ja": {
+            "name": "OpenRouter",
+            "description": "OpenRouter の統合プラットフォーム。複数ベンダーの対話モデルと画像モデルをまとめて利用できます。"
+          },
+          "ko": {
+            "name": "OpenRouter",
+            "description": "OpenRouter 통합 플랫폼. 여러 공급사의 대화·이미지 모델을 한곳에서 사용할 수 있습니다."
+          }
+        },
+        "links": {
+          "platform": "https://openrouter.ai/",
+          "api_keys": "https://openrouter.ai/settings/keys"
+        }
+      }
+    },
+    {
+      "name": "OpenCode Zen",
+      "vendor_key": "opencode",
+      "description": "OpenCode pay-as-you-go endpoints (/inference) for OpenAI Chat, Responses, Anthropic, and Bearer-authenticated Gemini. Do not mix with Go.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://opencode.ai/inference/openai/v1/chat/completions",
+            "responses": "https://opencode.ai/inference/openai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://opencode.ai/inference/anthropic"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://opencode.ai/inference/google/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "OpenCode Zen",
+            "description": "OpenCode 按量端点（/inference），支持 OpenAI Chat、Responses、Anthropic，以及 Bearer 鉴权的 Gemini。勿与 Go 套餐端点混用。"
+          },
+          "en": {
+            "name": "OpenCode Zen",
+            "description": "OpenCode pay-as-you-go endpoints (/inference) for OpenAI Chat, Responses, Anthropic, and Bearer-authenticated Gemini. Do not mix with Go."
+          },
+          "ja": {
+            "name": "OpenCode Zen",
+            "description": "OpenCode の従量課金エンドポイント（/inference）。OpenAI Chat、Responses、Anthropic、Bearer 認証の Gemini に対応しています。Go プランのエンドポイントと混在させないでください。"
+          },
+          "ko": {
+            "name": "OpenCode Zen",
+            "description": "OpenCode 종량제 엔드포인트(/inference). OpenAI Chat, Responses, Anthropic, Bearer 인증 Gemini를 지원합니다. Go 플랜 엔드포인트와 섞어 쓰지 마세요."
+          }
+        },
+        "links": {
+          "platform": "https://opencode.ai/console/models",
+          "api_keys": "https://opencode.ai/console/login"
+        }
+      }
+    },
+    {
+      "name": "OpenCode Go",
+      "vendor_key": "opencode",
+      "description": "OpenCode Go subscription endpoints (/inference/go) for OpenAI Chat, Responses, Anthropic, and Bearer-authenticated Gemini. Do not mix with pay-as-you-go.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://opencode.ai/inference/go/openai/v1/chat/completions",
+            "responses": "https://opencode.ai/inference/go/openai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://opencode.ai/inference/go/anthropic"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://opencode.ai/inference/go/google/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "OpenCode Go",
+            "description": "OpenCode Go 订阅端点（/inference/go），支持 OpenAI Chat、Responses、Anthropic，以及 Bearer 鉴权的 Gemini。勿与按量端点混用。"
+          },
+          "en": {
+            "name": "OpenCode Go",
+            "description": "OpenCode Go subscription endpoints (/inference/go) for OpenAI Chat, Responses, Anthropic, and Bearer-authenticated Gemini. Do not mix with pay-as-you-go."
+          },
+          "ja": {
+            "name": "OpenCode Go",
+            "description": "OpenCode Go のサブスクリプション専用エンドポイント（/inference/go）。OpenAI Chat、Responses、Anthropic、Bearer 認証の Gemini に対応しています。従量課金エンドポイントと混在させないでください。"
+          },
+          "ko": {
+            "name": "OpenCode Go",
+            "description": "OpenCode Go 구독 전용 엔드포인트(/inference/go). OpenAI Chat, Responses, Anthropic, Bearer 인증 Gemini를 지원합니다. 종량제 엔드포인트와 섞어 쓰지 마세요."
+          }
+        },
+        "links": {
+          "platform": "https://opencode.ai/console/go",
+          "api_keys": "https://opencode.ai/console/login"
+        }
+      }
+    },
+    {
+      "name": "Command Code",
+      "vendor_key": "commandcode",
+      "description": "Command Code Provider API. OpenAI and open models use Chat Completions and Responses; Claude uses Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.commandcode.ai/provider/v1/chat/completions",
+            "responses": "https://api.commandcode.ai/provider/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.commandcode.ai/provider"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Command Code",
+            "description": "Command Code Provider API。OpenAI 与开源模型走 Chat Completions 和 Responses，Claude 走 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Command Code",
+            "description": "Command Code Provider API. OpenAI and open models use Chat Completions and Responses; Claude uses Anthropic Messages."
+          },
+          "ja": {
+            "name": "Command Code",
+            "description": "Command Code Provider API。OpenAI とオープンモデルは Chat Completions と Responses、Claude は Anthropic Messages。"
+          },
+          "ko": {
+            "name": "Command Code",
+            "description": "Command Code Provider API. OpenAI와 오픈 모델은 Chat Completions와 Responses, Claude는 Anthropic Messages를 사용합니다."
+          }
+        },
+        "links": {
+          "platform": "https://commandcode.ai/provider",
+          "api_keys": "https://commandcode.ai/"
+        }
+      }
+    },
+    {
+      "name": "Hugging Face Inference Providers",
+      "vendor_key": "huggingface",
+      "description": "Hugging Face’s OpenAI-compatible chat router across many inference providers.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://router.huggingface.co/v1/chat/completions"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Hugging Face Inference Providers",
+            "description": "Hugging Face 推理路由的 OpenAI 兼容对话 API，可按模型指定上游供应商。"
+          },
+          "en": {
+            "name": "Hugging Face Inference Providers",
+            "description": "Hugging Face’s OpenAI-compatible chat router across many inference providers."
+          },
+          "ja": {
+            "name": "Hugging Face Inference Providers",
+            "description": "Hugging Face 推論ルーターの OpenAI 互換チャット API。モデルごとに上流プロバイダーを指定できます。"
+          },
+          "ko": {
+            "name": "Hugging Face Inference Providers",
+            "description": "Hugging Face 추론 라우터의 OpenAI 호환 대화 API. 모델마다 업스트림 공급자를 지정할 수 있습니다."
+          }
+        },
+        "links": {
+          "platform": "https://huggingface.co/docs/inference-providers",
+          "api_keys": "https://huggingface.co/settings/tokens"
+        }
+      }
+    },
+    {
+      "name": "Vercel AI Gateway",
+      "vendor_key": "vercel",
+      "description": "Vercel AI Gateway with OpenAI-compatible and Anthropic Messages endpoints.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ai-gateway.vercel.sh/v1/chat/completions",
+            "responses": "https://ai-gateway.vercel.sh/v1/responses",
+            "embeddings": "https://ai-gateway.vercel.sh/v1/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://ai-gateway.vercel.sh"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Vercel AI Gateway",
+            "description": "Vercel AI Gateway 聚合网关，支持 OpenAI 兼容协议与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "Vercel AI Gateway",
+            "description": "Vercel AI Gateway with OpenAI-compatible and Anthropic Messages endpoints."
+          },
+          "ja": {
+            "name": "Vercel AI Gateway",
+            "description": "Vercel AI Gateway の統合ゲートウェイ。OpenAI 互換プロトコルと Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "Vercel AI Gateway",
+            "description": "Vercel AI Gateway 통합 게이트웨이. OpenAI 호환 프로토콜과 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://vercel.com/ai-gateway",
+          "api_keys": "https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys"
+        }
+      }
+    },
+    {
+      "name": "ZenMux",
+      "vendor_key": "zenmux",
+      "description": "ZenMux aggregation API (OpenAI, Anthropic, Gemini); Pay As You Go and Builder Plan share endpoints and differ by API key only.",
+      "endpoints": {
+        "openai": {
+          "base": "https://zenmux.ai/api/v1"
+        },
+        "anthropic": {
+          "base": "https://zenmux.ai/api/anthropic"
+        },
+        "gemini": {
+          "base": "https://zenmux.ai/api/vertex-ai/v1/publishers/google/models",
+          "auth": "bearer"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "ZenMux",
+            "description": "ZenMux 聚合平台（OpenAI / Anthropic / Gemini；Pay As You Go 与 Builder 订阅共用端点，按 API Key 区分计费）。"
+          },
+          "en": {
+            "name": "ZenMux",
+            "description": "ZenMux aggregation API (OpenAI, Anthropic, Gemini); Pay As You Go and Builder Plan share endpoints and differ by API key only."
+          },
+          "ja": {
+            "name": "ZenMux",
+            "description": "ZenMux 統合プラットフォーム（OpenAI / Anthropic / Gemini）。Pay As You Go と Builder サブスクリプションはエンドポイントを共有し、API キーで課金を分けます。"
+          },
+          "ko": {
+            "name": "ZenMux",
+            "description": "ZenMux 통합 플랫폼(OpenAI / Anthropic / Gemini). Pay As You Go와 Builder 구독은 엔드포인트를 공유하고, API 키로 과금을 나눕니다."
+          }
+        },
+        "links": {
+          "platform": "https://zenmux.ai/",
+          "api_keys": "https://zenmux.ai/platform",
+          "referral": "https://zenmux.ai/invite/PNWNOJ"
+        }
+      }
+    },
+    {
+      "name": "SCNet",
+      "vendor_key": "scnet",
+      "description": "National Supercomputing Internet model API with OpenAI- and Anthropic-compatible endpoints.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.scnet.cn/api/llm/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.scnet.cn/api/llm/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "超算互联网 SCNet",
+            "description": "国家超算互联网模型 API，支持 OpenAI 与 Anthropic 兼容协议。"
+          },
+          "en": {
+            "name": "SCNet",
+            "description": "National Supercomputing Internet model API with OpenAI- and Anthropic-compatible endpoints."
+          },
+          "ja": {
+            "name": "SCNet",
+            "description": "国家スーパーコンピューティング・インターネット（SCNet）のモデル API。OpenAI と Anthropic 互換プロトコルに対応しています。"
+          },
+          "ko": {
+            "name": "SCNet",
+            "description": "국가 슈퍼컴퓨팅 인터넷(SCNet)의 모델 API. OpenAI 및 Anthropic 호환 프로토콜을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://www.scnet.cn/ui/mall/",
+          "api_keys": "https://www.scnet.cn/ui/llm/apikeys"
+        }
+      }
+    },
+    {
+      "name": "SiliconFlow",
+      "vendor_key": "siliconflow",
+      "description": "SiliconFlow China Model Cloud with OpenAI-compatible APIs and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.siliconflow.cn/v1/chat/completions",
+            "images.generations": "https://api.siliconflow.cn/v1/images/generations",
+            "audio.transcriptions": "https://api.siliconflow.cn/v1/audio/transcriptions",
+            "audio.speech": "https://api.siliconflow.cn/v1/audio/speech",
+            "embeddings": "https://api.siliconflow.cn/v1/embeddings"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.siliconflow.cn"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "硅基流动",
+            "description": "硅基流动国内站，支持 OpenAI 兼容接口与 Anthropic Messages。"
+          },
+          "en": {
+            "name": "SiliconFlow",
+            "description": "SiliconFlow China Model Cloud with OpenAI-compatible APIs and Anthropic Messages."
+          },
+          "ja": {
+            "name": "SiliconFlow",
+            "description": "SiliconFlow の中国サイト。OpenAI 互換 API と Anthropic Messages に対応しています。"
+          },
+          "ko": {
+            "name": "SiliconFlow (실리콘플로우)",
+            "description": "SiliconFlow(실리콘플로우) 중국 사이트. OpenAI 호환 API와 Anthropic Messages를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://cloud.siliconflow.cn/",
+          "api_keys": "https://cloud.siliconflow.cn/account/ak",
+          "referral": "https://cloud.siliconflow.cn/i/rA30k5VJ"
+        }
+      }
+    },
+    {
+      "name": "Ollama (Local)",
+      "vendor_key": "ollama",
+      "description": "Default local Ollama OpenAI-compatible endpoint; no platform API key is required.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "http://127.0.0.1:11434/v1/chat/completions",
+            "embeddings": "http://127.0.0.1:11434/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Ollama（本地）",
+            "description": "本地 Ollama 默认 OpenAI 兼容端点；无需平台 API Key。"
+          },
+          "en": {
+            "name": "Ollama (Local)",
+            "description": "Default local Ollama OpenAI-compatible endpoint; no platform API key is required."
+          },
+          "ja": {
+            "name": "Ollama（ローカル）",
+            "description": "ローカル Ollama の既定 OpenAI 互換エンドポイント。プラットフォーム API キーは不要です。"
+          },
+          "ko": {
+            "name": "Ollama (로컬)",
+            "description": "로컬 Ollama 기본 OpenAI 호환 엔드포인트. 플랫폼 API 키는 필요 없습니다."
+          }
+        },
+        "links": {
+          "platform": "https://ollama.com/download"
+        }
+      }
+    },
+    {
+      "name": "Qwen AI Platform",
+      "vendor_key": "aliyun",
+      "icon_key": "qwen",
+      "description": "Pay-as-you-go endpoints on maas.qianwenaiapi.com for OpenAI Chat/Responses, Anthropic, and DashScope audio, image, and file transcription. Uses sk- or sk-ws- keys.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://maas.qianwenaiapi.com/compatible-mode/v1/chat/completions",
+            "responses": "https://maas.qianwenaiapi.com/compatible-mode/v1/responses"
+          }
+        },
+        "dashscope": {
+          "base": "https://maas.qianwenaiapi.com/api/v1"
+        },
+        "anthropic": {
+          "base": "https://maas.qianwenaiapi.com/apps/anthropic"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "千问 AI 平台",
+            "description": "千问按量端点（maas.qianwenaiapi.com），支持 OpenAI Chat / Responses、Anthropic，以及 DashScope 语音、生图与 filetrans。使用 sk- 或 sk-ws- Key。"
+          },
+          "en": {
+            "name": "Qwen AI Platform",
+            "description": "Pay-as-you-go endpoints on maas.qianwenaiapi.com for OpenAI Chat/Responses, Anthropic, and DashScope audio, image, and file transcription. Uses sk- or sk-ws- keys."
+          },
+          "ja": {
+            "name": "Qwen AI プラットフォーム",
+            "description": "Qwen の従量課金エンドポイント（maas.qianwenaiapi.com）。OpenAI Chat / Responses、Anthropic、DashScope の音声・画像・filetrans に対応しています。キーは sk- または sk-ws- を使います。"
+          },
+          "ko": {
+            "name": "Qwen AI 플랫폼",
+            "description": "Qwen 종량제 엔드포인트(maas.qianwenaiapi.com). OpenAI Chat / Responses, Anthropic, DashScope 음성·이미지·filetrans를 지원합니다. 키는 sk- 또는 sk-ws-입니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.qianwenai.com/"
+        }
+      }
+    },
+    {
+      "name": "MiniMax (International)",
+      "vendor_key": "minimax",
+      "description": "International MiniMax endpoints for OpenAI Chat/Responses, Anthropic Messages, and native file transcription, speech synthesis, and image generation.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.minimax.io/v1/chat/completions",
+            "responses": "https://api.minimax.io/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.minimax.io/anthropic"
+        },
+        "minimax": {
+          "base": "https://api.minimax.io/v1"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "MiniMax（国际站）",
+            "description": "MiniMax 国际站端点，支持 OpenAI Chat / Responses、Anthropic Messages，以及原生文件转写、同步语音合成与生图。"
+          },
+          "en": {
+            "name": "MiniMax (International)",
+            "description": "International MiniMax endpoints for OpenAI Chat/Responses, Anthropic Messages, and native file transcription, speech synthesis, and image generation."
+          },
+          "ja": {
+            "name": "MiniMax（国際）",
+            "description": "MiniMax 国際サイト。OpenAI Chat / Responses、Anthropic Messages、ネイティブのファイル文字起こし、同期音声合成、画像生成に対応しています。"
+          },
+          "ko": {
+            "name": "MiniMax (국제)",
+            "description": "MiniMax 국제 사이트. OpenAI Chat / Responses, Anthropic Messages, 네이티브 파일 전사, 동기 음성 합성과 이미지 생성을 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://platform.minimax.io/"
+        }
+      }
+    },
+    {
+      "name": "Google Vertex AI",
+      "vendor_key": "google",
+      "icon_key": "vertexai",
+      "description": "Full Vertex: OpenAI Chat Completions plus native Gemini. Replace the project ID; paste a GCP service account JSON as the API key.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/endpoints/openapi/chat/completions"
+          }
+        },
+        "gemini": {
+          "base": "https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/publishers/google/models",
+          "auth": "bearer"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Google Vertex AI",
+            "description": "正式 Vertex：OpenAI Chat Completions 与原生 Gemini；导入后替换项目 ID，API Key 栏粘贴 GCP 服务账号 JSON。"
+          },
+          "en": {
+            "name": "Google Vertex AI",
+            "description": "Full Vertex: OpenAI Chat Completions plus native Gemini. Replace the project ID; paste a GCP service account JSON as the API key."
+          },
+          "ja": {
+            "name": "Google Vertex AI",
+            "description": "正式な Vertex。OpenAI Chat Completions とネイティブ Gemini。インポート後にプロジェクト ID を置き換え、API キー欄には GCP サービスアカウント JSON を貼り付けます。"
+          },
+          "ko": {
+            "name": "Google Vertex AI",
+            "description": "정식 Vertex. OpenAI Chat Completions와 네이티브 Gemini. 가져온 뒤 프로젝트 ID를 바꾸고, API 키 란에 GCP 서비스 계정 JSON을 붙여 넣습니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.cloud.google.com/vertex-ai"
+        }
+      }
+    },
+    {
+      "name": "Azure OpenAI",
+      "vendor_key": "azure",
+      "description": "Azure OpenAI v1 base URL. Replace the resource name after import. The Foundry host *.services.ai.azure.com/openai/v1 is the same template.",
+      "endpoints": {
+        "openai": {
+          "base": "https://YOUR_RESOURCE_NAME.openai.azure.com/openai/v1"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Azure OpenAI",
+            "description": "Azure OpenAI 的 OpenAI v1 地址。导入后替换资源名。Foundry 控制台给出的 *.services.ai.azure.com/openai/v1 同样可用。"
+          },
+          "en": {
+            "name": "Azure OpenAI",
+            "description": "Azure OpenAI v1 base URL. Replace the resource name after import. The Foundry host *.services.ai.azure.com/openai/v1 is the same template."
+          },
+          "ja": {
+            "name": "Azure OpenAI",
+            "description": "Azure OpenAI の OpenAI v1 アドレス。インポート後にリソース名を置き換えます。Foundry の *.services.ai.azure.com/openai/v1 も同じテンプレートです。"
+          },
+          "ko": {
+            "name": "Azure OpenAI",
+            "description": "Azure OpenAI의 OpenAI v1 주소. 가져온 뒤 리소스 이름을 바꿉니다. Foundry의 *.services.ai.azure.com/openai/v1도 같은 템플릿입니다."
+          }
+        },
+        "links": {
+          "platform": "https://ai.azure.com/"
+        }
+      }
+    },
+    {
+      "name": "SiliconFlow (International)",
+      "vendor_key": "siliconflow",
+      "description": "SiliconFlow’s international Model Cloud OpenAI-compatible API.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.siliconflow.com/v1/chat/completions",
+            "images.generations": "https://api.siliconflow.com/v1/images/generations",
+            "audio.transcriptions": "https://api.siliconflow.com/v1/audio/transcriptions",
+            "audio.speech": "https://api.siliconflow.com/v1/audio/speech",
+            "embeddings": "https://api.siliconflow.com/v1/embeddings"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "硅基流动（国际站）",
+            "description": "硅基流动国际站的 OpenAI 兼容 API。"
+          },
+          "en": {
+            "name": "SiliconFlow (International)",
+            "description": "SiliconFlow’s international Model Cloud OpenAI-compatible API."
+          },
+          "ja": {
+            "name": "SiliconFlow（国際）",
+            "description": "SiliconFlow 国際サイトの OpenAI 互換 API。"
+          },
+          "ko": {
+            "name": "SiliconFlow (국제)",
+            "description": "SiliconFlow 국제 사이트의 OpenAI 호환 API."
+          }
+        },
+        "links": {
+          "platform": "https://cloud.siliconflow.com/",
+          "api_keys": "https://cloud.siliconflow.com/account/ak"
+        }
+      }
+    },
+    {
+      "name": "Baidu Cloud Model Service (Guangzhou)",
+      "vendor_key": "baidu",
+      "description": "Guangzhou endpoint for OpenAI Chat/Responses and Anthropic Messages. Use a Guangzhou key, separate from Qianfan and the overseas regions. No image or audio. Qwen here is Chat and Responses only.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://vod.gz.baidubce.com/v1/chat/completions",
+            "responses": "https://vod.gz.baidubce.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://vod.gz.baidubce.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百度云模型服务（广州）",
+            "description": "百度云模型服务 V2 广州端点。支持 OpenAI Chat / Responses 与 Anthropic Messages。请使用广州地域 Key，不要与千帆或海外三地混用。不含生图和音频。该地域的通义千问只有 Chat / Responses。"
+          },
+          "en": {
+            "name": "Baidu Cloud Model Service (Guangzhou)",
+            "description": "Guangzhou endpoint for OpenAI Chat/Responses and Anthropic Messages. Use a Guangzhou key, separate from Qianfan and the overseas regions. No image or audio. Qwen here is Chat and Responses only."
+          },
+          "ja": {
+            "name": "バイドゥクラウド モデルサービス（広州）",
+            "description": "バイドゥクラウド モデルサービス V2 の広州エンドポイント。OpenAI Chat / Responses と Anthropic Messages に対応しています。広州の API キーを使い、Qianfan や海外 3 リージョンと混在させないでください。画像と音声は含みません。このリージョンの Qwen は Chat / Responses のみです。"
+          },
+          "ko": {
+            "name": "바이두 클라우드 모델 서비스 (광저우)",
+            "description": "바이두 클라우드 모델 서비스 V2 광저우 엔드포인트. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다. 광저우 API 키를 사용하고 Qianfan 및 해외 3개 리전과 섞지 마세요. 이미지와 음성은 없습니다. 이 리전의 Qwen은 Chat / Responses만 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.bce.baidu.com/vod-gz/"
+        }
+      }
+    },
+    {
+      "name": "Baidu Cloud Model Service (Singapore)",
+      "vendor_key": "baidu",
+      "description": "Singapore endpoint for OpenAI Chat/Responses, image generation and edits, Anthropic Messages, and Bearer-authenticated Gemini text and image generation. No embeddings or audio. Keys are region-scoped.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-sg.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-sg.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-sg.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-sg.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-sg.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-sg.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百度云模型服务（新加坡）",
+            "description": "百度云模型服务 V2 新加坡端点。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini 文本和生图。不含向量和音频。Key 按地域隔离。人民币账户在国内控制台切换到该地域创建，美元账户使用国际站。"
+          },
+          "en": {
+            "name": "Baidu Cloud Model Service (Singapore)",
+            "description": "Singapore endpoint for OpenAI Chat/Responses, image generation and edits, Anthropic Messages, and Bearer-authenticated Gemini text and image generation. No embeddings or audio. Keys are region-scoped."
+          },
+          "ja": {
+            "name": "バイドゥクラウド モデルサービス（シンガポール）",
+            "description": "バイドゥクラウド モデルサービス V2 のシンガポールエンドポイント。OpenAI Chat / Responses、画像生成と編集、Anthropic Messages、Bearer 認証の Gemini テキストと画像生成に対応しています。埋め込みと音声は含みません。API キーはリージョンごとに分かれます。"
+          },
+          "ko": {
+            "name": "바이두 클라우드 모델 서비스 (싱가포르)",
+            "description": "바이두 클라우드 모델 서비스 V2 싱가포르 엔드포인트. OpenAI Chat / Responses, 이미지 생성과 편집, Anthropic Messages, Bearer 인증 Gemini 텍스트와 이미지 생성을 지원합니다. 임베딩과 음성은 없습니다. API 키는 리전별로 구분됩니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.bce.baidu.com/vod-overseas"
+        }
+      }
+    },
+    {
+      "name": "Baidu Cloud Model Service (California)",
+      "vendor_key": "baidu",
+      "description": "California endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or Frankfurt key.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-ca.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-ca.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-ca.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-ca.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-ca.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-ca.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百度云模型服务（加利福尼亚）",
+            "description": "百度云模型服务 V2 加利福尼亚端点，对话和生图路径与新加坡相同。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini。不含向量和音频。不要复用新加坡或法兰克福的 Key。"
+          },
+          "en": {
+            "name": "Baidu Cloud Model Service (California)",
+            "description": "California endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or Frankfurt key."
+          },
+          "ja": {
+            "name": "バイドゥクラウド モデルサービス（カリフォルニア）",
+            "description": "バイドゥクラウド モデルサービス V2 のカリフォルニアエンドポイント。対話と画像のパスはシンガポールと同じです。埋め込みと音声は含みません。シンガポールやフランクフルトの API キーは再利用できません。"
+          },
+          "ko": {
+            "name": "바이두 클라우드 모델 서비스 (캘리포니아)",
+            "description": "바이두 클라우드 모델 서비스 V2 캘리포니아 엔드포인트. 대화와 이미지 경로는 싱가포르와 같습니다. 임베딩과 음성은 없습니다. 싱가포르나 프랑크푸르트 API 키를 재사용할 수 없습니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.bce.baidu.com/vod-overseas"
+        }
+      }
+    },
+    {
+      "name": "Baidu Cloud Model Service (Frankfurt)",
+      "vendor_key": "baidu",
+      "description": "Frankfurt endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or California key.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-de.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-de.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-de.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-de.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-de.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-de.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "百度云模型服务（法兰克福）",
+            "description": "百度云模型服务 V2 法兰克福端点，对话和生图路径与新加坡相同。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini。不含向量和音频。不要复用新加坡或加利福尼亚的 Key。"
+          },
+          "en": {
+            "name": "Baidu Cloud Model Service (Frankfurt)",
+            "description": "Frankfurt endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or California key."
+          },
+          "ja": {
+            "name": "バイドゥクラウド モデルサービス（フランクフルト）",
+            "description": "バイドゥクラウド モデルサービス V2 のフランクフルトエンドポイント。対話と画像のパスはシンガポールと同じです。埋め込みと音声は含みません。シンガポールやカリフォルニアの API キーは再利用できません。"
+          },
+          "ko": {
+            "name": "바이두 클라우드 모델 서비스 (프랑크푸르트)",
+            "description": "바이두 클라우드 모델 서비스 V2 프랑크푸르트 엔드포인트. 대화와 이미지 경로는 싱가포르와 같습니다. 임베딩과 음성은 없습니다. 싱가포르나 캘리포니아 API 키를 재사용할 수 없습니다."
+          }
+        },
+        "links": {
+          "platform": "https://console.bce.baidu.com/vod-overseas"
+        }
+      }
+    },
+    {
+      "name": "ElevenLabs",
+      "vendor_key": "elevenlabs",
+      "description": "ElevenLabs official API with native file transcription (Scribe) and text-to-speech, plus OpenAI-compatible /v1/audio/* through adapters.",
+      "endpoints": {
+        "elevenlabs": {
+          "base": "https://api.elevenlabs.io/v1"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "ElevenLabs",
+            "description": "ElevenLabs 官方 API，支持原生文件转写（Scribe）与文本转语音，并可通过适配器提供 OpenAI 兼容的 /v1/audio/* 入口。"
+          },
+          "en": {
+            "name": "ElevenLabs",
+            "description": "ElevenLabs official API with native file transcription (Scribe) and text-to-speech, plus OpenAI-compatible /v1/audio/* through adapters."
+          },
+          "ja": {
+            "name": "ElevenLabs",
+            "description": "ElevenLabs 公式 API。ネイティブのファイル文字起こし（Scribe）とテキスト読み上げに対応し、アダプター経由で OpenAI 互換の /v1/audio/* も提供します。"
+          },
+          "ko": {
+            "name": "ElevenLabs",
+            "description": "ElevenLabs 공식 API. 네이티브 파일 전사(Scribe)와 텍스트 음성 변환을 지원하고, 어댑터를 통해 OpenAI 호환 /v1/audio/* 엔드포인트도 제공합니다."
+          }
+        },
+        "links": {
+          "platform": "https://elevenlabs.io/app",
+          "api_keys": "https://elevenlabs.io/app/developers/api-keys"
+        }
+      }
+    },
+    {
+      "name": "Modelink",
+      "vendor_key": "modelink",
+      "description": "Modelink overseas endpoint with OpenAI Chat, Responses and Images bypass, Anthropic, and Gemini (Vertex-compatible, Bearer).",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.modelink.ai/v1/chat/completions",
+            "responses": "https://api.modelink.ai/bypass/openai/v1/responses",
+            "images.generations": "https://api.modelink.ai/bypass/openai/v1/images/generations",
+            "images.edits": "https://api.modelink.ai/bypass/openai/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.modelink.ai"
+        },
+        "gemini": {
+          "base": "https://api.modelink.ai/bypass/vertex/v1/models",
+          "auth": "bearer"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Modelink",
+            "description": "Modelink 海外接入点（七牛云 AI 海外品牌），支持 OpenAI Chat、Responses / Images 直通、Anthropic 与 Gemini（Vertex 兼容 + Bearer）。"
+          },
+          "en": {
+            "name": "Modelink",
+            "description": "Modelink overseas endpoint with OpenAI Chat, Responses and Images bypass, Anthropic, and Gemini (Vertex-compatible, Bearer)."
+          },
+          "ja": {
+            "name": "Modelink",
+            "description": "Modelink の海外エンドポイント。OpenAI Chat、Responses / Images パススルー、Anthropic、Gemini（Vertex 互換 + Bearer）に対応しています。"
+          },
+          "ko": {
+            "name": "Modelink",
+            "description": "Modelink 해외 엔드포인트. OpenAI Chat, Responses / Images 패스스루, Anthropic, Gemini(Vertex 호환 + Bearer)를 지원합니다."
+          }
+        },
+        "links": {
+          "platform": "https://modelink.ai/"
+        }
+      }
+    },
+    {
+      "name": "Kingsoft StarFlow",
+      "vendor_key": "kingsoft",
+      "description": "Kingsoft StarFlow in China, with OpenAI Chat, Responses, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://kspmas.ksyun.com/v1/chat/completions",
+            "responses": "https://kspmas.ksyun.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://kspmas.ksyun.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "金山云星流",
+            "description": "金山云星流国内版，支持 OpenAI Chat、Responses 与 Anthropic Messages。不要和国际版 global-kspmas.ksyun.com 的密钥混用。"
+          },
+          "en": {
+            "name": "Kingsoft StarFlow",
+            "description": "Kingsoft StarFlow in China, with OpenAI Chat, Responses, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Kingsoft Cloud StarFlow",
+            "description": "Kingsoft Cloud StarFlow の中国版。OpenAI Chat、Responses、Anthropic Messages に対応しています。国際版 global-kspmas.ksyun.com のキーと混在させないでください。"
+          },
+          "ko": {
+            "name": "킹소프트클라우드 StarFlow",
+            "description": "킹소프트클라우드 StarFlow 중국판. OpenAI Chat, Responses, Anthropic Messages를 지원합니다. 국제판 global-kspmas.ksyun.com 키와 섞어 쓰지 마세요."
+          }
+        },
+        "links": {
+          "platform": "https://ksp.console.ksyun.com/",
+          "api_keys": "https://ksp.console.ksyun.com/#/apiKey"
+        }
+      }
+    },
+    {
+      "name": "Kingsoft StarFlow (International)",
+      "vendor_key": "kingsoft",
+      "description": "Kingsoft StarFlow international endpoint at global-kspmas.ksyun.com, with OpenAI Chat, Responses, and Anthropic Messages.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://global-kspmas.ksyun.com/v1/chat/completions",
+            "responses": "https://global-kspmas.ksyun.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://global-kspmas.ksyun.com"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "金山云星流（国际版）",
+            "description": "金山云星流国际版，接入 https://global-kspmas.ksyun.com/v1，支持 OpenAI Chat、Responses 与 Anthropic Messages。不要和国内版 kspmas.ksyun.com 的密钥混用。"
+          },
+          "en": {
+            "name": "Kingsoft StarFlow (International)",
+            "description": "Kingsoft StarFlow international endpoint at global-kspmas.ksyun.com, with OpenAI Chat, Responses, and Anthropic Messages."
+          },
+          "ja": {
+            "name": "Kingsoft Cloud StarFlow（国際版）",
+            "description": "Kingsoft Cloud StarFlow の国際版。https://global-kspmas.ksyun.com/v1 に接続し、OpenAI Chat、Responses、Anthropic Messages に対応しています。中国版 kspmas.ksyun.com のキーと混在させないでください。"
+          },
+          "ko": {
+            "name": "킹소프트클라우드 StarFlow (국제판)",
+            "description": "킹소프트클라우드 StarFlow 국제판. https://global-kspmas.ksyun.com/v1에 연결하며 OpenAI Chat, Responses, Anthropic Messages를 지원합니다. 중국판 kspmas.ksyun.com 키와 섞어 쓰지 마세요."
+          }
+        },
+        "links": {
+          "platform": "https://ksp.console.ksyun.com/",
+          "api_keys": "https://ksp.console.ksyun.com/#/apiKey"
+        }
+      }
+    },
+    {
+      "name": "Open Design",
+      "vendor_key": "opendesign",
+      "description": "Open Design Cloud model API with OpenAI Chat, Responses, and Anthropic Messages. Keys are sk-amr- and share Design Plan credits.",
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://amr-link.open-design.ai/v1/chat/completions",
+            "responses": "https://amr-link.open-design.ai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://amr-link.open-design.ai"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "Open Design",
+            "description": "Open Design Cloud 模型接口（amr-link.open-design.ai/v1）。大多数模型走 OpenAI Chat，Codex 风格走 Responses，glm-5.3-flash 走 Anthropic Messages。密钥为 sk-amr-，与应用共用 Design Plan 额度。未写入生图、音频和向量端点。"
+          },
+          "en": {
+            "name": "Open Design",
+            "description": "Open Design Cloud model API with OpenAI Chat, Responses, and Anthropic Messages. Keys are sk-amr- and share Design Plan credits."
+          },
+          "ja": {
+            "name": "Open Design",
+            "description": "Open Design Cloud のモデル API（amr-link.open-design.ai/v1）。ほとんどのモデルは OpenAI Chat、Codex 形式は Responses、glm-5.3-flash は Anthropic Messages。キーは sk-amr- で、アプリと Design Plan の枠を共有。画像・音声・埋め込みのエンドポイントは含みません。"
+          },
+          "ko": {
+            "name": "Open Design",
+            "description": "Open Design Cloud 모델 API(amr-link.open-design.ai/v1). 대부분 모델은 OpenAI Chat, Codex 형식은 Responses, glm-5.3-flash는 Anthropic Messages를 사용합니다. 키는 sk-amr-이며 앱과 Design Plan 한도를 공유합니다. 이미지, 오디오, 임베딩 엔드포인트는 포함하지 않습니다."
+          }
+        },
+        "links": {
+          "platform": "https://open-design.ai/",
+          "api_keys": "https://open-design.ai/cloud/api-keys"
+        }
+      }
+    },
+    {
+      "name": "Wangsu AI Gateway",
+      "vendor_key": "wangsu",
+      "description": "Wangsu’s unified gateway. OpenAI, Anthropic, and Gemini all sit under https://api.edgecloudapp.com/v2/llm. Create an sk- token in Token Management; Gemini uses Bearer.",
+      "endpoints": {
+        "openai": {
+          "base": "https://api.edgecloudapp.com/v2/llm/openai"
+        },
+        "anthropic": {
+          "endpoints": {
+            "messages": "https://api.edgecloudapp.com/v2/llm/anthropic/messages"
+          }
+        },
+        "gemini": {
+          "base": "https://api.edgecloudapp.com/v2/llm/gemini/v1beta/models",
+          "auth": "bearer"
+        }
+      },
+      "catalog": {
+        "i18n": {
+          "zh": {
+            "name": "网宿 AI 网关",
+            "description": "网宿新版统一网关。OpenAI、Anthropic、Gemini 都挂在 https://api.edgecloudapp.com/v2/llm 下。令牌在「令牌管理」创建，值为 sk- 开头，Gemini 使用 Bearer。"
+          },
+          "en": {
+            "name": "Wangsu AI Gateway",
+            "description": "Wangsu’s unified gateway. OpenAI, Anthropic, and Gemini all sit under https://api.edgecloudapp.com/v2/llm. Create an sk- token in Token Management; Gemini uses Bearer."
+          },
+          "ja": {
+            "name": "Wangsu AI Gateway",
+            "description": "Wangsu の統一ゲートウェイ。OpenAI、Anthropic、Gemini はいずれも https://api.edgecloudapp.com/v2/llm 配下です。トークンは「令牌管理」で作成し、値は sk- で始まります。Gemini は Bearer です。"
+          },
+          "ko": {
+            "name": "Wangsu AI Gateway",
+            "description": "Wangsu 통합 게이트웨이. OpenAI, Anthropic, Gemini는 모두 https://api.edgecloudapp.com/v2/llm 아래입니다. 토큰은 토큰 관리에서 만들며 sk-로 시작합니다. Gemini는 Bearer입니다."
+          }
+        },
+        "links": {
+          "platform": "https://www.wangsu.com/document/ai/aigateway-quick-start1"
+        }
+      }
+    }
+  ]
+}
